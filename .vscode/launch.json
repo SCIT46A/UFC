@@ -1,0 +1,14 @@
+{
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Spring Boot-UfcApplication<ufc>",
+      "request": "launch",
+      "cwd": "${workspaceFolder}",
+      "mainClass": "app.scit46.ufc.UfcApplication",
+      "projectName": "ufc",
+      "args": "",
+      "envFile": "${workspaceFolder}/.env"
+    }
+  ]
+}
