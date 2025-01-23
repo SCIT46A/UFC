@@ -16,7 +16,7 @@ public class UserController {
 
     @GetMapping({"/",""})
     public String index() {
-        return "user/index";
+        return "user/profile";
     }
 }
 

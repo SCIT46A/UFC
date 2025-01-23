@@ -24,4 +24,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
             mobileMenu.classList.toggle('hidden');
         });
     }
+
+    // Get all editable fields
+    const editableFields = document.querySelectorAll('.editable-field');
+
+    editableFields.forEach(field => {
+        const input = field.querySelector('input, textarea');
+        const editButton = field.querySelector('.btn-edit');
+        let originalValue;
+
+        editButton.addEventListener('click', function() {
+            if (input.readOnly) {
+                // Enter edit mode
+                originalValue = input.value;
+                input.readOnly = false;
+                input.classList.remove('bg-gray-100');
+                editButton.innerHTML = '<i data-lucide="check" class="h-4 w-4"></i>';
+                lucide.createIcons();
+            } else {
+                // Save changes
+                input.readOnly = true;
+                input.classList.add('bg-gray-100');
+                editButton.innerHTML = '<i data-lucide="edit-2" class="h-4 w-4"></i>';
+                lucide.createIcons();
+
+                // Here you would typically send the updated data to a server
+                console.log(`Updated ${field.dataset.field}: ${input.value}`);
+            }
+        });
+
+        // Add event listener for the Escape key to cancel editing
+        input.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && !input.readOnly) {
+                input.value = originalValue;
+                input.readOnly = true;
+                input.classList.add('bg-gray-100');
+                editButton.innerHTML = '<i data-lucide="edit-2" class="h-4 w-4"></i>';
+                lucide.createIcons();
+            }
+        });
+    });
 });
