@@ -43,7 +43,7 @@ jobs:
           ${{ runner.os }}-gradle-
 
     # Secret 주입
-    - name: Create Secrets data (Generate application.properties)
+    - name: Append Secrets Settings
       working-directory: ./ufc
       run: |
         echo "${{ secrets.APPLICATION_YML }}" >> ./src/main/resources/application.yml
