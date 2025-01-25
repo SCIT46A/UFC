@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+  <link
+          rel="stylesheet"
+          th:href="@{/css/index.css}"
+          href="../static/css/index.css"
+  />
+  <script th:src="@{/js/index.js}"></script>
+</head>
+<body>
+<div class="flex-col min-h-screen bg-green-50">
+<footer class="bg-green-800 text-white py-8">
+  <div class="container mx-auto px-4">
+    <div class="grid md:grid-cols-3 gap-8">
+      <div>
+        <h3 class="text-lg font-semibold mb-4">
+          UP-DA 소개
+        </h3>
+        <p>
+          UP-DA는 지속 가능한 프로젝트를 위한 크라우드펀딩
+          플랫폼입니다. 우리는 혁신적인 업사이클링
+          아이디어를 지원합니다.
+        </p>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-4">
+          빠른 링크
+        </h3>
+        <ul class="space-y-2">
+          <li>
+            <a
+                    href="#"
+                    class="hover:text-green-300 transition-colors"
+            >홈</a
+            >
+          </li>
+          <li>
+            <a
+                    href="#projects"
+                    class="hover:text-green-300 transition-colors"
+            >프로젝트</a
+            >
+          </li>
+          <li>
+            <a
+                    href="#how-it-works"
+                    class="hover:text-green-300 transition-colors"
+            >이용방법</a
+            >
+          </li>
+          <li>
+            <a
+                    href="#impact"
+                    class="hover:text-green-300 transition-colors"
+            >환경 영향</a
+            >
+          </li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-lg font-semibold mb-4">
+          소셜 미디어
+        </h3>
+        <div class="flex space-x-4">
+          <a
+                  href="#"
+                  class="hover:text-green-300 transition-colors"
+          ><i data-lucide="facebook"></i
+          ></a>
+          <a
+                  href="#"
+                  class="hover:text-green-300 transition-colors"
+          ><i data-lucide="twitter"></i
+          ></a>
+          <a
+                  href="#"
+                  class="hover:text-green-300 transition-colors"
+          ><i data-lucide="instagram"></i
+          ></a>
+        </div>
+      </div>
+    </div>
+    <div class="mt-8 text-center">
+      <p>
+        &copy; <span id="current-year"></span> UP-DA. All
+        rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+</div>
+</body>
+</html>
