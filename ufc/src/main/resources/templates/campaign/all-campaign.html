@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>진행중인 캠페인</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+                rel="icon"
+                th:href="@{/images/fix/favicon.png}"
+                type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/campaign/all-campaign.css}"
+            href="../../static/css/campaign/all-campaign.css"
+        />
+        <link
+                rel="stylesheet"
+                th:href="@{/css/fix/header.css}"
+                href="../../static/css/fix/header.css"
+        />
+        <link
+                rel="stylesheet"
+                th:href="@{/css/fix/footer.css}"
+                href="../../static/css/fix/footer.css"
+        />
+        <script src="../../static/js/compaign/all-compaign.js" defer></script>
+        <script th:src="@{/js/compaign/all-compaign.js}" defer></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="fix/header :: header"></div>
+        <main>
+            <section id="projects" style="background-color: #ffffff; padding-bottom: 30px">
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <div class="main-container">
+                            <!-- 상단 태그부분 -->
+                            <div class="main-top">
+                                <div class="main-top-in">
+                                    <div class="main-top-in-content">
+                                        <div class="main-top-in-content-target">
+                                            <div
+                                                class="main-top-in-content-target-box"
+                                            >
+                                                <!-- 달성률 -->
+                                                <span
+                                                    class="main-top-in-content-target-box-span"
+                                                >
+                                                    <button
+                                                        class="main-top-in-content-target-box-span-btn"
+                                                    >
+                                                        <span
+                                                            class="main-top-in-content-target-box-span-btn-spab"
+                                                            >달성률</span
+                                                        >
+                                                        <!-- 열림기준 -->
+                                                        <span class="icon-open"
+                                                            ><div
+                                                                name="arrow1-down"
+                                                                class="Icon__SVGICON-sc-bv7y1u-0 fuBkMs FilterUIButton__StyledSVGIcon-sc-aco6bu-0 fXaCUQ"
+                                                            >
+                                                                <svg
+                                                                    viewBox="0 0 48 48"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
+                                                                    ></path>
+                                                                </svg></div
+                                                        ></span>
+                                                    </button>
+                                                </span>
+                                                <!-- 검색 모달 -->
+                                                <div class="main-modal-per">
+                                                    <div
+                                                        class="main-modal-per-in"
+                                                    >
+                                                        <div
+                                                            class="main-modal-per-in-con"
+                                                        >
+                                                            <div
+                                                                class="main-modal-per-in-con-box"
+                                                            >
+                                                                <div
+                                                                    class="main-modal-per-in-con-box-choice"
+                                                                >
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in on"
+                                                                    >
+                                                                        전체보기
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        50% 이하
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        50% ~
+                                                                        100%
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        100%이상
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="main-modal-per-close"
+                                                ></div>
+                                                <!-- 재료 기준 -->
+                                                <span
+                                                    class="main-top-in-content-target-box-span"
+                                                >
+                                                    <button
+                                                        class="main-top-in-content-target-box-span-btn-re"
+                                                    >
+                                                        <span
+                                                            class="main-top-in-content-target-box-span-btn-spab"
+                                                            >재료</span
+                                                        >
+                                                        <!-- 열림기준 -->
+                                                        <span class="icon-open"
+                                                            ><div
+                                                                name="arrow1-down"
+                                                                class="Icon__SVGICON-sc-bv7y1u-0 fuBkMs FilterUIButton__StyledSVGIcon-sc-aco6bu-0 fXaCUQ"
+                                                            >
+                                                                <svg
+                                                                    viewBox="0 0 48 48"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
+                                                                    ></path>
+                                                                </svg></div
+                                                        ></span>
+                                                    </button>
+                                                </span>
+                                                <div class="main-modal-per-add">
+                                                    <div
+                                                        class="main-modal-per-in-add"
+                                                    >
+                                                        <div
+                                                            class="main-modal-per-in-con-add"
+                                                        >
+                                                            <div
+                                                                class="main-modal-per-in-con-box-add"
+                                                            >
+                                                                <div
+                                                                    class="main-modal-per-in-con-box-choice-add"
+                                                                >
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in on"
+                                                                    >
+                                                                        전체보기
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        청바지
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        병뚜껑
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        이것저것
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 캠페인 들어가는 부분 -->
+                            <div class="main-bo">
+                                <div class="main-bo-in">
+                                    <!--몇개인지 카운트 하는곳 -->
+                                    <div class="main-bo-in-top">
+                                        <span>000</span>개의 캠페인이 있습니다
+                                    </div>
+                                    <!-- 내용들 반복하는곳 -->
+                                    <div class="main-bo-in-bo">
+                                        <!-- 각각의 내용이 들어가는 곳 -->
+                                        <div class="main-bo-in-bo-pe">
+                                            <div class="main-bo-in-bo-pe-box">
+                                                <a
+                                                    href="/"
+                                                    class="main-bo-in-bo-pe-box-a"
+                                                >
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-img"
+                                                    >
+                                                        <img
+                                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvODg3ODQ0Y2YtZTIwZS00MWRkLTg5MDMtYjJlMWNmOTFkYmI2LzMyNWIzNDU3LTkyNDUtNDg3MS1hYTUxLTgwYmJlZGZlYTU0Yi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                                            alt=""
+                                                            class="main-bo-in-bo-pe-box-a-img-size"
+                                                        />
+                                                        <!-- 좋아요부분  -->
+                                                        <div
+                                                            class="main-like-btn"
+                                                        >
+                                                            <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                                    fill="black"
+                                                                    fill-opacity="0.25"
+                                                                    stroke="white"
+                                                                    stroke-width="1.6"
+                                                                ></path>
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706012)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                                                        fill="white"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg>
+                                                            <!-- 눌린버전 -->
+                                                            <!-- <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706251)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
+                                                                        fill="#F86453"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg> -->
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-title"
+                                                    >
+                                                        <!-- 상단 내용 -->
+                                                        <div
+                                                            class="main-bo-in-bo-pe-box-a-title-top"
+                                                        >
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-top-se"
+                                                            >
+                                                                <div>
+                                                                    판매자는
+                                                                    판매판매
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-mi"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-title"
+                                                                >
+                                                                    완벽적중<한국풍
+                                                                    판타지
+                                                                    타로카드:삼라만상>
+                                                                </div>
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-content"
+                                                                >
+                                                                    화려한
+                                                                    자개박으로
+                                                                    꾸며진
+                                                                    나전칠기
+                                                                    컨셉의 한국
+                                                                    전통
+                                                                    판타지풍
+                                                                    타로카드
+                                                                    78장
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-bo"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-bo-in"
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 펀딩쪽 -->
+                                                        <div
+                                                            class="main-funding"
+                                                        >
+                                                            <div
+                                                                class="main-funding-top"
+                                                            >
+                                                                <div>
+                                                                    <span
+                                                                        class="main-funding-top-per"
+                                                                        >1234%</span
+                                                                    >
+                                                                    <span
+                                                                        class="main-funding-top-pri"
+                                                                        >12개
+                                                                        모임</span
+                                                                    >
+                                                                </div>
+                                                                <em
+                                                                    >28일
+                                                                    남음</em
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="main-funding-bo"
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- 2번째 -->
+                                        <div class="main-bo-in-bo-pe">
+                                            <div class="main-bo-in-bo-pe-box">
+                                                <a
+                                                    href="/"
+                                                    class="main-bo-in-bo-pe-box-a"
+                                                >
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-img"
+                                                    >
+                                                        <img
+                                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvODg3ODQ0Y2YtZTIwZS00MWRkLTg5MDMtYjJlMWNmOTFkYmI2LzMyNWIzNDU3LTkyNDUtNDg3MS1hYTUxLTgwYmJlZGZlYTU0Yi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                                            alt=""
+                                                            class="main-bo-in-bo-pe-box-a-img-size"
+                                                        />
+                                                        <!-- 좋아요부분  -->
+                                                        <div
+                                                            class="main-like-btn"
+                                                        >
+                                                            <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                                    fill="black"
+                                                                    fill-opacity="0.25"
+                                                                    stroke="white"
+                                                                    stroke-width="1.6"
+                                                                ></path>
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706012)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                                                        fill="white"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg>
+                                                            <!-- 눌린버전 -->
+                                                            <!-- <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706251)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
+                                                                        fill="#F86453"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg> -->
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-title"
+                                                    >
+                                                        <!-- 상단 내용 -->
+                                                        <div
+                                                            class="main-bo-in-bo-pe-box-a-title-top"
+                                                        >
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-top-se"
+                                                            >
+                                                                <div>
+                                                                    판매자는
+                                                                    판매판매
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-mi"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-title"
+                                                                >
+                                                                    완벽적중<한국풍
+                                                                    판타지
+                                                                    타로카드:삼라만상>
+                                                                </div>
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-content"
+                                                                >
+                                                                    화려한
+                                                                    자개박으로
+                                                                    꾸며진
+                                                                    나전칠기
+                                                                    컨셉의 한국
+                                                                    전통
+                                                                    판타지풍
+                                                                    타로카드
+                                                                    78장
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-bo"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-bo-in"
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 펀딩쪽 -->
+                                                        <div
+                                                            class="main-funding"
+                                                        >
+                                                            <div
+                                                                class="main-funding-top"
+                                                            >
+                                                                <div>
+                                                                    <span
+                                                                        class="main-funding-top-per"
+                                                                        >1234%</span
+                                                                    >
+                                                                    <span
+                                                                        class="main-funding-top-pri"
+                                                                        >12개
+                                                                        모임</span
+                                                                    >
+                                                                </div>
+                                                                <em
+                                                                    >28일
+                                                                    남음</em
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="main-funding-bo"
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="main-bo-in-bo-pe">
+                                            <div class="main-bo-in-bo-pe-box">
+                                                <a
+                                                    href="/"
+                                                    class="main-bo-in-bo-pe-box-a"
+                                                >
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-img"
+                                                    >
+                                                        <img
+                                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvODg3ODQ0Y2YtZTIwZS00MWRkLTg5MDMtYjJlMWNmOTFkYmI2LzMyNWIzNDU3LTkyNDUtNDg3MS1hYTUxLTgwYmJlZGZlYTU0Yi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                                            alt=""
+                                                            class="main-bo-in-bo-pe-box-a-img-size"
+                                                        />
+                                                        <!-- 좋아요부분  -->
+                                                        <div
+                                                            class="main-like-btn"
+                                                        >
+                                                            <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                                    fill="black"
+                                                                    fill-opacity="0.25"
+                                                                    stroke="white"
+                                                                    stroke-width="1.6"
+                                                                ></path>
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706012)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                                                        fill="white"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg>
+                                                            <!-- 눌린버전 -->
+                                                            <!-- <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706251)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
+                                                                        fill="#F86453"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg> -->
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-title"
+                                                    >
+                                                        <!-- 상단 내용 -->
+                                                        <div
+                                                            class="main-bo-in-bo-pe-box-a-title-top"
+                                                        >
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-top-se"
+                                                            >
+                                                                <div>
+                                                                    판매자는
+                                                                    판매판매
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-mi"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-title"
+                                                                >
+                                                                    완벽적중<한국풍
+                                                                    판타지
+                                                                    타로카드:삼라만상>
+                                                                </div>
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-content"
+                                                                >
+                                                                    화려한
+                                                                    자개박으로
+                                                                    꾸며진
+                                                                    나전칠기
+                                                                    컨셉의 한국
+                                                                    전통
+                                                                    판타지풍
+                                                                    타로카드
+                                                                    78장
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-bo"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-bo-in"
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 펀딩쪽 -->
+                                                        <div
+                                                            class="main-funding"
+                                                        >
+                                                            <div
+                                                                class="main-funding-top"
+                                                            >
+                                                                <div>
+                                                                    <span
+                                                                        class="main-funding-top-per"
+                                                                        >1234%</span
+                                                                    >
+                                                                    <span
+                                                                        class="main-funding-top-pri"
+                                                                        >12개
+                                                                        모임</span
+                                                                    >
+                                                                </div>
+                                                                <em
+                                                                    >28일
+                                                                    남음</em
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="main-funding-bo"
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="main-bo-in-bo-pe">
+                                            <div class="main-bo-in-bo-pe-box">
+                                                <a
+                                                    href="/"
+                                                    class="main-bo-in-bo-pe-box-a"
+                                                >
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-img"
+                                                    >
+                                                        <img
+                                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvODg3ODQ0Y2YtZTIwZS00MWRkLTg5MDMtYjJlMWNmOTFkYmI2LzMyNWIzNDU3LTkyNDUtNDg3MS1hYTUxLTgwYmJlZGZlYTU0Yi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                                            alt=""
+                                                            class="main-bo-in-bo-pe-box-a-img-size"
+                                                        />
+                                                        <!-- 좋아요부분  -->
+                                                        <div
+                                                            class="main-like-btn"
+                                                        >
+                                                            <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                                    fill="black"
+                                                                    fill-opacity="0.25"
+                                                                    stroke="white"
+                                                                    stroke-width="1.6"
+                                                                ></path>
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706012)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                                                        fill="white"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg>
+                                                            <!-- 눌린버전 -->
+                                                            <!-- <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706251)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
+                                                                        fill="#F86453"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg> -->
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-title"
+                                                    >
+                                                        <!-- 상단 내용 -->
+                                                        <div
+                                                            class="main-bo-in-bo-pe-box-a-title-top"
+                                                        >
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-top-se"
+                                                            >
+                                                                <div>
+                                                                    판매자는
+                                                                    판매판매
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-mi"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-title"
+                                                                >
+                                                                    완벽적중<한국풍
+                                                                    판타지
+                                                                    타로카드:삼라만상>
+                                                                </div>
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-content"
+                                                                >
+                                                                    화려한
+                                                                    자개박으로
+                                                                    꾸며진
+                                                                    나전칠기
+                                                                    컨셉의 한국
+                                                                    전통
+                                                                    판타지풍
+                                                                    타로카드
+                                                                    78장
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-bo"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-bo-in"
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 펀딩쪽 -->
+                                                        <div
+                                                            class="main-funding"
+                                                        >
+                                                            <div
+                                                                class="main-funding-top"
+                                                            >
+                                                                <div>
+                                                                    <span
+                                                                        class="main-funding-top-per"
+                                                                        >1234%</span
+                                                                    >
+                                                                    <span
+                                                                        class="main-funding-top-pri"
+                                                                        >12개
+                                                                        모임</span
+                                                                    >
+                                                                </div>
+                                                                <em
+                                                                    >28일
+                                                                    남음</em
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="main-funding-bo"
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="main-bo-in-bo-pe">
+                                            <div class="main-bo-in-bo-pe-box">
+                                                <a
+                                                    href="/"
+                                                    class="main-bo-in-bo-pe-box-a"
+                                                >
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-img"
+                                                    >
+                                                        <img
+                                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvODg3ODQ0Y2YtZTIwZS00MWRkLTg5MDMtYjJlMWNmOTFkYmI2LzMyNWIzNDU3LTkyNDUtNDg3MS1hYTUxLTgwYmJlZGZlYTU0Yi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                                            alt=""
+                                                            class="main-bo-in-bo-pe-box-a-img-size"
+                                                        />
+                                                        <!-- 좋아요부분  -->
+                                                        <div
+                                                            class="main-like-btn"
+                                                        >
+                                                            <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                                    fill="black"
+                                                                    fill-opacity="0.25"
+                                                                    stroke="white"
+                                                                    stroke-width="1.6"
+                                                                ></path>
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706012)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                                                        fill="white"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg>
+                                                            <!-- 눌린버전 -->
+                                                            <!-- <svg
+                                                                width="40"
+                                                                height="40"
+                                                                viewBox="0 0 40 40"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <g
+                                                                    filter="url(#filter0_dd_909_4706251)"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
+                                                                        fill="#F86453"
+                                                                    ></path>
+                                                                </g>
+                                                            </svg> -->
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        class="main-bo-in-bo-pe-box-a-title"
+                                                    >
+                                                        <!-- 상단 내용 -->
+                                                        <div
+                                                            class="main-bo-in-bo-pe-box-a-title-top"
+                                                        >
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-top-se"
+                                                            >
+                                                                <div>
+                                                                    판매자는
+                                                                    판매판매
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-mi"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-title"
+                                                                >
+                                                                    완벽적중<한국풍
+                                                                    판타지
+                                                                    타로카드:삼라만상>
+                                                                </div>
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-mi-content"
+                                                                >
+                                                                    화려한
+                                                                    자개박으로
+                                                                    꾸며진
+                                                                    나전칠기
+                                                                    컨셉의 한국
+                                                                    전통
+                                                                    판타지풍
+                                                                    타로카드
+                                                                    78장
+                                                                </div>
+                                                            </div>
+                                                            <div
+                                                                class="main-bo-in-bo-pe-box-a-title-bo"
+                                                            >
+                                                                <div
+                                                                    class="main-bo-in-bo-pe-box-a-title-bo-in"
+                                                                ></div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- 펀딩쪽 -->
+                                                        <div
+                                                            class="main-funding"
+                                                        >
+                                                            <div
+                                                                class="main-funding-top"
+                                                            >
+                                                                <div>
+                                                                    <span
+                                                                        class="main-funding-top-per"
+                                                                        >1234%</span
+                                                                    >
+                                                                    <span
+                                                                        class="main-funding-top-pri"
+                                                                        >12개
+                                                                        모임</span
+                                                                    >
+                                                                </div>
+                                                                <em
+                                                                    >28일
+                                                                    남음</em
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="main-funding-bo"
+                                                            ></div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <!-- 무한 스크롤 제작~ -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fix/footer :: footer"></div>
+    </body>
+</html>
