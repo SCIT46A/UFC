@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>진행중인 캠페인</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/campaign/detail-campaign.css}"
+            href="../../static/css/campaign/detail-campaign.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <script
+            src="../../static/js/compaign/detail-compaign.js"
+            defer
+        ></script>
+        <script th:src="@{/js/compaign/detail-compaign.js}" defer></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="fix/header :: header"></div>
+        <main>
+            <section
+                id="projects"
+                style="background-color: #ffffff; padding-bottom: 30px"
+            >
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <!-- 상단 설명쪽 -->
+                        <div class="main-top">
+                            <div class="main-top-in">
+                                <div class="main-top-in-box">
+                                    <!-- 상단제목 -->
+                                    <div class="main-top-in-box-title">
+                                        <div class="main-top-in-box-title-in">
+                                            <div
+                                                class="main-top-in-box-title-in-tag"
+                                            >
+                                                <span>청바지</span>
+                                            </div>
+                                            <h1
+                                                class="main-top-in-box-title-in-tag-title"
+                                            >
+                                                범죄수사물&응급재난상황 자료집 |
+                                                양장본
+                                            </h1>
+                                        </div>
+                                    </div>
+                                    <!-- 이미지 -->
+                                    <div class="main-top-in-box-img">
+                                        <figure class="main-top-in-box-img-fi">
+                                            <div
+                                                class="main-top-in-box-img-fi-in"
+                                            >
+                                                <img
+                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWU4ZjRkOTYtY2RlNi00YzUyLWEwYzAtNGVjYTM3M2I4NmY5L2U3ZGI4OTJkLWM2ZmQtNGE5ZS05ZmNhLTExOTgwYzYyNWQ0Yy5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjEyNDAsImhlaWdodCI6MTI0MCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19"
+                                                    alt=""
+                                                    class="main-top-in-box-img-fi-in-img"
+                                                />
+                                            </div>
+                                        </figure>
+                                    </div>
+                                    <!-- 펀딩내용 -->
+                                    <aside class="main-top-in-box-content">
+                                        <div
+                                            class="main-top-in-box-content-fund"
+                                        >
+                                            <div
+                                                class="main-top-in-box-content-fund-top"
+                                            >
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-title"
+                                                >
+                                                    모인 펀딩
+                                                </div>
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-pi"
+                                                >
+                                                    <span
+                                                        class="main-top-in-box-content-fund-top-pi-de"
+                                                        >20 <span>개</span>
+                                                    </span>
+                                                    <span
+                                                        class="main-top-in-box-content-fund-top-pi-pe"
+                                                        >123 %
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <!-- 남은기간 -->
+                                            <div
+                                                class="main-top-in-box-content-fund-mi"
+                                            >
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-title"
+                                                >
+                                                    남은 기간
+                                                </div>
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-pi"
+                                                >
+                                                    <span
+                                                        class="main-top-in-box-content-fund-top-pi-de"
+                                                        >14 <span>일</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="main-top-in-box-content-fund-bo"
+                                            >
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-title"
+                                                >
+                                                    후원자
+                                                </div>
+                                                <div
+                                                    class="main-top-in-box-content-fund-top-pi"
+                                                >
+                                                    <span
+                                                        class="main-top-in-box-content-fund-top-pi-de"
+                                                        >12 <span>명</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- 펀딩상세내용 -->
+                                        <div class="main-funding-de">
+                                            <div class="main-funding-de-box">
+                                                <dl
+                                                    class="main-funding-de-box-in"
+                                                >
+                                                    <dt
+                                                        class="main-funding-de-box-in-dt"
+                                                    >
+                                                        목표치
+                                                    </dt>
+                                                    <dd
+                                                        class="main-funding-de-box-in-dd"
+                                                    >
+                                                        청바지 50개
+                                                    </dd>
+                                                </dl>
+                                                <dl
+                                                    class="main-funding-de-box-in"
+                                                >
+                                                    <dt
+                                                        class="main-funding-de-box-in-dt"
+                                                    >
+                                                        펀딩 기간
+                                                    </dt>
+                                                    <dd
+                                                        class="main-funding-de-box-in-dd"
+                                                    >
+                                                        2025.01.26 ~ 2025.02.06
+                                                    </dd>
+                                                </dl>
+                                                <dl
+                                                    class="main-funding-de-box-in"
+                                                >
+                                                    <dt
+                                                        class="main-funding-de-box-in-dt"
+                                                    >
+                                                        예상 발송 시작일
+                                                    </dt>
+                                                    <dd
+                                                        class="main-funding-de-box-in-dd"
+                                                    >
+                                                        2025.03.27
+                                                    </dd>
+                                                </dl>
+                                            </div>
+                                        </div>
+                                        <div class="main-funding-in">
+                                            <div class="main-funding-in-box">
+                                                <div
+                                                    class="main-funding-in-box-ri"
+                                                >
+                                                    <div
+                                                        class="main-funding-in-box-ri-in"
+                                                    >
+                                                        <div
+                                                            class="main-funding-in-box-ri-in-btn"
+                                                        >
+                                                            <div
+                                                                class="main-funding-in-box-ri-in-btn-in"
+                                                            >
+                                                                <button
+                                                                    class="main-funding-in-box-ri-in-btn-in-btn"
+                                                                >
+                                                                    캠페인
+                                                                    동참하기
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="main-funding-in-box-le"
+                                                >
+                                                    <div
+                                                        class="main-funding-in-box-le-in"
+                                                    >
+                                                        <div
+                                                            class="main-funding-in-box-le-in-in"
+                                                        >
+                                                            <div
+                                                                class="main-funding-in-box-le-in-in-like"
+                                                            >
+                                                                <div
+                                                                    class="main-funding-in-box-le-in-in-like-view"
+                                                                >
+                                                                    <!-- 빈하트 -->
+                                                                    <svg
+                                                                        viewBox="0 0 38 34"
+                                                                        fill="none"
+                                                                    >
+                                                                        <path
+                                                                            fill-rule="evenodd"
+                                                                            clip-rule="evenodd"
+                                                                            d="M18.9996 5.62299L15.6051 2.55614C12.2106 -0.510215 6.56995 0.17753 3.48147 3.57849C-0.397666 7.66674 -0.397863 14.5859 3.70675 18.9121L19 33.8811L34.2923 18.9121C38.3969 14.5859 38.3971 7.66747 34.5176 3.57849C31.4291 0.17753 25.7888 -0.510094 22.3942 2.55614L18.9996 5.62299ZM32.0081 16.6701C34.9446 13.533 34.8523 8.58052 32.1962 5.78099L32.1721 5.75565L32.1487 5.72978C30.0533 3.42248 26.4219 3.23047 24.5394 4.93062L18.9996 9.93557L13.4601 4.93076C11.5777 3.2306 7.94577 3.42244 5.85042 5.72978L5.82689 5.75569L5.8028 5.78108C3.14716 8.57988 3.05453 13.533 5.99094 16.6701L18.9999 29.4033L32.0081 16.6701Z"
+                                                                            fill="#6D6D6D"
+                                                                        ></path>
+                                                                    </svg>
+                                                                    <!-- 이따 채운거 넣읍시다 -->
+                                                                    <span
+                                                                        >123</span
+                                                                    >
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </aside>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 하단 내용쪽 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fix/footer :: footer"></div>
+    </body>
+</html>
