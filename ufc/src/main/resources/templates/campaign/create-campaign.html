@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>캠페인 시작하기</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/campaign/create-campaign.css}"
+            href="../../static/css/campaign/create-campaign.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <script
+            src="../../static/js/compaign/create-compaign.js"
+            defer
+        ></script>
+        <script th:src="@{/js/compaign/create-compaign.js}" defer></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="fix/header :: header"></div>
+        <main>
+            <section id="projects" style="background-color: #ffffff">
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <div class="cam">
+                            <!-- 1차 작성하는곳 -->
+                            <div class="cam-in hidden">
+                                <div class="cam-in-box">
+                                    <div class="cam-in-box-top">
+                                        <div class="cam-in-box-bo">
+                                            <div>
+                                                <h2>
+                                                    멋진 아이디어가 있으시군요!
+                                                    <br />
+                                                    어떤 캠페인을
+                                                    기획중이신가요?
+                                                </h2>
+                                                <p>프로젝트명을 정해주세요!</p>
+                                            </div>
+                                        </div>
+                                        <!-- 내용 -->
+                                        <div class="cam-in-box-item">
+                                            <ul class="cam-in-box-item-ul">
+                                                <li>
+                                                    <button
+                                                        class="isActive ul-btn"
+                                                    >
+                                                        디자인
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="ul-btn">
+                                                        가방
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="ul-btn">
+                                                        악세사리
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="ul-btn">
+                                                        소품
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="ul-btn">
+                                                        예술
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <button class="ul-btn">
+                                                        잡화
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- 아래쪽임 -->
+                                    <div class="cam-in-box-top">
+                                        <!-- 제목 -->
+                                        <div class="cam-in-box-bo">
+                                            <div>
+                                                <h2>
+                                                    프로젝트를 간단하게
+                                                    소개해주세요.
+                                                </h2>
+                                                <p>
+                                                    나중에 수정 가능하니 편하게
+                                                    적어주세요.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <!-- 내용 -->
+                                        <div class="cam-in-box-content">
+                                            <textarea
+                                                name="shortDescription"
+                                                placeholder="캠페인 요약을 입력해주세요."
+                                                class="cam-in-box-content-text"
+                                            ></textarea>
+                                            <div class="cam-in-box-content-btn">
+                                                <button>
+                                                    <span>다음</span>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 2차 작성하는 곳 -->
+                            <div class="cam-ag">
+                                <div class="cam-ag-box">
+                                    <div class="cam-in-box-bo">
+                                        <h2>
+                                            마지막으로, 이런 준비가 필요해요.
+                                        </h2>
+                                        <p>
+                                            프로젝트를 진행하시려면 아래 내용을
+                                            준비해주세요.
+                                        </p>
+                                    </div>
+                                    <div class="cam-ag-box-in">
+                                        <ul class="cam-ag-box-in-ul">
+                                            <li>
+                                                <label
+                                                    for="fi"
+                                                    class="cam-ag-box-in-ul-la"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id="fi"
+                                                        class="cam-ag-box-in-ul-la-input"
+                                                    />
+                                                    <div>
+                                                        대표 창작자는
+                                                        <strong
+                                                            >만 19세 이상의
+                                                            성인</strong
+                                                        >이여야 합니다.
+                                                    </div>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label
+                                                    for="ce"
+                                                    class="cam-ag-box-in-ul-la"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id="ce"
+                                                        class="cam-ag-box-in-ul-la-input"
+                                                    />
+                                                    <div>
+                                                        UP-DA에서 필요 시
+                                                        연락드릴 수 있도록
+                                                        <strong
+                                                            >본인 명의의 휴대폰
+                                                            번호</strong
+                                                        >완
+                                                        <strong
+                                                            >이메일 주소</strong
+                                                        >가 필요합니다.
+                                                    </div>
+                                                </label>
+                                            </li>
+                                            <li>
+                                                <label
+                                                    for="th"
+                                                    class="cam-ag-box-in-ul-la"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        id="th"
+                                                        class="cam-ag-box-in-ul-la-input"
+                                                    />
+                                                    <div>
+                                                        캠페인 성공 후의 정산을
+                                                        위해
+                                                        <strong
+                                                            >사업자
+                                                            등록증</strong
+                                                        >를 준비해주세요.
+                                                    </div>
+                                                </label>
+                                            </li>
+                                        </ul>
+                                        <div class="cam-in-box-btn">
+                                            <button class="cam-back-btn">
+                                                <span>
+                                                    <div
+                                                        class="cam-back-btn-svg"
+                                                    >
+                                                        <svg
+                                                            viewBox="0 0 48 48"
+                                                        >
+                                                            <path
+                                                                fill-rule="evenodd"
+                                                                clip-rule="evenodd"
+                                                                d="M31.8513 45.2994L12 23.9815L31.8513 2.76364C32.7272 1.76279 34.2842 1.76279 35.2574 2.66355C36.2305 3.56431 36.2305 5.16566 35.3556 6.1665L18.5191 23.9815L35.2574 41.8975C35.6466 42.2969 35.9386 42.9975 35.9386 43.598C35.9386 44.9992 34.8691 46 33.5057 46C32.9228 46 32.3379 45.7998 31.8513 45.2994Z"
+                                                            ></path>
+                                                        </svg>
+                                                    </div>
+                                                    뒤로가기
+                                                </span>
+                                            </button>
+                                            <button class="cam-create-btn">
+                                                <span>시작하기</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="fix/footer :: footer"></div>
+    </body>
+</html>

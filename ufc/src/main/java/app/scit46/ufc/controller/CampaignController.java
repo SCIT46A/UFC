@@ -12,4 +12,19 @@ public class CampaignController {
     public String allCampaign() {
         return "/campaign/all-campaign";
     }
+
+    @GetMapping("detail-campaign")
+    public String detailCampaign() {
+        return "/campaign/detail-campaign";
+    }
+
+    @GetMapping("pay-campaign")
+    public String payCampaign() {
+        return "/campaign/pay-campaign";
+    }
+
+    @GetMapping("intro-campaign")
+    public String intro() {
+        return "/campaign/intro-campaign";
+    }
 }

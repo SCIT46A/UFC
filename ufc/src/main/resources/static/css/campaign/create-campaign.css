@@ -1,0 +1,325 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    min-width: 320px;
+    background: #f6f5f5;
+    font-size: 14px;
+    line-height: 1.7em;
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    line-height: 1.7em;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: inherit;
+}
+
+main{
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+}
+
+.main{
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+    background: #fff;
+    color: #3d3d3d;
+    border-bottom: 1px solid rgb(228, 228, 228);
+    position: relative;
+    width: 100%;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    word-break: break-all;
+    box-sizing: inherit;
+}
+
+.cam{
+    flex: 1 1 0%;
+    display: flex;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    background: rgb(255, 255, 255);
+    height: 100%;
+    overflow-y: auto;
+}
+
+.cam-in{
+    flex: 1 1 0%;
+    display: flex;
+    gap: 64px;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 36px 32px;
+}
+
+.cam-in-box{
+    display: flex;
+    flex-direction: column;
+    gap: 53px;
+    width: 450px;
+}
+
+.cam-in-box-top{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.cam-in-box-bo{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 0px auto;
+}
+
+.cam-in-box-bo h2{
+    margin-top: 0em;
+    margin: calc(2rem - 0.14285em) 0em 1rem;
+    font-weight: 700;
+    color: rgb(13, 13, 13);
+    font-size: 20px !important;
+    line-height: 28px !important;
+}
+
+.cam-in-box-bo p{
+    margin-bottom: 0em;
+    font-weight: 400;
+    color: rgb(109, 109, 109);
+    font-size: 14px !important;
+    line-height: 24px !important;
+    margin: 0em 0em 1em;
+}
+
+.cam-in-box-content{
+    word-break: break-all;
+}
+
+.cam-in-box-content-text{
+    width: 100%;
+    height: 104px;
+    resize: none;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid rgb(229, 229, 229);
+    overflow: auto;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+}
+
+.cam-in-box-content-btn{
+    text-align: right;
+    padding-top: 16px;
+}
+
+.cam-in-box-content-btn button{
+    background: rgb(229, 229, 229);
+    color: white;
+    cursor: default;
+    width: 88px;
+    font-weight: bold;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 40px;
+    white-space: nowrap;
+    border-radius: 1px;
+    margin: 0px;
+    border: 0px;
+    outline: none;
+    box-sizing: border-box;
+    padding: 0px 16px;
+    pointer-events: none;
+    -webkit-appearance: button;
+}
+
+.cam-in-box-item{
+
+}
+
+.cam-in-box-item-ul{
+    display: inline-flex;
+    padding: 0px;
+    margin: 0px;
+    flex-wrap: wrap;
+}
+
+.cam-in-box-item-ul li{
+    list-style: none;
+    margin: 0px 8px 10px 0px;
+}
+
+.ul-btn{
+    outline: none;
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: 52px;
+    height: 36px;
+    background: rgb(255, 255, 255);
+    padding: 0px 18px;
+    -webkit-appearance: button;
+    cursor: pointer;
+    text-transform: none;
+}
+
+.isActive{
+    background: rgb(248, 100, 83);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(248, 100, 83);
+}
+
+.cam-ag{
+    flex: 1 1 0%;
+    display: flex;
+    gap: 64px;
+    flex-direction: column;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 36px 32px;
+}
+
+.cam-ag-box{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 450px;
+}
+
+.cam-ag-box-title{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    margin: 0px auto;
+}
+
+.cam-ag-box-in{
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    word-break: break-all;
+}
+
+.cam-ag-box-in-ul{
+    padding: 36px 0px;
+    border-top: 1px solid rgb(239, 239, 239);
+    border-bottom: 1px solid rgb(239, 239, 239);
+    margin: 0px 0px 16px;
+    color: rgb(61, 61, 61);
+}
+
+.cam-ag-box-in-ul li{
+    list-style: none;
+    margin-bottom: 14px;
+}
+
+.cam-ag-box-in-ul-la{
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    padding: 0px 0px 3px 29px;
+    color: rgb(61, 61, 61);
+    display: inline-flex;
+    height: 100%;
+}
+
+.cam-ag-box-in-ul-la-input{
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 2px;
+    z-index: 2;
+    left: 0px;
+    top: 0.14em;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgb(158, 158, 158);
+    background: white;
+    padding: 0;
+    line-height: normal;
+}
+
+.cam-in-box-btn{
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+.cam-back-btn{
+    padding: 0px;
+    cursor: pointer;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 40px;
+    white-space: nowrap;
+    border-radius: 1px;
+    margin: 0px;
+    border: 0px;
+    outline: none;
+    font-weight: normal;
+    box-sizing: border-box;
+    background-color: transparent;
+    color: rgb(61, 61, 61);
+    -webkit-appearance: button;
+}
+
+.cam-create-btn{
+    width: 88px;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    height: 40px;
+    white-space: nowrap;
+    border-radius: 1px;
+    margin: 0px;
+    border: 0px;
+    outline: none;
+    font-weight: normal;
+    box-sizing: border-box;
+    padding: 0px 16px;
+    background-color: rgb(248, 100, 83);
+    color: white;
+}
+
+.cam-back-btn-svg{
+    margin-right: 5px;
+    margin-bottom: 1px;
+    display: inline-flex;
+}
+
+.cam-back-btn-svg svg{
+    position: relative;
+    top: 3px;
+    overflow: hidden;
+    width: 1em;
+    height: 1em;
+}
+
+.cam-create-btn span{
+    font-weight: bold;
+}
+
+
+
+
+

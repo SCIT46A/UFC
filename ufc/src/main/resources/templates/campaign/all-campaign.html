@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,9 +10,9 @@
         />
         <script src="https://unpkg.com/lucide@latest"></script>
         <link
-                rel="icon"
-                th:href="@{/images/fix/favicon.png}"
-                type="image/png"
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
         />
         <link
             rel="stylesheet"
@@ -20,14 +20,14 @@
             href="../../static/css/campaign/all-campaign.css"
         />
         <link
-                rel="stylesheet"
-                th:href="@{/css/fix/header.css}"
-                href="../../static/css/fix/header.css"
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
         />
         <link
-                rel="stylesheet"
-                th:href="@{/css/fix/footer.css}"
-                href="../../static/css/fix/footer.css"
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
         />
         <script src="../../static/js/compaign/all-compaign.js" defer></script>
         <script th:src="@{/js/compaign/all-compaign.js}" defer></script>
@@ -36,7 +36,10 @@
     <body>
         <div th:replace="fix/header :: header"></div>
         <main>
-            <section id="projects" style="background-color: #ffffff; padding-bottom: 30px">
+            <section
+                id="projects"
+                style="background-color: #ffffff; padding-bottom: 30px"
+            >
                 <!-- 주목할 만한 프로젝트 -->
                 <div class="container mx-auto px-4 target-project">
                     <div class="main">
