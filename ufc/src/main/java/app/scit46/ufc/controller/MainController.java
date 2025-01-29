@@ -8,6 +8,11 @@ public class MainController {
 
   @GetMapping("/")
   public String index() {
-    return "index";
+    return "/index";
+  }
+
+  @GetMapping("/info")
+  public String info() {
+    return "/upda/info";
   }
 }

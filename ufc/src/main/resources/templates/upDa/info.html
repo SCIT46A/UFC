@@ -3,9 +3,21 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" th:href="@{/css/index.css}" href="../../static/css/index.css" />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
         <title>up다 설명페이지</title>
     </head>
     <body>
+        <div th:replace="~{fix/header :: header}"></div>
         <!-- 밑에는 기본임 -->
 
         <section id="how-it-works" class="py-20 bg-green-100">
@@ -123,5 +135,6 @@
                 </div>
             </div>
         </section>
+        <div th:replace="~{fix/footer :: footer}"></div>
     </body>
 </html>

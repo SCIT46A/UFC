@@ -26,11 +26,13 @@
                         <!-- 로고 , 검색창-->
                         <div class="header-box-top-logo">
                             <!-- 고로 -->
-                            <img
-                                th:src="@{/images/fix/logo.png}"
-                                alt=""
-                                class="header-box-top-logo-img"
-                            />
+                            <a th:href="@{/}">
+                                <img
+                                    th:src="@{/images/fix/logo.png}"
+                                    alt=""
+                                    class="header-box-top-logo-img"
+                                />
+                            </a>
                             <!-- 검색창 -->
                             <button class="header-search">
                                 <div class="header-search-in">
@@ -49,7 +51,7 @@
                                         </svg>
                                     </span>
                                     <span class="header-search-in-pr"
-                                        >참여하고 싶은 펀딩을
+                                        >참여하고 싶은 캠페인을
                                         입력해주세요!</span
                                     >
                                 </div>
@@ -136,7 +138,7 @@
                                 <!-- 진짜 창 -->
                                 <div class="modal-login-in">
                                     <!-- 각각의 내용 넣기 -->
-                                    <div class="modal-login-pe">프로필</div>
+                                    <div class="modal-login-pe"><a th:href="@{/user}">프로필</a></div>
                                     <div class="modal-login-bar"></div>
                                     <div class="modal-login-pe">
                                         내가 후원한 캠페인
@@ -148,7 +150,9 @@
                                         내가 좋아요 누른 캠페인
                                     </div>
                                     <div class="modal-login-bar"></div>
-                                    <div class="modal-login-pe">알림</div>
+                                    <div class="modal-login-pe"><a href="../campaign/intro-campaign.html" th:href="@{/campaign/intro}">캠페인 만들기</a></div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe"><a href="../login/login.html" th:href="@{/user/login}">로그인</a></div>
                                     <div class="modal-login-bar"></div>
                                     <div class="modal-login-pe">로그아웃</div>
                                 </div>

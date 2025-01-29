@@ -18,5 +18,15 @@ public class UserController {
     public String index() {
         return "user/profile";
     }
+
+    @GetMapping("/login")
+    public String login() {
+        return "/login/login";
+    }
+
+    @GetMapping("/join")
+    public String join() {
+        return "/login/joindetail";
+    }
 }
 

@@ -8,37 +8,37 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/terms")
 public class TermsController {
 
-    @GetMapping("/banking-terms")
+    @GetMapping("/banking")
     public String banking() {
         return "/terms/e-banking-terms";
     }
 
-    @GetMapping("/email-terms")
+    @GetMapping("/email")
     public String email() {
         return "/terms/email-terms";
     }
 
-    @GetMapping("/privacyprovision-terms")
+    @GetMapping("/privacyprovision")
     public String privacyprovision() {
         return "/terms/privacyprovision-terms";
     }
 
-    @GetMapping("/refund-terms")
+    @GetMapping("/refund")
     public String refund() {
         return "/terms/refund-terms";
     }
 
-    @GetMapping("/service-terms")
+    @GetMapping("/service")
     public String service() {
         return "/terms/service-terms";
     }
 
-    @GetMapping("/login-terms")
+    @GetMapping("/login")
     public String login() {
         return "/terms/login-terms";
     }
 
-    @GetMapping("/marketing-terms")
+    @GetMapping("/marketing")
     public String marketing() {
         return "/terms/marketing-terms";
     }
