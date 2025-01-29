@@ -21,12 +21,12 @@ public class UserController {
 
     @GetMapping("/login")
     public String login() {
-        return "/login/login";
+        return "login/login";
     }
 
     @GetMapping("/join")
     public String join() {
-        return "/login/joindetail";
+        return "login/joindetail";
     }
 }
 

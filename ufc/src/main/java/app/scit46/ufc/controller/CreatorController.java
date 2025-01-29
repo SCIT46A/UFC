@@ -10,16 +10,16 @@ public class CreatorController {
 
     @GetMapping("/create")
     public String create() {
-        return "/creator/creator-create";
+        return "creator/creator-create";
     }
 
     @GetMapping("/profile")
     public String profile() {
-        return "/creator/creator-profile";
+        return "creator/creator-profile";
     }
 
     @GetMapping("/campaign")
     public String campaign() {
-        return "/creator/creator-campaign";
+        return "creator/creator-campaign";
     }
 }
