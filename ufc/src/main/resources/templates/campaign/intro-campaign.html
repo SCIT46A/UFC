@@ -34,7 +34,7 @@
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
-        <div th:replace="fix/header :: header"></div>
+        <div th:replace="~{fix/header :: header}"></div>
         <main>
             <section id="projects" style="background-color: #ffffff">
                 <!-- 주목할 만한 프로젝트 -->
@@ -53,7 +53,7 @@
                                         필요없는게 없는 UP-DA에서
                                     </p>
                                     <div class="main-intro-start-btn">
-                                        <button>지금 시작하기</button>
+                                        <button><a href="../campaign/create-campaign.html" th:href="@{/campaign/create}">지금 시작하기</a></button>
                                         <!-- 필요하면 만들기 -->
                                         <a href="/">창작자 가이드</a>
                                     </div>
@@ -68,197 +68,7 @@
                                             >
                                                 <!-- 각각이 들어감 -->
                                                 <div
-                                                    class="main-intro-sl-box-in-box-pe"
-                                                >
-                                                    <a
-                                                        href="/"
-                                                        class="main-intro-sl-box-in-box-pe-a"
-                                                    >
-                                                        <div
-                                                            class="main-intro-sl-box-in-box-pe-a-img"
-                                                        >
-                                                            <img
-                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-tag"
-                                                        >
-                                                            청바지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-title"
-                                                        >
-                                                            아기 오구의 모험기
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-content"
-                                                        >
-                                                            인기 이모티콘을 넘어
-                                                            게임까지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-per"
-                                                        >
-                                                            1919% 달성!
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                                <!-- 2번째 -->
-                                                <div
-                                                    class="main-intro-sl-box-in-box-pe"
-                                                >
-                                                    <a
-                                                        href="/"
-                                                        class="main-intro-sl-box-in-box-pe-a"
-                                                    >
-                                                        <div
-                                                            class="main-intro-sl-box-in-box-pe-a-img"
-                                                        >
-                                                            <img
-                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-tag"
-                                                        >
-                                                            청바지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-title"
-                                                        >
-                                                            아기 오구의 모험기
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-content"
-                                                        >
-                                                            인기 이모티콘을 넘어
-                                                            게임까지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-per"
-                                                        >
-                                                            1919% 달성!
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    class="main-intro-sl-box-in-box-pe"
-                                                >
-                                                    <a
-                                                        href="/"
-                                                        class="main-intro-sl-box-in-box-pe-a"
-                                                    >
-                                                        <div
-                                                            class="main-intro-sl-box-in-box-pe-a-img"
-                                                        >
-                                                            <img
-                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-tag"
-                                                        >
-                                                            청바지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-title"
-                                                        >
-                                                            아기 오구의 모험기
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-content"
-                                                        >
-                                                            인기 이모티콘을 넘어
-                                                            게임까지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-per"
-                                                        >
-                                                            1919% 달성!
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    class="main-intro-sl-box-in-box-pe"
-                                                >
-                                                    <a
-                                                        href="/"
-                                                        class="main-intro-sl-box-in-box-pe-a"
-                                                    >
-                                                        <div
-                                                            class="main-intro-sl-box-in-box-pe-a-img"
-                                                        >
-                                                            <img
-                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-tag"
-                                                        >
-                                                            청바지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-title"
-                                                        >
-                                                            아기 오구의 모험기
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-content"
-                                                        >
-                                                            인기 이모티콘을 넘어
-                                                            게임까지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-per"
-                                                        >
-                                                            1919% 달성!
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                                <div
-                                                    class="main-intro-sl-box-in-box-pe"
-                                                >
-                                                    <a
-                                                        href="/"
-                                                        class="main-intro-sl-box-in-box-pe-a"
-                                                    >
-                                                        <div
-                                                            class="main-intro-sl-box-in-box-pe-a-img"
-                                                        >
-                                                            <img
-                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
-                                                                alt=""
-                                                            />
-                                                        </div>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-tag"
-                                                        >
-                                                            청바지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-title"
-                                                        >
-                                                            아기 오구의 모험기
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-content"
-                                                        >
-                                                            인기 이모티콘을 넘어
-                                                            게임까지
-                                                        </p>
-                                                        <p
-                                                            class="main-intro-sl-box-in-box-pe-a-per"
-                                                        >
-                                                            1919% 달성!
-                                                        </p>
-                                                    </a>
-                                                </div>
-                                                <div
+                                                    th:each="num : ${#numbers.sequence(1,5)}"
                                                     class="main-intro-sl-box-in-box-pe"
                                                 >
                                                     <a
@@ -590,6 +400,6 @@
                 </div>
             </section>
         </main>
-        <div th:replace="fix/footer :: footer"></div>
+        <div th:replace="~{fix/footer :: footer}"></div>
     </body>
 </html>

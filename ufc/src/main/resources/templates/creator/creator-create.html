@@ -20,8 +20,7 @@
         />
     </head>
     <body>
-        <!-- 헤더 -->
-        <header id="header"></header>
+        <div th:replace="~{fix/header :: header}"></div>
         <!-- 모임개설 페이지 시작 -->
         <main class="club-create">
             <div id="app">
@@ -393,8 +392,7 @@
                 </div>
             </div>
         </main>
-        <!-- 푸터 들어갈 자리 -->
-        <footer></footer>
+        <div th:replace="~{fix/footer :: footer}"></div>
     </body>
     <script src="../../static/js/creator/creator-create.js"></script>
     <script th:src="@{/js/creator/creator-create.js}" defer></script>
