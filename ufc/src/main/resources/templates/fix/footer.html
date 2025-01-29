@@ -25,11 +25,11 @@
                         <div class="footer-main-box">
                             <div class="company-service-box">
                                 <!-- 각 이동할 페이지 링크 필요 -->
-                                <a href="">
-                                    <span>회사 소개</span>
+                                <a th:href="@{/info}">
+                                    <span>UP-DA 소개</span>
                                 </a>
                                 <a href="">
-                                    <span>캠페인 소개</span>
+                                    <span>사회적 가치</span>
                                 </a>
                                 <a href="">
                                     <span>공지사항</span>
@@ -138,27 +138,35 @@
                             </div>
                             <div class="terms-box">
                                 <!-- 서비스 이용 약관 링크 필요 -->
-                                <a href="">
+                                <a th:href="@{/terms/service}">
                                     <span>서비스 이용 약관</span>
                                 </a>
                                 <!-- 개인정보처리방침 링크 필요 -->
                                 <a
-                                    href=""
+                                    th:href="@{/terms/privacyprovision}"
                                     target="_blank"
                                     style="font-weight: 700"
                                 >
                                     <span>개인정보처리방침</span>
                                 </a>
                                 <!-- 전자금융거래 이용약관 링크 필요 -->
-                                <a href="">
+                                <a th:href="@{/terms/banking}">
                                     <span>전자금융거래 이용약관</span>
                                 </a>
                                 <!-- 취소 및 환불 약관 링크 필요 -->
-                                <a href="">
+                                <a th:href="@{/terms/refund}">
                                     <span>취소 및 환불 약관</span>
                                 </a>
+                                <!-- 로그인 약관 -->
+                                <a th:href="@{/terms/login}">
+                                    <span>사이트 이용(로그인) 동의 약관</span>
+                                </a>
+                                <!-- 마케팅 약관 -->
+                                <a th:href="@{/terms/marketing}">
+                                    <span>마케팅 정보 동의 약관</span>
+                                </a>
                                 <!-- 이메일 주소 무단수집 거부 링크 필요 -->
-                                <a href="">
+                                <a th:href="@{/terms/email}">
                                     <span>이메일 주소 무단수집 거부</span>
                                 </a>
                             </div>
