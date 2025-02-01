@@ -53,7 +53,7 @@ main{
 
 .main-in-box-pro{
     padding: 40px 0px 32px;
-    max-width: 1160px;
+    max-width: 1280px;
     margin: 0px auto;
     width: 100%;
 }
@@ -240,3 +240,70 @@ main{
     color: rgb(13, 13, 13);
     opacity: 1;
 }
+
+.main-in-content{
+    max-width: 1280px;
+    margin: 0px auto;
+    width: 100%;
+}
+
+.main-in-content-in{
+    padding: 40px 0px;
+    min-height: 147px;
+    color: rgb(61, 61, 61);
+    font: 400 14px / 24px Pretendard, sans-serif;
+}
+
+.main-in-content-in-text{
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.main-in-content-in-text span{
+    color: rgb(61, 61, 61);
+    font: 400 14px / 24px Pretendard, sans-serif;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
