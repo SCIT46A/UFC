@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>틴플 :: 모임 개설하기</title>
+        <title>틴플 :: 창장가 개설하기</title>
         <link
             rel="icon"
             th:href="@{/images/fix/favicon.png}"
@@ -21,12 +21,12 @@
     </head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
-        <!-- 모임개설 페이지 시작 -->
+        <!-- 창장가개설 페이지 시작 -->
         <main class="club-create">
             <div id="app">
                 <div class="create-container">
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 1단계: 모임 이름 작성 -->
+                    <!-- 1단계: 창장가 이름 작성 -->
                     <div class="name-form-wrap">
                         <div class="name-form-title-wrap">
                             <span class="name-form-title"
@@ -48,7 +48,7 @@
                                     팀의 이름을 입력해주세요.
                                 </div>
                                 <div class="name-form-text-content">
-                                    UP-DA에서 모임의 이름이 됩니다.
+                                    UP-DA에서 창장가의 이름이 됩니다.
                                     <br />
                                     제작하신 제품의 성향에 맞는 이름을
                                     정해주세요.
@@ -72,7 +72,7 @@
                                     팀에 대한 소개글을 작성해주세요.
                                 </div>
                                 <div class="desc-form-text-content">
-                                    모임에 대해 한 마디로 소개해주세요.
+                                    창장가에 대해 한 마디로 소개해주세요.
                                 </div>
                                 <div class="desc-form-input-wrap">
                                     <div>
@@ -80,7 +80,7 @@
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
-                                                placeholder="우리 모임을 한 마디로 표현한다면?"
+                                                placeholder="우리 창장가를 한 마디로 표현한다면?"
                                                 maxlength="100"
                                             />
                                         </div>
@@ -95,7 +95,7 @@
                             <div class="name-form-img-wrap">
                                 <img
                                     src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_01.png"
-                                    alt="모임생성 이미지"
+                                    alt="창장가생성 이미지"
                                     class="name-form-img"
                                 />
                                 <div class="name-form-chat-img-wrap">
@@ -109,7 +109,7 @@
                         </div>
                     </div>
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 개설 2단계: 모임에 대한 소개글 입력 -->
+                    <!-- 개설 2단계: 창장가에 대한 소개글 입력 -->
                     <div class="desc-form-wrap">
                         <div class="desc-form-title-wrap">
                             <span class="desc-form-title"
@@ -127,7 +127,7 @@
                         </div>
                         <div class="desc-form-content-wrap">
                             <div class="desc-form-text-wrap">
-                                <!-- 대괄호 안에는 이전에 입력한 모임명을 넣습니다. -->
+                                <!-- 대괄호 안에는 이전에 입력한 창장가명을 넣습니다. -->
                                 <div class="desc-form-text-title">
                                     [UP-DA]에 창작자님에 대해 적어주세요.
                                 </div>
@@ -207,7 +207,7 @@
                             <div class="desc-form-img-wrap">
                                 <img
                                     src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_03.png"
-                                    alt="모임생성 이미지"
+                                    alt="창장가생성 이미지"
                                     class="desc-form-img"
                                 />
                                 <div class="desc-form-chat-img-wrap">
@@ -221,7 +221,7 @@
                         </div>
                     </div>
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 개설 3단계: 모임에 대한 소개글 입력 -->
+                    <!-- 개설 3단계: 창장가에 대한 소개글 입력 -->
                     <div class="img-form-wrap">
                         <div class="img-form-title-wrap">
                             <span class="img-form-title"
@@ -240,10 +240,10 @@
                         <div class="img-form-content-wrap">
                             <div class="img-form-text-wrap">
                                 <div class="img-form-text-title">
-                                    [틴플레이] 모임을 고유한 이미지로 꾸며주세요
+                                    [UP-DA] 창작가를 고유한 이미지로 꾸며주세요
                                 </div>
                                 <div class="img-form-text-content">
-                                    모임의 프로필, 모임 커버가 직접 등록한
+                                    창장가의 프로필, 창장가 커버가 직접 등록한
                                     이미지로 채워집니다.
                                 </div>
                                 <div class="img-form-profile-size-error">
@@ -327,7 +327,7 @@
                                         <div class="club-detail-title-wrap">
                                             <div class="club-detail-name-wrap">
                                                 <div class="club-detail-name">
-                                                    틴플레이
+                                                    UP-DA
                                                 </div>
                                             </div>
                                             <div class="club-detail-stats-wrap">
@@ -377,7 +377,7 @@
                                             type="button"
                                             class="img-form-button"
                                         >
-                                            모임 개설 완료
+                                            창장가 개설 완료
                                         </button>
                                     </div>
                                     <div class="img-form-skip-wrap">

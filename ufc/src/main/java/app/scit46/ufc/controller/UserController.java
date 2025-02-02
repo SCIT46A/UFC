@@ -44,6 +44,10 @@ public class UserController {
         return "user/mypage-sponsor-detail";
     }
 
+    @GetMapping("/edit")
+    public String edit() {
+        return "user/mypage-profile-edit";
+    }
 
     @GetMapping("/login")
     public String login() {
