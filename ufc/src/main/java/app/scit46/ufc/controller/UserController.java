@@ -16,7 +16,37 @@ public class UserController {
 
     @GetMapping({"/",""})
     public String index() {
-        return "user/profile";
+        return "user/mypage-profile";
+    }
+
+    @GetMapping("/alarm")
+    public String alarm() {
+        return "user/mypage-alarm";
+    }
+
+    @GetMapping("/like")
+    public String like() {
+        return "user/mypage-like";
+    }
+
+    @GetMapping("/reply")
+    public String reply() {
+        return "user/mypage-reply";
+    }
+
+    @GetMapping("/sponsor")
+    public String sponsor() {
+        return "user/mypage-sponsor";
+    }
+
+    @GetMapping("/sponsor/detail")
+    public String alarmDetail() {
+        return "user/mypage-sponsor-detail";
+    }
+
+    @GetMapping("/edit")
+    public String edit() {
+        return "user/mypage-profile-edit";
     }
 
     @GetMapping("/login")
