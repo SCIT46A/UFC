@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            th:href="@{/css/index.css}"
+            href="../static/css/index.css"
+        />
+        <link rel="stylesheet" href="../../static/css/fix/footer.css" />
+        <script th:src="@{/js/index.js}"></script>
+    </head>
+    <body>
+        <div class="flex-col min-h-screen bg-green-50">
+            <footer class="bg-green-800 text-white">
+                <!-- footer 내용 -->
+                <div class="footer-wrap" style="    position: relative; z-index: 1;">
+                    <div class="footer-container">
+                        <div class="footer-main-box">
+                            <div class="company-service-box">
+                                <!-- 각 이동할 페이지 링크 필요 -->
+                                <a th:href="@{/info}">
+                                    <span>UP-DA 소개</span>
+                                </a>
+                                <a href="">
+                                    <span>사회적 가치</span>
+                                </a>
+                                <a href="">
+                                    <span>공지사항</span>
+                                </a>
+                                <a href="">
+                                    <span>자주 묻는 질문</span>
+                                </a>
+                            </div>
+                            <div class="inquiry-service-box">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <span>서비스 이용 문의</span>
+                                            </td>
+                                            <td class="inquiry-service-chetbot">
+                                                <!-- 챗봇 링크 필요 -->
+                                                <a
+                                                    class="chetbot-link"
+                                                    href=""
+                                                    target="_blank"
+                                                >
+                                                    <span>채팅상담</span>
+                                                </a>
+                                                <span class="available-time">
+                                                    <span
+                                                        >(평일
+                                                        10:00~17:00)</span
+                                                    >
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <span>사업 제휴 문의</span>
+                                            </td>
+                                            <td class="inquiry-service-email">
+                                                <!-- 문의 받을 메일주소 작성 필요 -->
+                                                <a
+                                                    class="send-email-link"
+                                                    href="mailto:kjkj0724@gmail.com"
+                                                    >upda@gmail.com</a
+                                                >
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- 광고센터 및 서비스 소개자료 자리인데 지울 것인지 다른걸로 채울것인지 회의 필요 -->
+                            <!-- <div class="advertising-service-box">
+                <div>
+                    <a class="advertising-center" href="" target="_blank">
+                        <span>광고센터</span>
+                    </a>
+                </div>
+                <div class="advertising-service-info-box">
+                    <a class="advertising-service-info">
+                        <span>서비스 소개자료</span>
+                    </a>
+                </div>
+            </div>
+            <div class="black-space"></div> -->
+                            <!-- 회사 소개 블록 -->
+                            <div class="company-info-box">
+                                <div>
+                                    <!-- 메인 페이지 주소 필요 -->
+                                    <a class="company-name" href="">
+                                        <span>UP-DA</span>
+                                    </a>
+                                </div>
+                                <div class="company-infos">
+                                    <div>
+                                        <span>(주)UP-DA</span>
+                                        <span>|</span>
+                                        <span>사업자등록번호 000-00-00000</span>
+                                    </div>
+                                    <div>
+                                        <span
+                                            >통신판매업 신고번호
+                                            제2024-서울강남-0000호</span
+                                        >
+                                    </div>
+                                    <div>
+                                        <span>대표 김도희</span>
+                                        <span>|</span>
+                                        <span>개인정보책임자 조관익</span>
+                                    </div>
+                                    <div>
+                                        <span
+                                            >서울특별시 강남구 테헤란로 26길 12
+                                            제일비전타워 13층</span
+                                        >
+                                    </div>
+                                </div>
+                                <div class="warning-message">
+                                    <span>
+                                        텀블벅은 플랫폼 제공자로서 프로젝트의
+                                        당사자가 아니며, 직접적인 통신판매를
+                                        진행하지 않습니다. 프로젝트의 완수 및
+                                        선물제공의 책임은 해당 프로젝트의
+                                        창작자에게 있으며, 프로젝트와 관련하여
+                                        후원자와 발생하는 법적 분쟁에 대한
+                                        책임은 해당 창작자가 부담합니다.
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="terms-box">
+                                <!-- 서비스 이용 약관 링크 필요 -->
+                                <a th:href="@{/terms/service}">
+                                    <span>서비스 이용 약관</span>
+                                </a>
+                                <!-- 개인정보처리방침 링크 필요 -->
+                                <a
+                                    th:href="@{/terms/privacyprovision}"
+                                    target="_blank"
+                                    style="font-weight: 700"
+                                >
+                                    <span>개인정보처리방침</span>
+                                </a>
+                                <!-- 전자금융거래 이용약관 링크 필요 -->
+                                <a th:href="@{/terms/banking}">
+                                    <span>전자금융거래 이용약관</span>
+                                </a>
+                                <!-- 취소 및 환불 약관 링크 필요 -->
+                                <a th:href="@{/terms/refund}">
+                                    <span>취소 및 환불 약관</span>
+                                </a>
+                                <!-- 로그인 약관 -->
+                                <a th:href="@{/terms/login}">
+                                    <span>사이트 이용(로그인) 동의 약관</span>
+                                </a>
+                                <!-- 마케팅 약관 -->
+                                <a th:href="@{/terms/marketing}">
+                                    <span>마케팅 정보 동의 약관</span>
+                                </a>
+                                <!-- 이메일 주소 무단수집 거부 링크 필요 -->
+                                <a th:href="@{/terms/email}">
+                                    <span>이메일 주소 무단수집 거부</span>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="english-bulabula-box">
+                            <div class="english-bulabula">
+                                Copyright ⓒ UP-DA Co.,Ltd. All Rights Reserved.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

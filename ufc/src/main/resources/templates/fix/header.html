@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+        />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div class="flex-col min-h-screen bg-green-50">
+            <header class="bg-green-600 text-white header-main">
+                <div
+                    class="header-box container mx-auto px-4 py-6 flex justify-between items-center"
+                >
+                    <!-- 로고, 검색창, 정보창 -->
+                    <div class="header-box-top">
+                        <!-- 로고 , 검색창-->
+                        <div class="header-box-top-logo">
+                            <!-- 고로 -->
+                            <a th:href="@{/}">
+                                <img
+                                    th:src="@{/images/fix/logo.png}"
+                                    alt=""
+                                    class="header-box-top-logo-img"
+                                />
+                            </a>
+                            <!-- 검색창 -->
+                            <button class="header-search">
+                                <div class="header-search-in">
+                                    <span class="header-search-in-img">
+                                        <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="w-5 h-5"
+                                            viewBox="0 0 20 20"
+                                            fill="currentColor"
+                                        >
+                                            <path
+                                                fill-rule="evenodd"
+                                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                clip-rule="evenodd"
+                                            ></path>
+                                        </svg>
+                                    </span>
+                                    <span class="header-search-in-pr"
+                                        >참여하고 싶은 캠페인을
+                                        입력해주세요!</span
+                                    >
+                                </div>
+                            </button>
+                        </div>
+                        <!-- 로그인 시 -->
+                        <div class="header-box-top-pe">
+                            <div class="header-box-top-pe-sign">
+                                <div class="header-box-top-pe-sign-in">
+                                    <svg
+                                        class="style__NotificationIcon-sc-1dihp73-29 eODBzq"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M10.7501 3.5C10.6121 3.5 10.5001 3.61193 10.5001 3.75V4.16109C7.35495 4.84777 5.00013 7.64889 5.00013 11V14.6875L4.53246 18.7212C4.51524 18.8697 4.63131 19 4.78079 19H19.2195C19.369 19 19.485 18.8697 19.4678 18.7212L19.0001 14.6875V11C19.0001 7.64888 16.6453 4.84775 13.5001 4.16109V3.75C13.5001 3.61193 13.3882 3.5 13.2501 3.5H10.7501ZM6.29636 17.4L6.60013 14.7799V11C6.60013 8.01766 9.01779 5.6 12.0001 5.6C14.9825 5.6 17.4001 8.01766 17.4001 11V14.7799L17.7039 17.4H6.29636Z"
+                                            fill="#191919"
+                                        ></path>
+                                        <path
+                                            d="M10.0001 20H14.5001C14.5001 20.8284 13.8285 21.5 13.0001 21.5H11.5001C10.6717 21.5 10.0001 20.8284 10.0001 20Z"
+                                            fill="#191919"
+                                        ></path>
+                                    </svg>
+                                    <!-- 알람 있을때 -->
+                                    <div class="main-box-sign-on"></div>
+                                </div>
+                            </div>
+                            <!-- 개인정보 창 -->
+                            <div class="header-box-top-pe-my">
+                                <div class="header-box-top-pe-my-in">
+                                    <!-- 프로필 -->
+                                    <div class="header-box-top-pe-my-in-pro">
+                                        <span class="profile-th">
+                                            <svg
+                                                class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
+                                                width="48"
+                                                height="48"
+                                                viewBox="0 0 48 48"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            ></svg>
+                                        </span>
+                                    </div>
+                                    <!-- 이름 -->
+                                    <div class="header-box-top-pe-my-in-name">
+                                        이름이름
+                                    </div>
+                                </div>
+                                <!-- 로그인창모달 -->
+                            </div>
+                            <!-- 비로그인시 -->
+                            <!-- <div class="header-box-top-pe-my">
+                                <div class="header-box-top-pe-my-in">
+                                    <div class="header-box-top-pe-my-in-pro">
+                                        <span class="profile-th-no">
+                                            <svg
+                                                width="48"
+                                                height="48"
+                                                viewBox="0 0 48 48"
+                                                fill="none"
+                                            >
+                                                <path
+                                                    d="M41.8081 40.2C40.6938 32.1539 34.8597 26 27.852 26H20.1498C13.1405 26 7.30625 32.1539 6.19186 40.2C6.06567 41.1111 6 42.0465 6 43H42C42 42.0465 41.9343 41.1111 41.8081 40.2Z"
+                                                    fill="#0D0D0D"
+                                                ></path>
+                                                <path
+                                                    d="M24 23C28.9639 23 33 18.9626 33 14C33 9.0374 28.9639 5 24 5C19.0379 5 15 9.0374 15 14C15 18.9626 19.0379 23 24 23Z"
+                                                    fill="#0D0D0D"
+                                                ></path>
+                                            </svg>
+                                        </span>
+                                    </div>
+                                    <div class="header-box-top-pe-my-in-name">
+                                        로그인 / 회원가입
+                                    </div>
+                                </div>
+                            </div> -->
+                            <div class="modal-login">
+                                <!-- 진짜 창 -->
+                                <div class="modal-login-in">
+                                    <!-- 각각의 내용 넣기 -->
+                                    <div class="modal-login-pe"><a th:href="@{/user}">프로필</a></div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe">
+                                        내가 후원한 캠페인
+                                    </div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe">내 후기</div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe">
+                                        내가 좋아요 누른 캠페인
+                                    </div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe"><a href="../campaign/intro-campaign.html" th:href="@{/campaign/intro}">캠페인 만들기</a></div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe"><a href="../login/login.html" th:href="@{/user/login}">로그인</a></div>
+                                    <div class="modal-login-bar"></div>
+                                    <div class="modal-login-pe">로그아웃</div>
+                                </div>
+                                <!-- 닫기위한 전체 창 -->
+                                <div
+                                    class="modal-login-close"
+                                    id="modal-controller"
+                                ></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 내비게이션 바 -->
+                    <div class="header-nav">
+                        <div class="header-nav-in">
+                            <div class="header-nav-in-me">
+                                <!-- 여기에 이제 넣고싶은거 카테고리 빼고 추가 -->
+                                <div class="header-nav-in-me-cate">
+                                    <div class="header-nav-in-me-cate-logo">
+                                        <svg
+                                            class="style__MenuIcon-sc-1dihp73-26 haZYn"
+                                            width="48"
+                                            height="48"
+                                            viewBox="0 0 48 48"
+                                            fill="none"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <rect
+                                                x="9"
+                                                y="11"
+                                                width="30"
+                                                height="4"
+                                                fill="#1C1C1C"
+                                            ></rect>
+                                            <rect
+                                                x="9"
+                                                y="22"
+                                                width="30"
+                                                height="4"
+                                                fill="#1C1C1C"
+                                            ></rect>
+                                            <rect
+                                                x="9"
+                                                y="33"
+                                                width="30"
+                                                height="4"
+                                                fill="#1C1C1C"
+                                            ></rect>
+                                        </svg>
+                                    </div>
+                                    카테고리
+                                </div>
+                                <!-- 사실상 여기부터 반복 -->
+                                <div class="header-nav-home">홈</div>
+                                <div class="header-nav-home">펀딩</div>
+                                <div class="header-nav-home">구매</div>
+                            </div>
+                        </div>
+                        <!-- 카테고리 모달 -->
+                        <div class="modal-cate hidden">
+                            <div class="modal-cate-box">
+                                <div class="modal-cate-box-in">
+                                    <!-- 세로로 쭉 나와요~ -->
+                                    <div class="modal-cate-box-in-con">
+                                        <!-- 각각의 하나씩 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                        <!-- 2번째 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 가로로 2번째 -->
+                                    <div class="modal-cate-box-in-con">
+                                        <!-- 각각의 하나씩 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                        <!-- 2번째 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-cate-box-in-con">
+                                        <!-- 각각의 하나씩 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                        <!-- 2번째 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-cate-box-in-con">
+                                        <!-- 각각의 하나씩 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                        <!-- 2번째 -->
+                                        <div class="modal-cate-box-in-con-pe">
+                                            <!-- img -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-img"
+                                            >
+                                                <svg
+                                                    width="38"
+                                                    height="38"
+                                                    viewBox="0 0 38 38"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 9.6H9.6V16.4H16.4V9.6ZM8 8V18H18V8H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M28.4 9.6H21.6V16.4H28.4V9.6ZM20 8V18H30V8H20Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M16.4 21.6H9.6V28.4H16.4V21.6ZM8 20V30H18V20H8Z"
+                                                        fill="#0D0D0D"
+                                                    ></path>
+                                                    <path
+                                                        d="M20 20H30V30H20V20Z"
+                                                        fill="#FF5757"
+                                                    ></path>
+                                                </svg>
+                                            </div>
+                                            <!-- 이름 -->
+                                            <div
+                                                class="modal-cate-box-in-con-pe-content"
+                                            >
+                                                전체
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="cate-close"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden modal-search blur" id="search-modal">
+                    <div class="modal-search-box">
+                        <div class="modal-search-box-in">
+                            <!-- 상단 검색부분 -->
+                            <div class="modal-search-box-in-top">
+                                <button class="modal-search-box-in-top-bu">
+                                    <svg
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            class="h-5 w-5"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                    >
+                                        <path
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                                d="M10 19l-7-7m0 0l7-7m-7 7h18"
+                                        ></path>
+                                    </svg>
+                                </button>
+                                <div class="modal-search-box-in-top-input">
+                                    <div class="modal-search-box-in-top-input-img">
+                                        <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                class="w-5 h-5"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
+                                        >
+                                            <path
+                                                    fill-rule="evenodd"
+                                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                    clip-rule="evenodd"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                    <input
+                                            type="text"
+                                            placeholder="참여하고 싶은 펀딩을 입력해주세요!"
+                                            class="modal-search-box-in-top-input-in"
+                                    />
+                                </div>
+                            </div>
+                            <!-- 최근 검색어 -->
+                            <div class="modal-search-box-in-top-mi">
+                                <div class="modal-search-box-in-top-mi-top">
+                                    <div class="modal-search-box-in-top-mi-top-title">
+                                        최근 검색어
+                                    </div>
+                                    <div
+                                            class="modal-search-box-in-top-mi-top-title-mini"
+                                    >
+                                        <button
+                                                class="modal-search-box-in-top-mi-top-title-mini-close"
+                                        >
+                                            검색 기록 삭제
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- 최근 검색어 기록부분 -->
+                                <div class="modal-search-box-in-top-mi-content">
+                                    <!-- 각각의 기록 -->
+                                    <div class="modal-search-box-in-top-mi-content-pe">
+                                        <a
+                                                href="/"
+                                                class="modal-search-box-in-top-mi-content-pe-a"
+                                        >가</a
+                                        >
+                                        <button
+                                                class="modal-search-box-in-top-mi-content-pe-bu"
+                                        >
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                            >
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                        clip-rule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="modal-search-box-in-top-mi-content-pe">
+                                        <a
+                                                href="/"
+                                                class="modal-search-box-in-top-mi-content-pe-a"
+                                        >가</a
+                                        >
+                                        <button
+                                                class="modal-search-box-in-top-mi-content-pe-bu"
+                                        >
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                            >
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                        clip-rule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="modal-search-box-in-top-mi-content-pe">
+                                        <a
+                                                href="/"
+                                                class="modal-search-box-in-top-mi-content-pe-a"
+                                        >가</a
+                                        >
+                                        <button
+                                                class="modal-search-box-in-top-mi-content-pe-bu"
+                                        >
+                                            <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    class="h-4 w-4"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                            >
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                        clip-rule="evenodd"
+                                                ></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+        </div>
+        <!-- 검색창 모달 -->
+
+
+        <!-- 카테고리 -->
+    </body>
+<!--    <script src="../../static/js/fix/header.js"></script>-->
+</html>
