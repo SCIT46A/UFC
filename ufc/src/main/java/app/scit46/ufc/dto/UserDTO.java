@@ -1,18 +1,9 @@
 package app.scit46.ufc.dto;
 
-import java.time.LocalDateTime;
-
-import app.scit46.ufc.entity.PrivatePhotoEntity;
 import app.scit46.ufc.entity.UserEntity;
-import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
+import app.scit46.ufc.entity.PrivatePhotoEntity;
+import lombok.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -21,6 +12,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 @ToString
 @Builder
 public class UserDTO {
+
     private Long userId;
     private String oauthId;
     private String loginType;
@@ -36,23 +28,24 @@ public class UserDTO {
     private int isMarketed;
     private int userStatus;
     private int statusReason;
-    
-    public static UserDTO toDTO(UserEntity userEntity) {
+
+    public static UserDTO toDTO(UserEntity entity) {
         return UserDTO.builder()
-                .userId(userEntity.getUserId())
-                .oauthId(userEntity.getOauthId())
-                .loginType(userEntity.getLoginType())
-                .userName(userEntity.getUserName())
-                .email(userEntity.getEmail())
-                .phoneNumber(userEntity.getPhoneNumber())
-                .userAddress(userEntity.getUserAddress())
-                .roles(userEntity.getRoles())
-                .createdAt(userEntity.getCreatedAt())
-                .updatedAt(userEntity.getUpdatedAt())
-                .photoId(userEntity.getPhotoId())
-                .intro(userEntity.getIntro())
-                .isMarketed(userEntity.getIsMarketed())
-                .userStatus(userEntity.getUserStatus())
-            .build();
+                .userId(entity.getUserId())
+                .oauthId(entity.getOauthId())
+                .loginType(entity.getLoginType())
+                .userName(entity.getUserName())
+                .email(entity.getEmail())
+                .phoneNumber(entity.getPhoneNumber())
+                .userAddress(entity.getUserAddress())
+                .roles(entity.getRoles())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .photoId(entity.getPhotoId())
+                .intro(entity.getIntro())
+                .isMarketed(entity.getIsMarketed())
+                .userStatus(entity.getUserStatus())
+                .statusReason(entity.getStatusReason())
+                .build();
     }
 }

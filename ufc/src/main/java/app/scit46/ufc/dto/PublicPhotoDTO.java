@@ -1,6 +1,6 @@
 package app.scit46.ufc.dto;
 
-import app.scit46.ufc.entity.PrivatePhotoEntity;
+import app.scit46.ufc.entity.PublicPhotoEntity;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -10,15 +10,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Builder
-public class PrivatePhotoDTO {
+public class PublicPhotoDTO {
 
     private Long photoId;
     private String originName;
     private String convertName;
     private LocalDateTime uploadedDate;
 
-    public static PrivatePhotoDTO toDTO(PrivatePhotoEntity entity) {
-        return PrivatePhotoDTO.builder()
+    public static PublicPhotoDTO toDTO(PublicPhotoEntity entity) {
+        return PublicPhotoDTO.builder()
                 .photoId(entity.getPhotoId())
                 .originName(entity.getOriginName())
                 .convertName(entity.getConvertName())
