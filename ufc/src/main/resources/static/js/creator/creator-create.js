@@ -245,3 +245,18 @@ dragDropBox.addEventListener("drop", (e) => {
     sizeErrorMsg.style.display = "none";
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
+
+// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기
+document.addEventListener("DOMContentLoaded", function() {
+    let btn1 = document.querySelector(".img-form-button");
+            btn1.addEventListener("click", function() {
+            window.location.href="/ufc/src/main/resources/templates/creator/creator-campaign.html";
+        });
+});
+// 창작가 프로필 설정하지 않고 건너뛰기 할 시 창작가 페이지로 이동하기
+document.addEventListener("DOMContentLoaded", function() {
+    let skip = document.querySelector(".img-form-skip");
+        skip.addEventListener("click", function() {
+            window.location.href="/ufc/src/main/resources/templates/creator/creator-campaign.html";
+        });
+});
