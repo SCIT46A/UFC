@@ -65,7 +65,18 @@ public class OauthLogin implements AuthenticationSuccessHandler {
         if (existingUser != null) {
             // 이미 존재하는 회원 -> 세션에 정보 저장 후 루트 페이지로 이동
             request.getSession().setAttribute("loginUserId", existingUser.getUserId());
-            response.sendRedirect("/");
+
+            //관리자 여부 확인
+            boolean isAdmin = "ADMIN".equals(existingUser.getRoles());
+
+
+            // 관리자면 /admin, 일반 유저면 /
+            if (isAdmin) {
+                response.sendRedirect("/admin");  // 관리자일 경우 `/admin`으로 이동
+            } else {
+                response.sendRedirect("/");  // 일반 유저는 `/`으로 이동
+            }
+
         } else {
             // 신규 회원 -> 세션에 제공자 정보 저장 후 가입 페이지로 이동
             request.getSession().setAttribute("find", provider);
