@@ -637,3 +637,19 @@ a {
     width: 100%;
     display: block;
 }
+
+.bun-test{
+    background-color: green;
+    color: #ffffff;
+    border: solid 1px black;
+    width: 64px;
+    border-radius: 4px;
+    height: 35px;
+    margin-top: 17px;
+    margin-left: 15px;
+    padding-left: 10px;
+}
+
+.error{
+    color: red;
+}

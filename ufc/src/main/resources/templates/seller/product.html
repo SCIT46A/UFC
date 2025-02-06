@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 로고 만들어지면 href수정 -->
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/seller/product.css}"
+            href="../../static/css/seller/product.css"
+        />
+
+        <title>UP-DA :: 판매자 페이지</title>
+    </head>
+    <script src="../../static/js/seller/product.js"></script>
+    <script th:src="@{/css/seller/product.js}"></script>
+    <body>
+        <!-- 헤더 먼저 해야합니다. 나중에 색상은 바꿔야합니다! -->
+        <header class="header-all">
+            <div class="header-logo-text">
+                <a href="" class="header-logo">
+                    <img
+                        class="header-logo-icon"
+                        src="../../static/images/fix/logo.png"
+                        alt="로고"
+                    />
+                </a>
+                <div class="header-slash">|</div>
+                <div class="header-admin-text">
+                    <span>seller Center</span>
+                </div>
+            </div>
+        </header>
+        <!-- 헤더  끝 좌측 안내부분 시작 -->
+        <main class="main-all">
+            <!-- 공통으로 들어가는 좌측부분 -->
+            <nav class="main-nav-wrap">
+                <!-- 위에 로그인 정보 및 로그아웃 칸 -->
+                <div class="main-admin-info">
+                    <div class="main-admin-wrap">
+                        <div class="main-admin-container">
+                            <button class="main-admin-button">
+                                <img
+                                    class="main-admin-image"
+                                    src="/staticfiles/images/teenplay_logo/logo1.png"
+                                    alt="admin사진"
+                                />
+                                <!-- 여기 중간에 뭐 이상한거 있긴한데 의미 없어보임 일단은 보류 -->
+                                <div class="main-admin-image-warp"></div>
+                            </button>
+                        </div>
+                        <h2 class="main-admin-name">UP-DA</h2>
+                        <a href="" class="main-admin-logout">
+                            <button class="main-admin-logout-button">
+                                <div class="main-admin-logout-warp">
+                                    <div>로그아웃</div>
+                                </div>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- 메뉴 선택할수 있는 칸 -->
+                <ul class="main-admin-select">
+                    <!-- 유저관리 -->
+                    <li class="main-user">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/admin-user-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-texta">유저 관리</span>
+                        </a>
+                    </li>
+                    <!-- 쪽지 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/message-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">쪽지 관리</span>
+                        </a>
+                    </li>
+                    <!-- 틴플레이관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/play-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">틴 플레이 관리</span>
+                        </a>
+                    </li>
+                    <!-- 게시글 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/post-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">게시글 관리</span>
+                        </a>
+                    </li>
+                    <!-- 전체모임 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/meeting-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">전체 모임관리</span>
+                        </a>
+                    </li>
+                    <!-- 축제관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/festival-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">축제 관리</span>
+                        </a>
+                    </li>
+                    <!-- 공지사항 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/loudspeaker-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">공지사항 관리</span>
+                        </a>
+                    </li>
+                    <!-- 댓글관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/comment-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">댓글 관리</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- 사실상 여기만 수정하면 모든게 끝입니다! -->
+            <div class="main-user-info-warp">
+                <div class="main-user-info-container">
+                    <div class="main-user-info-box">
+                        <div class="container">
+                            <div class="header">
+                                <h1>상품 조회/수정</h1>
+                                <button class="version-btn">
+                                    1.0 상품 초기화기
+                                </button>
+                            </div>
+
+                            <div class="search-form">
+                                <div class="form-group">
+                                    <label>번호</label>
+                                    <input
+                                        type="text"
+                                        placeholder="상품번호/마스터상품번호/판매자관리코드/SKU번호/그룹 필요로 키워드 검색 가능하며, 복수 상품 검색 시 쉼표(,) 또는 엔터(Enter)로 입력해주세요"
+                                        class="full-width"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>검색어</label>
+                                    <input
+                                        type="text"
+                                        placeholder="상품명, 브랜드명, 제조사명을 입력해주세요."
+                                        class="full-width"
+                                    />
+                                </div>
+
+                                <div class="form-group">
+                                    <label>판매상태</label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> 전체
+                                        </label>
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> 판매가능
+                                        </label>
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> 판매중지
+                                        </label>
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> 판매종료
+                                        </label>
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> SKU종료
+                                        </label>
+                                        <label class="checkbox">
+                                            <input type="checkbox" /> 등록대기
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>기간</label>
+                                    <div class="date-filter">
+                                        <select class="select-box">
+                                            <option>상품등록일</option>
+                                        </select>
+
+                                        <div class="date-buttons">
+                                            <button type="button">오늘</button>
+                                            <button type="button">1주일</button>
+                                            <button type="button">1개월</button>
+                                            <button type="button">3개월</button>
+                                            <button type="button">6개월</button>
+                                            <button type="button">1년</button>
+                                            <button
+                                                type="button"
+                                                class="active"
+                                            >
+                                                전체
+                                            </button>
+                                        </div>
+
+                                        <div class="date-inputs">
+                                            <input
+                                                type="date"
+                                                class="date-input"
+                                            />
+                                            <span>~</span>
+                                            <input
+                                                type="date"
+                                                class="date-input"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="button-group">
+                                    <button type="button" class="btn-secondary">
+                                        초기화
+                                    </button>
+                                    <button type="button" class="btn-primary">
+                                        검색
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="results-section">
+                                <div class="results-header">
+                                    <div class="results-count">
+                                        상품목록 0건
+                                    </div>
+                                    <div class="results-actions">
+                                        <select class="select-box">
+                                            <option>상품등록일순</option>
+                                        </select>
+                                        <select class="select-box">
+                                            <option>한 페이지에 20개씩</option>
+                                        </select>
+                                        <button class="btn-outline">
+                                            복수노출 설정
+                                        </button>
+                                        <button class="btn-outline excel-btn">
+                                            <span class="excel-icon">X</span>
+                                            엑셀 다운로드
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="filter-buttons">
+                                    <div class="button-scroll">
+                                        <button class="filter-btn">
+                                            판매 상태 변경
+                                        </button>
+                                        <button class="filter-btn">
+                                            판매 기간 변경
+                                        </button>
+                                        <button class="filter-btn">
+                                            판매가 설정
+                                        </button>
+                                        <button class="filter-btn">
+                                            할인 설정
+                                        </button>
+                                        <button class="filter-btn">
+                                            재고 변경
+                                        </button>
+                                        <button class="filter-btn">
+                                            배송정보 변경
+                                        </button>
+                                        <button class="filter-btn">
+                                            부가서비스 설정
+                                        </button>
+                                        <button class="filter-btn">
+                                            기타 정보 수정
+                                        </button>
+                                        <button class="filter-btn">
+                                            그룹설정
+                                        </button>
+                                        <button class="filter-btn">삭제</button>
+                                        <button class="btn-primary">
+                                            수정 완료
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" />
+                                                </th>
+                                                <th>수정/복사</th>
+                                                <th>마스터상품번호</th>
+                                                <th>상품번호</th>
+                                                <th>이미지</th>
+                                                <th>상품명</th>
+                                                <th>프로모션 문구</th>
+                                                <th>판매자 관리코드</th>
+                                                <th>사이트/아이디</th>
+                                                <th>판매상태</th>
+                                                <th>판매가</th>
+                                                <th>판매종료일(전체)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="empty-state">
+                                                <td colspan="12">
+                                                    <div class="empty-message">
+                                                        <span class="info-icon"
+                                                            >!</span
+                                                        >
+                                                        데이터가 존재하지
+                                                        않습니다.
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <script src="script.js"></script>
+                    </div>
+                    <!-- 밑에 페이지 선택 -->
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

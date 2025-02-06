@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 로고 만들어지면 href수정 -->
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/seller/calculate.css}"
+            href="../../static/css/seller/calculate.css"
+        />
+
+        <title>UP-DA :: 판매자 페이지</title>
+    </head>
+    <script src="../../static/js/seller/calculate.js"></script>
+    <script th:src="@{/css/seller/calculate.js}"></script>
+    <body>
+        <!-- 헤더 먼저 해야합니다. 나중에 색상은 바꿔야합니다! -->
+        <header class="header-all">
+            <div class="header-logo-text">
+                <a href="" class="header-logo">
+                    <img
+                        class="header-logo-icon"
+                        src="../../static/images/fix/logo.png"
+                        alt="로고"
+                    />
+                </a>
+                <div class="header-slash">|</div>
+                <div class="header-admin-text">
+                    <span>seller Center</span>
+                </div>
+            </div>
+        </header>
+        <!-- 헤더  끝 좌측 안내부분 시작 -->
+        <main class="main-all">
+            <!-- 공통으로 들어가는 좌측부분 -->
+            <nav class="main-nav-wrap">
+                <!-- 위에 로그인 정보 및 로그아웃 칸 -->
+                <div class="main-admin-info">
+                    <div class="main-admin-wrap">
+                        <div class="main-admin-container">
+                            <button class="main-admin-button">
+                                <img
+                                    class="main-admin-image"
+                                    src="/staticfiles/images/teenplay_logo/logo1.png"
+                                    alt="admin사진"
+                                />
+                                <!-- 여기 중간에 뭐 이상한거 있긴한데 의미 없어보임 일단은 보류 -->
+                                <div class="main-admin-image-warp"></div>
+                            </button>
+                        </div>
+                        <h2 class="main-admin-name">UP-DA</h2>
+                        <a href="" class="main-admin-logout">
+                            <button class="main-admin-logout-button">
+                                <div class="main-admin-logout-warp">
+                                    <div>로그아웃</div>
+                                </div>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- 메뉴 선택할수 있는 칸 -->
+                <ul class="main-admin-select">
+                    <!-- 유저관리 -->
+                    <li class="main-user">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/admin-user-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-texta">유저 관리</span>
+                        </a>
+                    </li>
+                    <!-- 쪽지 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/message-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">쪽지 관리</span>
+                        </a>
+                    </li>
+                    <!-- 틴플레이관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/play-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">틴 플레이 관리</span>
+                        </a>
+                    </li>
+                    <!-- 게시글 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/post-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">게시글 관리</span>
+                        </a>
+                    </li>
+                    <!-- 전체모임 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/meeting-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">전체 모임관리</span>
+                        </a>
+                    </li>
+                    <!-- 축제관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/festival-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">축제 관리</span>
+                        </a>
+                    </li>
+                    <!-- 공지사항 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/loudspeaker-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">공지사항 관리</span>
+                        </a>
+                    </li>
+                    <!-- 댓글관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/comment-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">댓글 관리</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- 사실상 여기만 수정하면 모든게 끝입니다! -->
+            <div class="main-user-info-warp">
+                <div class="main-user-info-container">
+                    <div class="main-user-info-box">
+                        <div class="container">
+                            <div class="tabs">
+                                <button class="tab active">승급관리내역</button>
+                                <button class="tab">주문건별 내역</button>
+                            </div>
+
+                            <div class="notice">
+                                <p>
+                                    • 목션 승급건별 내역은 게시물 승급된 내역만
+                                    조회할 수 있습니다.
+                                </p>
+                                <p>
+                                    • 판매예치금으로 정산된 내역은 주문건별 내역
+                                    또는
+                                    <a href="#" class="link">판매예치금관리</a
+                                    >에서 조회할 수 있습니다.
+                                </p>
+                            </div>
+
+                            <div class="date-filter">
+                                <div class="date-range">
+                                    <input
+                                        type="date"
+                                        value="2025-01-04"
+                                        class="date-input"
+                                    />
+                                    <span>~</span>
+                                    <input
+                                        type="date"
+                                        value="2025-02-04"
+                                        class="date-input"
+                                    />
+                                </div>
+                                <div class="period-buttons">
+                                    <button>오늘</button>
+                                    <button>1주일</button>
+                                    <button>1개월</button>
+                                    <button class="active">1분기</button>
+                                    <button>1년</button>
+                                    <button>11월</button>
+                                    <button>조회</button>
+                                </div>
+                            </div>
+
+                            <div class="table-section">
+                                <div class="table-header">
+                                    <h2>승급내역</h2>
+                                    <button class="excel-btn">
+                                        엑셀다운로드
+                                    </button>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>승급번호</th>
+                                                <th>승급일</th>
+                                                <th>승급상태</th>
+                                                <th>승급액</th>
+                                                <th>입금은행</th>
+                                                <th>입금계좌번호</th>
+                                                <th>예금주명</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td
+                                                    colspan="7"
+                                                    class="empty-state"
+                                                >
+                                                    -
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+                            <div class="table-section">
+                                <div class="table-header">
+                                    <h2>판매대금 상세내역</h2>
+                                    <button class="excel-btn">
+                                        엑셀다운로드
+                                    </button>
+                                </div>
+                                <div class="table-container">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>정산구분</th>
+                                                <th>대금종류</th>
+                                                <th>주문번호</th>
+                                                <th>상품번호</th>
+                                                <th>상품명</th>
+                                                <th>구매자ID</th>
+                                                <th>구매자결제금액</th>
+                                                <th>수수료및(-)예치금</th>
+                                                <th>출전액</th>
+                                                <th>승급액</th>
+                                                <th>정산방식</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td
+                                                    colspan="11"
+                                                    class="empty-state"
+                                                >
+                                                    -
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <script src="script.js"></script>
+                    </div>
+                    <!-- 밑에 페이지 선택 -->
+                </div>
+            </div>
+        </main>
+    </body>
+</html>

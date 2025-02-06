@@ -15,32 +15,51 @@ public class UserService {
 
 // ------------------ CRUD ------------------
     // 유저생성(회원가입)
-    public UserDTO createUser(UserDTO userDTO) {
-        UserEntity userEntity = UserEntity.toEntity(userDTO);
-        userRepository.save(userEntity);
-        return UserDTO.toDTO(userEntity);
-    }
+//    public UserDTO createUser(UserDTO userDTO) {
+//        UserEntity userEntity = UserEntity.toEntity(userDTO);
+//        userRepository.save(userEntity);
+//        return UserDTO.toDTO(userEntity);
+//    }
 
-    // 유저조회(회원정보조회)
-    public UserDTO readUserById(String userId) throws DBNotFoundException {
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
-        return UserDTO.toDTO(userEntity);
-    }
-
-    // 유저수정(회원정보수정)
-    public UserDTO updateUser(UserDTO userDTO) throws DBNotFoundException {
-        userRepository.findById(userDTO.getUserId()).orElseThrow(() -> new DBNotFoundException("User not found for Update"));
-        UserEntity userEntity = UserEntity.toEntity(userDTO);
-        userRepository.save(userEntity);
-        return UserDTO.toDTO(userEntity);
-    }
-
-    // 유저삭제(회원탈퇴)
-    public void deleteUser(String userId) throws DBNotFoundException {
-        userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Delete"));
-        userRepository.deleteById(userId);
-    }
+//    // 유저조회(회원정보조회)
+//    public UserDTO readUserById(String userId) throws DBNotFoundException {
+//        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
+//        return UserDTO.toDTO(userEntity);
+//    }
+//
+//    // 유저수정(회원정보수정)
+//    public UserDTO updateUser(UserDTO userDTO) throws DBNotFoundException {
+//        userRepository.findById(userDTO.getUserId()).orElseThrow(() -> new DBNotFoundException("User not found for Update"));
+//        UserEntity userEntity = UserEntity.toEntity(userDTO);
+//        userRepository.save(userEntity);
+//        return UserDTO.toDTO(userEntity);
+//    }
+//
+//    // 유저삭제(회원탈퇴)
+//    public void deleteUser(String userId) throws DBNotFoundException {
+//        userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Delete"));
+//        userRepository.deleteById(userId);
+//    }
 // ------------------ CRUD ------------------ //End
+
+    public UserEntity findUserByIdentity(String identity) {
+        return userRepository.findByOauthId(identity).orElse(null);
+    }
+
+    public UserEntity saveUser(UserDTO userDTO) {
+        UserEntity user = new UserEntity();
+        user.setOauthId(userDTO.getOauthId());
+        user.setUserName(userDTO.getUserName());
+        user.setEmail(userDTO.getEmail());
+        user.setLoginType(userDTO.getLoginType()); // 제공자 정보 설정
+        user.setRoles("USER");
+        user.setUserStatus(1);
+        user.setIsMarketed(userDTO.getIsMarketed());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setIntro(userDTO.getIntro());
+        user.setUserAddress(userDTO.getUserAddress());
+        return userRepository.save(user);
+    }
 
 
 

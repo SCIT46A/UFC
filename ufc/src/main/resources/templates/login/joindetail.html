@@ -6,6 +6,9 @@
         <link rel="stylesheet" th:href="@{/css/login/joindetail.css}" />
         <link rel="stylesheet" href="../../static/css/login/joindetail.css" />
     </head>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="../../static/js/login/joindetail.js"></script>
+    <script th:src="@{/js/login/joindetail.js}"></script>
     <body>
         <div class="screen-all-wrap">
             <div class="screen-full-wrap">
@@ -27,7 +30,7 @@
                                 <div class="line"></div>
                             </div>
                             <form
-                                th:action="@{/joindetail}"
+                                th:action="@{/user/joindetail}"
                                 method="post"
                                 class="input-all-wrap"
                             >
@@ -63,6 +66,88 @@
                                             />
                                         </div>
                                     </div>
+                                    <div class="name-container">
+                                        <div class="name-content">
+                                            <div class="name-text-divison">
+                                                <label class="name-text"
+                                                    >연락처</label
+                                                >
+                                            </div>
+                                            <!-- 바꿔줍시다~ -->
+                                            <input
+                                                type="text"
+                                                name="phone"
+                                                class="input name-input phone"
+                                                oninput="autoHyphen2(this)"
+                                                maxlength="13"
+                                                placeholder="연락처를 입력해주세요"
+                                            />
+                                        </div>
+                                        <div
+                                            class="error hidden"
+                                            id="phone-error"
+                                        >
+                                            연락처를 입력해주세요
+                                        </div>
+                                    </div>
+                                    <div class="name-container">
+                                        <div class="name-content">
+                                            <div class="name-text-divison">
+                                                <label class="name-text"
+                                                    >주소</label
+                                                >
+                                            </div>
+                                            <div style="display: flex">
+                                                <input
+                                                    type="text"
+                                                    name="nickname"
+                                                    class="input name-input address"
+                                                    style="width: 400px"
+                                                    readonly
+                                                />
+                                                <button
+                                                    type="button"
+                                                    class="bun-test"
+                                                    onclick="execPostCode()"
+                                                >
+                                                    검색
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="name-container">
+                                        <div class="name-content">
+                                            <div class="name-text-divison">
+                                                <label class="name-text"
+                                                    >상세주소</label
+                                                >
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="nickname"
+                                                class="input name-input address-detail"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="error hidden" id="add-error">
+                                        상세주소를 입력해주세요
+                                    </div>
+                                    <div class="name-container">
+                                        <div class="name-content">
+                                            <div class="name-text-divison">
+                                                <label class="name-text"
+                                                    >소개글[선택]</label
+                                                >
+                                            </div>
+                                            <input
+                                                type="text"
+                                                name="intro"
+                                                class="input name-input"
+                                            />
+                                        </div>
+                                    </div>
+                                    <!-- 주소 하나로 합치는곳 -->
+                                    <input type="hidden" class="total-add" name="address" />
 
                                     <div class="agreement-container">
                                         <p>
@@ -160,7 +245,7 @@
                                                     >
                                                         <a
                                                             class="agreement-add-link"
-                                                            th:href="@{/terms/information-web}"
+                                                            th:href="@{/terms/privacyprovision-web}"
                                                         >
                                                             <span>보기</span>
                                                         </a>
@@ -168,18 +253,24 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- [필수]마케팅 정보 수신동의 -->
+                                        <!-- [선택]마케팅 정보 수신동의 -->
                                         <div class="agreement-content">
                                             <div
                                                 class="agreement-divison-content"
                                             >
                                                 <div class="agreement-divison">
                                                     <input
-                                                        class="agreement-button"
+                                                        type="hidden"
+                                                        name="check"
+                                                        value="0"
+                                                    />
+                                                    <input
+                                                        class="agreement-button add-more"
                                                         id="choice-agreement-send"
                                                         tabindex="4"
+                                                        name="check"
                                                         type="checkbox"
-                                                        value="true"
+                                                        value="1"
                                                         data-gtm-form-interact-field-id="3"
                                                     />
                                                     <label
@@ -187,7 +278,7 @@
                                                         for="choice-agreement-send"
                                                     >
                                                         <span
-                                                            >[필수] 마케팅 정보
+                                                            >[선택] 마케팅 정보
                                                             수신동의</span
                                                         >
                                                     </label>
@@ -197,43 +288,6 @@
                                                         <a
                                                             class="agreement-add-link"
                                                             th:href="@{/terms/marketing-terms-web}"
-                                                        >
-                                                            <span>보기</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- [필수]개인정보 수집·이용 동의서 -->
-                                        <div class="agreement-content">
-                                            <div
-                                                class="agreement-divison-content"
-                                            >
-                                                <div class="agreement-divison">
-                                                    <input
-                                                        class="agreement-button"
-                                                        id="choice-agreement-user"
-                                                        tabindex="4"
-                                                        type="checkbox"
-                                                        value="true"
-                                                        data-gtm-form-interact-field-id="4"
-                                                    />
-                                                    <label
-                                                        class="agreement-text"
-                                                        for="choice-agreement-user"
-                                                    >
-                                                        <span
-                                                            >[필수] 개인정보
-                                                            수집·이용
-                                                            동의서</span
-                                                        >
-                                                    </label>
-                                                    <div
-                                                        class="agreement-add-text"
-                                                    >
-                                                        <a
-                                                            class="agreement-add-link"
-                                                            th:href="@{/terms/privacyprovision-web}"
                                                         >
                                                             <span>보기</span>
                                                         </a>
@@ -257,27 +311,4 @@
             </div>
         </div>
     </body>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const checkboxes = document.querySelectorAll(".agreement-button"); // 모든 체크박스 선택
-            const submitButton = document.querySelector(
-                "button[type='submit']"
-            );
-
-            function toggleSubmitButton() {
-                // 모든 체크박스가 체크되었는지 확인
-                const allChecked = Array.from(checkboxes).every(
-                    (checkbox) => checkbox.checked
-                );
-                submitButton.disabled = !allChecked;
-            }
-
-            // 체크박스 상태 변경 시 버튼 활성화 여부 확인
-            checkboxes.forEach((checkbox) => {
-                checkbox.addEventListener("change", toggleSubmitButton);
-            });
-        });
-    </script>
-
-    <script th:src="@{/js/login/joindetail.js}"></script>
 </html>
