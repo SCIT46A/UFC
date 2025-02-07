@@ -140,7 +140,7 @@ body {
 
 .py-6 {
     padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+
 }
 
 .py-8 {
@@ -309,6 +309,7 @@ body {
     justify-content: center;
     z-index: 1000;
     box-shadow: rgba(0, 0, 0, 0.08) 0px 1px 6px;
+    background-color: #ffffff;
 }
 
 .header-box{
@@ -341,7 +342,7 @@ body {
 
 .header-box-top-logo{
     display: flex;
-    width: 800px;
+    width: 890px;
     min-height: 35px;
     -webkit-box-align: center;
     align-items: center;
@@ -404,7 +405,16 @@ body {
     -webkit-box-pack: center;
     justify-content: center;
     z-index: 1000;
-    background-color: #16a34a
+}
+
+.header-box-top-pe-my-add{
+    position: relative;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    z-index: 1000;
 }
 
 .header-box-top-pe-my-in{
@@ -461,8 +471,16 @@ body {
 
 .header-box-top-pe-my-in-name{
     margin-left: 10px;
-    display: inline-flex
-;
+    display: inline-flex;
+    color: rgb(25, 25, 25);
+    font-size: 12px;
+    line-height: 28px;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.header-box-top-pe-my-in-name-no{
+    display: inline-flex;
     color: rgb(25, 25, 25);
     font-size: 12px;
     line-height: 28px;
@@ -591,6 +609,7 @@ body {
     line-height: 28px;
     letter-spacing: 0.02em;
     color: rgba(0, 0, 0, 0.3);
+    border: solid 1px black;
 }
 
 .header-search-in{
@@ -709,7 +728,7 @@ body {
 .modal-search-box-in-top-input{
     --tw-space-x-reverse: 0;
     margin-right: calc(1rem* var(--tw-space-x-reverse));
-    margin-left: calc(1rem*(1 - var(--tw-space-x-reverse)));
+    margin-left: 257px;
     flex: 1 1 0%;
     position: relative;
 }
@@ -758,7 +777,10 @@ body {
     border-width: 1px;
     line-height: 1.5rem;
     --tw-shadow: 0 0 #0000;
+    color: black;
+    border: solid 0.5px gray;
 }
+
 
 .modal-search-box-in-top-mi{
     --tw-space-y-reverse: 0;
@@ -890,6 +912,68 @@ body {
     z-index: auto; /* 필요 시 삭제 */
 }
 
+.modal-login-add {
+    display: none;
+    position: absolute; /* 부모 요소 기준으로 위치 고정 */
+    top: 100%; /* 부모 요소 바로 아래로 */
+    left: 929px;
+    width: 240px;
+    min-height: 200px;
+    background: white;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 4px;
+    z-index: 3000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+
+
+.modal-login-add::before{
+    position: absolute;
+    top: -5px;
+    right: 35px;
+    width: 8px;
+    height: 8px;
+    background-color: rgb(255, 255, 255);
+    content: " ";
+    transform: rotate(45deg);
+    border-top: 1px solid rgb(228, 228, 228);
+    border-left: 1px solid rgb(228, 228, 228);
+    z-index: auto; /* 필요 시 삭제 */
+}
+
+.modal-alert {
+    display: none;
+    position: absolute; /* 부모 요소 기준으로 위치 고정 */
+    top: 100%; /* 부모 요소 바로 아래로 */
+    left: 929px;
+    width: 240px;
+    min-height: 200px;
+    background: white;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 4px;
+    z-index: 3000;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+}
+
+
+
+.modal-alert::before{
+    position: absolute;
+    top: -5px;
+    right: 35px;
+    width: 8px;
+    height: 8px;
+    background-color: rgb(255, 255, 255);
+    content: " ";
+    transform: rotate(45deg);
+    border-top: 1px solid rgb(228, 228, 228);
+    border-left: 1px solid rgb(228, 228, 228);
+    z-index: auto; /* 필요 시 삭제 */
+}
+
 .modal-login-in{
     overflow-y: auto;
     padding: 10px 0px;
@@ -917,7 +1001,7 @@ body {
 .modal-login-pe{
     padding: 2px 16px;
     display: flex;
-    width: 80%;
+    width: 100%;
     height: 46px;
     min-height: 46px;
     -webkit-box-align: center;
@@ -1001,38 +1085,33 @@ body {
     width: 1168px;
 }
 
-.modal-cate-box-in{
+.modal-cate-box-in {
     position: relative;
     display: flex;
-    flex-flow: wrap;
+    flex-wrap: wrap;
     width: 100%;
     padding: 40px 0px 30px;
     padding-bottom: 0px;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
+    justify-content: flex-start;
+    gap: 10px;
+    overflow-x: hidden;
+    box-sizing: border-box;
     z-index: 1500;
 }
 
-.modal-cate-box-in-con{
-    flex: 1 0 20%;
-    text-decoration: none;
-    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+.modal-cate-box-in-con-pe {
+    width: 24%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-shrink: 0;
+    height: 32px;
+    margin-bottom: 20px;
+    padding: 0px 3px;
+    cursor: pointer;
 }
 
-.modal-cate-box-in-con-pe{
-    display: flex
-    ;
-        flex-direction: row;
-        -webkit-box-pack: start;
-        justify-content: flex-start;
-        -webkit-box-align: center;
-        align-items: center;
-        flex-shrink: 0;
-        height: 32px;
-        margin-bottom: 20px;
-        padding: 0px 3px;
-        cursor: pointer;
-}
 
 .modal-cate-box-in-con-pe-img{
     overflow: hidden;
@@ -1072,4 +1151,36 @@ body {
     height: 100%;
     background: transparent; /* 투명 배경 */
     z-index: 1400; /* 모달 바로 아래 레이어 */
+}
+
+.modal-search-input{
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1.5rem*(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1.5rem* var(--tw-space-y-reverse));
+}
+
+.modal-search-input-title{
+    justify-content: space-between;
+    align-items: center;
+
+}
+
+.modal-search-input-title-text{
+    --tw-text-opacity: 1;
+    color: green;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+}
+
+.modal-search-input-a{
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem*(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem* var(--tw-space-y-reverse));
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .15s;
 }
