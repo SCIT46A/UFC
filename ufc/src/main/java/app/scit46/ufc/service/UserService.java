@@ -1,12 +1,14 @@
 package app.scit46.ufc.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+    
 
 @Service
 @RequiredArgsConstructor
@@ -21,11 +23,16 @@ public class UserService {
 //        return UserDTO.toDTO(userEntity);
 //    }
 
-//    // 유저조회(회원정보조회)
-//    public UserDTO readUserById(String userId) throws DBNotFoundException {
-//        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
-//        return UserDTO.toDTO(userEntity);
-//    }
+// 유저조회(회원정보조회)
+public UserDTO selectOne(Long user_id) {
+    Optional<UserEntity> temp = userRepository.findById(user_id);
+    if (temp.isPresent()) {
+        return UserDTO.toDTO(temp.get());
+        
+    }
+    return null;
+    }
+
 //
 //    // 유저수정(회원정보수정)
 //    public UserDTO updateUser(UserDTO userDTO) throws DBNotFoundException {
