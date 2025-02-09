@@ -1,16 +1,33 @@
 package app.scit46.ufc.controller;
 
+import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.service.CampaignService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("/campaign")
 public class CampaignController {
 
+    @Autowired
+    private CampaignService campaignService;
+
     @GetMapping("/all")
     public String allCampaign() {
         return "campaign/all-campaign";
+    }
+
+    @GetMapping("/all/find")
+    @ResponseBody
+    public List<CampaignDTO> findCampaign() {
+        List<CampaignDTO> campaigns = campaignService.getAllCampaigns();
+        return campaigns;
     }
 
     @GetMapping("/detail")

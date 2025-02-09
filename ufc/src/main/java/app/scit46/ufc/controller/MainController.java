@@ -1,24 +1,32 @@
 package app.scit46.ufc.controller;
 
+import app.scit46.ufc.dto.CampaignDTO;
 import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.dto.UserAlertDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.UserAlertEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.repository.UserAlertRepository;
+import app.scit46.ufc.service.CampaignService;
 import app.scit46.ufc.service.TagService;
 import app.scit46.ufc.service.UserAlertService;
 import app.scit46.ufc.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.Collections;
 import java.util.List;
 
+@Slf4j
 @Controller
 public class MainController {
 
@@ -30,6 +38,9 @@ public class MainController {
 
   @Autowired
   private TagService tagService;
+
+  @Autowired
+  private CampaignService campaignService;
 
   @GetMapping("/")
   public String index(HttpServletRequest request, Model model) {
@@ -46,7 +57,7 @@ public class MainController {
 
 
 // 검색시 사용하는 검색창
-  @GetMapping("/campagin/all/{search}")
+  @GetMapping("/campaign/all/{search}")
   public String allCampaign(@PathVariable("search") String search, Model model) {
     model.addAttribute("searchText", search);
     return "campaign/all-campaign"; // 검색어를 포함한 뷰 반환
@@ -55,7 +66,7 @@ public class MainController {
 //  알림상태 확인하는거
   @GetMapping("/check-alert")
   @ResponseBody //
-  public Boolean checkAlert(HttpServletRequest request) {
+  public List<UserAlertDTO> checkAlert(HttpServletRequest request) {
     HttpSession session = request.getSession(false); // 세션 가져오기
 
     if (session != null) {
@@ -63,7 +74,7 @@ public class MainController {
       return userAlertService.alertCheck(loginUserId);
     }
 
-    return false; // 세션이 없거나, 알람이 없음
+    return Collections.emptyList(); // 세션이 없거나, 알람이 없음
   }
 
 //  로그인 상태 확인?
@@ -91,6 +102,12 @@ public class MainController {
   @ResponseBody
   public List<TagDTO> checkTag() {
     return tagService.getTopTags();
+  }
+
+  @GetMapping("search-box")
+  @ResponseBody
+  public List<CampaignDTO> searchBox(@RequestParam("keyword") String keyword) {
+    return campaignService.search_target(keyword);
   }
 
 
