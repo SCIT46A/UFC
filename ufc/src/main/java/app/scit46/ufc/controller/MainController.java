@@ -1,17 +1,11 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.UserAlertDTO;
-import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.*;
 import app.scit46.ufc.entity.UserAlertEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.repository.UserAlertRepository;
-import app.scit46.ufc.service.CampaignService;
-import app.scit46.ufc.service.TagService;
-import app.scit46.ufc.service.UserAlertService;
-import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +32,9 @@ public class MainController {
 
   @Autowired
   private TagService tagService;
+
+  @Autowired
+  private SearchService searchService;
 
   @Autowired
   private CampaignService campaignService;
@@ -106,8 +103,9 @@ public class MainController {
 
   @GetMapping("search-box")
   @ResponseBody
-  public List<CampaignDTO> searchBox(@RequestParam("keyword") String keyword) {
-    return campaignService.search_target(keyword);
+  public List<SearchDTO> search(@RequestParam("keyword") String keyword) {
+    log.info(searchService.search_target(keyword).toString());
+    return searchService.search_target(keyword);
   }
 
 

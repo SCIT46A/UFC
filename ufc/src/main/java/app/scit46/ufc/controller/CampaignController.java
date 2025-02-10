@@ -23,6 +23,11 @@ public class CampaignController {
         return "campaign/all-campaign";
     }
 
+    @GetMapping("/expected")
+    public String expectedCampaign() {
+        return "campaign/expected-campaign";
+    }
+
     @GetMapping("/all/find")
     @ResponseBody
     public List<CampaignDTO> findCampaign() {
