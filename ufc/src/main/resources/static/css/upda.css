@@ -1,0 +1,71 @@
+.upda-back-green {
+    background: rgb(74, 222, 128);
+}
+
+.upda-back-lgreen {
+    background: rgb(22, 163, 74);
+}
+
+
+.upda-text-lgreen {
+    color: rgb(74, 222, 128);
+}
+
+.upda-text-green {
+    color: rgb(22, 163, 74);
+}
+
+.upda-tag-small {
+    color: rgb(84, 84, 84);
+    background-color: rgb(248, 248, 248);
+    height: 18px;
+    white-space: nowrap;
+    font-size: 10px;
+    font-weight: 700;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    padding: 0px 4px;
+    border-radius: 2px;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+.upda-tag-custom {
+    outline: none;
+    color: rgb(159, 159, 159);
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: 52px;
+    min-width: 60px;
+    width: auto;
+    height: 36px;
+    background: rgb(255, 255, 255);
+    padding: 0px 18px;
+    -webkit-appearance: button;
+    cursor: pointer;
+    text-transform: none;
+}
+
+.upda-tag-big {
+    outline: none;
+    border: 1px solid rgb(240, 240, 240);
+    border-radius: 52px;
+    height: 36px;
+    color: rgb(0, 0, 0);
+    background: rgb(255, 255, 255);
+    padding: 0px 18px;
+    -webkit-appearance: button;
+    cursor: pointer;
+    text-transform: none;
+    &:hover {
+        background: rgb(123, 123, 123);
+        color: rgb(255, 255, 255);
+        border: 1px solid rgb(74, 222, 128);
+    }
+}
+
+.tag-active {
+    background: rgb(74, 222, 128);
+    color: rgb(255, 255, 255);
+    border: 1px solid rgb(74, 222, 128);
+}

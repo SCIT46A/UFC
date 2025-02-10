@@ -44,32 +44,19 @@
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
         />
         <script src="https://unpkg.com/lucide@latest"></script>
-        <link
-            rel="icon"
-            th:href="@{/images/fix/favicon.png}"
-            type="image/png"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/campaign/create-campaign.css}"
-            href="../../static/css/campaign/create-campaign.css"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/fix/header.css}"
-            href="../../static/css/fix/header.css"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/fix/footer.css}"
-            href="../../static/css/fix/footer.css"
-        />
-        <script
-            src="../../static/js/compaign/create-compaign.js"
-            defer
-        ></script>
-        <script th:src="@{/js/compaign/create-compaign.js}" defer></script>
-        <script th:src="@{/js/fix/header.js}" defer></script>
+
+        <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png"/>
+        <link rel="stylesheet" th:href="@{/css/upda.css}" href="../../static/css/upda.css" />
+        <link rel="stylesheet" th:href="@{/css/campaign/create-campaign.css}" href="../../static/css/campaign/create-campaign.css" />
+        <link rel="stylesheet" th:href="@{/css/fix/header.css}" href="../../static/css/fix/header.css" />
+        <link rel="stylesheet" th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
+        <link rel="stylesheet"  th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
+
+        <script src="../../static/js/campaign/create-campaign.js" defer></script>
+        <script src="../../static/js/fix/header.js" defer></script>
+        <script src="../../static/js/fix/footer.js" defer></script>
+
+
     </head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
@@ -91,45 +78,31 @@
                                                     어떤 캠페인을
                                                     기획중이신가요?
                                                 </h2>
-                                                <p>프로젝트명을 정해주세요!</p>
+                                                <input 
+                                                    type="text" 
+                                                    name="title"
+                                                    class="cam-in-box-title-text" 
+                                                    placeholder="캠페인명을 입력해주세요!"
+                                                >
                                             </div>
+
+
                                         </div>
                                         <!-- 내용 -->
                                         <div class="cam-in-box-item">
+                                            <!-- 태그(카테고리) 설정 버튼 -->
                                             <ul class="cam-in-box-item-ul">
-                                                <li>
-                                                    <button
-                                                        class="isActive ul-btn"
-                                                    >
-                                                        디자인
-                                                    </button>
+                                                <li th:each="tag : ${tags}">
+                                                    <button class="upda-tag-big" th:text="${tag.name}">테스트1</button>
                                                 </li>
-                                                <li>
-                                                    <button class="ul-btn">
-                                                        가방
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="ul-btn">
-                                                        악세사리
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="ul-btn">
-                                                        소품
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="ul-btn">
-                                                        예술
-                                                    </button>
-                                                </li>
-                                                <li>
-                                                    <button class="ul-btn">
-                                                        잡화
+                                                <li id="tagAdd">
+                                                    <button class="upda-tag-custom">
+                                                        +
                                                     </button>
                                                 </li>
                                             </ul>
+
+                                           
                                         </div>
                                     </div>
                                     <!-- 아래쪽임 -->
@@ -138,10 +111,11 @@
                                         <div class="cam-in-box-bo">
                                             <div>
                                                 <h2>
-                                                    프로젝트를 간단하게
+                                                    캠페인을 간단하게
                                                     소개해주세요.
                                                 </h2>
                                                 <p>
+
                                                     나중에 수정 가능하니 편하게
                                                     적어주세요.
                                                 </p>
@@ -151,11 +125,11 @@
                                         <div class="cam-in-box-content">
                                             <textarea
                                                 name="shortDescription"
-                                                placeholder="캠페인 요약을 입력해주세요."
+                                                placeholder="캠페인을 간단하게 설명해주세요!"
                                                 class="cam-in-box-content-text"
                                             ></textarea>
                                             <div class="cam-in-box-content-btn">
-                                                <button class="next-btn">
+                                                <button class="next-btn isActive">
                                                     <span>다음</span>
                                                 </button>
                                             </div>
@@ -188,11 +162,8 @@
                                                         class="cam-ag-box-in-ul-la-input"
                                                     />
                                                     <div>
-                                                        대표 창작자는
-                                                        <strong
-                                                            >만 19세 이상의
-                                                            성인</strong
-                                                        >이여야 합니다.
+                                                        나는 창작자는
+                                                        <strong>만 19세 이상의 성인</strong>입니다.
                                                     </div>
                                                 </label>
                                             </li>
@@ -207,18 +178,13 @@
                                                         class="cam-ag-box-in-ul-la-input"
                                                     />
                                                     <div>
-                                                        UP-DA에서 필요 시
-                                                        연락드릴 수 있도록
-                                                        <strong
-                                                            >본인 명의의 휴대폰
-                                                            번호</strong
-                                                        >완
-                                                        <strong
-                                                            >이메일 주소</strong
-                                                        >가 필요합니다.
+                                                        나는 연락이 가능한
+                                                        <strong>본인 명의의 휴대폰 번호</strong>와<br>
+                                                        <strong>이메일 주소</strong>가 있습니다.
                                                     </div>
                                                 </label>
                                             </li>
+
                                             <li>
                                                 <label
                                                     for="th"
@@ -230,15 +196,12 @@
                                                         class="cam-ag-box-in-ul-la-input"
                                                     />
                                                     <div>
-                                                        캠페인 성공 후의 정산을
-                                                        위해
-                                                        <strong
-                                                            >사업자
-                                                            등록증</strong
-                                                        >를 준비해주세요.
+                                                        나는 UPDA에서 펀딩을 받기 위한
+                                                        <strong>사업자 등록증</strong>이 있습니다.
                                                     </div>
                                                 </label>
                                             </li>
+
                                         </ul>
                                         <div class="cam-in-box-btn">
                                             <button class="cam-back-btn">
