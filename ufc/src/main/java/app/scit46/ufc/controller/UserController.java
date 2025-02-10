@@ -28,10 +28,10 @@ public class UserController {
 
     @GetMapping({"/",""})
     public String index(
-            @AuthenticationPrincipal LoginUserDetails LoginUser,
+            @AuthenticationPrincipal LoginUserDetails loginUser,
             Model model 
     ) {
-        model.addAttribute("LoginUser", LoginUser);
+        model.addAttribute("loginUser", loginUser);
         return "user/mypage-profile";
     }
 
@@ -62,7 +62,20 @@ public class UserController {
     }
 
     @GetMapping("/edit")
-    public String edit() {
+    public String edit(
+    @AuthenticationPrincipal LoginUserDetails loginUser,
+            Model model
+
+    ) {
+        if (loginUser != null) {
+            model.addAttribute("loginUser", loginUser);
+            // model.addAttribute("phoneNumber", loginUser.getPhoneNumber());
+            // model.addAttribute("userAddress", loginUser.getUserAddress());
+            // model.addAttribute("userName", loginUser.getUsername());
+            // model.addAttribute("intro", loginUser.getIntro());
+            // model.addAttribute("photoId", loginUser.getPhotoId());
+            // }}
+        }
         return "user/mypage-profile-edit";
     }
 

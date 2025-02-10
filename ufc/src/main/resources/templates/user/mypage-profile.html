@@ -216,7 +216,7 @@
                       <button class="pro-name-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-name">조관익</div>
+                    <div class="pro-name" th:text="${loginUser.name}">조관익</div>
                     <!-- 버튼 눌렀을때 -->
                     <div class="pro-name-close hidden">
                       <div>
@@ -225,10 +225,11 @@
                             <input
                               type="text"
                               placeholder="이름을 입력해주세요."
-                              value="조관익"
+                              th:value="${loginUser.name}"
                             />
                           </span>
                         </div>
+
                       </div>
                       <div class="name-btn">
                         <button class="name-btn-in">
@@ -246,7 +247,7 @@
                       <button class="pro-sh-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-sh">끼에에에에에에에에엑</div>
+                    <div class="pro-sh" th:text="${loginUser.intro}">끼에에에에에에에에엑</div>
                     <!-- 버튼 눌렀을때 -->
                     <div class="pro-sh-close hidden">
                       <div>
@@ -254,10 +255,11 @@
                           <textarea
                             type="text"
                             placeholder="소개를 입력해주세요."
-                            value="끼에에에에에에에에엑"
+                            th:value="${loginUser.intro}"
                           ></textarea>
                         </div>
                       </div>
+
                       <div class="name-btn">
                         <button class="name-btn-in">
                           <span>저장</span>
@@ -274,7 +276,7 @@
                       <button class="pro-ph-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-ph">010-1234-4231</div>
+                    <div class="pro-ph" th:text="${loginUser.phoneNumber}">010-1234-4231</div>
                     <!-- 버튼 눌렀을때 -->
                     <div class="pro-ph-close hidden">
                       <div>
@@ -284,10 +286,11 @@
                             <input
                               type="number"
                               placeholder="연락처를 입력해주세요."
-                              value="010-1234-4231"
+                              th:value="${loginUser.phone}"
                             />
                           </span>
                         </div>
+
                       </div>
                       <div class="name-btn">
                         <button class="name-btn-in">
@@ -305,7 +308,7 @@
                       <button class="pro-ad-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-ad">코엑스 어딘가</div>
+                    <div class="pro-ad" th:text="${loginUser.userAddress}">코엑스 어딘가</div>
                     <!-- 버튼 눌렀을때 -->
                     <div class="pro-ad-close hidden">
                       <div>
@@ -314,10 +317,11 @@
                             <input
                               type="text"
                               placeholder="주소를 입력해주세요."
-                              value="코엑스 어딘가"
+                              th:value="${loginUser.userAddress}"
                             />
                           </span>
                         </div>
+
                       </div>
                       <div class="name-btn">
                         <button class="name-btn-in">
