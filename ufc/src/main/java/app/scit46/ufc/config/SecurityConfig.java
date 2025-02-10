@@ -5,11 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -27,9 +23,15 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/admin/login").permitAll()  // 관리자 로그인 페이지는 모두 접근 가능
+                        .requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 페이지는 ADMIN 권한 필요
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/admin/login")  // 관리자 로그인 페이지
+                        .defaultSuccessUrl("/admin/adminPage", true)  // 로그인 성공 후 이동
+                        .permitAll()
                 )
                 .csrf(csrf -> csrf.disable())
                 .oauth2Login(oauth2 -> oauth2
@@ -37,6 +39,7 @@ public class SecurityConfig {
                         .successHandler(oauthSuccessHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
