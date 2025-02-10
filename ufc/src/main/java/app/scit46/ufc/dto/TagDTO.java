@@ -13,6 +13,9 @@ public class TagDTO {
     private Integer tagId;
     private String content;
 
+//  header에서 카테고리 생성을 위해 만듬
+    private Long totalUsage;
+
     public static TagDTO toDTO(TagEntity entity) {
         return TagDTO.builder()
                 .tagId(entity.getTagId())

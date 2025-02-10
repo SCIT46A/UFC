@@ -28,7 +28,6 @@ public class OauthLogin implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = defaultOAuth2User.getAttributes();
-        log.info(attributes.toString());
 
 
         String identity = null;  // Google: sub, Kakao: id

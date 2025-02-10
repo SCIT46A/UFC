@@ -102,7 +102,6 @@ public class UserController {
         String email = (String) session.getAttribute("email");
         String find = (String) session.getAttribute("find");
 
-        log.info(address,phone,intro);
 
         // DB 저장 (UserDTO 만들거나 직접)
         UserDTO userDTO = new UserDTO();
@@ -117,7 +116,6 @@ public class UserController {
 
         // userService.add(...) 저장
         UserEntity savedUser = userService.saveUser(userDTO);
-        log.info(savedUser.toString());
 
         // 가입 완료 후, 세션에 로그인 정보 저장
         session.setAttribute("loginUserId", savedUser.getUserId());
