@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UP-DA :: 프로필 수정하기</title>
+    <link rel="stylesheet" href="/ufc/src/main/resources/static/css/creator/creator-edit.css">
+</head>
+<body>
+    <h2>판매자 프로필 수정하기</h2>
+    
+    <form action="" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="creatorId" th:value="${creator.creatorId}">
+        
+        <label>이름:</label>
+        <input type="text" name="businessName" th:value="${creator.businessName}" required><br>
+
+        <label>상호:</label>
+        <input type="text" name="companyName" th:value="${creator.companyName}" required><br>
+
+        <label>사업자 주소:</label>
+        <input type="text" name="address" th:value="${creator.address}" required><br>
+
+        <label>한마디:</label>
+        <textarea name="intro" th:text="${creator.intro}"></textarea><br>
+
+        <label>배경 사진:</label>
+        <input type="file" name="backImgFile"><br>
+
+        <label>프로필 사진:</label>
+        <input type="file" name="profileImgFile"><br>
+        
+        <button type="submit">저장</button>
+    </form>
+</body>
+</html>

@@ -29,9 +29,11 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/creator/creator-campaign.js"></script>
-        <script th:src="@{/js/creator/creator-campaign.js}" defer></script>
-        <script th:src="@{/js/fix/header.js}" defer></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="../../static/js/creator/creator-campaign.js" defer></script>
+        <script src="../../static//js/creator/creator-campaign.js" defer></script>
+        <script src="../../static//js/fix/header.js" defer></script>
+
     </head>
     <body>
         <div th:replace="fix/header :: header"></div>
@@ -65,8 +67,8 @@
                                     <!-- 3. 가입중(가입됨) -->
                                     <div class="club-top-button-boxes">
                                         <button
-                                            id="quit"
-                                            class="club-top-button quit"
+                                            id="create_campaign"
+                                            class="club-top-button create_campaign"
                                         >
                                             <span>캠페인 제작하기</span>
                                         </button>
@@ -89,45 +91,11 @@
                                 </span>
                             </div>
                             <div class="club-detail-introduction">
-                                안녕하세요! UP-DA 입니다. 세상에 필요한건~
-                                UP-DA~!
+                                안녕하세요! UPDA 입니다. 세상에 필요한건~
+                                UPDA~!
                             </div>
                         </div>
                         <div class="club-detail-desc-wrap">
-                            <div class="club-detail-filters-wrap">
-                                <div class="club-detail-filters-container">  
-                                    <div class="club-detail-filter-info">
-                                        <button
-                                            class="club-detail-filter-button off"
-                                        >
-                                            캠페인
-                                        </button>
-                                    </div>
-                                    <!-- 아래 버튼은 틴플레이 업로드 버튼으로, 모임장일 때에만 표시되도록 합니다. -->
-                                    <div class="club-detail-filter-upload-wrap">
-                                        <button
-                                            class="club-detail-filter-upload"
-                                        >
-                                            <svg
-                                                id="Layer_1"
-                                                fill="currentColor"
-                                                class="teenplay-upload-icon"
-                                                version="1.1"
-                                                viewBox="0 0 512 512"
-                                                xml:space="preserve"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                xmlns:xlink="http://www.w3.org/1999/xlink"
-                                            >
-                                                <g>
-                                                    <path
-                                                        d="M256,48C141.1,48,48,141.1,48,256s93.1,208,208,208c114.9,0,208-93.1,208-208S370.9,48,256,48z M384,265H264v119h-17V265   H128v-17h119V128h17v120h120V265z"
-                                                    />
-                                                </g>
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                             <div>
                                 <!-- 활동 탭 클릭 시 표시되는 부분 -->
                                 <div class="club-detail-desc-container">
