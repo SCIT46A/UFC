@@ -1,19 +1,19 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.entity.UserEntity;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import app.scit46.ufc.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
@@ -82,7 +82,7 @@ public class UserController {
             model.addAttribute("email", email);
             model.addAttribute("find", find);
         }
-        return "/login/joindetail";
+        return "login/joindetail";
     }
 
     @PostMapping("/joindetail")
