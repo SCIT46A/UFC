@@ -1,15 +1,7 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.entity.UserAlertEntity;
-import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.TagService;
-import app.scit46.ufc.service.UserAlertService;
-import app.scit46.ufc.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
+import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.service.TagService;
+import app.scit46.ufc.service.UserAlertService;
+import app.scit46.ufc.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class MainController {
@@ -105,6 +104,6 @@ public class MainController {
 
   @GetMapping("/info")
   public String info() {
-    return "upda/info";
+    return "info";
   }
 }
