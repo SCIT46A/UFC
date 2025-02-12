@@ -22,14 +22,28 @@ document.addEventListener("DOMContentLoaded", function () {
                 fetchCreatorApproval();
             } else if (page === "notice") {
                 fetchNotice();
+                loadNoticeStyles(); // ✅ 공지사항 CSS 로드
             } else if (page === "notice-form") {
                 loadNoticeForm();
+                loadNoticeStyles(); // ✅ 공지사항 CSS 로드
             } else {
                 contentArea.innerHTML = generatePageContent(page);
             }
         });
     });
 });
+
+// ✅ 공지사항 CSS 로드 함수 추가
+function loadNoticeStyles() {
+    let existingLink = document.getElementById("notice-css");
+    if (!existingLink) {
+        let link = document.createElement("link");
+        link.id = "notice-css";
+        link.rel = "stylesheet";
+        link.href = "/css/admin/admin-notice.css"; // ✅ 공지사항 전용 CSS 경로
+        document.head.appendChild(link);
+    }
+}
 
 // ✅ 공지사항 생성 폼 로드
 function loadNoticeForm() {
@@ -76,6 +90,7 @@ function submitNotice() {
 
 //공지사항
 function fetchNotice() {
+    loadNoticeStyles();  // ✅ CSS 로드 추가
     fetch("/api/notices")
         .then(response => {
             if (!response.ok) {
@@ -102,10 +117,11 @@ function generateNoticeTable(notices) {
     }
 
     let tableHTML = `
+    <div class="notice-container">
         <h2>공지사항</h2>
         <button onclick="location.href='/admin/notice-form'">공지사항 등록</button>
         <div class="table-container">
-            <table>
+            <table class="notice-table">  <!-- ✅ CSS 적용할 클래스 추가 -->
                 <thead>
                     <tr>
                         <th>공지 번호</th>
@@ -115,20 +131,20 @@ function generateNoticeTable(notices) {
                     </tr>
                 </thead>
                 <tbody>
-    `;
+`;
 
     notices.forEach(notice => {
         tableHTML += `
-            <tr>
-                <td>${notice.noticeId}</td>
-                <td>${notice.title}</td>
-                <td>${notice.content}</td>
-                <td>${new Date(notice.noticedDate).toLocaleDateString()}</td>
-            </tr>
-        `;
+        <tr>
+            <td>${notice.noticeId}</td>
+            <td>${notice.title}</td>
+            <td>${notice.content}</td>
+            <td>${new Date(notice.noticedDate).toLocaleDateString()}</td>
+        </tr>
+    `;
     });
 
-    tableHTML += `</tbody></table></div>`;
+    tableHTML += `</tbody></table></div></div>`;  // ✅ .notice-container 닫는 태그 추가
     return tableHTML;
 }
 

@@ -20,6 +20,7 @@ public class CampaignDTO {
     private Long createdById;
     private Boolean isSuccess;
     private Long photoId;
+    private Boolean campaignStatus;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
         return CampaignDTO.builder()
@@ -31,6 +32,7 @@ public class CampaignDTO {
                 .isSuccess(entity.getIsSuccess())
                 .createdById(entity.getCreatedBy() != null ? entity.getCreatedBy().getCreatorId() : null)
                 .photoId(entity.getPhoto() != null ? entity.getPhoto().getPhotoId() : null)
+                .campaignStatus(entity.getCampaignStatus())
                 .build();
     }
 }
