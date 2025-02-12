@@ -323,7 +323,7 @@ input[name="inputTag"] {
     box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 8px, rgba(0, 0, 0, 0.02) 0px 1px 0px;
 }
 
-.cam-la-in-box-top{
+.cam-la-in-box-bottom{
     top: 0px;
     z-index: 100;
     width: 100%;
@@ -337,7 +337,7 @@ input[name="inputTag"] {
     transform: translateY(0px);
 }
 
-.cam-la-in-box-top-in{
+.cam-la-in-box-bottom-in{
     width: 1080px;
     height: 100%;
     margin: 0px auto;
@@ -347,7 +347,7 @@ input[name="inputTag"] {
     position: relative;
 }
 
-.cam-la-in-box-top-in-back{
+.cam-la-in-box-bottom-in-back{
     position: relative;
     z-index: 1;
     display: flex;
@@ -360,19 +360,19 @@ input[name="inputTag"] {
     margin-top: 25px;
 }
 
-.cam-la-in-box-top-in-back-in{
+.cam-la-in-box-bottom-in-back-in{
     margin-right: 9px;
     display: inline-flex;
     align-self: center;
 }
 
-.cam-la-in-box-top-in-back-in svg{
+.cam-la-in-box-bottom-in-back-in svg{
     overflow: hidden;
     width: 1em;
     height: 1em;
 }
 
-.cam-la-in-box-top-in-end{
+.cam-la-in-box-bottom-in-end{
     position: relative;
     z-index: 1;
     display: flex;
@@ -380,11 +380,11 @@ input[name="inputTag"] {
     align-items: center;
 }
 
-.cam-la-in-box-top-in-end-btn{
+.cam-la-in-box-bottom-in-end-btn{
     background: rgb(240, 240, 240);
     cursor: default;
     font-weight: 500;
-    background: rgb(22, 163, 74);
+    background: rgb(74, 222, 128);
     width: 112px;
     height: 40px;
     color: white;
@@ -472,7 +472,7 @@ input[name="inputTag"] {
     display: block;
     width: 100%;
     height: 2px;
-    background: rgb(248, 100, 83);
+    background: rgb(74, 222, 128);
 }
 
 .cam-la-in-box-bo{
@@ -488,7 +488,6 @@ input[name="inputTag"] {
 .cam-la-in-box-bo-all-de{
     display: flex;
     padding-bottom: 48px;
-    margin-bottom: 56px;
     -webkit-box-pack: justify;
     justify-content: space-between;
     border-bottom: 1px solid rgb(240, 240, 240);
@@ -834,7 +833,7 @@ input[name="inputTag"] {
 }
 
 .cam-wr-title{
-    color: rgb(74, 222, 128);
+    color: rgb(248, 100, 83);
     font-size: 12px;
     font-weight: bold;
     line-height: 120%;
@@ -851,7 +850,7 @@ input[name="inputTag"] {
     overflow: hidden;
     position: relative;
     margin-right: 8px;
-    fill: rgb(74, 222, 128);
+    fill: rgb(248, 100, 83);
     font-size: 13.5px;
     width: 1em;
     height: 1em;
@@ -906,6 +905,10 @@ input[name="inputTag"] {
     outline: 0px;
     box-sizing: border-box;
     background: white;
+    &.isActive {
+        color: rgb(255, 255, 255);
+        background: rgb(74, 222, 128);
+    }
 }
 
 .cam-la-pay-box{
@@ -1101,7 +1104,7 @@ input[name="inputTag"] {
     width: 100%;
     min-height: calc(-298px + 100vh);
     position: relative;
-    padding: 0px 0px 98px;
+    padding: 0px 0px 28px;
     margin-top: -34px;
     -webkit-box-pack: justify;
     justify-content: space-between;

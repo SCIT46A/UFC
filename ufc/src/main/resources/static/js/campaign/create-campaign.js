@@ -2,7 +2,7 @@ $(document).ready(function () {
     let campaignTitle = document.querySelector("input[name='title']");
     let campaignDesc = document.querySelector("input[name='shortDescription']");
 
-    /* 약관, 동의 */
+    // 약관, 동의
     const startBtn = document.querySelector(".cam-create-btn");
     $(document).on('click', function(){
         if($('#fi').is(':checked')&&$('#ce').is(':checked')&&$('#th').is(':checked')){
@@ -14,11 +14,14 @@ $(document).ready(function () {
         }
     });
 
+    // 캠페인 생성 동의 체크박스 검사, 시작하기 버튼 활성화
     $('.cam-create-btn').on('click', function(){
         $('.cam-ag-box').addClass('hidden');
         $('.cam-la').removeClass('hidden');
     });
-    /* 캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성성 */
+    // 약관, 동의 END
+
+    // 캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성
     const tagAdd = document.querySelector("#tagAdd");
 
     let tagList = [];
@@ -85,19 +88,90 @@ $(document).ready(function () {
         tagList = tagList.filter(tag => tag !== tagName);
         //console.log(tagList);
     });
+    // 캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성
 
-    // 키보드 입력 이벤트 상시 체크
-    $(document).on('keyup', keyupCheck);
+    // 하단 버튼 컨트롤러
+    $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
+    // 캠페인 기획 페이지 다음 버튼
+    $(document).on('click','.cam-la-in-box-bottom-in-end-btn', function(){
+        const navTarget = $('.cam-la-in-box-top-in-na-all-ul-li.check');
+        let navName = navTarget.attr('data-target');
+        if(navName == 'info'){    
+            navTarget.removeClass('check');
+            navTarget.next().addClass('check');
+            $('.cam-la-in-box-bo.info').addClass('hidden');
+            $('.cam-la-in-box-bo.funding').removeClass('hidden'); 
+        }else if(navName == 'funding'){
+            navTarget.removeClass('check');
+            navTarget.next().addClass('check');
+            $('.cam-la-in-box-bo.funding').addClass('hidden');
+            $('.cam-la-in-box-bo.reward').removeClass('hidden'); 
+            $(".cam-la-in-box-bottom-in-end-btn-span").text('캠페인 생성');
+        }
+        window.location.href = '#header';
+    });
 
+    // 캠페인 기획 페이지 뒤로가기 버튼
+    $(document).on('click','.cam-la-in-box-bottom-in-back', function(){
+        // 캠페인 기획 페이지가 보이는 중에 눌리면 약관 동의 페이지가 나오도록
+        const navTarget = $('.cam-la-in-box-top-in-na-all-ul-li.check');
+        let navName = navTarget.attr('data-target');
+        if(navName == 'info'){    
+            $('.cam-ag-box').removeClass('hidden'); // 약관 동의 페이지
+            $('.cam-la').addClass('hidden');
+        }else if(navName == 'funding'){
+            navTarget.removeClass('check');
+            navTarget.prev().addClass('check');
+            $('.cam-la-in-box-bo.info').removeClass('hidden');
+            $('.cam-la-in-box-bo.funding').addClass('hidden'); 
+        }else if(navName == 'reward'){
+            navTarget.removeClass('check');
+            navTarget.prev().addClass('check');
+            $('.cam-la-in-box-bo.funding').removeClass('hidden');
+            $('.cam-la-in-box-bo.reward').addClass('hidden'); 
+            $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
+        }
+    });
+    // 하단 버튼 컨트롤러 END
 
-    /* page 2 캠페인 생성 동의 체크박스 */
-
-    const checkBox = document.querySelectorAll(".cam-ag-in-box-top-in-na-all-ul-li");
-
-    checkBox.forEach(item => {
-        item.addEventListener("click", function () {
-            this.classList.toggle("check");
-        });
+    // 펀딩 계획 페이지 기부품 추가 버튼 클릭 시 기부품 추가 필드 제공
+    let fundingItem = $('#fundingItemInput');
+    let fundingAmount = $('#fundingAmountInput');
+    let fundingTag = `
+        <div class="cam-la-pay-box-pe">
+            ${fundingItem.val()}
+            <em>${fundingAmount.val()}</em>개
+            <button class="cam-tag-sh-pe-btn">
+                <div>
+                    <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 10 10"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            fill-rule="evenodd"
+                            clip-rule="evenodd"
+                            d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
+                            fill="#6D6D6D"
+                        ></path>
+                    </svg>
+                </div>
+            </button>
+        </div>
+    `
+    // 기부품 이름 및 수량 입력 시 버튼 활성화
+    $(document).on('keyup', activeItemFundingBtn);
+    function activeItemFundingBtn(){
+        if(fundingItem.val() != '' && fundingAmount.val() != ''){
+            $('.cam-la-pay-btn').addClass('isActive');
+        }else{
+            $('.cam-la-pay-btn').removeClass('isActive');
+        }
+    }
+    $('.cam-la-pay-btn').on('click', function(){
+        $('.cam-la-pay-box-total').parent().append(fundingTag);
     });
 
 
@@ -122,7 +196,7 @@ $(document).ready(function () {
         })
     })
 
-});
+}); // $(document).ready END
 
 function activeNextBtn(){
     const nextBtn = document.querySelector(".next-btn");
