@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공지사항 작성</title>
+  <link rel="icon" type="image/png" href="/images/fix/favicon.png">
+
+</head>
+<body>
+
+<div class="container">
+  <h2>공지사항 작성</h2>
+  <form id="notice-form">
+    <label for="title">제목:</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="content">내용:</label>
+    <textarea id="content" name="content" required></textarea>
+
+    <button type="button" onclick="submitNotice()">등록</button>
+  </form>
+</div>
+
+<script src="/js/admin/admin-user.js"></script> <!-- 공지사항 등록 요청 스크립트 -->
+</body>
+</html>

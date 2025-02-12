@@ -71,7 +71,7 @@ public class OauthLogin implements AuthenticationSuccessHandler {
 
             // 관리자면 /admin, 일반 유저면 /
             if (isAdmin) {
-                response.sendRedirect("/admin");  // 관리자일 경우 `/admin`으로 이동
+                response.sendRedirect("/admin/adminPage");  // 관리자일 경우 `/admin`으로 이동
             } else {
                 response.sendRedirect("/");  // 일반 유저는 `/`으로 이동
             }
