@@ -1,3 +1,5 @@
+
+/* UPDA 색상 */
 .upda-back-green {
     background: rgb(74, 222, 128);
 }
@@ -14,7 +16,9 @@
 .upda-text-green {
     color: rgb(22, 163, 74);
 }
+/* UPDA 색상 끝 */
 
+/* 태그 */
 .upda-tag-small {
     color: rgb(84, 84, 84);
     background-color: rgb(248, 248, 248);
@@ -29,6 +33,11 @@
     border-radius: 2px;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    &:hover {
+        background: rgb(123, 123, 123);
+        color: rgb(255, 255, 255);
+        border: 1px solid rgb(74, 222, 128);
+    }
 }
 
 .upda-tag-custom {
@@ -69,3 +78,4 @@
     color: rgb(255, 255, 255);
     border: 1px solid rgb(74, 222, 128);
 }
+/* 태그 끝 */

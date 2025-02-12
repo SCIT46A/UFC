@@ -62,173 +62,87 @@
         <div th:replace="~{fix/header :: header}"></div>
         <main>
             <section id="projects" style="background-color: #ffffff">
-                <!-- 주목할 만한 프로젝트 -->
+                <!-- 주목할 만한 캠페인 -->
                 <div class="container mx-auto px-4 target-project">
                     <div class="main">
                         <div class="cam">
-                            <!-- 1차 작성하는곳 -->
-                            <div class="cam-in">
-                                <div class="cam-in-box">
-                                    <div class="cam-in-box-top">
-                                        <div class="cam-in-box-bo">
-                                            <div>
-                                                <h2>
-                                                    멋진 아이디어가 있으시군요!
-                                                    <br />
-                                                    어떤 캠페인을
-                                                    기획중이신가요?
-                                                </h2>
-                                                <input 
-                                                    type="text" 
-                                                    name="title"
-                                                    class="cam-in-box-title-text" 
-                                                    placeholder="캠페인명을 입력해주세요!"
-                                                >
-                                            </div>
+                            <!-- 약관, 동의 -->
+                            <div class="cam-ag-box">
+                                <div class="cam-in-box-bo">
+                                    <h1>
+                                        멋진 아이디어가 있으시군요!
+                                        <br />
+                                        캠페인을 기획중이신가요?
+                                    </h1>
+                                    <h2>
+                                        시작하기 전에, 이런 준비가 필요해요.
+                                    </h2>
+                                    <p>
+                                        캠페인을 진행하시려면 아래 내용을
+                                        준비해주세요.
+                                    </p>
+                                </div>
+                                <div class="cam-ag-box-in">
+                                    <ul class="cam-ag-box-in-ul">
+                                        <li>
+                                            <label
+                                                for="fi"
+                                                class="cam-ag-box-in-ul-la"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    id="fi"
+                                                    class="cam-ag-box-in-ul-la-input"
+                                                />
+                                                <div>
+                                                    나는 <strong>만 19세 이상의 성인</strong>입니다.
+                                                </div>
+                                            </label>
+                                        </li>
+                                        <li>
+                                            <label
+                                                for="ce"
+                                                class="cam-ag-box-in-ul-la"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    id="ce"
+                                                    class="cam-ag-box-in-ul-la-input"
+                                                />
+                                                <div>
+                                                    나는 연락이 가능한
+                                                    <strong>본인 명의의 휴대폰 번호</strong>와<br>
+                                                    <strong>이메일 주소</strong>가 있습니다.
+                                                </div>
+                                            </label>
+                                        </li>
 
+                                        <li>
+                                            <label
+                                                for="th"
+                                                class="cam-ag-box-in-ul-la"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    id="th"
+                                                    class="cam-ag-box-in-ul-la-input"
+                                                />
+                                                <div>
+                                                    나는 UPDA에서 펀딩을 받기 위한
+                                                    <strong>사업자 등록증</strong>이 있습니다.
+                                                </div>
+                                            </label>
+                                        </li>
 
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="cam-in-box-item">
-                                            <!-- 태그(카테고리) 설정 버튼 -->
-                                            <ul class="cam-in-box-item-ul">
-                                                <li th:each="tag : ${tags}">
-                                                    <button class="upda-tag-big" th:text="${tag.name}">테스트1</button>
-                                                </li>
-                                                <li id="tagAdd">
-                                                    <button class="upda-tag-custom">
-                                                        +
-                                                    </button>
-                                                </li>
-                                            </ul>
-
-                                           
-                                        </div>
-                                    </div>
-                                    <!-- 아래쪽임 -->
-                                    <div class="cam-in-box-top">
-                                        <!-- 제목 -->
-                                        <div class="cam-in-box-bo">
-                                            <div>
-                                                <h2>
-                                                    캠페인을 간단하게
-                                                    소개해주세요.
-                                                </h2>
-                                                <p>
-
-                                                    나중에 수정 가능하니 편하게
-                                                    적어주세요.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="cam-in-box-content">
-                                            <textarea
-                                                name="shortDescription"
-                                                placeholder="캠페인을 간단하게 설명해주세요!"
-                                                class="cam-in-box-content-text"
-                                            ></textarea>
-                                            <div class="cam-in-box-content-btn">
-                                                <button class="next-btn isActive">
-                                                    <span>다음</span>
-                                                </button>
-                                            </div>
-                                        </div>
+                                    </ul>
+                                    <div class="cam-in-box-btn">
+                                        <button class="cam-create-btn">
+                                            <span>시작하기</span>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <!-- 2차 작성하는 곳 -->
-                            <div class="cam-ag hidden">
-                                <div class="cam-ag-box">
-                                    <div class="cam-in-box-bo">
-                                        <h2>
-                                            시작하기 전에, 이런 준비가 필요해요.
-                                        </h2>
-                                        <p>
-                                            캠페인을 진행하시려면 아래 내용을
-                                            준비해주세요.
-                                        </p>
-                                    </div>
-                                    <div class="cam-ag-box-in">
-                                        <ul class="cam-ag-box-in-ul">
-                                            <li>
-                                                <label
-                                                    for="fi"
-                                                    class="cam-ag-box-in-ul-la"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        id="fi"
-                                                        class="cam-ag-box-in-ul-la-input"
-                                                    />
-                                                    <div>
-                                                        나는 창작자는
-                                                        <strong>만 19세 이상의 성인</strong>입니다.
-                                                    </div>
-                                                </label>
-                                            </li>
-                                            <li>
-                                                <label
-                                                    for="ce"
-                                                    class="cam-ag-box-in-ul-la"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        id="ce"
-                                                        class="cam-ag-box-in-ul-la-input"
-                                                    />
-                                                    <div>
-                                                        나는 연락이 가능한
-                                                        <strong>본인 명의의 휴대폰 번호</strong>와<br>
-                                                        <strong>이메일 주소</strong>가 있습니다.
-                                                    </div>
-                                                </label>
-                                            </li>
 
-                                            <li>
-                                                <label
-                                                    for="th"
-                                                    class="cam-ag-box-in-ul-la"
-                                                >
-                                                    <input
-                                                        type="checkbox"
-                                                        id="th"
-                                                        class="cam-ag-box-in-ul-la-input"
-                                                    />
-                                                    <div>
-                                                        나는 UPDA에서 펀딩을 받기 위한
-                                                        <strong>사업자 등록증</strong>이 있습니다.
-                                                    </div>
-                                                </label>
-                                            </li>
-
-                                        </ul>
-                                        <div class="cam-in-box-btn">
-                                            <button class="cam-back-btn">
-                                                <span>
-                                                    <div
-                                                        class="cam-back-btn-svg"
-                                                    >
-                                                        <svg
-                                                            viewBox="0 0 48 48"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M31.8513 45.2994L12 23.9815L31.8513 2.76364C32.7272 1.76279 34.2842 1.76279 35.2574 2.66355C36.2305 3.56431 36.2305 5.16566 35.3556 6.1665L18.5191 23.9815L35.2574 41.8975C35.6466 42.2969 35.9386 42.9975 35.9386 43.598C35.9386 44.9992 34.8691 46 33.5057 46C32.9228 46 32.3379 45.7998 31.8513 45.2994Z"
-                                                            ></path>
-                                                        </svg>
-                                                    </div>
-                                                    뒤로가기
-                                                </span>
-                                            </button>
-                                            <button class="cam-create-btn">
-                                                <span>시작하기</span>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             <!-- 최종으로 입력하는 곳 -->
                             <div class="cam-la hidden">
                                 <div class="cam-la-in">
@@ -238,7 +152,6 @@
                                         <div class="cam-la-in-box-top">
                                             <div class="cam-la-in-box-top-in">
                                                 <button
-                                                    href="/"
                                                     class="cam-la-in-box-top-in-back"
                                                 >
                                                     <div
@@ -269,7 +182,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- 프로젝트~ -->
+                                        <!-- 캠페인~ -->
                                         <div class="cam-la-in-box-top-in-title">
                                             <div>캠페인 기획</div>
                                         </div>
@@ -303,7 +216,7 @@
                                                         class="cam-la-in-box-top-in-na-all-ul-li"
                                                         data-target="project"
                                                     >
-                                                        <div>프로젝트 계획</div>
+                                                        <div>캠페인 계획</div>
                                                     </li>
                                                     <li
                                                         class="cam-la-in-box-top-in-na-all-ul-li"
@@ -327,14 +240,13 @@
                                                 <dl
                                                     class="cam-la-in-box-bo-all-de-dl"
                                                 >
-                                                    <dt>프로젝트 카테고리</dt>
+                                                    <dt>캠페인 태그</dt>
                                                     <dd>
-                                                        프로젝트 성격과 가장
-                                                        일치하는 카테고리를
-                                                        선택해주세요.
-                                                        <br />적합하지 않을 경우
-                                                        운영자에 의해 조정될 수
-                                                        있습니다.
+                                                        캠페인와 관련된 태그를
+                                                        입력해주세요.<br>UPDA 에서
+                                                        해당 태그로 검색한
+                                                        후원자가 이 캠페인을
+                                                        발견할 수 있습니다.
                                                     </dd>
                                                 </dl>
                                                 <div
@@ -346,26 +258,24 @@
                                                         <p
                                                             class="cam-la-in-box-bo-all-de-div-box-title"
                                                         >
-                                                            카테고리
+                                                            태그
                                                         </p>
-                                                        <select
-                                                            class="cam-la-in-box-bo-all-de-div-box-input"
-                                                        >
-                                                            <option value="">
-                                                                카테고리를
-                                                                선택해주세요
-                                                            </option>
-                                                            <option
-                                                                value="카테카테"
-                                                            >
-                                                                카테카테
-                                                            </option>
-                                                            <option
-                                                                value="고리고리"
-                                                            >
-                                                                고리고리
-                                                            </option>
-                                                        </select>
+                                                        <!-- 내용 -->
+                                                        <div class="cam-in-box-item">
+                                                            <!-- 태그(카테고리) 설정 버튼 -->
+                                                            <ul class="cam-in-box-item-ul">
+                                                                <!-- 상위 5개 태그 표시 -->
+                                                                <li th:each="tag : ${tags}">
+                                                                    <button class="upda-tag-big" th:text="${tag.name}">테스트1</button>
+                                                                </li>
+                                                                <!-- 태그 추가 버튼 -->
+                                                                <li id="tagAdd">
+                                                                    <button class="upda-tag-custom">
+                                                                        +
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -378,9 +288,9 @@
                                                 <dl
                                                     class="cam-la-in-box-bo-all-de-dl"
                                                 >
-                                                    <dt>프로젝트 제목</dt>
+                                                    <dt>캠페인 제목</dt>
                                                     <dd>
-                                                        프로젝트의 주제,
+                                                        캠페인의 주제,
                                                         창작물의 품목이 명확하게
                                                         드러나는 멋진 제목을
                                                         붙여주세요.
@@ -399,8 +309,9 @@
                                                         </p>
                                                         <input
                                                             type="text"
+                                                            name="title"
                                                             class="cam-la-in-box-bo-all-de-div-box-input"
-                                                            placeholder="프로제특 제목을 입력해주세요"
+                                                            placeholder="캠페인명을 입력해주세요!"
                                                         />
                                                     </div>
                                                 </div>
@@ -414,30 +325,24 @@
                                                 <dl
                                                     class="cam-la-in-box-bo-all-de-dl"
                                                 >
-                                                    <dt>프로젝트 요약</dt>
+                                                    <dt>캠페인 요약</dt>
                                                     <dd>
-                                                        후원자 분들이 프로젝트를
+                                                        후원자 분들이 캠페인를
                                                         빠르게 이해할 수 있도록
                                                         명확하고 간략하게
                                                         소개해주세요.
                                                     </dd>
                                                 </dl>
-                                                <div
-                                                    class="cam-la-in-box-bo-all-de-div"
-                                                >
-                                                    <div
-                                                        class="cam-la-in-box-bo-all-de-div-box"
-                                                    >
-                                                        <p
-                                                            class="cam-la-in-box-bo-all-de-div-box-title"
-                                                        >
-                                                            프로젝트 요약
+                                                <div class="cam-la-in-box-bo-all-de-div">
+                                                    <div class="cam-la-in-box-bo-all-de-div-box">
+                                                        <p class="cam-la-in-box-bo-all-de-div-box-title">
+                                                            요약
                                                         </p>
-                                                        <input
-                                                            type="text"
-                                                            class="cam-la-in-box-bo-all-de-div-box-input"
-                                                            placeholder="프로제특 요약내용을 입력해주세요"
-                                                        />
+                                                        <textarea 
+                                                            name="shortDescription" 
+                                                            placeholder="캠페인을 간단하게 설명해주세요!"
+                                                            class="cam-la-in-box-bo-all-de-div-box-textarea"
+                                                        ></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -451,10 +356,10 @@
                                                     class="cam-la-in-box-bo-all-de-dl"
                                                 >
                                                     <dt>
-                                                        프로젝트 대표 이미지
+                                                        캠페인 대표 이미지
                                                     </dt>
                                                     <dd>
-                                                        후원자들이 프로젝트의
+                                                        후원자들이 캠페인의
                                                         내용을 쉽게 파악하고
                                                         좋은 인상을 받을 수
                                                         있도록 이미지를
@@ -470,7 +375,7 @@
                                                         <p
                                                             class="cam-la-in-box-bo-all-de-div-box-title"
                                                         >
-                                                            프로젝트 대표 이미지
+                                                            이미지
                                                         </p>
                                                         <div
                                                             class="cam-la-in-box-bo-all-de-div-box-img"
@@ -495,33 +400,19 @@
                                                                     업로드
                                                                 </span>
                                                                 <p>
-                                                                    파일 형식:
-                                                                    jpg 또는 png
-                                                                    / 용량: 5MB
-                                                                    이하 /
-                                                                    사이즈: 가로
-                                                                    세로 각각
-                                                                    1,000px
-                                                                    이상의
-                                                                    <span
-                                                                        >가로
-                                                                        세로
-                                                                        비율
-                                                                        1:1</span
-                                                                    >
+                                                                    파일 형식: jpg 또는 png / 용량: 5MB 이하 /
+                                                                    사이즈:<span>600 x 600px 이상</span> 1:1 비율
                                                                 </p>
-                                                                <strong
-                                                                    >※ 이미지를
-                                                                    등록하면
-                                                                    즉시
-                                                                    반영됩니다.</strong
-                                                                >
+                                                                <strong>※ 이미지를 등록하면 즉시 반영됩니다.</strong>
                                                             </div>
                                                             <input
                                                                 type="file"
                                                                 multiple
                                                                 class="cam-img"
+                                                                id="campaignImageInput"
+                                                                accept="image/*"  
                                                             />
+                                                            <!-- 이미지 파일만 선택 가능하도록 -->
                                                         </div>
                                                         <li class="cam-img-re">
                                                             <div
@@ -536,8 +427,10 @@
                                                                         이미지</span
                                                                     >
                                                                     <img
-                                                                        src="../../static/images/fix/logo.png"
-                                                                        alt=""
+                                                                        id="previewImage"
+                                                                        src="../../static/images/fix/logo.png"  
+                                                                        alt="이미지 미리보기"
+                                                                        style="display: none; max-width: 100%; height: auto;"
                                                                     />
                                                                 </div>
                                                                 <div
@@ -565,110 +458,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="cam-la-in-box-bo-all">
-                                            <!-- 이것도 사실 반복-->
-                                            <div
-                                                class="cam-la-in-box-bo-all-de"
-                                            >
-                                                <dl
-                                                    class="cam-la-in-box-bo-all-de-dl"
-                                                >
-                                                    <dt>검색 태그</dt>
-                                                    <dd>
-                                                        잠재 후원자의 관심사를
-                                                        고려한 검색 태그를
-                                                        입력해주세요. 외부
-                                                        검색엔진이나 텀블벅에서
-                                                        해당 태그로 검색한
-                                                        후원자가 프로젝트를
-                                                        발견할 수 있습니다.
-                                                    </dd>
-                                                </dl>
-                                                <div
-                                                    class="cam-la-in-box-bo-all-de-div"
-                                                >
-                                                    <div
-                                                        class="cam-la-in-box-bo-all-de-div-box"
-                                                    >
-                                                        <p
-                                                            class="cam-la-in-box-bo-all-de-div-box-title"
-                                                        >
-                                                            검색 태그
-                                                        </p>
-                                                        <input
-                                                            type="text"
-                                                            class="cam-la-in-box-bo-all-de-div-box-input"
-                                                            placeholder="프로제특 요약내용을 입력해주세요"
-                                                        />
-                                                        <div class="cam-tag">
-                                                            <p>
-                                                                검색 태그는 최대
-                                                                10개까지 등록할
-                                                                수 있습니다.
-                                                            </p>
-                                                            <span>2/10개</span>
-                                                        </div>
-                                                        <div class="cam-tag-sh">
-                                                            <!-- 각각의 div -->
-                                                            <div
-                                                                class="cam-tag-sh-pe"
-                                                            >
-                                                                <span
-                                                                    >끼에엑</span
-                                                                >
-                                                                <button
-                                                                    class="cam-tag-sh-pe-btn"
-                                                                >
-                                                                    <div>
-                                                                        <svg
-                                                                            width="10"
-                                                                            height="10"
-                                                                            viewBox="0 0 10 10"
-                                                                            fill="none"
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                fill="#6D6D6D"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                            <div
-                                                                class="cam-tag-sh-pe"
-                                                            >
-                                                                <span
-                                                                    >끄아악</span
-                                                                >
-                                                                <button
-                                                                    class="cam-tag-sh-pe-btn"
-                                                                >
-                                                                    <div>
-                                                                        <svg
-                                                                            width="10"
-                                                                            height="10"
-                                                                            viewBox="0 0 10 10"
-                                                                            fill="none"
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                fill="#6D6D6D"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
                                     <!-- 펀딩계획 -->
                                     <div
@@ -684,7 +473,7 @@
                                                 >
                                                     <dt>목표 기부수량</dt>
                                                     <dd>
-                                                        프로젝트를 완수하기 위해
+                                                        캠페인를 완수하기 위해
                                                         필요한 금액을
                                                         설정해주세요.
                                                     </dd>
@@ -1791,14 +1580,14 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- 프로젝트 계획 -->
+                                    <!-- 캠페인 계획 -->
                                     <div
                                         class="cam-la-in-box-bo project hidden"
                                     >
                                         <div class="cam-la-in-box-bo-all">
                                             <div class="cam-pro-top">
                                                 <div class="cam-pro-top-in">
-                                                    프로젝트 계획
+                                                    캠페인 계획
                                                 </div>
                                             </div>
                                             <div class="cam-pro-bo">
@@ -1848,7 +1637,7 @@
                                                         <div
                                                             class="cam-pro-bo-ri-in-title"
                                                         >
-                                                            프로젝트 소개
+                                                            캠페인 소개
                                                         </div>
                                                         <!-- 섬머노트 들어가는 자리 -->
                                                         <div
