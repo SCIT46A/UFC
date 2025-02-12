@@ -149,20 +149,36 @@ function generateNoticeTable(notices) {
 }
 
 
-//창작자 승인 대기
+// ✅ 창작자 승인 대기 목록 조회
 function fetchCreatorApproval() {
     fetch("/api/creator-approval")
         .then(response => {
             if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
+                return response.text().then(err => {
+                    throw new Error("서버 오류 발생: " + err);
+                });
             }
             return response.json();
         })
         .then(data => {
-            if (!Array.isArray(data)) {  // 🚀 데이터가 배열인지 확인
-                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
-            }
-            document.getElementById("content").innerHTML = generateCreatorApprovalTable(data); // ✅ `data`를 함수에 전달
+            console.log("📢 API 원본 응답 데이터:", data);
+
+            // 🔥 `ownUser.creators` 삭제 후 JSON 무결성 확인
+            const cleanedData = data.map(creator => {
+                if (creator.ownUser) {
+                    // 🔥 ownUser가 비어 있으면 undefined 방지
+                    if (creator.ownUser.creators) {
+                        delete creator.ownUser.creators;
+                    }
+                } else {
+                    creator.ownUser = null;  // JSON 형식 유지
+                }
+                return creator;
+            });
+
+            console.log("🚀 순환 참조 제거된 데이터:", cleanedData);
+
+            document.getElementById("content").innerHTML = generateCreatorApprovalTable(cleanedData);
         })
         .catch(error => {
             console.error("❌ 창작자 승인 대기 목록 로드 오류:", error);
@@ -170,11 +186,52 @@ function fetchCreatorApproval() {
         });
 }
 
-//창작자 승인 대기 동적 생성
 
-function generateCreatorApprovalTable() {
-// ❌❌❌❌❌❌❌❌추가 해야해요❌❌❌❌❌❌❌❌❌ ApiController, service, repository 다 추가해야함
+
+// 창작자 승인 대기 테이블 생성
+function generateCreatorApprovalTable(creators) {
+    if (!creators || creators.length === 0) {
+        return `<h2>창작자 승인 대기</h2><p>승인 대기 중인 창작자가 없습니다.</p>`;
+    }
+
+    let tableHTML = `
+        <h2>창작자 승인 대기</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                      
+                        <th>창작자 번호</th>
+                        <th>사업자 이름</th>
+                        <th>상호</th>
+                        <th>사업자 등록번호</th>
+                        <th>창작자 전환 관리자 승인여부</th>
+                        <th>승인</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    creators.forEach(creator => {
+        const creatorStatus = creator.creatorStatus ? "승인됨" : "대기 중";  // 🔥 Boolean을 텍스트로 변환
+
+        tableHTML += `
+            <tr>
+                
+                <td>${creator.creatorId}</td>
+                <td>${creator.bName || "N/A"}</td>
+                <td>${creator.companyName || "N/A"}</td>
+                <td>${creator.bRegistNumber || "N/A"}</td>
+                <td>${creatorStatus}</td>
+                <td><button onclick="approveCreator(${creator.creatorId})">승인</button></td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table></div>`;
+    return tableHTML;
 }
+
 
 
 // 캠페인 신고 관리

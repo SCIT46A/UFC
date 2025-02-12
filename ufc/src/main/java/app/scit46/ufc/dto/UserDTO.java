@@ -2,6 +2,7 @@ package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.PrivatePhotoEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
 
