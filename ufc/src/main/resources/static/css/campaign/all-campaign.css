@@ -31,7 +31,7 @@ main{
 .main{
     position: relative;
     display: block;
-    width: 100%;
+    width: 1200px;
     -webkit-box-flex: 1;
     flex-grow: 1;
     background: rgb(255, 255, 255);
@@ -76,6 +76,7 @@ main{
     height: 100%;
     overflow: auto hidden;
     padding-left: 20px;
+    justify-content: space-between;
 }
 
 .main-top-in-content-target-box{
@@ -520,4 +521,82 @@ em{
     background: rgb(255, 255, 255);
     position: relative;
     z-index: 2;
+}
+
+.main-search-tag{
+    margin-top: 10px;
+    overflow-x: auto;
+    flex-wrap: wrap;
+    display: flex;
+    box-sizing: border-box;
+    padding-left: 20px;
+}
+
+.main-search-tag-pe{
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+    font-weight: 300;
+    font-size: .8125rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .75rem;
+    padding-right: .75rem;
+    --tw-bg-opacity: 1;
+    background-color: #16A34A;
+    display: flex;
+    margin-right: 10px;
+    border-radius: 4px;
+}
+
+.main-search-tag-pe-btn{
+    align-items: center;
+    display: flex;
+    margin-left: .25rem;
+    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+    transition-duration: .15s;
+    text-align: left;
+    cursor: pointer;
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+    
+}
+
+.main-search-tag-pe-btn svg{
+    width: 1rem;
+    height: 1rem;
+    display: block;
+    vertical-align: middle;
+}
+
+.main-search-box{
+    --tw-drop-shadow: drop-shadow(0 1px 1px rgba(0, 0, 0, .05));
+    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+    padding-right: 1.5rem;
+    padding-left: 3.5rem;
+    --tw-bg-opacity: 1;
+    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+    border-radius: .375rem;
+    text-overflow: ellipsis;
+    width: 100%;
+    height: 3rem;
+    appearance: none;
+    border-color: rgba(0, 0, 0, .1);
+    font-size: .9375rem;
+    border-width: 1px;
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+    color: black;
+    border: 1px solid rgb(228, 228, 228);
+}
+
+.main-search-box:focus-visible {
+    outline: none;
+    box-shadow: none;
+}
+
+.main-search-box-all{
+    --tw-space-x-reverse: 0;
+    position: relative;
 }
