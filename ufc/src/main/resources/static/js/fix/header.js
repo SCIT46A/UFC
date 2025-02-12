@@ -41,7 +41,7 @@ $(function () {
         method: "GET",
         success: function (response) {
             // 일반유저
-            if (response.roles === "USER") {
+            if (response.roles === "ROLE_USER") {
                 $(".header-box-top-pe").append(`
                     <div class="header-box-top-pe-my">
                         <div class="header-box-top-pe-my-in">
@@ -69,7 +69,7 @@ $(function () {
                 initializeEventListeners();
             }
             // 판매자
-            else if (response.roles === "CREATOR") {
+            else if (response.roles === "ROLE_CREATOR") {
                 $(".header-box-top-pe").append(`
                     <div class="header-box-top-pe-my-add">
                         <div class="header-box-top-pe-my-in">
@@ -89,6 +89,33 @@ $(function () {
                             <!-- 이름 -->
                             <div class="header-box-top-pe-my-in-name">
                                 ${response.userName}
+                            </div>
+                        </div>
+                        <!-- 로그인창모달 -->
+                    </div>
+                `);
+                initializeEventListeners();
+            }
+            else if (response.roles === "ROLE_ADMIN") {
+                $(".header-box-top-pe").append(`
+                    <div class="header-box-top-pe-my-add">
+                        <div class="header-box-top-pe-my-in">
+                            <!-- 프로필 -->
+                            <div class="header-box-top-pe-my-in-pro">
+                                <span class="profile-th">
+                                    <svg
+                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
+                                        width="48"
+                                        height="48"
+                                        viewBox="0 0 48 48"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    ></svg>
+                                </span>
+                            </div>
+                            <!-- 이름 -->
+                            <div class="header-box-top-pe-my-in-name">
+                                관리자 ${response.userName} 님
                             </div>
                         </div>
                         <!-- 로그인창모달 -->
@@ -119,6 +146,10 @@ $(function () {
         url: "/check-tag",
         method: "GET",
         success: function (response) {
+            console.log(response)
+
+
+
             response.forEach((data)=> {
                 $(".modal-re-search-box-top").append(
                 `

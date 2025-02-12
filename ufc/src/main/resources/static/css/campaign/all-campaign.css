@@ -165,7 +165,7 @@ main{
 }
 
 .main-bo-in-top span{
-    color: rgb(255, 87, 87);
+    color: #16A34A;
 }
 
 .main-bo-in-bo{
@@ -178,7 +178,7 @@ main{
 }
 
 .main-bo-in-bo-pe{
-    width: 25%;
+    width: 33%;
     margin: 0px;
     box-sizing: border-box;
     padding: 8px 10px;
@@ -324,7 +324,7 @@ em{
 }
 
 .main-funding-top-per{
-    color: rgb(235, 75, 56);
+    color: #16a34a;
     font-size: 14px;
     font-weight: bold;
     line-height: 120%;
@@ -351,7 +351,7 @@ em{
     width: 12334%;
     display: block;
     height: 100%;
-    background: rgb(235, 75, 56);
+    background: #16a34a;
 }
 
 .main-like-btn{

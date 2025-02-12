@@ -35,7 +35,7 @@ public class UserService {
         user.setUserName(userDTO.getUserName());
         user.setEmail(userDTO.getEmail());
         user.setLoginType(userDTO.getLoginType()); // 제공자 정보 설정
-        user.setRoles("USER");
+        user.setRoles("ROLE_USER");
         user.setUserStatus(1);
         user.setIsMarketed(userDTO.getIsMarketed());
         user.setPhoneNumber(userDTO.getPhoneNumber());

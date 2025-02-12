@@ -53,12 +53,7 @@ public class MainController {
   }
 
 
-// 검색시 사용하는 검색창
-  @GetMapping("/campaign/all/{search}")
-  public String allCampaign(@PathVariable("search") String search, Model model) {
-    model.addAttribute("searchText", search);
-    return "campaign/all-campaign"; // 검색어를 포함한 뷰 반환
-  }
+
 
 //  알림상태 확인하는거
   @GetMapping("/check-alert")
@@ -109,11 +104,7 @@ public class MainController {
   }
 
 
-  @GetMapping("logout")
-  public String logout(HttpSession session) {
-    session.removeAttribute("loginUserId");
-    return "redirect:/";
-  }
+
 
 
 

@@ -86,7 +86,7 @@ public class UserController {
         return "/login/joindetail";
     }
 
-    @PostMapping("/joindetail")
+    @PostMapping("/joinProc")
     public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check ,
                                    @RequestParam("address") String address,
                                    @RequestParam("phone") String phone,
@@ -124,6 +124,7 @@ public class UserController {
         // 메인 페이지로 리다이렉트
         return "redirect:/";
     }
+
 
 }
 
