@@ -430,8 +430,8 @@
                                                 >
                                                     <dt>목표 기부수량</dt>
                                                     <dd>
-                                                        캠페인를 완수하기 위해
-                                                        필요한 금액을
+                                                        캠페인을 완수하기 위한
+                                                        재료와 목표 수량을
                                                         설정해주세요.
                                                     </dd>
                                                     <div class="cam-wr">
@@ -536,6 +536,7 @@
                                                             </div>
                                                             <button
                                                                 class="cam-la-pay-btn"
+                                                                disabled
                                                             >
                                                                 등록
                                                             </button>
@@ -544,12 +545,10 @@
                                                             class="cam-la-pay-box"
                                                         >
                                                             <div
-                                                                class="cam-la-pay-box-total"
+                                                                class="cam-la-pay-box-total funding"
                                                             >
                                                                 <span
-                                                                    >목표 달성
-                                                                    시 예상
-                                                                    수령품</span
+                                                                    >목표 달성에 필요한 물품</span
                                                                 >
                                                             </div>
                                                             <!-- 기부받을 품목 나오는곳 -->
@@ -567,10 +566,8 @@
                                                     <dd>
                                                         설정한 일시가 되면
                                                         펀딩이 자동 시작됩니다.
-                                                        펀딩 시작 전까지 날짜를
-                                                        변경할 수 있고, 즉시
-                                                        펀딩을 시작할 수도
-                                                        있습니다.
+                                                        캠페인은 펀딩 시작 후에는
+                                                        <strong class="upda-text-danger">수정 및 취소가 불가능</strong>합니다.
                                                     </dd>
                                                 </dl>
                                                 <div
@@ -584,87 +581,32 @@
                                                                 class="cam-la-ti-in"
                                                             >
                                                                 <div
-                                                                    class="cam-la-ti-in-top"
-                                                                >
-                                                                    <div
-                                                                        class="cam-la-to-in-top-box"
-                                                                    >
-                                                                        <p>
-                                                                            시작일
-                                                                        </p>
-                                                                        <!-- 달력 -->
-                                                                        <div>
-                                                                            <input
-                                                                                class="datepicker"
-                                                                                id="activity-start-date"
-                                                                                placeholder="날짜선택"
-                                                                                autocomplete="off"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="cam-la-to-in-top-box"
-                                                                    >
-                                                                        <p>
-                                                                            시간선택
-                                                                        </p>
-                                                                        <!-- 달력 -->
-                                                                        <div>
-                                                                            <input
-                                                                                class="timepicker"
-                                                                                id="start-time"
-                                                                                placeholder="시간선택"
-                                                                                autocomplete="off"
-                                                                            />
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div
-                                                                    class="cam-la-ti-in-bo-a"
-                                                                >
-                                                                    <p>
-                                                                        펀딩일수
-                                                                    </p>
-                                                                    최대 60일
-                                                                </div>
-                                                            </li>
-                                                            <li
-                                                                class="cam-la-ti-in"
-                                                            >
-                                                                <div
                                                                     class="cam-la-to-in-top-box"
                                                                 >
                                                                     <p>
-                                                                        종료일
+                                                                        시작 일자
                                                                     </p>
                                                                     <!-- 달력 -->
                                                                     <div>
                                                                         <input
-                                                                            class="datepicker"
-                                                                            id="end-date"
-                                                                            placeholder="날짜선택"
+                                                                            type="datetime-local"
+                                                                            class="datetime-picker"
+                                                                            id="funding-start-datetime"
+                                                                            placeholder="일자선택"
                                                                             autocomplete="off"
                                                                         />
                                                                     </div>
                                                                 </div>
                                                             </li>
-                                                            <li
-                                                                class="cam-la-ti-in"
-                                                            >
-                                                                <div
-                                                                    class="cam-la-to-in-top-box"
-                                                                >
-                                                                    <div
-                                                                        class="cam-la-ti-in-bo"
-                                                                    >
+                                                            <li class="cam-la-ti-in">
+                                                                <div class="cam-la-ti-in-top">
+                                                                    <div class="cam-la-to-in-top-box">
                                                                         <p>
-                                                                            후원
-                                                                            마감일
+                                                                            펀딩 기간
                                                                         </p>
-                                                                        종료일
-                                                                        다음
-                                                                        날로부터
-                                                                        7일
+                                                                        <div id="funding-period">
+                                                                            최대 60일
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -675,37 +617,16 @@
                                                                     class="cam-la-to-in-top-box"
                                                                 >
                                                                     <p>
-                                                                        예상
-                                                                        발송일
+                                                                        종료 일자
                                                                     </p>
                                                                     <!-- 달력 -->
                                                                     <div>
-                                                                        <input
-                                                                            class="datepicker"
-                                                                            id="send-date"
-                                                                            placeholder="날짜선택"
-                                                                            autocomplete="off"
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            </li>
-                                                            <li
-                                                                class="cam-la-ti-in-la"
-                                                            >
-                                                                <div
-                                                                    class="cam-la-to-in-top-box"
-                                                                >
-                                                                    <div
-                                                                        class="cam-la-ti-in-bo"
-                                                                    >
-                                                                        <p>
-                                                                            후원
-                                                                            마감일
-                                                                        </p>
-                                                                        종료일
-                                                                        다음
-                                                                        날로부터
-                                                                        7일
+                                                                        <input 
+                                                                            type="datetime-local" 
+                                                                            class="datetime-picker" 
+                                                                            id="funding-end-datetime" 
+                                                                            placeholder="일자선택"
+                                                                            autocomplete="off" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -727,13 +648,10 @@
                                                         <div
                                                             class="cam-gi-box-le-in-top"
                                                         >
-                                                            <span
-                                                                class="cam-gi-box-le-in-top-title"
-                                                                >내가 만든선물
-                                                                <span
-                                                                    >2</span
-                                                                ></span
-                                                            >
+                                                            <span class="cam-gi-box-le-in-top-title">
+                                                                제작할 리워드
+                                                                <span>2</span>
+                                                            </span>
                                                         </div>
                                                         <ul
                                                             class="cam-gi-box-le-in-bo"
@@ -827,185 +745,7 @@
                                                                         </svg>
                                                                     </div>
                                                                 </button>
-                                                            </div>
-                                                            <div
-                                                                class="cam-gi-box-le-in-bo-pe"
-                                                            >
-                                                                <!-- 내용 -->
-                                                                <div>
-                                                                    <button
-                                                                        class="cam-gi-box-le-in-bo-pe-content"
-                                                                    >
-                                                                        <!-- 받는 기부품 -->
-                                                                        <strong
-                                                                            >청바지
-                                                                            2개
-                                                                            +</strong
-                                                                        >
-                                                                        <!-- 판매자가 입력한 리워드 이름 -->
-                                                                        <p>
-                                                                            선물제목
-                                                                        </p>
-                                                                        <!-- 리워드 구성품 -->
-                                                                        <ul>
-                                                                            <li>
-                                                                                가방
-                                                                                1개
-                                                                            </li>
-                                                                        </ul>
-                                                                        <span
-                                                                            >예상
-                                                                            발송
-                                                                            시작일
-                                                                            :
-                                                                            <em
-                                                                                >2025년
-                                                                                4월
-                                                                                18일</em
-                                                                            ></span
-                                                                        >
-                                                                        <div
-                                                                            class="cam-gi-box-le-in-bo-pe-content-div"
-                                                                        >
-                                                                            <em
-                                                                                class="cam-gi-em"
-                                                                            >
-                                                                                <div
-                                                                                    class="cam-gi-em-in"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                0
-                                                                                명이
-                                                                                선택
-                                                                            </em>
-                                                                            <div
-                                                                                class="cam-gi-em-box"
-                                                                            >
-                                                                                <em
-                                                                                    >1개
-                                                                                    남음</em
-                                                                                >
-                                                                            </div>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                                <!-- 삭제버튼 -->
-                                                                <button
-                                                                    class="cam-gi-de"
-                                                                >
-                                                                    <div
-                                                                        class="cam-gi-de-in"
-                                                                    >
-                                                                        <svg
-                                                                            viewBox="0 0 48 48"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                            <div
-                                                                class="cam-gi-box-le-in-bo-pe"
-                                                            >
-                                                                <!-- 내용 -->
-                                                                <div>
-                                                                    <button
-                                                                        class="cam-gi-box-le-in-bo-pe-content"
-                                                                    >
-                                                                        <!-- 받는 기부품 -->
-                                                                        <strong
-                                                                            >청바지
-                                                                            2개
-                                                                            +</strong
-                                                                        >
-                                                                        <!-- 판매자가 입력한 리워드 이름 -->
-                                                                        <p>
-                                                                            선물제목
-                                                                        </p>
-                                                                        <!-- 리워드 구성품 -->
-                                                                        <ul>
-                                                                            <li>
-                                                                                가방
-                                                                                1개
-                                                                            </li>
-                                                                        </ul>
-                                                                        <span
-                                                                            >예상
-                                                                            발송
-                                                                            시작일
-                                                                            :
-                                                                            <em
-                                                                                >2025년
-                                                                                4월
-                                                                                18일</em
-                                                                            ></span
-                                                                        >
-                                                                        <div
-                                                                            class="cam-gi-box-le-in-bo-pe-content-div"
-                                                                        >
-                                                                            <em
-                                                                                class="cam-gi-em"
-                                                                            >
-                                                                                <div
-                                                                                    class="cam-gi-em-in"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                0
-                                                                                명이
-                                                                                선택
-                                                                            </em>
-                                                                            <div
-                                                                                class="cam-gi-em-box"
-                                                                            >
-                                                                                <em
-                                                                                    >1개
-                                                                                    남음</em
-                                                                                >
-                                                                            </div>
-                                                                        </div>
-                                                                    </button>
-                                                                </div>
-                                                                <!-- 삭제버튼 -->
-                                                                <button
-                                                                    class="cam-gi-de"
-                                                                >
-                                                                    <div
-                                                                        class="cam-gi-de-in"
-                                                                    >
-                                                                        <svg
-                                                                            viewBox="0 0 48 48"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
+                                                            </div>                                                
                                                         </ul>
                                                     </div>
                                                 </div>
@@ -1307,30 +1047,44 @@
                                                             <section
                                                                 class="gi-se"
                                                             >
-                                                                <!-- 상단 이름 -->
-                                                                <div
-                                                                    class="gi-se-title"
-                                                                >
-                                                                    <div
-                                                                        class="gi-se-div"
-                                                                    >
-                                                                        <span
-                                                                            ><p>
-                                                                                예상
-                                                                                발송
-                                                                                시작일
-                                                                            </p></span
-                                                                        >
+                                                                <div class="cam-la-in-box-bo-all-de-div">
+                                                                    <div class="cam-la-in-box-bo-all-de-div-box">
+                                                                        <ol class="cam-la-ti">
+                                                                            <li class="cam-la-ti-in">
+                                                                                <div class="cam-la-to-in-top-box">
+                                                                                    <p>
+                                                                                        종료 일자
+                                                                                    </p>
+                                                                                    <!-- 달력 -->
+                                                                                    <div>
+                                                                                        <input type="datetime-local" class="datetime-picker" id="funding-end-datetime"
+                                                                                            placeholder="일자선택" autocomplete="off" readonly />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li class="cam-la-ti-in">
+                                                                                <div class="cam-la-to-in-top-box">
+                                                                                    <p>준비 기간</p>
+                                                                                    <div id="prepare-period">
+                                                                                        7일
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                            <li class="cam-la-ti-in">
+                                                                                <div class="cam-la-to-in-top-box">
+                                                                                    <p>
+                                                                                        예상 발송일
+                                                                                    </p>
+                                                                                    <!-- 달력 -->
+                                                                                    <div>
+                                                                                        <input type="datetime-local" class="datetime-picker" id="funding-send-datetime"
+                                                                                            placeholder="일자선택" autocomplete="off" />
+                                                                                    </div>
+                                                                                </div>
+                                                                            </li>
+                                                                        </ol>
+                                                                        <p></p>
                                                                     </div>
-                                                                </div>
-                                                                <!-- 하단 받는거 -->
-                                                                <div>
-                                                                    <input
-                                                                        class="datepicker"
-                                                                        id="send-date-time"
-                                                                        placeholder="날짜 선택"
-                                                                        autocomplete="off"
-                                                                    />
                                                                 </div>
                                                             </section>
                                                             <section
@@ -1396,6 +1150,7 @@
                                                                 </div>
                                                                 <div
                                                                     class="cam-la-pay-box"
+                                                                    disabled
                                                                 >
                                                                     <div
                                                                         class="cam-la-pay-box-total"
@@ -1405,63 +1160,7 @@
                                                                             구성품</span
                                                                         >
                                                                     </div>
-                                                                    <!-- 기부받을 품목 나오는곳 -->
-                                                                    <div
-                                                                        class="cam-la-pay-box-pe"
-                                                                    >
-                                                                        청바지
-                                                                        <em
-                                                                            >20개</em
-                                                                        >
-                                                                        <button
-                                                                            class="cam-tag-sh-pe-btn"
-                                                                        >
-                                                                            <div>
-                                                                                <svg
-                                                                                    width="10"
-                                                                                    height="10"
-                                                                                    viewBox="0 0 10 10"
-                                                                                    fill="none"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                >
-                                                                                    <path
-                                                                                        fill-rule="evenodd"
-                                                                                        clip-rule="evenodd"
-                                                                                        d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                        fill="#6D6D6D"
-                                                                                    ></path>
-                                                                                </svg>
-                                                                            </div>
-                                                                        </button>
-                                                                    </div>
-                                                                    <div
-                                                                        class="cam-la-pay-box-pe"
-                                                                    >
-                                                                        청자켓
-                                                                        <em
-                                                                            >30개</em
-                                                                        >
-                                                                        <button
-                                                                            class="cam-tag-sh-pe-btn"
-                                                                        >
-                                                                            <div>
-                                                                                <svg
-                                                                                    width="10"
-                                                                                    height="10"
-                                                                                    viewBox="0 0 10 10"
-                                                                                    fill="none"
-                                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                                >
-                                                                                    <path
-                                                                                        fill-rule="evenodd"
-                                                                                        clip-rule="evenodd"
-                                                                                        d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                        fill="#6D6D6D"
-                                                                                    ></path>
-                                                                                </svg>
-                                                                            </div>
-                                                                        </button>
-                                                                    </div>
+                                                                    <!-- 리워드 품목 나오는곳 -->
                                                                 </div>
                                                             </section>
                                                             <div
