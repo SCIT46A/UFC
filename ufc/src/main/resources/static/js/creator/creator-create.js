@@ -296,3 +296,23 @@ function update_seller_regist_name() {
 function creator_intro() {
     document.querySelector('.display_creator_intro').textContent = document.querySelector('.desc-form-input').value;
 }
+
+document.getElementById("seller_regist_number").addEventListener("input", function (e) {
+    let value = e.target.value.replace(/\D/g, "");  // 숫자만 남기기
+    if (value.length > 10) value - value.slice(0, 10);  // 10자리 제한
+
+    // 형식 맞추기: xxx-xx-xxxxx
+    let formattedValue = "";
+    if (value.length > 0) formattedValue += value.substring(0, 3);
+    if (value.length > 3) formattedValue += "-" + value.substring(3, 5);
+    if (value.length > 5) formattedValue += "-" + value.substring(5);
+
+    e.target.value = formattedValue;
+});
+
+// 숫자만 입력 가능하도록 키 입력 필터링
+document.getElementById("seller_regist_number").addEventListener("keydown", function (e) {
+    if (!/[\d]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
+        e.preventDefault();
+    }
+});
