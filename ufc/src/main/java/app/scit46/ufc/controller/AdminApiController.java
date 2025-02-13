@@ -1,17 +1,12 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.NoticeDTO;
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.ReportDTO;
-import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.*;
 import app.scit46.ufc.service.NoticeService;
 import app.scit46.ufc.service.CampaignService;
 import app.scit46.ufc.service.ReportService;
 import app.scit46.ufc.service.CreatorService;
-import com.nimbusds.jose.shaded.gson.Gson;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -68,16 +63,56 @@ public class AdminApiController {
         }
     }
 
-    // ✅ 캠페인 운영 현황 API
+    // ✅ 캠페인 운영 현황 API (올바른 엔드포인트 유지)
     @GetMapping("/campaign-status")
-    public ResponseEntity<List<CampaignDTO>> getAllCampaigns() {
+    public ResponseEntity<List<CampaignDTO>> getCampaignStatus() {
         return ResponseEntity.ok(campaignService.getAllCampaigns());
+    }
+
+    // ✅ 캠페인 목표 조회 API (수량 목표 포함)
+    @GetMapping("/campaign-goals")
+    public ResponseEntity<List<CampaignGoalDTO>> getAllCampaignGoals() {
+        try {
+            return ResponseEntity.ok(campaignService.getAllCampaignGoals());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    // ✅ 캠페인 기부 내역 조회 API
+    @GetMapping("/material-donations")
+    public ResponseEntity<List<MaterialDonationDTO>> getAllMaterialDonations() {
+        try {
+            return ResponseEntity.ok(campaignService.getAllMaterialDonations());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
     // ✅ 캠페인 신고 현황 API (조회만 가능)
     @GetMapping("/campaign-report")
     public ResponseEntity<List<ReportDTO>> getReportedCampaigns() {
         return ResponseEntity.ok(reportService.getReportedCampaigns());
+    }
+
+    // ✅ 승인 대기 중인 캠페인 목록 조회 API
+    @GetMapping("/campaigns-pending")
+    public ResponseEntity<List<CampaignDTO>> getPendingCampaigns() {
+        return ResponseEntity.ok(campaignService.getPendingCampaigns());
+    }
+
+    // ✅ **캠페인 승인 API** (URL 통일)
+    @PutMapping("/campaigns/{campaignId}/approve")
+    public ResponseEntity<String> approveCampaign(@PathVariable Long campaignId) {
+        try {
+            campaignService.approveCampaign(campaignId);
+            return ResponseEntity.ok("캠페인이 승인되었습니다.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("캠페인 승인 중 오류 발생: " + e.getMessage());
+        }
     }
 
     // ✅ 창작자 승인 대기 목록 조회 API
@@ -109,19 +144,10 @@ public class AdminApiController {
         return ResponseEntity.ok(formattedCreators);
     }
 
-
-
-
-    @PostMapping("/creator-approval/approve")
-    public ResponseEntity<String> approveCreator(@RequestBody Map<String, Long> request) {
+    // ✅ 창작자 승인 API (URL 통일)
+    @PostMapping("/creators/{creatorId}/approve")
+    public ResponseEntity<String> approveCreator(@PathVariable Long creatorId) {
         try {
-            Long creatorId = request.get("creatorId");
-
-            if (creatorId == null) {
-                return ResponseEntity.badRequest().body("창작자 ID가 제공되지 않았습니다.");
-            }
-
-            System.out.println("✔ Approving Creator ID: " + creatorId); // 디버깅용 로그 추가
             creatorService.approveCreator(creatorId);
             return ResponseEntity.ok("창작자 승인 완료!");
         } catch (Exception e) {
@@ -129,5 +155,4 @@ public class AdminApiController {
                     .body("창작자 승인 중 오류 발생: " + e.getMessage());
         }
     }
-
 }
