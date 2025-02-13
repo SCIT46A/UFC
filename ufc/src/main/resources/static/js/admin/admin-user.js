@@ -270,55 +270,21 @@ function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
 
-    let startMonth = (selectedQuarter - 1) * 3; // 분기 시작 월 (0부터 시작)
-    let endMonth = startMonth + 2; // 분기 종료 월
+    const quarterStartMonth = (selectedQuarter - 1) * 3 + 1;
+    const quarterEndMonth = quarterStartMonth + 2;
 
-    let filteredCampaigns = [];
+    const filteredCampaigns = allCampaigns.filter(campaign => {
+        const startDate = new Date(campaign.startDate);
+        const campaignYear = startDate.getFullYear();
+        const campaignMonth = startDate.getMonth() + 1;
 
-    if (currentFilter === "ongoing") {
-        filteredCampaigns = allCampaigns.filter(campaign => {
-            const campaignStart = new Date(campaign.startDate);
-            const campaignEnd = new Date(campaign.endDate);
+        return campaignYear === selectedYear && campaignMonth >= quarterStartMonth && campaignMonth <= quarterEndMonth;
+    });
 
-            return (
-                campaignStart.getFullYear() === selectedYear &&
-                campaignStart.getMonth() >= startMonth &&
-                campaignStart.getMonth() <= endMonth &&
-                campaignStart <= new Date() && campaignEnd >= new Date() // ✅ 진행 중인 캠페인만
-            );
-        });
+    // ✅ 필터링된 캠페인 테이블 렌더링
+    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
 
-        document.getElementById("table-container").innerHTML = generateOngoingCampaignTable(
-            filteredCampaigns, allCampaignGoals, allMaterialDonations
-        );
-    } else if (currentFilter === "pending") {
-        filteredCampaigns = allCampaigns.filter(campaign => {
-            const campaignStart = new Date(campaign.startDate);
-            return (
-                campaignStart.getFullYear() === selectedYear &&
-                campaignStart.getMonth() >= startMonth &&
-                campaignStart.getMonth() <= endMonth &&
-                !campaign.campaignStatus // ✅ 승인 대기 중 캠페인만
-            );
-        });
-
-        document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns);
-    } else if (currentFilter === "completed") {
-        filteredCampaigns = allCampaigns.filter(campaign => {
-            const campaignStart = new Date(campaign.startDate);
-            const campaignEnd = new Date(campaign.endDate);
-            return (
-                campaignStart.getFullYear() === selectedYear &&
-                campaignStart.getMonth() >= startMonth &&
-                campaignStart.getMonth() <= endMonth &&
-                campaignEnd < new Date() // ✅ 종료된 캠페인만
-            );
-        });
-
-        document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns);
-    }
-
-    console.log(`✅ ${currentFilter} 캠페인에서 ${selectedYear}년 ${selectedQuarter}분기 캠페인 ${filteredCampaigns.length}개 검색됨`);
+    console.log(`🔎 검색 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter})`);
 }
 
 function generateCampaignTable(campaigns, campaignGoals = [], materialDonations = []) {
