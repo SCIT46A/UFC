@@ -9,33 +9,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
             console.log(`📢 선택된 페이지: ${page}`);
 
-            // 페이지는 서버에서 데이터를 가져와야 함
-            //캠페인 운영 현황
+            // 캠페인 운영 현황 (카운트 업데이트 필요)
             if (page === "campaign-status") {
                 fetchCampaignStatus();
                 loadCampaignStyles();
-            //캠페인 승인 관리
-            } else if (page === "campaign-approval") {
+                setTimeout(updateCampaignCounts, 500); // ✅ 딜레이 추가
+            }
+            // 캠페인 승인 관리
+            else if (page === "campaign-approval") {
                 fetchCampaignApproval();
-                updateCampaignCounts();
-                filterCampaigns();
-            //캠페인 신고 관리
-            } else if (page === "campaign-report") {
+            }
+            // 캠페인 신고 관리
+            else if (page === "campaign-report") {
                 fetchCampaignReport();
-            //창작자 승인 관리
-            } else if (page === "creator-approval") {
+            }
+            // 창작자 승인 관리
+            else if (page === "creator-approval") {
                 fetchCreatorApproval();
-            //유저 신고 관리
-            } else if (page === "user-report") {
+            }
+            // 유저 신고 관리
+            else if (page === "user-report") {
                 fetchUserReport();
+            }
             // 공지사항
-            } else if (page === "notice") {
+            else if (page === "notice") {
                 fetchNotice();
                 loadNoticeStyles(); // ✅ 공지사항 CSS 로드
-            } else if (page === "notice-form") {
-                loadNoticeForm();
+            }
+            else if (page === "notice-form") {
                 loadNoticeStyles(); // ✅ 공지사항 CSS 로드
-            } else {
+            }
+            else {
                 contentArea.innerHTML = generatePageContent(page);
             }
         });
@@ -78,27 +82,29 @@ function fetchCampaignStatus() {
         });
 }
 
-
-// 캠페인 구분 별로 건수 카운트
+let retryCount = 0;
 function updateCampaignCounts() {
-    // ✅ 캠페인 개수 업데이트 전에 HTML 요소 존재 확인
     const ongoingCountElem = document.getElementById("ongoing-count");
     const pendingCountElem = document.getElementById("pending-count");
     const completedCountElem = document.getElementById("completed-count");
 
     if (!ongoingCountElem || !pendingCountElem || !completedCountElem) {
-        console.warn("⏳ 캠페인 카운트 요소가 아직 생성되지 않았습니다. 실행 중단.");
+        if (retryCount < 5) {  // 최대 5번까지만 재시도
+            retryCount++;
+            console.warn(`⏳ 캠페인 카운트 요소가 아직 생성되지 않았습니다. 500ms 후 재시도... (시도: ${retryCount}/5)`);
+            setTimeout(updateCampaignCounts, 500);
+        } else {
+            console.error("🚨 캠페인 카운트 요소를 찾을 수 없습니다. 실행 중단.");
+        }
         return;
     }
 
     if (!allCampaigns || allCampaigns.length === 0) {
-        console.warn("📢 캠페인 데이터가 없습니다. updateCampaignCounts() 실행 취소.");
+        console.warn("📢 캠페인 데이터가 없습니다.");
         return;
     }
 
-    const now = new Date().getTime(); // ✅ 현재 시간을 UTC 밀리초로 변환
-    console.log(`✅ 현재 UTC 시간: ${new Date(now).toISOString()}`);
-
+    const now = new Date().getTime();
     let ongoingCount = 0;
     let pendingCount = 0;
     let completedCount = 0;
@@ -107,24 +113,15 @@ function updateCampaignCounts() {
         const startDate = new Date(campaign.startDate).getTime();
         const endDate = new Date(campaign.endDate).getTime();
 
-        console.log(`✅ 캠페인 [ID: ${campaign.campaignId}] 시작: ${new Date(startDate).toISOString()}, 종료: ${new Date(endDate).toISOString()}, 현재: ${new Date(now).toISOString()}`);
-
         if (!campaign.campaignStatus) {
             pendingCount++;
         } else if (startDate <= now && now <= endDate) {
-            console.log(`🎯 진행 중인 캠페인 발견! ID: ${campaign.campaignId}`);
             ongoingCount++;
         } else if (endDate < now) {
             completedCount++;
         }
     });
 
-    // ✅ 개수가 NaN이면 0으로 설정
-    ongoingCount = isNaN(ongoingCount) ? 0 : ongoingCount;
-    pendingCount = isNaN(pendingCount) ? 0 : pendingCount;
-    completedCount = isNaN(completedCount) ? 0 : completedCount;
-
-    // ✅ HTML에서 캠페인 개수 업데이트
     ongoingCountElem.textContent = `${ongoingCount}건`;
     pendingCountElem.textContent = `${pendingCount}건`;
     completedCountElem.textContent = `${completedCount}건`;
@@ -148,6 +145,16 @@ function filterCampaigns(type) {
 
     currentFilter = type; // ✅ 현재 필터 상태 업데이트
 
+    document.querySelectorAll(".tracking-card").forEach(card => card.classList.remove("active"));
+    const selectedCard = document.getElementById(`${type}-card`);
+
+    if (selectedCard) {
+        selectedCard.classList.add("active");
+    } else {
+        console.warn(`🚨 ${type}-card 요소가 없음`);
+        return;
+    }
+
     if (type === "ongoing") {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const startDate = new Date(campaign.startDate);
@@ -159,11 +166,10 @@ function filterCampaigns(type) {
             filteredCampaigns, allCampaignGoals, allMaterialDonations
         );
 
-        console.log(`✅ 진행 중인 캠페인 개수: ${filteredCampaigns.length}`);
-        return; // 진행 중인 캠페인일 경우 여기서 종료 (필터 초기화 X)
+        return;
     }
 
-    resetFilterUI(); // ✅ 다른 버튼을 클릭하면 필터 초기화
+    resetFilterUI();
 
     if (type === "pending") {
         filteredCampaigns = allCampaigns.filter(campaign => !campaign.campaignStatus);
@@ -176,11 +182,7 @@ function filterCampaigns(type) {
 
     document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
     updateCampaignCounts();
-
-    document.querySelectorAll(".tracking-card").forEach(card => card.classList.remove("active"));
-    document.getElementById(`${type}-card`).classList.add("active");
 }
-
 
 // ✅ 캠페인 현황 페이지 CSS 로드
 function loadCampaignStyles() {
@@ -261,11 +263,22 @@ function generateFilterUI() {
 
 // 📌 다른 버튼(진행/대기/종료)을 클릭할 때 필터 초기화
 function resetFilterUI() {
-    document.getElementById("year-select").selectedIndex = 0;  // ✅ 연도를 기본값으로 초기화
-    document.getElementById("quarter-select").selectedIndex = 0;  // ✅ 분기를 1분기로 초기화
+    setTimeout(() => {
+        const yearSelect = document.getElementById("year-select");
+        const quarterSelect = document.getElementById("quarter-select");
+
+        if (!yearSelect || !quarterSelect) {
+            console.warn("⏳ 필터 UI 요소가 아직 생성되지 않았습니다. 실행 중단.");
+            return;
+        }
+
+        yearSelect.selectedIndex = 0;
+        quarterSelect.selectedIndex = 0;
+    }, 500);  // 500ms 후 실행하여 요소가 렌더링될 시간을 줌
 }
 
 // 📌 연도 & 분기를 기준으로 캠페인 필터링
+// 📌 연도 & 분기를 기준으로 캠페인 필터링 (현재 선택된 상태 반영)
 function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
@@ -273,7 +286,31 @@ function filterCampaignsByDate() {
     const quarterStartMonth = (selectedQuarter - 1) * 3 + 1;
     const quarterEndMonth = quarterStartMonth + 2;
 
-    const filteredCampaigns = allCampaigns.filter(campaign => {
+    const now = new Date();
+
+    // ✅ 현재 필터 상태를 반영한 캠페인 목록 가져오기
+    let filteredCampaigns = [];
+
+    if (currentFilter === "ongoing") {
+        filteredCampaigns = allCampaigns.filter(campaign => {
+            const startDate = new Date(campaign.startDate);
+            const endDate = new Date(campaign.endDate);
+            return startDate <= now && now <= endDate;
+        });
+    } else if (currentFilter === "pending") {
+        filteredCampaigns = allCampaigns.filter(campaign => !campaign.campaignStatus);
+    } else if (currentFilter === "completed") {
+        filteredCampaigns = allCampaigns.filter(campaign => {
+            const endDate = new Date(campaign.endDate);
+            return endDate < now;
+        });
+    } else {
+        // 기본적으로 전체 목록
+        filteredCampaigns = allCampaigns;
+    }
+
+    // ✅ 선택된 날짜 범위에 맞게 필터링 적용
+    const dateFilteredCampaigns = filteredCampaigns.filter(campaign => {
         const startDate = new Date(campaign.startDate);
         const campaignYear = startDate.getFullYear();
         const campaignMonth = startDate.getMonth() + 1;
@@ -282,10 +319,13 @@ function filterCampaignsByDate() {
     });
 
     // ✅ 필터링된 캠페인 테이블 렌더링
-    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
+    document.getElementById("table-container").innerHTML = generateCampaignTable(dateFilteredCampaigns, allCampaignGoals, allMaterialDonations);
 
-    console.log(`🔎 검색 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter})`);
+    console.log(`🔎 검색 결과: ${dateFilteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
 }
+
+
+
 
 function generateCampaignTable(campaigns, campaignGoals = [], materialDonations = []) {
     if (campaigns.length === 0) {
@@ -458,7 +498,7 @@ function generateOngoingCampaignTable(campaigns, campaignGoals, materialDonation
 
 // ✅ 캠페인 승인 대기 목록 조회
 function fetchCampaignApproval() {
-    fetch("/api/campaigns-pending")  // 🔥 백엔드와 일치하는 API 엔드포인트
+    fetch("/api/campaigns-pending")
         .then(response => {
             if (!response.ok) {
                 return response.text().then(err => { throw new Error(err); });
@@ -469,13 +509,21 @@ function fetchCampaignApproval() {
             if (!Array.isArray(data)) {
                 throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
             }
-            document.getElementById("content").innerHTML = generateCampaignApprovalTable(data); // ✅ 데이터 전달
+            document.getElementById("content").innerHTML = generateCampaignApprovalTable(data);
+
+            console.log("✅ 캠페인 승인 대기 목록이 로드됨");
+
+
         })
         .catch(error => {
             console.error("❌ 캠페인 승인 대기 목록 로드 오류:", error);
             document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
         });
 }
+
+
+
+
 // ✅ 캠페인 승인 요청
 function approveCampaign(campaignId) {
     fetch(`/api/campaigns-pending/${campaignId}/approve`, {  // ✅ 올바른 엔드포인트 사용
@@ -796,10 +844,9 @@ function updateReportStatus(userId, action) {
     alert(`유저 ${userId}에게 ${action} 조치를 했습니다.`);
 }
 
-// ✅ 공지사항 CSS 로드 함수 추가
+// ✅ 공지사항 스타일 로드 (이미 로드된 경우 중복 방지)
 function loadNoticeStyles() {
-    let existingLink = document.getElementById("notice-css");
-    if (!existingLink) {
+    if (!document.getElementById("notice-css")) {
         let link = document.createElement("link");
         link.id = "notice-css";
         link.rel = "stylesheet";
@@ -808,64 +855,19 @@ function loadNoticeStyles() {
     }
 }
 
-// ✅ 공지사항 생성 폼 로드
-function loadNoticeForm() {
-    document.getElementById("content").innerHTML = `
-        <h2>공지사항 작성</h2>
-        <form id="notice-form">
-            <label for="title">제목:</label>
-            <input type="text" id="title" name="title" required>
-
-            <label for="content">내용:</label>
-            <textarea id="content" name="content" required></textarea>
-
-            <button type="button" onclick="submitNotice()">등록</button>
-        </form>
-    `;
-}
-
-// ✅ 공지사항 등록 요청
-function submitNotice() {
-    const title = document.getElementById("title").value;
-    const content = document.getElementById("content").value;
-
-    fetch("/api/notices/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, content })
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            alert("공지사항이 등록되었습니다!");
-            fetchNotice();
-        })
-        .catch(error => {
-            console.error("❌ 공지사항 등록 오류:", error);
-            alert("공지사항 등록 중 오류가 발생했습니다.");
-        });
-}
-
-
-//공지사항
+// ✅ 공지사항 데이터 가져와서 화면에 표시
 function fetchNotice() {
-    loadNoticeStyles();  // ✅ CSS 로드 추가
+    loadNoticeStyles(); // ✅ CSS 로드 추가
+
     fetch("/api/notices")
         .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
-            }
+            if (!response.ok) return response.text().then(err => { throw new Error(err); });
             return response.json();
         })
         .then(data => {
-            if (!Array.isArray(data)) {  // 🚀 데이터가 배열인지 확인
-                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
-            }
-            document.getElementById("content").innerHTML = generateNoticeTable(data); // ✅ `data`를 함수에 전달
+            if (!Array.isArray(data)) throw new Error("🚨 서버에서 예상치 못한 응답을 받았습니다.");
+
+            document.getElementById("content").innerHTML = generateNoticeTable(data); // ✅ 리스트 렌더링
         })
         .catch(error => {
             console.error("❌ 공지사항 목록 로드 오류:", error);
@@ -873,43 +875,106 @@ function fetchNotice() {
         });
 }
 
-//공지사항 동적 생성
+// ✅ 공지사항 테이블 생성 (제목 클릭 시 팝업)
 function generateNoticeTable(notices) {
-    if (!notices || notices.length === 0) {
-        return `<h2>공지사항</h2><p>등록된 공지사항이 없습니다.</p>`;
-    }
-
     let tableHTML = `
     <div class="notice-container">
         <h2>공지사항</h2>
-        <button onclick="location.href='/admin/notice-form'">공지사항 등록</button>
         <div class="table-container">
-            <table class="notice-table">  <!-- ✅ CSS 적용할 클래스 추가 -->
+            <table class="notice-table">
                 <thead>
                     <tr>
-                        <th>공지 번호</th>
-                        <th>제목</th>
-                        <th>내용</th>
-                        <th>등록 날짜</th>
+                        <th style="width: 10%">번호</th>
+                        <th style="width: 60%">제목</th>
+                        <th style="width: 30%">등록 날짜</th>
                     </tr>
                 </thead>
                 <tbody>
-`;
+                <!-- 공지사항 팝업 (페이지 어디든 위치 가능, body 내부여야 함) -->
+<div id="notice-popup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close" onclick="closeNoticePopup()">&times;</span>
+        <h3 id="popup-title"></h3>
+        <p id="popup-content"></p>
+    </div>
+</div>
 
-    notices.forEach(notice => {
-        tableHTML += `
-        <tr>
-            <td>${notice.noticeId}</td>
-            <td>${notice.title}</td>
-            <td>${notice.content}</td>
-            <td>${new Date(notice.noticedDate).toLocaleDateString()}</td>
-        </tr>
     `;
-    });
 
-    tableHTML += `</tbody></table></div></div>`;  // ✅ .notice-container 닫는 태그 추가
+    if (notices.length === 0) {
+        tableHTML += `<tr><td colspan="3">🚫 등록된 공지사항이 없습니다.</td></tr>`;
+    } else {
+        notices.forEach(notice => {
+            tableHTML += `
+            <tr>
+                <td>${notice.noticeId}</td>
+                <td onclick="openNoticePopup('${encodeURIComponent(notice.title)}', '${encodeURIComponent(notice.content)}')">${notice.title}</td>
+                <td>${new Date(notice.noticedDate).toLocaleDateString()}</td>
+            </tr>
+            `;
+        });
+    }
+
+    tableHTML += `</tbody></table></div>`;
+
+    // ✅ 공지사항 입력 폼을 하단에 추가
+    tableHTML += `
+        <div class="notice-input-container">
+            <h3>📢 새 공지사항 작성</h3>
+            <input type="text" id="notice-title" placeholder="제목을 입력하세요" required>
+            <textarea id="notice-content" placeholder="내용을 입력하세요" required></textarea>
+            <button onclick="submitNotice()">등록</button>
+        </div>
+    </div>`;
+
     return tableHTML;
 }
+
+// ✅ 공지사항 팝업 열기
+function openNoticePopup(title, content) {
+    document.getElementById("popup-title").textContent = decodeURIComponent(title);
+    document.getElementById("popup-content").innerHTML = decodeURIComponent(content).replace(/\n/g, '<br>');
+    document.getElementById("notice-popup").style.display = "block";
+}
+
+// ✅ 공지사항 팝업 닫기
+function closeNoticePopup() {
+    document.getElementById("notice-popup").style.display = "none";
+}
+
+// ✅ 공지사항 등록 요청
+function submitNotice() {
+    const title = document.getElementById("notice-title").value.trim();
+    const content = document.getElementById("notice-content").value.trim();
+
+    if (!title || !content) {
+        alert("제목과 내용을 모두 입력하세요.");
+        return;
+    }
+
+    fetch("/api/notices/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, content })
+    })
+        .then(response => {
+            if (!response.ok) return response.text().then(err => { throw new Error(err); });
+            return response.json();
+        })
+        .then(() => {
+            alert("공지사항이 등록되었습니다!");
+            fetchNotice(); // ✅ 공지사항 목록 갱신
+        })
+        .catch(error => {
+            console.error("❌ 공지사항 등록 오류:", error);
+            alert("공지사항 등록 중 오류가 발생했습니다.");
+        });
+
+    // ✅ 입력 필드 초기화
+    document.getElementById("notice-title").value = "";
+    document.getElementById("notice-content").value = "";
+}
+
 
 // ✅ 다른 페이지 컨텐츠를 동적으로 생성하는 함수
 function generatePageContent(page) {

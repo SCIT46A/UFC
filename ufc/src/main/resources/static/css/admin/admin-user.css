@@ -125,15 +125,57 @@ body {
 }
 
 
-/* 컨테이너 */
+/* ✅ 컨테이너 구분 스타일 */
 .container {
     max-width: 900px;
-    margin: 0 auto;
+    margin: 20px auto;
     background: white;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
 }
+
+.container:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* ✅ 캠페인 운영 현황 카드 스타일 */
+.tracking-grid {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.tracking-card {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 10px;
+    background: #fff;
+    text-align: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+}
+
+.tracking-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.tracking-card .card-content {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.tracking-card .count {
+    font-size: 18px;
+    font-weight: bold;
+    color: #CE201B;
+    margin-top: 8px;
+}
+
 
 /* 제목 스타일 */
 h2 {
@@ -160,7 +202,7 @@ h2 {
 }
 
 .filter-btn.active {
-    background-color: #007bff;
+    background-color: #CE201B;
     color: white;
 }
 
@@ -178,7 +220,7 @@ h2 {
 }
 
 .campaign-table th {
-    background-color: #007bff;
+    background-color: #CE201B;
     color: white;
 }
 
@@ -204,12 +246,12 @@ button {
 }
 
 .detail-btn {
-    background: #007bff;
+    background: #CE201B;
     color: white;
 }
 
 .approve-btn {
-    background: #28a745;
+    background: #CE201B;
     color: white;
 }
 
