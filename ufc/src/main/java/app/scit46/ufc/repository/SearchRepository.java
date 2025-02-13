@@ -13,4 +13,5 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
 
     @Query("SELECT s FROM SearchEntity s WHERE LOWER(REPLACE(s.name, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<SearchEntity> searchByKeyword(@Param("keyword") String keyword);
+
 }

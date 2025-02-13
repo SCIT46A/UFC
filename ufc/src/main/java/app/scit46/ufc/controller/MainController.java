@@ -25,19 +25,7 @@ import java.util.List;
 public class MainController {
 
   @Autowired
-  private UserAlertService userAlertService;
-
-  @Autowired
   private UserService userService;
-
-  @Autowired
-  private TagService tagService;
-
-  @Autowired
-  private SearchService searchService;
-
-  @Autowired
-  private CampaignService campaignService;
 
   @GetMapping("/")
   public String index(HttpServletRequest request, Model model) {
@@ -52,61 +40,12 @@ public class MainController {
     return "index";
   }
 
-
-
-
-//  알림상태 확인하는거
-  @GetMapping("/check-alert")
-  @ResponseBody //
-  public List<UserAlertDTO> checkAlert(HttpServletRequest request) {
-    HttpSession session = request.getSession(false); // 세션 가져오기
-
-    if (session != null) {
-      Long loginUserId = (Long) session.getAttribute("loginUserId"); // 세션에서 userId 가져오기
-      return userAlertService.alertCheck(loginUserId);
-    }
-
-    return Collections.emptyList(); // 세션이 없거나, 알람이 없음
+  @GetMapping("/search/{type}/{query}")
+  public String searchBox(@PathVariable("query") String query, @PathVariable("type") String type, Model model) {
+    model.addAttribute("searchText", query);
+    model.addAttribute("searchType", type); // ✅ 검색 유형 추가
+    return "campaign/all-campaign"; // 검색어를 포함한 뷰 반환
   }
-
-//  로그인 상태 확인?
-
-  @GetMapping("check-login")
-  @ResponseBody
-  public UserDTO checkLogin(HttpServletRequest request) {
-    HttpSession session = request.getSession(false); // 세션 가져오기
-    UserDTO user = null;
-    if (session != null) {
-      Long loginUserId = (Long) session.getAttribute("loginUserId"); // 세션에서 userId 가져오기
-      try {
-        user = userService.readUserById(loginUserId);
-        return user;
-      } catch (DBNotFoundException e) {
-        return null;
-      }
-    }
-    return user;
-  }
-
-//  카테고리 입력
-
-  @GetMapping("check-tag")
-  @ResponseBody
-  public List<TagDTO> checkTag() {
-    return tagService.getTopTags();
-  }
-
-  @GetMapping("search-box")
-  @ResponseBody
-  public List<SearchDTO> search(@RequestParam("keyword") String keyword) {
-    log.info(searchService.search_target(keyword).toString());
-    return searchService.search_target(keyword);
-  }
-
-
-
-
-
 
 
   @GetMapping("/info")

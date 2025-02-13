@@ -30,13 +30,6 @@ public class CampaignController {
         return "campaign/expected-campaign";
     }
 
-    @GetMapping("/all/find")
-    @ResponseBody
-    public List<CampaignDTO> findCampaign() {
-        List<CampaignDTO> campaigns = campaignService.getAllCampaigns();
-        return campaigns;
-    }
-
     @GetMapping("/detail")
     public String detailCampaign() {
         return "campaign/detail-campaign";
@@ -57,12 +50,6 @@ public class CampaignController {
         return "campaign/create-campaign";
     }
 
-    // 검색시 사용하는 검색창
-    @GetMapping("/all/{keyword}")
-    public String allCampaign(@PathVariable("search") String keyword, Model model) {
-        model.addAttribute("searchText", keyword);
-        return "campaign/all-campaign"; // 검색어를 포함한 뷰 반환
-    }
 
 }
 

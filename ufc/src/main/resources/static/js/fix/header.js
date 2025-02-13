@@ -1,27 +1,19 @@
 $(function () {
     function search() {
         const searchText = $(".modal-search-box-in-top-input-in").val().trim();
-        if (searchText === "") return; // 빈 값 방지
 
-        saveSearchQuery(searchText); // ✅ 검색 기록 저장 (검색 실행 시)
+        if (!searchText) return; // 빈 값 방지
 
-        $.ajax({
-            url: `/campaign/all/${encodeURIComponent(searchText)}`, // URL 인코딩 추가
-            method: "GET",
-            success: () => {
+        saveSearchQuery(searchText); // ✅ 검색 기록 저장 (선택 사항)
 
-                window.location.href = `/campaign/all/${encodeURIComponent(searchText)}`;
-            },
-            error: (xhr, status, error) => {
-                console.error("검색 실패:", error);
-            },
-        });
+        // ✅ 불필요한 AJAX 요청 제거 → 바로 페이지 이동
+        window.location.href = `/search/search/${encodeURIComponent(searchText)}`;
     }
 
 
     // 최초 알림창 확인
     $.ajax({
-        url: "/check-alert",
+        url: "/api/checkAlert",
         method: "GET",
         success: function (response) {
             if (response && response.length > 0) {  // response가 null이 아니고, 데이터가 있는 경우
@@ -37,7 +29,7 @@ $(function () {
     //  로그인정보가 보고 나타내기
 
     $.ajax({
-        url: "/check-login",
+        url: "/api/checkLogin",
         method: "GET",
         success: function (response) {
             // 일반유저
@@ -143,18 +135,14 @@ $(function () {
     });
 
     $.ajax({
-        url: "/check-tag",
+        url: "/api/checkTag",
         method: "GET",
         success: function (response) {
-            console.log(response)
-
-
-
             response.forEach((data)=> {
                 $(".modal-re-search-box-top").append(
                 `
                 <a
-                    href="/campaign/all/${data.content}"
+                    href="/search/tag/${data.content}"
                     class="modal-re-search-box-top-tag"
                 >
                     <div
@@ -230,7 +218,7 @@ $(function () {
         if (history.length > 0) {
             history.forEach(query => {
                 $(".modal-re-search-box-recent-bo").append(`
-                <a class="modal-re-search-box-recent-bo-pe" href="/campaign/all/${query}">
+                <a class="modal-re-search-box-recent-bo-pe" href="/search/search/${query}">
                     <div class="modal-re-search-box-recent-bo-pe-text">${query}</div>
                     <div class="modal-re-search-box-recent-bo-pe-cancle">
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -265,18 +253,23 @@ $(function () {
      * (대소문자 구분 없이 검색)
      */
     function highlightText(text, query) {
-        if (!text) return "";  // 🔹 text가 없으면 빈 문자열 반환
-        if (!query || query.trim() === "") return text;  // 🔹 query가 없으면 원본 반환
+        if (!text) return "";
+        if (!query || query.trim() === "") return text;
 
         try {
-            const escapedQuery = escapeRegExp(query);
+            // 🔹 검색어에서 공백을 제거하고, 공백을 무시하는 정규식 패턴 생성
+            const escapedQuery = escapeRegExp(query).replace(/\s+/g, "\\s*");
+
+            // 🔹 띄어쓰기 유무에 관계없이 검색 가능하도록 정규식 수정
             const regex = new RegExp(`(${escapedQuery})`, "gi");
+
             return text.replace(regex, "<em>$1</em>");
         } catch (error) {
             console.error("🚨 highlightText 오류:", error);
             return text;
         }
     }
+
 
 
 
@@ -291,28 +284,41 @@ $(function () {
 
 
         $.ajax({
-            url: "/search-box",
+            url: "/api/searchBox",
             method: "GET",
             data: { keyword: keyword },
             success: function (response) {
-                console.log(response)
                 $(".modal-re-search-box-bo-box-in-se").html("");
-
+                console.log(response)
                 if (response.length > 0) {
                     response.forEach((data) => {
-                        // data.title에서 검색어에 해당하는 부분을 <em> 태그로 감싼 결과 생성
+                        // ✅ 검색어에 해당하는 부분을 <em> 태그로 감싼 결과 생성
+                        const highlightedName = highlightText(data.name, keyword);
+                        if(data.type !== "Tag"){
                         $(".modal-re-search-box-bo-box-in-se").append(`
-                        <a href="/${data.type}/detail/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
-                            <div>
-                                <svg viewBox="0 0 48 48">
-                                    <path fill-rule="evenodd" clip-rule="evenodd"
-                                        d="M22.0886 38.8C12.7939 38.8 5.29813 31.3 5.29813 22.1C5.29813 12.8 12.7939 5.4 22.0886 5.4C31.3833 5.4 38.879 12.9 38.879 22.1C38.879 31.3 31.2834 38.8 22.0886 38.8ZM45.4753 43.1L37.28 35C40.3782 31.401 42.0772 26.8 42.0772 22C42.0772 10.9 33.1823 2 22.0886 2C10.9949 2 2 11 2 22C2 33 10.9949 42 22.0886 42C26.8859 42 31.4832 40.3 35.0812 37.3L43.2765 45.5C43.5764 45.8 43.9762 46 44.3759 46C44.7757 46 45.1755 45.8 45.4753 45.5C46.1749 44.901 46.1749 43.8 45.4753 43.1Z">
-                                    </path>
-                                </svg>
-                            </div>
-                            <span>${data.name}</span>
-                        </a>
-                    `);
+                    <a href="/${data.type}/detail/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
+                        <div>
+                            <svg viewBox="0 0 48 48">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M22.0886 38.8C12.7939 38.8 5.29813 31.3 5.29813 22.1C5.29813 12.8 12.7939 5.4 22.0886 5.4C31.3833 5.4 38.879 12.9 38.879 22.1C38.879 31.3 31.2834 38.8 22.0886 38.8ZM45.4753 43.1L37.28 35C40.3782 31.401 42.0772 26.8 42.0772 22C42.0772 10.9 33.1823 2 22.0886 2C10.9949 2 2 11 2 22C2 33 10.9949 42 22.0886 42C26.8859 42 31.4832 40.3 35.0812 37.3L43.2765 45.5C43.5764 45.8 43.9762 46 44.3759 46C44.7757 46 45.1755 45.8 45.4753 45.5C46.1749 44.901 46.1749 43.8 45.4753 43.1Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span>${highlightedName}</span>  <!-- ✅ 하이라이팅 적용 -->
+                    </a>
+                `);} else{
+                            $(".modal-re-search-box-bo-box-in-se").append(`
+                    <a href="/search/tag/${data.name}" class="modal-re-search-box-bo-box-in-se-a">
+                        <div>
+                            <svg viewBox="0 0 48 48">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M22.0886 38.8C12.7939 38.8 5.29813 31.3 5.29813 22.1C5.29813 12.8 12.7939 5.4 22.0886 5.4C31.3833 5.4 38.879 12.9 38.879 22.1C38.879 31.3 31.2834 38.8 22.0886 38.8ZM45.4753 43.1L37.28 35C40.3782 31.401 42.0772 26.8 42.0772 22C42.0772 10.9 33.1823 2 22.0886 2C10.9949 2 2 11 2 22C2 33 10.9949 42 22.0886 42C26.8859 42 31.4832 40.3 35.0812 37.3L43.2765 45.5C43.5764 45.8 43.9762 46 44.3759 46C44.7757 46 45.1755 45.8 45.4753 45.5C46.1749 44.901 46.1749 43.8 45.4753 43.1Z">
+                                </path>
+                            </svg>
+                        </div>
+                        <span># ${highlightedName}</span>  <!-- ✅ 하이라이팅 적용 -->
+                    </a>
+                `);}
                     });
                 } else {
                     $(".modal-re-search-box-bo-box-in-se").append(`<div>검색 결과가 없습니다.</div>`);
@@ -322,6 +328,8 @@ $(function () {
                 console.error("검색 오류:", error);
             }
         });
+
+
     });
 
 
