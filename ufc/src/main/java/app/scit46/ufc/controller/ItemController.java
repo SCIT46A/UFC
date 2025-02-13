@@ -17,7 +17,7 @@ public class ItemController {
 
     @GetMapping("/more")
     public List<String> getMoreItems(@RequestParam("page") int page) {
-        int pageSize = 8;
+        int pageSize = 6;
         int start = page * pageSize;
         int end = Math.min(start + pageSize, allItems.size());
 

@@ -31,9 +31,27 @@ prevButton.addEventListener("click", () => {
 });
 
 // 소개글 입력 검사
-
-const descInput = document.querySelector("input.desc-form-input");
 const descButton = document.querySelector(".desc-form-button");
+
+// 키가 입력될 때 마다 확인
+document.addEventListener("input", () => {
+    // 입력 필드의 값을 매번 가져옴
+    let sellerNumber = document.querySelector("#seller_regist_number").value;
+    let sellerName = document.querySelector("#seller_regist_name").value;
+    let sellerPerson = document.querySelector("#seller_regist_person").value;
+    let sellerLocation = document.querySelector("#seller_regist_location").value;
+
+    if (sellerNumber && sellerName && sellerPerson && sellerLocation) {
+        // 버튼 활성화
+        descButton.classList.remove("disabled");
+        descButton.removeAttribute("disabled");
+    } else {
+        // 버튼 비활성화
+        descButton.classList.add("disabled");
+        descButton.setAttribute("disabled", "true"); // setAttribute로 수정
+    }
+});
+/*
 descInput.addEventListener("keyup", () => {
     if (descInput.value) {
         descButton.classList.remove("disabled");
@@ -43,6 +61,7 @@ descInput.addEventListener("keyup", () => {
         descButton.classList.add("disabled");
     }
 });
+*/
 
 // 다음 버튼 클릭 시 내용 변경(3단계로 이동)
 
@@ -246,17 +265,22 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기
+// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
 document.addEventListener("DOMContentLoaded", function() {
     let btn1 = document.querySelector(".img-form-button");
             btn1.addEventListener("click", function() {
-            window.location.href="/ufc/src/main/resources/templates/creator/creator-campaign.html";
+            window.location.href="/ufc/src/main/resources/templates/index.html";
         });
 });
-// 창작가 프로필 설정하지 않고 건너뛰기 할 시 창작가 페이지로 이동하기
+
+// 창작가 프로필 설정하지 않고 취소하기 할 시 창작가 개설하기 패이지로 리다이렉트
 document.addEventListener("DOMContentLoaded", function() {
     let skip = document.querySelector(".img-form-skip");
         skip.addEventListener("click", function() {
-            window.location.href="/ufc/src/main/resources/templates/creator/creator-campaign.html";
+            let cancel_check = confirm ("작성된 내용이 사라집니다. 정말로 취소하시겠습니까?");
+             if (!cancel_check) {
+                return;
+             }
+            window.location.href="/ufc/src/main/resources/templates/index.html";
         });
 });

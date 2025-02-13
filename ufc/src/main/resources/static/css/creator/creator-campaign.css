@@ -318,7 +318,7 @@ button, input, optgroup, select, textarea {
     /* background-color: #e1e1e1; */
     /* color: #878D91; */
     /* background-color: #2563EB; */
-    background-color: #CE201B;
+    background-color: #16a34a;
     --tw-bg-opacity: 1;
     color: rgb(255 255 255/var(--tw-bg-opacity));
 }
@@ -326,16 +326,16 @@ button, input, optgroup, select, textarea {
 .club-top-button.cancel:hover {
     /* background-color: #c2c2c2; */
     /* background-color: #245DCB; */
-    background-color: #9F0D08;
+    background-color: #08652a;
 }
 
 .club-top-button.create_campaign {
     /* color: rgb(90 90 90) */
-    background-color: #CE201B;
+    background-color: #16a34a;
     --tw-bg-opacity: 1;
     color: rgb(255 255 255/var(--tw-bg-opacity));
     &:hover{
-        background-color: #9F0D08;
+        background-color: #08652a;
     }
 }
 
@@ -377,13 +377,21 @@ button, input, optgroup, select, textarea {
     line-height: 2rem;
 }
 
+.company_name {
+    margin-left: 15px;
+    font-weight: 100;
+    font-size: 1rem;
+    line-height: 2rem;
+    opacity: .5;
+}
+
 .club-detail-stats-wrap {
     margin-top: 0.5rem;
 }
 
 .club-detail-stats-name {
     --tw-text-opacity: 1;
-    color:#CE201B;
+    color:#16a34a;
 }
 
 .club-detail-stats-count {
@@ -420,7 +428,7 @@ button, input, optgroup, select, textarea {
 
 .club-detail-filter-event {
     --tw-border-opacity: 1;
-    border-color: #CE201B;
+    border-color: #16a34a;
     border-bottom-width: 2px;
     min-width: fit-content;
 }
@@ -472,14 +480,14 @@ button, input, optgroup, select, textarea {
     margin-right: calc(1rem*var(--tw-space-x-reverse));
     margin-left: 0;
     min-width: fit-content;
-    color: #CE201B;
+    color: #16a34a;
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .club-detail-filter-upload-wrap:hover {
-    color: #9F0D08;
+    color: #08652a;
 }
 
 .club-detail-filter-upload {
@@ -646,7 +654,7 @@ button, input, optgroup, select, textarea {
 
 .event-price-wrap {
     --tw-text-opacity: 1;
-    color:#CE201B;
+    color:#16a34a;
     font-weight: 700;
 }
 
@@ -1573,7 +1581,7 @@ button, input, optgroup, select, textarea {
     margin-top: 26px;
     margin-bottom: auto;
     color: #fff;
-    background-color: #CE201B;
+    background-color: #16a34a;
     padding: 0 8px;
     padding-left: 16px;
     padding-right: 16px;
@@ -1630,7 +1638,7 @@ button, input, optgroup, select, textarea {
 }
 
 .upload-modal-content-link {
-    color: #CE201B;
+    color: #16a34a;
     text-decoration: none;
 }
 
@@ -1683,7 +1691,7 @@ p {
 
 .pr-file-icon {
     --tw-text-opacity: 1;
-    color: #CE201B;
+    color: #16a34a;
     width: 1rem;
     height: 1rem;
 }
@@ -1832,7 +1840,7 @@ input::placeholder {
     margin: 0;
     margin-top: 40px;
     color: #fff;
-    background-color: #CE201B;
+    background-color: #16a34a;
     padding: 0 8px;
     padding-left: 16px;
     padding-right: 16px;
@@ -1868,7 +1876,7 @@ input::placeholder {
 }
 
 .upload-modal-confirm-button-wrap:hover {
-    background-color: #9F0D08;
+    background-color: #08652a;
 }
 
 .upload-modal-confirm-button-wrap.disabled {
@@ -1947,7 +1955,7 @@ input::placeholder {
 
 .pr-thumbnail-icon {
     --tw-text-opacity: 1;
-    color: #CE201B;
+    color: #16a34a;
     width: 1rem;
     height: 1rem;
 }
@@ -1990,7 +1998,7 @@ input::placeholder {
 .img-form-profile-size-error {
     display: none;
     --tw-text-opacity: 1;
-    color: #CE201B;
+    color: #16a34a;
     margin-top: 1rem;
     font-size: .8125rem;
     word-break: keep-all;

@@ -1,16 +1,16 @@
-// 아직 작업 중 -> 프로필 수정하기 버튼 클릭 시 판매자 프로필 수정하기 페이지로 이동
+// 프로필 수정하기 버튼 클릭 시 판매자 프로필 수정하기 페이지로 이동
 const profile_edit = document.querySelector("#share");
 profile_edit.addEventListener("click", function() {
     window.location.href = "../../templates/creator/creator-edit.html";
 });
 
-// 아직 코딩 해야함 -> 캠페인 제작하기 버튼 클릭 시 intro-campaign 페이지로 이동
+// 캠페인 제작하기 버튼 클릭 시 intro-campaign 페이지로 이동
 const start_campaign = document.querySelector("#create_campaign");
 start_campaign.addEventListener("click", function () {
     window.location.href = "../../templates/campaign/intro-campaign.html";
 });
 
-// 더보기 버튼 구현
+// 더보기(n/N) 버튼 구현
 /* document.addEventListener("DOMContentLoaded", function() {
     const more_btn = document.querySelector(".show-more-btn");
     const itemList = document.querySelector("#item-list");
@@ -36,6 +36,6 @@ start_campaign.addEventListener("click", function () {
                 more_btn.setAttribute("data-page", currentPage + 1);
             })
             .catch(error => console.error("에러 발생:", error));
+        })
     })
-})
-    */
+*/
