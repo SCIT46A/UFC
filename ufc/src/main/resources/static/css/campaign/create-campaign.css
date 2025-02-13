@@ -52,6 +52,7 @@ main{
     background: rgb(255, 255, 255);
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 36px 32px;
 }
 
@@ -1056,6 +1057,10 @@ input[name="inputTag"] {
     border: 1px solid rgb(240, 240, 240);
     background: white;
     color: rgb(208, 208, 208);
+    &:focus-visible {
+        border: 1px solid rgb(74, 222, 128) !important;
+        outline: none;
+    }
 }
 /*
 .datepicker-nojquery{
@@ -2016,6 +2021,66 @@ input[name="inputTag"] {
 
 .period-alert-message {
     color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.default-date-message {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 14px;
+    color: #999;
+    vertical-align: middle;
+}
+
+/* 날짜 선택기 스타일 */
+input[type="datetime-local"] {
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+}
+
+input[type="datetime-local"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+/* 날짜 알림창 스타일 */
+.date-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-100%);
+    background-color: #ff4444;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.date-alert.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.date-alert-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-alert-icon {
+    font-size: 20px;
+}
+
+.date-alert-message {
     font-size: 14px;
     font-weight: 500;
 }

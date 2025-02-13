@@ -1,20 +1,14 @@
 $(document).ready(function () {
-    // 전역 변수 필드
-    let tagList = [];   // 선택된 태그 목록
-    let campaignTitle = document.querySelector("input[name='title']");
-    let campaignDesc = document.querySelector("input[name='shortDescription']");
-    let campaignImage = document.querySelector("input[name='image']");
-    let fundingItems = []; //[{itemName: '', itemAmount: ''}]
-
-    // 약관, 동의
+    
+// 0. 약관, 동의
     const startBtn = document.querySelector(".cam-create-btn");
     $(document).on('click', function(){
         if($('#fi').is(':checked')&&$('#ce').is(':checked')&&$('#th').is(':checked')){
             startBtn.classList.add("isActive");
-            //startBtn.disabled = false;
+            startBtn.disabled = false;
         }else{
             startBtn.classList.remove("isActive");
-            //startBtn.disabled = true;
+            startBtn.disabled = true;
         }
     });
 
@@ -23,12 +17,13 @@ $(document).ready(function () {
         $('.cam-ag-box').addClass('hidden');
         $('.cam-la').removeClass('hidden');
     });
-    // 약관, 동의 END
+// 약관, 동의 END
 
-    // 캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성
+// 1. 캠페인 기본정보 (캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성)
+
+    let tagList = [];   // 선택된 태그 목록
+  
     const tagAdd = document.querySelector("#tagAdd");
-
-    
 
     let tag = `
         <li>
@@ -65,34 +60,462 @@ $(document).ready(function () {
     });
     let editTag = '';
     $(document).on('focusout', '.upda-tag-custom > input', function(){
-        const tagName = $(this).val();
-        if($(this).parent().hasClass('tag-active')){
-            tagList.push(tagName);
-            editTag = tagName;
+        const inputValue = $(this).val().trim();
+        
+        // 빈 값이거나 이미 존재하는 태그인 경우 입력 필드 삭제
+        if(inputValue === '' || tagList.includes(inputValue)) {
+            $(this).closest('li').remove();
+            return;
         }
-        //console.log(tagList);
+        
+        if($(this).parent().hasClass('tag-active')){
+            tagList.push(inputValue);
+            editTag = inputValue;
+        }
+        console.log(tagList);
     });
     $(document).on('focusin', '.upda-tag-custom > input', function(){
-        const tagName = $(this).val();
+        const tagName = $(this).val().trim();
         tagList = tagList.filter(tag => tag !== tagName);
         editTag = '';
-        //console.log(tagList);
+        console.log('Focus in - current tagList:', tagList);
     });
 
 
     // 태그 추가 버튼 클릭 시 태그 추가 필드 제공
     $(tagAdd).on('click', function(){
+        // 현재 입력 중인 태그 필드가 있는지 확인
+        const existingEmptyInput = $('.upda-tag-custom > input[type="text"]').filter(function() {
+            return $(this).val().trim() === '';
+        });
+        
+        // 빈 입력 필드가 있으면 새로운 필드를 추가하지 않음
+        if (existingEmptyInput.length > 0) {
+            existingEmptyInput.first().focus();
+            return;
+        }
+        
         $(tagAdd).before(tag);
     });
 
     // 태그 삭제 버튼 클릭 시 추가된 필드 삭제 (이벤트 위임 사용)
     $(document).on('click', '.tagDelete', function(){
-        const tagName = $(this).prev().val();
+        const tagName = $(this).prev().val().trim();
         $(this).closest('li').remove();  // 또는 $(this).parent().parent().remove();
         tagList = tagList.filter(tag => tag !== tagName);
-        //console.log(tagList);
+        console.log('Tag deleted - current tagList:', tagList);
     });
-    // 캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성 END
+// 1. 캠페인 기본정보 (캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성) END
+
+// 2. 펀딩 일자
+    // 펀딩 기간 설정 초기화
+    const fundingStartDate = document.getElementById('funding-start-datetime');
+    const fundingEndDate = document.getElementById('funding-end-datetime');
+    const fundingSendDate = document.getElementById('funding-send-datetime');
+    const fundingPeriod = document.getElementById('funding-period');
+    const preparePeriod = document.getElementById('prepare-period');
+    
+    // 리워드 섹션의 종료일자 input 요소
+    const rewardEndDate = document.querySelectorAll('#funding-end-datetime')[1];
+
+    // 오늘 날짜 구하기 (시작시간은 다음 시간으로 설정)
+    const today = new Date();
+    // KST로 변환 (UTC+9)
+    const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
+    const todayKST = new Date(today.getTime() + kstOffset);
+    
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);  // 다음날 00:00:00으로 설정
+    
+    // KST 시간대로 문자열 변환
+    function toKSTString(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}T00:00`;
+    }
+    
+    const minDateTime = toKSTString(tomorrow);
+    
+    // 종료일 (시작일 + 30일) 계산
+    const defaultEndDate = new Date(tomorrow);
+    defaultEndDate.setDate(tomorrow.getDate() + 30);
+    
+    // 발송일 (종료일 + 7일) 계산
+    const defaultSendDate = new Date(defaultEndDate);
+    defaultSendDate.setDate(defaultEndDate.getDate() + 7);
+    
+    // 시작일 제한 설정 (오늘 이후로만 설정 가능)
+    fundingStartDate.setAttribute('min', minDateTime);
+    
+    // 기본값 설정
+    fundingStartDate.value = toKSTString(tomorrow);
+    fundingEndDate.value = toKSTString(defaultEndDate);
+    fundingSendDate.value = toKSTString(defaultSendDate);
+    
+    // 초기 기간 표시 업데이트
+    fundingPeriod.textContent = '30일';
+    preparePeriod.textContent = '7일';
+    
+    // 날짜 입력 시 유효성 검사 및 자동 계산
+    fundingStartDate.addEventListener('change', function() {
+        const startDate = new Date(this.value);
+        
+        // 과거 날짜 체크
+        if (startDate < tomorrow) {
+            showAlert('시작일은 내일 이후로 설정해야 합니다.');
+            this.value = '';
+            return;
+        }
+        
+        // 종료일 제한 업데이트
+        if (fundingEndDate) {
+            fundingEndDate.setAttribute('min', this.value);
+            
+            // 이미 설정된 종료일이 시작일보다 이전인 경우
+            if (new Date(fundingEndDate.value) < startDate) {
+                fundingEndDate.value = '';
+            }
+        }
+    });
+    
+    fundingEndDate.addEventListener('change', function() {
+        const endDate = new Date(this.value);
+        const startDate = new Date(fundingStartDate.value);
+        
+        // 시작일이 설정되지 않은 경우
+        if (!fundingStartDate.value) {
+            showAlert('먼저 시작일을 설정해주세요.');
+            this.value = '';
+            return;
+        }
+        
+        // 시작일 이전으로 설정한 경우
+        if (endDate < startDate) {
+            showAlert('종료일은 시작일 이후로 설정해야 합니다.');
+            this.value = '';
+            return;
+        }
+        
+        // 펀딩 기간 계산 및 표시 (일 수)
+        const diffTime = Math.abs(endDate - startDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // 60일 초과 체크
+        if (diffDays > 60) {
+            showAlert('펀딩 기간은 최대 60일을 초과할 수 없습니다.');
+            this.value = '';
+            return;
+        }
+        
+        fundingPeriod.textContent = diffDays + '일';
+        
+        // 발송일 제한 업데이트
+        if (fundingSendDate) {
+            fundingSendDate.setAttribute('min', this.value);
+            
+            // 이미 설정된 발송일이 종료일보다 이전인 경우
+            if (new Date(fundingSendDate.value) < endDate) {
+                fundingSendDate.value = '';
+            }
+        }
+    });
+    
+    fundingSendDate.addEventListener('change', function() {
+        const sendDate = new Date(this.value);
+        const endDate = new Date(fundingEndDate.value);
+        
+        // 종료일이 설정되지 않은 경우
+        if (!fundingEndDate.value) {
+            showAlert('먼저 종료일을 설정해주세요.');
+            this.value = '';
+            return;
+        }
+        
+        // 종료일 이전으로 설정한 경우
+        if (sendDate < endDate) {
+            showAlert('발송 예정일은 종료일 이후로 설정해야 합니다.');
+            this.value = '';
+            return;
+        }
+        
+        // 준비 기간 계산 및 표시 (일 수)
+        const diffTime = Math.abs(sendDate - endDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // 60일 초과 체크
+        if (diffDays > 60) {
+            showAlert('리워드 준비 기간은 최대 60일을 초과할 수 없습니다.');
+            // 60일 후의 날짜로 자동 설정
+            const maxSendDate = new Date(endDate);
+            maxSendDate.setDate(endDate.getDate() + 60);
+            this.value = maxSendDate.toISOString().slice(0, 16);
+            preparePeriod.textContent = '60일';
+            return;
+        }
+        
+        preparePeriod.textContent = diffDays + '일';
+    });
+    
+    // 알림 표시 함수
+    function showAlert(message) {
+        const alertBox = document.createElement('div');
+        alertBox.className = 'date-alert';
+        alertBox.innerHTML = `
+            <div class="date-alert-content">
+                <span class="date-alert-icon">⚠️</span>
+                <span class="date-alert-message">${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(alertBox);
+        
+        // 애니메이션 효과를 위한 지연
+        setTimeout(() => alertBox.classList.add('show'), 100);
+        
+        // 3초 후 알림 제거
+        setTimeout(() => {
+            alertBox.classList.remove('show');
+            setTimeout(() => alertBox.remove(), 300);
+        }, 3000);
+    }
+// 2. 펀딩 일자 END
+
+// 3. 리워드 구성
+    // 펀딩 계획 페이지 기부품 추가 버튼 클릭 시 기부품 추가 필드 제공
+    let fundingItems = []; //[{"name": '', "amount": ''}] rewardList.funding의 name별 amount를 더하여 표현(1.1배 증가 예정)
+    let rewardList = {"reward": [], "funding": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
+
+    // 기부품 이름 및 수량 입력 시 버튼 활성화
+    $(document).on('keyup', '.fundingItemInput, .fundingAmountInput', activeItemFundingBtn);
+    function activeItemFundingBtn(){
+        let fundingItem = $(this).closest('div').parent().find('.fundingItemInput');
+        let fundingAmount = $(this).closest('div').parent().find('.fundingAmountInput');
+        
+        if((fundingItem.val() != '' && fundingAmount.val() != '') && !rewardList.funding.some(item => item.name === fundingItem.val())){
+            $('.cam-la-pay-btn.funding').addClass('isActive');
+            $('.cam-la-pay-btn.funding').removeAttr('disabled');
+        }else{
+            $('.cam-la-pay-btn.funding').removeClass('isActive');
+            $('.cam-la-pay-btn.funding').attr('disabled', true);
+        }
+    }
+    
+    $(document).on('keyup', '.rewardItemInput, .rewardAmountInput', activeItemRewardBtn);
+    function activeItemRewardBtn(){
+        let rewardItem = $(this).closest('div').parent().find('.rewardItemInput');
+        let rewardAmount = $(this).closest('div').parent().find('.rewardAmountInput');
+        
+        if((rewardItem.val() != '' && rewardAmount.val() != '') && !rewardList.reward.some(item => item.name === rewardItem.val())){
+            $('.cam-la-pay-btn.reward').addClass('isActive');
+            $('.cam-la-pay-btn.reward').removeAttr('disabled');
+        }else{
+            $('.cam-la-pay-btn.reward').removeClass('isActive');
+            $('.cam-la-pay-btn.reward').attr('disabled', true);
+        }
+    }
+    
+    // 기부품 추가 버튼 클릭 시 기부품 추가 
+    $(document).on('click', '.cam-la-pay-btn.funding', addFundingItem);
+    function addFundingItem(){
+        let fundingItem = $(this).closest('div').find('.fundingItemInput');
+        let fundingAmount = $(this).closest('div').find('.fundingAmountInput');
+        
+        let fundingTag = `
+            <div class="cam-la-pay-box-pe">
+                <div class="cam-la-pay-box-pe-fname">${fundingItem.val()}</div>
+                <div class="cam-la-pay-box-pe-famount">${fundingAmount.val()}</div>
+                <button class="cam-tag-sh-pe-btn">
+                    <svg viewBox="0 0 40 40" focusable="false" role="presentation" class="withIcon_icon__1YH1P" aria-hidden="true">
+                        <path d="M33.4 8L32 6.6l-12 12-12-12L6.6 8l12 12-12 12L8 33.4l12-12 12 12 1.4-1.4-12-12 12-12z"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        rewardList.funding.push({name: fundingItem.val(), amount: fundingAmount.val()});
+        console.log('Funding items:', rewardList.funding);
+        $('.cam-la-pay-box-total.funding').parent().append(fundingTag);
+        fundingItem.val('');
+        fundingAmount.val('');
+        $('.cam-la-pay-btn.funding').removeClass('isActive');
+        $('.cam-la-pay-btn.funding').attr('disabled', true);
+    }
+    
+    // 리워드 추가 버튼 클릭 시 리워드 추가
+    $(document).on('click', '.cam-la-pay-btn.reward', addRewardItem);
+    function addRewardItem(){
+        let rewardItem = $(this).closest('div').find('.rewardItemInput');
+        let rewardAmount = $(this).closest('div').find('.rewardAmountInput');
+        
+        let rewardTag = `
+            <div class="cam-la-pay-box-pe">
+                <div class="cam-la-pay-box-pe-fname">${rewardItem.val()}</div>
+                <div class="cam-la-pay-box-pe-famount">${rewardAmount.val()}</div>
+                <button class="cam-tag-sh-pe-btn">
+                    <svg viewBox="0 0 40 40" focusable="false" role="presentation" class="withIcon_icon__1YH1P" aria-hidden="true">
+                        <path d="M33.4 8L32 6.6l-12 12-12-12L6.6 8l12 12-12 12L8 33.4l12-12 12 12 1.4-1.4-12-12 12-12z"></path>
+                    </svg>
+                </button>
+            </div>
+        `;
+        rewardList.reward.push({name: rewardItem.val(), amount: rewardAmount.val()});
+        console.log('Reward items:', rewardList.reward);
+        $('.cam-la-pay-box-total:not(.funding)').parent().append(rewardTag);
+        rewardItem.val('');
+        rewardAmount.val('');
+        $('.cam-la-pay-btn.reward').removeClass('isActive');
+        $('.cam-la-pay-btn.reward').attr('disabled', true);
+    }
+
+    // 아이템 삭제 버튼 클릭 시 추가된 필드 삭제 (이벤트 위임 사용)
+    $(document).on('click', '.cam-tag-sh-pe-btn', function(){
+        let itemName = $(this).closest('div').find('.cam-la-pay-box-pe-fname').text();
+        let itemAmount = $(this).closest('div').find('.cam-la-pay-box-pe-famount').text();
+        if($(this).closest('div').prev().hasClass('funding')){
+            rewardList.funding = rewardList.funding.filter(item => item.name != itemName || item.amount != itemAmount);
+        }else{  //$(this).closest('div').prev().hasClass('reward')
+            rewardList.reward = rewardList.reward.filter(item => item.name != itemName || item.amount != itemAmount);
+        }
+        //console.log(fundingItems);
+        $(this).closest('div').remove();  // 또는 $(this).parent().parent().remove();
+    });
+
+
+    // 리워드 태그 변수
+    let rewardTitle = $('.gi-se-input-va');
+    let rewardTargetName = '';
+    let rewardTargetAmount = '';
+    let rewardSendDate = '';
+    let rewardSelectedCount = 0; // 기본값을 0으로 설정
+    let rewardLeftAmount = $("#productionAmount").val(); // 기본값을 0으로 설정
+
+    // 리워드 태그 추가 함수
+    function addRewardItemField() {
+        const rewardItemField = `
+            <div class="cam-gi-box-le-in-bo-pe">
+                <div>
+                    <button class="cam-gi-box-le-in-bo-pe-content">
+                        <strong>${rewardTargetName} ${rewardTargetAmount}개+</strong>
+                        <p>${rewardTitle}</p>
+                        <ul>
+                            <li>${rewardItem} ${rewardAmount}개</li>
+                        </ul>
+                        <span>예상 발송 시작일: <em>${rewardSendDate}</em></span>
+                        <div class="cam-gi-box-le-in-bo-pe-content-div">
+                            <em class="cam-gi-em">
+                                <div class="cam-gi-em-in">
+                                    <svg viewBox="0 0 48 48">
+                                        <path fill-rule="evenodd" clip-rule="evenodd" d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z" fill="#6D6D6D"></path>
+                                    </svg>
+                                </div>
+                                ${rewardSelectedCount}명이 선택
+                            </em>
+                            <div class="cam-gi-em-box">
+                                <em>${rewardLeftAmount}개 남음</em>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+                <!-- 삭제버튼 -->
+                <button class="cam-gi-de">
+                    <div class="cam-gi-de-in">
+                        <svg viewBox="0 0 48 48">
+                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z">
+                            </path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+            
+        `;
+        $('.cam-gi-box-le-in-bo').append(rewardItemField);
+    }
+// 3. 리워드 구성 END
+
+    // 캠페인 생성 완료 시 AJAX로 데이터 전송
+    let sendData = {};
+    
+    // Cloudflare Images 업로더 인스턴스 생성
+    const imageUploader = new CloudflareImageUploader();
+    
+    // 이미지 업로드 후 캠페인 데이터 전송
+    async function submitCampaign() {
+        try {
+            sendData.tagList = tagList;     // 캠페인 태그 리스트트
+            sendData.title = document.querySelector("input[name='title']").value;        // 캠페인 제목
+            sendData.content = document.querySelector("input[name='shortDescription']").value;    // 캠페인 설명
+            sendData.goalAmount = goalAmount; // 캠페인 목표 총 재료 수량 리스트
+            sendData.rewardList = rewardList; // 캠페인 목표 총 리워드 수량 리스트
+            sendData.startDate = fundingStartDate.value; // 캠페인 시작일
+            sendData.endDate = fundingEndDate.value;     // 캠페인 종료일
+            sendData.sendDate = fundingSendDate.value;   // 캠페인 발송일
+            
+            // 이미지 파일 가져오기
+            const imageInput = document.querySelector('input[name="image"]');
+            const imageFile = imageInput.files[0];
+            
+            if (!imageFile) {
+                alert('캠페인 이미지를 선택해주세요.');
+                return;
+            }
+            
+            // 로딩 표시
+            showLoading();
+            
+            // Cloudflare에 이미지 업로드
+            const uploadResult = await imageUploader.uploadImage(imageFile);
+            
+            if (!uploadResult.success) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+            
+            // 캠페인 데이터에 이미지 URL 추가
+            sendData.imageUrl = uploadResult.imageUrl;
+            sendData.imageId = uploadResult.imageId;
+            
+            // 서버로 캠페인 데이터 전송
+            const response = await $.ajax({
+                url: '/api/campaigns',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(sendData)
+            });
+            
+            // 성공 시 처리
+            if (response.success) {
+                alert('캠페인이 성공적으로 등록되었습니다.');
+                window.location.href = '/campaigns/' + response.campaignId;
+            } else {
+                throw new Error(response.message || '캠페인 등록에 실패했습니다.');
+            }
+            
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        } finally {
+            hideLoading();
+        }
+    }
+    
+    // 로딩 표시/숨김 함수
+    function showLoading() {
+        // 로딩 UI 표시 로직
+        $('.loading-overlay').show();
+    }
+    
+    function hideLoading() {
+        // 로딩 UI 숨김 로직
+        $('.loading-overlay').hide();
+    }
+    
+    // 캠페인 생성 버튼 클릭 이벤트
+    $('.cam-la-in-box-bottom-in-end-btn').on('click', function() {
+        if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 생성') {
+            submitCampaign();
+        }
+    });
 
     // 하단 버튼 컨트롤러
     $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
@@ -110,6 +533,11 @@ $(document).ready(function () {
             navTarget.next().addClass('check');
             $('.cam-la-in-box-bo.funding').addClass('hidden');
             $('.cam-la-in-box-bo.reward').removeClass('hidden'); 
+        }else if(navName == 'reward'){
+            navTarget.removeClass('check');
+            navTarget.next().addClass('check');
+            $('.cam-la-in-box-bo.reward').addClass('hidden');
+            $('.cam-la-in-box-bo.final').removeClass('hidden');
             $(".cam-la-in-box-bottom-in-end-btn-span").text('캠페인 생성');
         }
         window.location.href = '#header';
@@ -133,266 +561,16 @@ $(document).ready(function () {
             navTarget.prev().addClass('check');
             $('.cam-la-in-box-bo.funding').removeClass('hidden');
             $('.cam-la-in-box-bo.reward').addClass('hidden'); 
+        }else if(navName == 'final'){
+            navTarget.removeClass('check');
+            navTarget.prev().addClass('check');
+            $('.cam-la-in-box-bo.reward').removeClass('hidden');
+            $('.cam-la-in-box-bo.final').addClass('hidden');
             $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
         }
     });
-    // 하단 버튼 컨트롤러 END
-
-    // 펀딩 계획 페이지 기부품 추가 버튼 클릭 시 기부품 추가 필드 제공
-    let fundingItem = $('#fundingItemInput');
-    let fundingAmount = $('#fundingAmountInput');
-    
-    // 기부품 이름 및 수량 입력 시 버튼 활성화
-    $(document).on('keyup', activeItemFundingBtn);
-    function activeItemFundingBtn(){
-        if((fundingItem.val() != '' && fundingAmount.val() != '') && !fundingItems.some(item => item.itemName === fundingItem.val())){
-            $('.cam-la-pay-btn').addClass('isActive');
-            $('.cam-la-pay-btn').removeAttr('disabled');
-        }else{
-            $('.cam-la-pay-btn').removeClass('isActive');
-            $('.cam-la-pay-btn').attr('disabled', true);
-        }
-    }
-    // 기부품 추가 버튼 클릭 시 기부품 추가
-    $('.cam-la-pay-btn').on('click', addFundingItem);
-    function addFundingItem(){
-        let fundingTag = `
-            <div class="cam-la-pay-box-pe" >
-                <span class="cam-la-pay-box-pe-fname">${fundingItem.val()}</span>
-                <em class="cam-la-pay-box-pe-famount">${fundingAmount.val()}</em>개
-                <button class="cam-tag-sh-pe-btn">
-                    <div>
-                        <svg
-                            width="10"
-                            height="10"
-                            viewBox="0 0 10 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                fill-rule="evenodd"
-                                clip-rule="evenodd"
-                                d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                fill="#6D6D6D"
-                            ></path>
-                        </svg>
-                    </div>
-                </button>
-            </div>
-        `;
-        fundingItems.push({itemName: fundingItem.val(), itemAmount: fundingAmount.val()});
-        //console.log(fundingItems);
-        $('.cam-la-pay-box-total.funding').parent().append(fundingTag);
-        fundingItem.val('');
-        fundingAmount.val('');
-        $('.cam-la-pay-btn').removeClass('isActive');
-        $('.cam-la-pay-btn').attr('disabled', true);
-    }
-    // 아이템 삭제 버튼 클릭 시 추가된 필드 삭제 (이벤트 위임 사용)
-    $(document).on('click', '.cam-tag-sh-pe-btn', function(){
-        let itemName = $(this).closest('div').find('.cam-la-pay-box-pe-fname').text();
-        let itemAmount = $(this).closest('div').find('.cam-la-pay-box-pe-famount').text();
-        fundingItems = fundingItems.filter(item => item.itemName != itemName || item.itemAmount != itemAmount);
-        //console.log(fundingItems);
-        $(this).closest('div').remove();  // 또는 $(this).parent().parent().remove();
-    });
-
-    // 펀딩 기간 설정 초기화
-    const fundingStartDate = document.getElementById('funding-start-datetime');
-    const fundingEndDate = document.getElementById('funding-end-datetime');
-    const fundingSendDate = document.getElementById('funding-send-datetime');
-    const fundingPeriod = document.getElementById('funding-period');
-    const preparePeriod = document.getElementById('prepare-period');
-    
-    // 리워드 섹션의 종료일자 input 요소
-    const rewardEndDate = document.querySelectorAll('#funding-end-datetime')[1];
-
-    // 날짜 포맷 변환 함수 (KST)
-    function formatDateTime(date) {
-        const offset = date.getTimezoneOffset() * 60000;
-        const dateWithOffset = new Date(date.getTime() - offset);
-        return dateWithOffset.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm 형식
-    }
-
-    // 초기값 설정
-    const now = new Date();
-    const thirtyDaysLater = new Date(now);
-    thirtyDaysLater.setDate(now.getDate() + 30);
-    fundingStartDate.value = formatDateTime(now);
-    fundingEndDate.value = formatDateTime(thirtyDaysLater);
-    if (rewardEndDate) {
-        rewardEndDate.value = formatDateTime(thirtyDaysLater);
-    }
-    updatePeriod();
-
-    // 기간 업데이트 함수
-    function updatePeriod() {
-        const startDate = new Date(fundingStartDate.value);
-        const endDate = new Date(fundingEndDate.value);
-        const diffTime = Math.abs(endDate - startDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        fundingPeriod.textContent = diffDays + '일';
-
-        // 60일 초과 체크
-        if(diffDays > 60) {
-            showPeriodAlert();
-            fundingEndDate.value = ''; // 종료일 초기화
-            if (rewardEndDate) {
-                rewardEndDate.value = ''; // 리워드 섹션의 종료일도 초기화
-            }
-            fundingPeriod.textContent = '-일';
-            return;
-        }
-
-        // 리워드 섹션의 종료일자도 함께 업데이트
-        if (rewardEndDate) {
-            rewardEndDate.value = fundingEndDate.value;
-        }
-
-        // 예상 발송일 자동 설정 (종료일 + 7일)
-        const sendDate = new Date(endDate);
-        sendDate.setDate(endDate.getDate() + 7);
-        fundingSendDate.value = formatDateTime(sendDate);
-        updatePreparePeriod();
-    }
-
-    // 준비 기간 업데이트 함수
-    function updatePreparePeriod() {
-        const endDate = new Date(fundingEndDate.value);
-        const sendDate = new Date(fundingSendDate.value);
-        const diffTime = Math.abs(sendDate - endDate);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-        
-        preparePeriod.textContent = diffDays + '일';
-    }
-
-    // 날짜 변경 이벤트 리스너
-    fundingStartDate.addEventListener('change', updatePeriod);
-    fundingEndDate.addEventListener('change', updatePeriod);
-    fundingSendDate.addEventListener('change', updatePreparePeriod);
-
-    // 60일 초과 알림 함수
-    function showPeriodAlert() {
-        const alertBox = document.createElement('div');
-        alertBox.className = 'period-alert';
-        alertBox.innerHTML = `
-            <div class="period-alert-content">
-                <span class="period-alert-icon">⚠️</span>
-                <span class="period-alert-message">펀딩 기간은 최대 60일을 초과할 수 없습니다.</span>
-            </div>
-        `;
-
-        document.body.appendChild(alertBox);
-
-        // 애니메이션 효과를 위한 지연
-        setTimeout(() => alertBox.classList.add('show'), 100);
-
-        // 3초 후 알림 제거
-        setTimeout(() => {
-            alertBox.classList.remove('show');
-            setTimeout(() => alertBox.remove(), 300);
-        }, 3000);
-    }
-
-    // 리워드 태그 변수
-    let rewardTitle = '';
-    let rewardItem = '';
-    let rewardAmount = '';
-    let rewardTargetName = '';
-    let rewardTargetAmount = '';
-    let rewardSendDate = '';
-    let rewardSelectedCount = '';
-    let rewardLeftAmount = '';
-
-    let rewardTag = `
-        <div class="cam-gi-box-le-in-bo-pe">
-            <!-- 내용 -->
-            <div>
-                <button class="cam-gi-box-le-in-bo-pe-content">
-                     <!-- 받는 기부품 -->
-                    <strong>${rewardTargetName} ${rewardTargetAmount}개+</strong>
-                    <!-- 판매자가 입력한 리워드 이름 -->
-                    <p>
-                        ${rewardTitle}
-                    </p>
-                    <!-- 리워드 구성품 -->
-                    <ul>
-                        <li>${rewardItem} ${rewardAmount}개</li>
-                    </ul>
-                    <span>예상 발송 시작일 :
-                        <em>
-                            ${rewardSendDate}
-                        </em>
-                    </span>
-                    <div class="cam-gi-box-le-in-bo-pe-content-div">
-                        <em class="cam-gi-em">
-                            <div class="cam-gi-em-in">
-                                <svg viewBox="0 0 48 48">
-                                    <path
-                                        fill-rule="evenodd"
-                                        clip-rule="evenodd"
-                                        d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                    ></path>
-                                </svg>
-                            </div>
-                            ${rewardSelectedCount}명이 선택
-                        </em>
-                        <div
-                            class="cam-gi-em-box"
-                        >
-                            <em>${rewardLeftAmount}개 남음</em
-                            >
-                        </div>
-                    </div>
-                </button>
-            </div>
-            <!-- 삭제버튼 -->
-            <button
-                class="cam-gi-de"
-            >
-                <div
-                    class="cam-gi-de-in"
-                >
-                    <svg
-                        viewBox="0 0 48 48"
-                    >
-                        <path
-                            fill-rule="evenodd"
-                            clip-rule="evenodd"
-                            d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z"
-                        ></path>
-                    </svg>
-                </div>
-            </button>
-        </div>
-    
-    
-    `
-
-    // 캠페인 생성 완료 시 AJAX로 데이터 전송
-    let sendData = {};
-    
-    $(document).on('click', '#saveBtn', function(){
-        let data = {
-            title: $(title).val(),
-            description: $(description).val(),
-            tags: $(tags).val()
-        }
-        $.ajax({
-            url: '/campaign/create',
-            type: 'POST',
-            data: sendData,
-            success: function(response){
-                redirect('/creator/dashboard');
-            },
-            error: function(error){
-                console.log(error);
-            }
-        })
-    })
-
-}); // $(document).ready END
+// 하단 버튼 컨트롤러 END
+}); // ===================================== $(document).ready END =====================================
 
 function activeNextBtn(){
     const nextBtn = document.querySelector(".next-btn");
