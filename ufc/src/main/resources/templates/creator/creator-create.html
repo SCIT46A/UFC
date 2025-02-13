@@ -61,6 +61,7 @@
                                                 class="name-form-input"
                                                 placeholder="ex) UPDA"
                                                 maxlength="10"
+                                                oninput="creator_nickname()"
                                             />
                                         </div>
                                     </div>
@@ -133,7 +134,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="desc-form-text-content">상호</div>
+                                <div class="desc-form-text-content">상호명</div>
                                 <div class="desc-form-input-wrap">
                                     <div>
                                         <div>
@@ -143,6 +144,7 @@
                                                 id="seller_regist_name"
                                                 placeholder="사업자등록증에 있는 상호명 입력"
                                                 maxlength="100"
+                                                oninput="update_seller_regist_name()"
                                             />
                                         </div>
                                     </div>
@@ -303,7 +305,11 @@
                                         <div class="club-detail-title-wrap">
                                             <div class="club-detail-name-wrap">
                                                 <div class="club-detail-name">
-                                                    UPDA
+                                                    <span class="display_name"></span>
+                                                    
+                                                </div>
+                                                <div class="company_name">
+                                                    <span class="display_seller_name"></span>
                                                 </div>
                                             </div>
                                             <div class="club-detail-stats-wrap">
@@ -311,7 +317,7 @@
                                                     <span
                                                         class="club-detail-stats-name"
                                                     >
-                                                        구성원
+                                                        팔로워
                                                     </span>
                                                     <span
                                                         class="club-detail-stats-count"

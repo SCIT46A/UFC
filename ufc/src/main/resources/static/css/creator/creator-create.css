@@ -1189,6 +1189,14 @@ input::placeholder {
     line-height: 2rem;
 }
 
+.company_name {
+    margin-left: 15px;
+    font-weight: 100;
+    font-size: 1rem;
+    line-height: 2rem;
+    opacity: .5;
+}
+
 .club-detail-stats-wrap {
     margin-top: 0.5rem;
 }

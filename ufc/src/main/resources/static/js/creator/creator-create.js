@@ -284,3 +284,11 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href="/ufc/src/main/resources/templates/index.html";
         });
 });
+
+function creator_nickname() {
+    document.querySelector('.display_name').textContent = document.querySelector('.name-form-input').value;
+}
+
+function update_seller_regist_name() {
+    document.querySelector('.display_seller_name').textContent = document.getElementById('seller_regist_name').value;
+}
