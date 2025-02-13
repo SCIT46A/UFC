@@ -162,6 +162,13 @@ function filterCampaigns(type) {
             const endDate = new Date(campaign.endDate);
             return endDate < now;
         });
+
+        document.getElementById("table-container").innerHTML = generateCompletedCampaignTable(
+            filteredCampaigns, allCampaignGoals, allMaterialDonations
+        );
+
+        console.log(`✅ 종료된 캠페인 개수: ${filteredCampaigns.length}`);
+        return;
     }
 
     console.log(`📢 필터링된 캠페인 개수 (${type}): ${filteredCampaigns.length}`);
@@ -313,9 +320,61 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
     return tableHTML;
 }
 
+// ✅ 종료된 캠페인 테이블 생성 (펀딩 진행률 → 펀딩 결과)
+function generateCompletedCampaignTable(campaigns, campaignGoals, materialDonations) {
+    if (campaigns.length === 0) {
+        return `<div class="empty-message"><p>🚫 종료된 캠페인이 없습니다.</p></div>`;
+    }
 
+    let tableHTML = `
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%">캠페인 ID</th>
+                        <th style="width: 25%">제목</th>
+                        <th style="width: 12%">시작일</th>
+                        <th style="width: 12%">종료일</th>
+                        <th style="width: 8%">생성자</th>
+                        <th style="width: 35%">펀딩 결과</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
 
+    campaigns.forEach(campaign => {
+        const goal = campaignGoals.find(goal => goal.campaignId === campaign.campaignId);
+        const donations = materialDonations
+            .filter(donation => donation.campaignId === campaign.campaignId)
+            .reduce((sum, donation) => sum + donation.quantity, 0);
 
+        const goalQuantity = goal ? goal.quantityRequired : 0;
+        const fundingPercentage = goalQuantity > 0 ? (donations / goalQuantity) * 100 : 0;
+        const displayPercentage = Math.min(100, fundingPercentage); // 100% 이상일 경우 바 크기는 100% 유지
+        const extraPercentage = fundingPercentage > 100 ? `${fundingPercentage.toFixed(1)}%` : `${displayPercentage.toFixed(1)}%`;
+
+        tableHTML += `
+            <tr>
+                <td>${campaign.campaignId}</td>
+                <td>${campaign.title}</td>
+                <td>${new Date(campaign.startDate).toLocaleDateString()}</td>
+                <td>${new Date(campaign.endDate).toLocaleDateString()}</td>
+                <td>${campaign.createdById ? campaign.createdById : "정보 없음"}</td>
+                <td>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${displayPercentage}%; background-color: #16A34A;"></div>
+                        <span class="progress-text">${extraPercentage}</span>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table></div>`;
+    return tableHTML;
+}
+
+// ✅ 진행 중인 캠페인 테이블 생성
 function generateOngoingCampaignTable(campaigns, campaignGoals, materialDonations) {
     if (campaigns.length === 0) {
         return `<div class="empty-message"><p>🚫 진행 중인 캠페인이 없습니다.</p></div>`;
@@ -366,6 +425,7 @@ function generateOngoingCampaignTable(campaigns, campaignGoals, materialDonation
     tableHTML += `</tbody></table></div>`;
     return tableHTML;
 }
+
 
 
 // 2. 캠페인 승인 관리
