@@ -1,14 +1,3 @@
-<!-- 수정사항(공유 전)
-    수정한 내용
-    1. 프로필 적힌 내용 (프로필사진, 닉네임, 팔로잉, 후원수) 
-    2. 프로필 편집 버튼
-    3. 프로필 마이페이지 창 (작성한후기, 후원캠페인 등)
-    4. 프로필 사진 수정 시 들어가는 창과 처음 보여지는 사진 크기 조정
-
-
-    
--->
-
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
   <head>
@@ -142,7 +131,7 @@
                       <button class="pro-name-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-name" th:text="${loginUser.userName}">
+                    <div class="pro-name" th:text="${user.userName}">
                       조관익
                     </div>
                     <!-- 버튼 눌렀을때 -->
@@ -153,13 +142,16 @@
                             <input
                               type="text"
                               placeholder="이름을 입력해주세요."
-                              th:value="${loginUser.userName}"
+                              th:value="${user.userName}"
                             />
                           </span>
                         </div>
                       </div>
                       <div class="name-btn">
-                        <button class="name-btn-in">
+                        <button
+                          class="name-btn-in"
+                          th:href="@{/user/update(userId=${user.userId})}"
+                        >
                           <span>저장</span>
                         </button>
                       </div>
@@ -174,7 +166,7 @@
                       <button class="pro-sh-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-sh" th:text="${loginUser.intro}">
+                    <div class="pro-sh" th:text="${user.intro}">
                       끼에에에에에에에에엑
                     </div>
                     <!-- 버튼 눌렀을때 -->
@@ -184,12 +176,15 @@
                           <textarea
                             type="text"
                             placeholder="소개를 입력해주세요."
-                            th:value="${loginUser.intro}"
+                            th:text="${user.intro}"
                           ></textarea>
                         </div>
                       </div>
                       <div class="name-btn">
-                        <button class="name-btn-in">
+                        <button
+                          class="name-btn-in"
+                          th:href="@{/user/update(userId=${user.userId})}"
+                        >
                           <span>저장</span>
                         </button>
                       </div>
@@ -204,7 +199,7 @@
                       <button class="pro-ph-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-ph" th:text="${loginUser.phoneNumber}">
+                    <div class="pro-ph" th:text="${user.phoneNumber}">
                       010-1234-4231
                     </div>
                     <!-- 버튼 눌렀을때 -->
@@ -216,13 +211,16 @@
                             <input
                               type="number"
                               placeholder="연락처를 입력해주세요."
-                              th:value="${loginUser.phoneNumber}"
+                              th:value="${user.phoneNumber}"
                             />
                           </span>
                         </div>
                       </div>
                       <div class="name-btn">
-                        <button class="name-btn-in">
+                        <button
+                          class="name-btn-in"
+                          th:href="@{/user/update(userId=${user.userId})}"
+                        >
                           <span>저장</span>
                         </button>
                       </div>
@@ -237,7 +235,7 @@
                       <button class="pro-ad-btn-cancle hidden">취소</button>
                     </div>
                     <!-- 아래 내용 -->
-                    <div class="pro-ad" th:text="${loginUser.userAddress}">
+                    <div class="pro-ad" th:text="${user.userAddress}">
                       코엑스 어딘가
                     </div>
                     <!-- 버튼 눌렀을때 -->
@@ -248,7 +246,7 @@
                             <input
                               type="text"
                               placeholder="주소를 입력해주세요."
-                              th:value="${loginUser.userAddress}"
+                              th:value="${user.userAddress}"
                             />
                           </span>
                         </div>
@@ -261,11 +259,12 @@
                     </div>
                   </div>
                   <!-- 회원탈퇴 -->
-                  <div class="main-in-content-in-pe">
+                  <div class="main-in-content-in-pe-un">
                     <!-- 상단 -->
-                    <div class="main-in-content-in-pe-title">
-                      <p>회원탈퇴</p>
-                      <button class="pro-run">탈퇴</button>
+                    <div class="main-in-content-in-pe-title-un">
+                      <a th:href="@{/user/delete(userId=${user.userId})}"
+                        >회원탈퇴</a
+                      >
                     </div>
                   </div>
                 </div>

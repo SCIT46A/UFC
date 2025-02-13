@@ -40,59 +40,6 @@
                 <!-- 주목할 만한 프로젝트 -->
                 <div class="container mx-auto px-4 target-project">
                     <div class="main">
-                        <div class="choice hidden">
-                            <div class="choice-box">
-                                <div class="choice-box-in">
-                                    <div class="choice-box-in-warp">
-                                        <div class="choice-box-in-warp-in">
-                                            <div
-                                                class="choice-box-in-warp-in-box"
-                                            >
-                                                <div
-                                                    class="choice-box-in-warp-in-box-pe"
-                                                >
-                                                    전체
-                                                </div>
-                                                <div
-                                                    class="choice-box-in-warp-in-box-pe"
-                                                >
-                                                    진행중
-                                                </div>
-                                                <div
-                                                    class="choice-box-in-warp-in-box-pe"
-                                                >
-                                                    종료
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="choice-add hidden">
-                            <div class="choice-box-add">
-                                <div class="choice-box-in">
-                                    <div class="choice-box-in-warp">
-                                        <div class="choice-box-in-warp-in">
-                                            <div
-                                                class="choice-box-in-warp-in-box"
-                                            >
-                                                <div
-                                                    class="choice-box-in-warp-in-box-pe"
-                                                >
-                                                    추가순
-                                                </div>
-                                                <div
-                                                    class="choice-box-in-warp-in-box-pe"
-                                                >
-                                                    마감 임박순
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="main-in">
                             <!-- 공용으로 들어가는 상단 -->
                             <div class="main-in-box">
@@ -191,7 +138,7 @@
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                        <span class="main-in-box-na-box-pe-span current">
+                                        <span class="main-in-box-na-box-pe-span">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-profile.html"
@@ -215,8 +162,8 @@
                                             >내가 후원한 캠페인</a>
                                             </div>
                                         </span>
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
+                                        <span class="main-in-box-na-box-pe-span current">
+                                            <div class="main-in-box-na-box-pe-span-in ">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-like.html"
                                             th:href="@{/user/like}"
@@ -226,9 +173,9 @@
                                         <span class="main-in-box-na-box-pe-span">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a
-                                            href="/src/main/resources/templates/user/mypage-alarm.html"
-                                            th:href="@{/user/alarm}"
-                                            >알림</a>
+                                            href="/src/main/resources/templates/user/mypage-badge.html"
+                                            th:href="@{/user/badge}"
+                                            >뱃지</a>
                                             </div>
                                         </span>
                                         </div>
@@ -240,61 +187,22 @@
                             <div class="like">
                                 <div>
                                     <div class="like-top">
+
                                         <span class="like-top-le">
-                                            <button class="like-top-le-btn">
-                                                <span class="like-top-le-btn-in"
-                                                    >상태</span
-                                                >
-                                                <span
-                                                    class="like-top-le-btn-in-img"
-                                                >
-                                                    <div
-                                                        style="
-                                                            display: inline-flex;
-                                                        "
-                                                    >
-                                                        <svg
-                                                            viewBox="0 0 48 48"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
-                                                            ></path>
-                                                        </svg>
-                                                    </div>
-                                                </span>
-                                            </button>
+                                            <select class="like-top-select">
+                                            <option value="all">전체</option>
+                                            <option value="progress">진행중</option>
+                                            <option value="end">종료</option>
+                                        </select>
+
                                         </span>
                                         <div class="like-top-ri">
                                             <div class="like-top-ri-in">
-                                                <button
-                                                    class="like-top-le-btn-add"
-                                                >
-                                                    <span
-                                                        class="like-top-le-btn-in"
-                                                        >최신순</span
-                                                    >
-                                                    <span
-                                                        class="like-top-le-btn-in-img"
-                                                    >
-                                                        <div
-                                                            style="
-                                                                display: inline-flex;
-                                                            "
-                                                        >
-                                                            <svg
-                                                                viewBox="0 0 48 48"
-                                                            >
-                                                                <path
-                                                                    fill-rule="evenodd"
-                                                                    clip-rule="evenodd"
-                                                                    d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
-                                                                ></path>
-                                                            </svg>
-                                                        </div>
-                                                    </span>
-                                                </button>
+                                                <select class="like-top-sorting">
+                                                    <option value="latest">최신순</option>
+                                                    <option value="add">추가순</option>
+                                                    <option value="deadline">마감임박순</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>

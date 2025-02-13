@@ -139,7 +139,7 @@
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                        <span class="main-in-box-na-box-pe-span current">
+                                        <span class="main-in-box-na-box-pe-span ">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-profile.html"
@@ -155,7 +155,7 @@
                                             >작성한 후기</a>
                                             </div>
                                         </span>
-                                        <span class="main-in-box-na-box-pe-span">
+                                        <span class="main-in-box-na-box-pe-span current">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-sponsor.html"
@@ -163,8 +163,8 @@
                                             >내가 후원한 캠페인</a>
                                             </div>
                                         </span>
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in ">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-like.html"
                                             th:href="@{/user/like}"
@@ -174,9 +174,9 @@
                                         <span class="main-in-box-na-box-pe-span">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a
-                                            href="/src/main/resources/templates/user/mypage-alarm.html"
-                                            th:href="@{/user/alarm}"
-                                            >알림</a>
+                                            href="/src/main/resources/templates/user/mypage-badge.html"
+                                            th:href="@{/user/badge}"
+                                            >뱃지</a>
                                             </div>
                                         </span>
                                         </div>
@@ -187,48 +187,6 @@
                             </div>
                             <!-- 각각의 나올것들 -->
                             <div class="sup">
-                                <div class="sup-title">
-                                    <div class="sup-title-se">
-                                        <select
-                                            name="choice"
-                                            id=""
-                                            class="sup-title-se-in"
-                                        >
-                                            <option value="진행중">
-                                                진행중
-                                            </option>
-                                            <option value="진행중">종료</option>
-                                        </select>
-                                    </div>
-                                    <div class="sup-title-input">
-                                        <div class="sup-title-input-in">
-                                            <span
-                                                class="sup-title-input-in-span"
-                                            >
-                                                <div
-                                                    class="sup-title-input-in-span-img"
-                                                >
-                                                    <svg viewBox="0 0 48 48">
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M21.8113 37.22C13.3064 37.22 6.4025 30.3161 6.4025 21.8113C6.4025 13.3064 13.3064 6.4025 21.8113 6.4025C30.3161 6.4025 37.22 13.3064 37.22 21.8113C37.22 30.3161 30.3161 37.22 21.8113 37.22ZM45.3246 42.2229L37.22 34.1172C44.0239 25.6124 42.6231 13.1063 34.1182 6.4025C30.9174 3.70097 26.714 2.20011 22.5117 2H21.8113H21.1109C10.805 2.40023 2.40023 10.7049 2 21.0108V21.7112V22.3115C2.30017 33.2177 11.4053 41.8226 22.3115 41.5225C26.614 41.4224 30.7163 39.9215 34.1182 37.22L42.2229 45.3246C43.1234 46.2251 44.4251 46.2251 45.3246 45.3246C46.2251 44.5242 46.2251 43.1224 45.3246 42.2229Z"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    inputmode="text"
-                                                    placeholder="프로젝트를 검색하세요"
-                                                    autocapitalize="off"
-                                                    autocomplete="off"
-                                                    class="sup-title-input-in-span-input"
-                                                    value=""
-                                                />
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="sup-content">
                                     <div class="sup-content-in">
                                         <!-- 위에 몇개인지 나오고 -->
@@ -248,10 +206,15 @@
                                                     class="sup-content-main-box-in"
                                                 >
                                                     <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
+                                                     <div>
+                                                        <div>
+
+                                                            <div
+                                                            class="sup-content-main-box-in-img"
+                                                            ></div>
+                                                        </div>
                                                     <!-- 내용 -->
+                                                     
                                                     <div
                                                         class="sup-content-main-box-in-content"
                                                     >
@@ -263,7 +226,7 @@
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/user/sponsor/detail}"
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span
@@ -301,6 +264,11 @@
                                                                 2025.02.06 배송
                                                                 예정
                                                             </p>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        <div
+                                                        class="sup-content-main-box-in-result-img">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -313,10 +281,15 @@
                                                     class="sup-content-main-box-in"
                                                 >
                                                     <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
+                                                     <div>
+                                                        <div>
+
+                                                            <div
+                                                            class="sup-content-main-box-in-img"
+                                                            ></div>
+                                                        </div>
                                                     <!-- 내용 -->
+                                                     
                                                     <div
                                                         class="sup-content-main-box-in-content"
                                                     >
@@ -328,7 +301,7 @@
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/user/sponsor/detail}"
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span
@@ -367,20 +340,30 @@
                                                                 예정
                                                             </p>
                                                         </div>
+                                                        </div>
+                                                        </div>
+                                                        <div
+                                                        class="sup-content-main-box-in-result-img">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        <!-- 3번째 -->
                                         <div class="sup-content-main">
                                             <div class="sup-content-main-box">
                                                 <div
                                                     class="sup-content-main-box-in"
                                                 >
                                                     <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
+                                                     <div>
+                                                        <div>
+
+                                                            <div
+                                                            class="sup-content-main-box-in-img"
+                                                            ></div>
+                                                        </div>
                                                     <!-- 내용 -->
+                                                     
                                                     <div
                                                         class="sup-content-main-box-in-content"
                                                     >
@@ -392,7 +375,7 @@
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/user/sponsor/detail}"
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span
@@ -431,10 +414,14 @@
                                                                 예정
                                                             </p>
                                                         </div>
+                                                        </div>
+                                                        </div>
+                                                        <div
+                                                        class="sup-content-main-box-in-result-img">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
