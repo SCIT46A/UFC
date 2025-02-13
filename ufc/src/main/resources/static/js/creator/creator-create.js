@@ -292,3 +292,7 @@ function creator_nickname() {
 function update_seller_regist_name() {
     document.querySelector('.display_seller_name').textContent = document.getElementById('seller_regist_name').value;
 }
+
+function creator_intro() {
+    document.querySelector('.display_creator_intro').textContent = document.querySelector('.desc-form-input').value;
+}
