@@ -382,7 +382,6 @@ input[name="inputTag"] {
 }
 
 .cam-la-in-box-bottom-in-end-btn{
-    background: rgb(240, 240, 240);
     cursor: default;
     font-weight: 500;
     background: rgb(74, 222, 128);
@@ -403,6 +402,10 @@ input[name="inputTag"] {
     outline: none;
     box-sizing: border-box;
     padding: 0px 16px;
+    &:disabled{
+        background-color: rgb(158, 158, 158);
+        cursor: default;
+    }
 }
 
 .cam-la-in-box-top-in-title{
@@ -704,13 +707,12 @@ input[name="inputTag"] {
 
 .cam-img-re-box-sh {
     width: 100%;  /* 전체 너비 사용 */
-    padding-bottom: 100%;  /* 1:1 비율 유지 */
     position: relative;
     overflow: hidden;
 }
 
 .cam-img-re-box-sh img {
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     left: 0;
     width: 100%;
@@ -1653,14 +1655,16 @@ input[name="inputTag"] {
     font-weight: normal;
     box-sizing: border-box;
     padding: 0px 24px;
-    color: white;
     pointer-events: none;
-    background-color: rgb(228, 228, 228);
+    background-color: rgb(158, 158, 158);
     -webkit-appearance: button;
+    &.isActive {
+        background-color: rgb(74, 222, 128);
+    }
 }
 
 .git-la-btn-ok span{
-    color: rgb(158, 158, 158);
+    color: white;
 }
 
 .cam-pro-top{
@@ -2053,8 +2057,7 @@ input[type="datetime-local"]:focus {
 .date-alert {
     position: fixed;
     top: 20px;
-    left: 50%;
-    transform: translateX(-50%) translateY(-100%);
+    right: 20px;
     background-color: #ff4444;
     color: white;
     padding: 15px 25px;
@@ -2062,12 +2065,13 @@ input[type="datetime-local"]:focus {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 1000;
     opacity: 0;
+    transform: translateX(100%);
     transition: all 0.3s ease;
 }
 
 .date-alert.show {
-    transform: translateX(-50%) translateY(0);
     opacity: 1;
+    transform: translateX(0);
 }
 
 .date-alert-content {
@@ -2083,4 +2087,40 @@ input[type="datetime-local"]:focus {
 .date-alert-message {
     font-size: 14px;
     font-weight: 500;
+}
+
+.upda-tag-custom.tag-active {
+    background-color: rgb(74, 222, 128);
+    color: white;
+}
+
+.upda-tag-custom.tag-duplicate {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4444;
+}
+
+.duplicate-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    margin-top: 4px;
+    z-index: 1000;
+}
+
+.duplicate-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #ff4444;
 }

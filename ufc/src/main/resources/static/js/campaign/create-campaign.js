@@ -1,5 +1,8 @@
 $(document).ready(function () {
-    
+    // 페이지 로드 시 초기화 함수 호출
+    //initializePage();
+
+    let pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
 // 0. 약관, 동의
     const startBtn = document.querySelector(".cam-create-btn");
     $(document).on('click', function(){
@@ -20,6 +23,9 @@ $(document).ready(function () {
 // 약관, 동의 END
 
 // 1. 캠페인 기본정보 (캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성)
+    let campaignTitle = document.querySelector("input[name='title']");        // 캠페인 제목
+    let campaignDescription = document.querySelector(".cam-la-in-box-bo-all-de-div-box-textarea");    // 캠페인 설명
+    let imageInput = document.getElementById('campaignImageInput');    // 이미지 입력
 
     let tagList = [];   // 선택된 태그 목록
   
@@ -41,25 +47,92 @@ $(document).ready(function () {
     // 태그 버튼 누르면 선택 표시, 다시 누르면 선택 해제 태그 내용 데이터에 추가
     $(document).on('click', '.upda-tag-big', function(){
         $(this).toggleClass('tag-active');
-        const tagName = $(this).text();
+        const tagName = $(this).text().trim();
+        const duplicateTags = $(`.upda-tag-big[data-tag="${tagName}"]`).toArray();
+        
         if($(this).hasClass('tag-active')){
-            tagList.push(tagName);
-
-        }else{
+            if (!tagList.includes(tagName)) {
+                tagList.push(tagName);
+            }
+        } else {
             tagList = tagList.filter(tag => tag !== tagName);
+            // 같은 태그가 2개 이상 있는 경우 가장 나중에 생성된 것을 제거
+            if (duplicateTags.length > 1) {
+                // 가장 마지막에 생성된 태그 제거
+                const lastDuplicateTag = duplicateTags[duplicateTags.length - 1];
+                $(lastDuplicateTag).closest('li').remove();
+                
+                // 남은 태그들 중 비활성화된 것이 있다면 활성화
+                const remainingTags = duplicateTags.slice(0, -1);
+                remainingTags.forEach(tag => {
+                    if (!$(tag).hasClass('tag-active')) {
+                        $(tag).addClass('tag-active');
+                    }
+                });
+                
+                showAlert('중복된 태그가 정리되었습니다.');
+            }
         }
-        //console.log(tagList);
+        
+        console.log('Current tagList:', tagList);
+        checkInfoPageInput();
     });
 
-    $(document).on('keyup', '.upda-tag-custom > input', function(){
-        if($(this).val().length > 0){
-            $(this).parent().addClass('tag-active');
+    $(document).on('keyup', '.upda-tag-custom > input[type="text"]', function(e){
+        // Enter 키 입력 시 태그 저장
+        if (e.key === 'Enter') {
+            const inputValue = $(this).val().trim();
+            // 이미 존재하는 태그인지 HTML에서도 확인
+            const existingTags = $('.upda-tag-big').map(function() {
+                return $(this).text().trim();
+            }).get();
+            
+            if (inputValue && !existingTags.includes(inputValue)) {
+                tagList.push(inputValue);
+                // 입력 필드를 태그로 변환
+                const $li = $(this).closest('li');
+                $li.html(`
+                    <button class="upda-tag-big tag-active" data-tag="${inputValue}">
+                        ${inputValue}
+                    </button>
+                `);
+                checkInfoPageInput();
+            } else if (inputValue) {
+                showAlert('이미 존재하는 태그입니다.');
+                $(this).closest('li').remove();
+            }
+            e.preventDefault(); // 폼 제출 방지
+            return;
+        }
+        
+        // 입력값이 변경될 때마다 중복 체크
+        const inputValue = $(this).val().trim();
+        if(inputValue.length > 0){
+            // HTML에서 현재 존재하는 모든 태그 확인
+            const existingTags = $('.upda-tag-big').map(function() {
+                return $(this).text().trim();
+            }).get();
+            
+            if(existingTags.includes(inputValue)) {
+                // 중복된 태그인 경우
+                $(this).parent().removeClass('tag-active').addClass('tag-duplicate');
+                $(this).css('color', '#ff4444');
+                if(!$(this).next('.duplicate-tooltip').length) {
+                    $(this).after('<span class="duplicate-tooltip">이미 존재하는 태그입니다</span>');
+                }
+            } else {
+                $(this).parent().addClass('tag-active').removeClass('tag-duplicate');
+                $(this).css('color', '');
+                $(this).next('.duplicate-tooltip').remove();
+            }
         }else{
-            $(this).parent().removeClass('tag-active');
+            $(this).parent().removeClass('tag-active tag-duplicate');
+            $(this).css('color', '');
+            $(this).next('.duplicate-tooltip').remove();
         }
     });
     let editTag = '';
-    $(document).on('focusout', '.upda-tag-custom > input', function(){
+    $(document).on('focusout', '.upda-tag-custom > input[type="text"]', function(){
         const inputValue = $(this).val().trim();
         
         // 빈 값이거나 이미 존재하는 태그인 경우 입력 필드 삭제
@@ -71,8 +144,15 @@ $(document).ready(function () {
         if($(this).parent().hasClass('tag-active')){
             tagList.push(inputValue);
             editTag = inputValue;
+            // 입력 필드를 태그로 변환
+            const $li = $(this).closest('li');
+            $li.html(`
+                <button class="upda-tag-big tag-active" data-tag="${inputValue}">
+                    ${inputValue}
+                </button>
+            `);
         }
-        console.log(tagList);
+        checkInfoPageInput();
     });
     $(document).on('focusin', '.upda-tag-custom > input', function(){
         const tagName = $(this).val().trim();
@@ -99,11 +179,13 @@ $(document).ready(function () {
     });
 
     // 태그 삭제 버튼 클릭 시 추가된 필드 삭제 (이벤트 위임 사용)
-    $(document).on('click', '.tagDelete', function(){
+    $(document).on('click', '.tagDelete', function(e){
+        e.preventDefault();  // 기본 동작 방지
+        e.stopPropagation(); // 이벤트 전파 중지
         const tagName = $(this).prev().val().trim();
-        $(this).closest('li').remove();  // 또는 $(this).parent().parent().remove();
+        $(this).closest('li').remove();
         tagList = tagList.filter(tag => tag !== tagName);
-        console.log('Tag deleted - current tagList:', tagList);
+        checkInfoPageInput();
     });
 // 1. 캠페인 기본정보 (캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성) END
 
@@ -158,6 +240,49 @@ $(document).ready(function () {
     fundingPeriod.textContent = '30일';
     preparePeriod.textContent = '7일';
     
+    // 펀딩 일정 페이지 입력 감지
+    $(document).on('change', '#funding-start-datetime, #funding-end-datetime, #funding-send-datetime', checkFundingPageInput);
+    
+    function checkFundingPageInput() {
+        const hasStartDate = $('#funding-start-datetime').val() !== '';
+        const hasEndDate = $('#funding-end-datetime').val() !== '';
+        const hasSendDate = $('#funding-send-datetime').val() !== '';
+        
+        console.log('Funding page inputs:', {
+            startDate: hasStartDate,
+            endDate: hasEndDate,
+            sendDate: hasSendDate
+        });
+        
+        if (hasStartDate && hasEndDate && hasSendDate) {
+            $('.cam-la-in-box-bottom-in-end-btn').removeAttr('disabled').addClass('isActive');
+        } else {
+            $('.cam-la-in-box-bottom-in-end-btn').attr('disabled', true).removeClass('isActive');
+        }
+    }
+    
+    // 알림 메시지 표시 함수
+    function showAlert(message) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'date-alert';
+        alertDiv.innerHTML = `
+            <div class="date-alert-content">
+                <span class="date-alert-icon">⚠️</span>
+                <span class="date-alert-message">${message}</span>
+            </div>
+        `;
+        document.body.appendChild(alertDiv);
+        
+        // 애니메이션을 위한 타이밍
+        setTimeout(() => alertDiv.classList.add('show'), 100);
+        
+        // 3초 후 제거
+        setTimeout(() => {
+            alertDiv.classList.remove('show');
+            setTimeout(() => alertDiv.remove(), 300);
+        }, 3000);
+    }
+    
     // 날짜 입력 시 유효성 검사 및 자동 계산
     fundingStartDate.addEventListener('change', function() {
         const startDate = new Date(this.value);
@@ -166,6 +291,7 @@ $(document).ready(function () {
         if (startDate < tomorrow) {
             showAlert('시작일은 내일 이후로 설정해야 합니다.');
             this.value = '';
+            checkFundingPageInput();
             return;
         }
         
@@ -176,6 +302,7 @@ $(document).ready(function () {
             // 이미 설정된 종료일이 시작일보다 이전인 경우
             if (new Date(fundingEndDate.value) < startDate) {
                 fundingEndDate.value = '';
+                checkFundingPageInput();
             }
         }
     });
@@ -183,11 +310,13 @@ $(document).ready(function () {
     fundingEndDate.addEventListener('change', function() {
         const endDate = new Date(this.value);
         const startDate = new Date(fundingStartDate.value);
+        const currentSendDate = new Date(fundingSendDate.value);
         
         // 시작일이 설정되지 않은 경우
         if (!fundingStartDate.value) {
             showAlert('먼저 시작일을 설정해주세요.');
             this.value = '';
+            checkFundingPageInput();
             return;
         }
         
@@ -195,6 +324,7 @@ $(document).ready(function () {
         if (endDate < startDate) {
             showAlert('종료일은 시작일 이후로 설정해야 합니다.');
             this.value = '';
+            checkFundingPageInput();
             return;
         }
         
@@ -205,11 +335,32 @@ $(document).ready(function () {
         // 60일 초과 체크
         if (diffDays > 60) {
             showAlert('펀딩 기간은 최대 60일을 초과할 수 없습니다.');
-            this.value = '';
+            // 60일 후의 날짜로 자동 설정
+            const maxEndDate = new Date(startDate);
+            maxEndDate.setDate(startDate.getDate() + 60);
+            this.value = toKSTString(maxEndDate);
+            fundingPeriod.textContent = '60일';
+            checkFundingPageInput();
             return;
         }
         
         fundingPeriod.textContent = diffDays + '일';
+        
+        // 현재 리워드 준비 기간 계산
+        const currentPrepDays = Math.ceil(Math.abs(currentSendDate - endDate) / (1000 * 60 * 60 * 24));
+        
+        // 기존 발송일이 기본값(7일 차이)인 경우에만 자동 조정
+        if (currentPrepDays === 7) {
+            const newSendDate = new Date(endDate);
+            newSendDate.setDate(endDate.getDate() + 7);
+            fundingSendDate.value = toKSTString(newSendDate);
+            preparePeriod.textContent = '7일';
+        } else {
+            // 사용자가 직접 설정한 발송일인 경우, 새로운 준비 기간 계산
+            const newPrepTime = Math.abs(currentSendDate - endDate);
+            const newPrepDays = Math.ceil(newPrepTime / (1000 * 60 * 60 * 24));
+            preparePeriod.textContent = newPrepDays + '일';
+        }
         
         // 발송일 제한 업데이트
         if (fundingSendDate) {
@@ -218,6 +369,7 @@ $(document).ready(function () {
             // 이미 설정된 발송일이 종료일보다 이전인 경우
             if (new Date(fundingSendDate.value) < endDate) {
                 fundingSendDate.value = '';
+                checkFundingPageInput();
             }
         }
     });
@@ -230,62 +382,87 @@ $(document).ready(function () {
         if (!fundingEndDate.value) {
             showAlert('먼저 종료일을 설정해주세요.');
             this.value = '';
+            checkFundingPageInput();
             return;
         }
         
         // 종료일 이전으로 설정한 경우
         if (sendDate < endDate) {
-            showAlert('발송 예정일은 종료일 이후로 설정해야 합니다.');
+            showAlert('발송일은 종료일 이후로 설정해야 합니다.');
             this.value = '';
+            checkFundingPageInput();
             return;
         }
         
-        // 준비 기간 계산 및 표시 (일 수)
+        // 발송일 기간 계산 및 표시 (일 수)
         const diffTime = Math.abs(sendDate - endDate);
         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
         
         // 60일 초과 체크
         if (diffDays > 60) {
-            showAlert('리워드 준비 기간은 최대 60일을 초과할 수 없습니다.');
+            showAlert('리워드 발송일은 종료일로부터 최대 60일을 초과할 수 없습니다.');
             // 60일 후의 날짜로 자동 설정
             const maxSendDate = new Date(endDate);
             maxSendDate.setDate(endDate.getDate() + 60);
-            this.value = maxSendDate.toISOString().slice(0, 16);
+            this.value = toKSTString(maxSendDate);
             preparePeriod.textContent = '60일';
+            checkFundingPageInput();
             return;
         }
         
         preparePeriod.textContent = diffDays + '일';
+        checkFundingPageInput();
     });
-    
-    // 알림 표시 함수
-    function showAlert(message) {
-        const alertBox = document.createElement('div');
-        alertBox.className = 'date-alert';
-        alertBox.innerHTML = `
-            <div class="date-alert-content">
-                <span class="date-alert-icon">⚠️</span>
-                <span class="date-alert-message">${message}</span>
-            </div>
-        `;
-        
-        document.body.appendChild(alertBox);
-        
-        // 애니메이션 효과를 위한 지연
-        setTimeout(() => alertBox.classList.add('show'), 100);
-        
-        // 3초 후 알림 제거
-        setTimeout(() => {
-            alertBox.classList.remove('show');
-            setTimeout(() => alertBox.remove(), 300);
-        }, 3000);
-    }
 // 2. 펀딩 일자 END
 
 // 3. 리워드 구성
     // 펀딩 계획 페이지 기부품 추가 버튼 클릭 시 기부품 추가 필드 제공
+
     let fundingItems = []; //[{"name": '', "amount": ''}] rewardList.funding의 name별 amount를 더하여 표현(1.1배 증가 예정)
-    let rewardList = {"reward": [], "funding": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
+    let rewardItems = []; //[{"name": '', "amount": ''}] rewardList.reward의 name별 amount를 더하여 표현(1.1배 증가 예정)
+    let rewardList = {"name":[], "amount":[], "funding": [], "reward": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
+
+
+    // 리워드 입력 필드 포커스 이벤트
+    $(document).on('focusin', '.gi-se-input-va, #productionAmount', function() {
+        const rewardTitle = $('.gi-se-input-va').val();
+        const rewardAmount = $('#productionAmount').val();
+        
+        // 기존 값이 있다면 리스트에서 제거
+        if(rewardTitle && rewardAmount) {
+            const nameIndex = rewardList.name.indexOf(rewardTitle);
+            if(nameIndex !== -1) {
+                rewardList.name.splice(nameIndex, 1);
+                rewardList.amount.splice(nameIndex, 1);
+                console.log('Removed from list:', rewardList);
+            }
+        }
+        // 입력 중에는 버튼 비활성화
+        $('.git-la-btn-ok').attr('disabled', true).removeClass('isActive');
+    });
+
+    // 리워드 입력 필드 포커스 아웃 이벤트
+    $(document).on('focusout', '.gi-se-input-va, #productionAmount', function() {
+        const rewardTitle = $('.gi-se-input-va').val();
+        const rewardAmount = $('#productionAmount').val();
+
+        if(rewardTitle && rewardAmount) {
+            // 중복 방지를 위해 기존 값이 있다면 제거
+            const nameIndex = rewardList.name.indexOf(rewardTitle);
+            if(nameIndex !== -1) {
+                rewardList.name.splice(nameIndex, 1);
+                rewardList.amount.splice(nameIndex, 1);
+            }
+            
+            // 새로운 값 추가
+            rewardList.name.push(rewardTitle);
+            rewardList.amount.push(rewardAmount);
+            console.log('Added to list:', rewardList);
+            
+            // 입력이 완료되면 버튼 상태 체크
+            checkRewardPageInput();
+        }
+    });
 
     // 기부품 이름 및 수량 입력 시 버튼 활성화
     $(document).on('keyup', '.fundingItemInput, .fundingAmountInput', activeItemFundingBtn);
@@ -381,17 +558,23 @@ $(document).ready(function () {
         $(this).closest('div').remove();  // 또는 $(this).parent().parent().remove();
     });
 
+    $(document).on('click', '.git-la-btn-ok', function(){
+        if (!$(this).hasClass('isActive')) {
+            return; // 버튼이 비활성화 상태면 함수 종료
+        }
+        addRewardItemField();
+    });
 
-    // 리워드 태그 변수
-    let rewardTitle = $('.gi-se-input-va');
-    let rewardTargetName = '';
-    let rewardTargetAmount = '';
-    let rewardSendDate = '';
-    let rewardSelectedCount = 0; // 기본값을 0으로 설정
-    let rewardLeftAmount = $("#productionAmount").val(); // 기본값을 0으로 설정
-
-    // 리워드 태그 추가 함수
+    // 리워드 섹션태그 추가 함수
     function addRewardItemField() {
+        // 리워드 섹션태그 변수
+        let rewardTitle = $('.gi-se-input-va');
+        let rewardTargetName = $('.rewardItemInput');
+        let rewardTargetAmount = $('.rewardAmountInput');
+        let rewardSendDate = fundingSendDate.value;
+        let rewardSelectedCount = 0;
+        let rewardLeftAmount = $("#productionAmount").val();
+
         const rewardItemField = `
             <div class="cam-gi-box-le-in-bo-pe">
                 <div>
@@ -399,7 +582,7 @@ $(document).ready(function () {
                         <strong>${rewardTargetName} ${rewardTargetAmount}개+</strong>
                         <p>${rewardTitle}</p>
                         <ul>
-                            <li>${rewardItem} ${rewardAmount}개</li>
+                            <li>${rewardTargetName} ${rewardTargetAmount}개</li>
                         </ul>
                         <span>예상 발송 시작일: <em>${rewardSendDate}</em></span>
                         <div class="cam-gi-box-le-in-bo-pe-content-div">
@@ -409,7 +592,7 @@ $(document).ready(function () {
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z" fill="#6D6D6D"></path>
                                     </svg>
                                 </div>
-                                ${rewardSelectedCount}명이 선택
+                                <span class="cam-gi-em-in">${rewardSelectedCount}</span>명이 선택
                             </em>
                             <div class="cam-gi-em-box">
                                 <em>${rewardLeftAmount}개 남음</em>
@@ -434,26 +617,26 @@ $(document).ready(function () {
     }
 // 3. 리워드 구성 END
 
-    // 캠페인 생성 완료 시 AJAX로 데이터 전송
-    let sendData = {};
-    
+// 4. 최종 확인
     // Cloudflare Images 업로더 인스턴스 생성
     const imageUploader = new CloudflareImageUploader();
-    
+
     // 이미지 업로드 후 캠페인 데이터 전송
     async function submitCampaign() {
         try {
-            sendData.tagList = tagList;     // 캠페인 태그 리스트트
-            sendData.title = document.querySelector("input[name='title']").value;        // 캠페인 제목
-            sendData.content = document.querySelector("input[name='shortDescription']").value;    // 캠페인 설명
-            sendData.goalAmount = goalAmount; // 캠페인 목표 총 재료 수량 리스트
+            // 캠페인 생성 완료 시 AJAX로 데이터 전송
+            let sendData = {};
+
+            sendData.tagList = tagList;     // 캠페인 태그 리스트
+            sendData.title = campaignTitle.value;   // 캠페인 제목
+            sendData.description = campaignDescription.value;    // 캠페인 설명
+            sendData.fundingItems = fundingItems; // 캠페인 목표 총 재료 수량 리스트
             sendData.rewardList = rewardList; // 캠페인 목표 총 리워드 수량 리스트
             sendData.startDate = fundingStartDate.value; // 캠페인 시작일
             sendData.endDate = fundingEndDate.value;     // 캠페인 종료일
             sendData.sendDate = fundingSendDate.value;   // 캠페인 발송일
             
             // 이미지 파일 가져오기
-            const imageInput = document.querySelector('input[name="image"]');
             const imageFile = imageInput.files[0];
             
             if (!imageFile) {
@@ -517,29 +700,44 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on('change', '.fundingItemInput, .fundingAmountInput, .rewardItemInput, .rewardAmountInput', checkFirstPageInput);
+    // 페이지 입력 검사
+    function checkFirstPageInput(){
+        console.log(tagList.length, campaignTitle.value, campaignDescription.value, imageInput.files.length);
+        if(tagList.length > 0&&campaignTitle.value != ''&&campaignDescription.value != ''&&imageInput.files.length > 0){
+            $('.cam-la-in-box-bottom-in-end-btn').removeAttr('disabled');
+        }else{
+            $('.cam-la-in-box-bottom-in-end-btn').attr('disabled', true);
+        }
+    }
     // 하단 버튼 컨트롤러
     $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
-    // 캠페인 기획 페이지 다음 버튼
+    // 캠페인 기획 페이지 다음 버튼 -> 약관 동의 시작하기는 0.약관 동의에서 처리중
     $(document).on('click','.cam-la-in-box-bottom-in-end-btn', function(){
         const navTarget = $('.cam-la-in-box-top-in-na-all-ul-li.check');
         let navName = navTarget.attr('data-target');
-        if(navName == 'info'){    
+        if(navName == 'info'){  // info에서 다음 버튼 클릭 시 처리
             navTarget.removeClass('check');
             navTarget.next().addClass('check');
             $('.cam-la-in-box-bo.info').addClass('hidden');
             $('.cam-la-in-box-bo.funding').removeClass('hidden'); 
-        }else if(navName == 'funding'){
+            checkCurrentPageInputs('funding');
+        }else if(navName == 'funding'){  // funding에서 다음 버튼 클릭 시 처리
             navTarget.removeClass('check');
             navTarget.next().addClass('check');
             $('.cam-la-in-box-bo.funding').addClass('hidden');
             $('.cam-la-in-box-bo.reward').removeClass('hidden'); 
-        }else if(navName == 'reward'){
+            checkCurrentPageInputs('reward');
+        }else if(navName == 'reward'){  // reward에서 다음 버튼 클릭 시 처리
             navTarget.removeClass('check');
             navTarget.next().addClass('check');
             $('.cam-la-in-box-bo.reward').addClass('hidden');
             $('.cam-la-in-box-bo.final').removeClass('hidden');
             $(".cam-la-in-box-bottom-in-end-btn-span").text('캠페인 생성');
+            checkCurrentPageInputs('final');
         }
+        pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
+        console.log(pageStatus);
         window.location.href = '#header';
     });
 
@@ -568,8 +766,111 @@ $(document).ready(function () {
             $('.cam-la-in-box-bo.final').addClass('hidden');
             $(".cam-la-in-box-bottom-in-end-btn-span").text('다음');
         }
+        pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
+        console.log(pageStatus);
     });
 // 하단 버튼 컨트롤러 END
+
+    // 각 페이지별 입력 필드 변경 감지
+    // 기본 정보 페이지 입력 감지
+    $(document).on('input', 'input[name="title"]', checkInfoPageInput);
+    $(document).on('input', '.cam-la-in-box-bo-all-de-div-box-textarea', checkInfoPageInput);
+   //$(document).on('click', checkInfoPageInput);
+    $(document).on('keydown', checkInfoPageInput);
+    $(document).on('change', '#campaignImageInput', function() {
+        const previewImage = document.getElementById('previewImage');
+        const file = this.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+                document.querySelector('.cam-img-re').style.display = 'flex';
+                document.querySelector('.cam-img-re-box-sh span').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        checkInfoPageInput();
+    });
+    $(document).on('click', '.upda-tag-big, .tagDelete, .upda-tag-custom', checkInfoPageInput);
+    
+    // 페이지별 입력 검사 함수들
+    function checkInfoPageInput() {
+        const title = campaignTitle ? campaignTitle.value.trim() : '';
+        const desc = $('.cam-la-in-box-bo-all-de-div-box-textarea').val() ? $('.cam-la-in-box-bo-all-de-div-box-textarea').val().trim() : '';
+        const hasImage = imageInput && (
+            imageInput.files.length > 0 || 
+            (document.getElementById('previewImage').style.display === 'block' && 
+             document.getElementById('previewImage').src && 
+             document.getElementById('previewImage').src !== 'about:blank')
+        );
+        
+        console.log('Info page inputs:', {
+            tags: tagList.length,
+            title: title,
+            desc: desc,
+            image: hasImage
+        });
+        
+        if (tagList.length > 0 && title !== '' && desc !== '' && hasImage) {
+            $('.cam-la-in-box-bottom-in-end-btn').removeAttr('disabled').addClass('isActive');
+        } else {
+            $('.cam-la-in-box-bottom-in-end-btn').attr('disabled', true).removeClass('isActive');
+        }
+    }
+
+    $(document).on('input', '.rewardItemInput, .rewardAmountInput', checkRewardPageInput);
+    function checkRewardPageInput() {
+        const hasRewardTitle = $('.gi-se-input-va').val() && $('.gi-se-input-va').val().trim() !== '';
+        const hasProductionAmount = $('#productionAmount').val() && $('#productionAmount').val() > 0;
+        const hasFundingItems = rewardList.funding.length > 0;
+        const hasRewardItems = rewardList.reward.length > 0;
+        
+        if (hasRewardTitle && hasProductionAmount && hasFundingItems && hasRewardItems) {
+            $('.git-la-btn-ok').removeAttr('disabled').addClass('isActive');
+        } else {
+            $('.git-la-btn-ok').attr('disabled', true).removeClass('isActive');
+        }
+        /*
+        console.log('Reward page inputs:', {
+            title: hasRewardTitle,
+            production: hasProductionAmount,
+            funding: hasFundingItems,
+            reward: hasRewardItems
+        });
+        */
+       
+        console.log(JSON.stringify(rewardList));
+        
+        
+
+        if(rewardList.reward.length > 0){
+            $('.cam-la-in-box-bottom-in-end-btn').removeAttr('disabled').addClass('isActive');
+        } else {
+            $('.cam-la-in-box-bottom-in-end-btn').attr('disabled', true).removeClass('isActive');
+        }
+    }
+    
+    // 페이지 전환 시 해당 페이지의 입력 상태 확인
+    function checkCurrentPageInputs(navName) {
+        switch(navName) {
+            case 'info':
+                checkInfoPageInput();
+                break;
+            case 'funding':
+                checkFundingPageInput();
+                break;
+            case 'reward':
+                checkRewardPageInput();
+                break;
+            case 'final':
+                // 최종 확인 페이지는 항상 활성화
+                $('.cam-la-in-box-bottom-in-end-btn').removeAttr('disabled').addClass('isActive');
+                break;
+        }
+    }
 }); // ===================================== $(document).ready END =====================================
 
 function activeNextBtn(){
@@ -596,60 +897,6 @@ document.querySelectorAll('input[name="inputTag"]').forEach(input => {
     });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-    const firstPage = document.querySelector(".cam-in");
-    const firstPageBtn = document.querySelector(".cam-in-box-content-btn");
-    const cePage = document.querySelector(".cam-ag");
-    const cePageBtnNext = document.querySelector(".cam-create-btn");
-    const cePageBtnBack = document.querySelector(".cam-back-btn");
-    const thPage = document.querySelector(".cam-la");
-    const thPageBtnBack = document.querySelector(".cam-la-in-box-top-in-back");
-    const listItems = document.querySelectorAll(
-        ".cam-la-in-box-top-in-na-all-ul-li"
-    );
-    const contentBoxes = document.querySelectorAll(".cam-la-in-box-bo");
-
-    firstPageBtn.addEventListener("click", () => {
-        firstPage.classList.add("hidden");
-        cePage.classList.remove("hidden");
-    });
-
-
-    cePageBtnNext.addEventListener("click", () => {
-        cePage.classList.add("hidden");
-        thPage.classList.remove("hidden");
-    });
-
-    cePageBtnBack.addEventListener("click", () => {
-        firstPage.classList.remove("hidden");
-        cePage.classList.add("hidden");
-    });
-
-    thPageBtnBack.addEventListener("click", () => {
-        thPage.classList.add("hidden");
-        cePage.classList.remove("hidden");
-    });
-
-    listItems.forEach((item) => {
-        item.addEventListener("click", function () {
-            // 모든 li에서 'check' 클래스 제거
-            listItems.forEach((li) => li.classList.remove("check"));
-
-            // 클릭한 li에 'check' 클래스 추가
-            this.classList.add("check");
-
-            // 모든 content-box 숨기기
-            contentBoxes.forEach((box) => box.classList.add("hidden"));
-
-            // 선택한 li의 data-target 속성에 해당하는 content-box 보이기
-            const targetClass = this.getAttribute("data-target");
-            document
-                .querySelector(`.cam-la-in-box-bo.${targetClass}`)
-                .classList.remove("hidden");
-        });
-    });
-});
-
 // 이미지 미리보기 기능
 document.addEventListener('DOMContentLoaded', function() {
     const imageInput = document.getElementById('campaignImageInput');
@@ -661,29 +908,21 @@ document.addEventListener('DOMContentLoaded', function() {
     loadingSpinner.style.display = 'none';
     previewContainer.appendChild(loadingSpinner);
 
-    // 기본 이미지 설정
-    const defaultImagePath = 'https://upda.store/images/fix/logo.png';
-    previewImage.src = defaultImagePath;
-    
     // 처음에는 미리보기 숨기기
     previewImage.style.display = 'none';
     document.querySelector('.cam-img-re').style.display = 'none';
 
-    // 에러 메시지 컨테이너 생성
-    const errorContainer = document.createElement('div');
-    errorContainer.className = 'error-container';
-    document.body.appendChild(errorContainer);
-
-    // 파일 입력 이벤트
-    imageInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        handleImageFile(file);
-    });
-
     // 삭제 버튼 클릭 이벤트
     deleteButton.addEventListener('click', function(e) {
-        e.preventDefault();  // 기본 동작 방지
-        resetImage();
+        e.preventDefault();
+        previewImage.src = '';
+        previewImage.style.display = 'none';
+        imageInput.value = '';
+        document.querySelector('.cam-img-re').style.display = 'none';
+        previewContainer.querySelector('span').style.display = 'flex';
+        // 이미지 상태 완전히 초기화
+        previewImage.removeAttribute('src');
+        checkInfoPageInput();
     });
 
     // 파일 유효성 검사
@@ -857,7 +1096,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 이미지 리셋 함수 수정
     function resetImage() {
         imageInput.value = '';
-        previewImage.src = defaultImagePath;
+        previewImage.src = '';
         document.querySelector('.cam-img-re').style.display = 'none';
         loadingSpinner.style.display = 'none';
         
@@ -878,3 +1117,66 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
     }
 });
+
+// 페이지 초기화 함수
+function initializePage() {
+    // 태그 초기화
+    tagList = [];
+    $('.upda-tag-big').removeClass('tag-active');
+    $('.upda-tag-custom').remove();
+
+    // 기본 정보 초기화
+    $('input[name="title"]').val('');
+    $('.cam-la-in-box-bo-all-de-div-box-textarea').val('');
+
+    // 이미지 초기화
+    $('#campaignImageInput').val('');
+    $('#previewImage').attr('src', '').hide();
+    $('.cam-img-re').hide();
+    $('.cam-img-re-box-sh span').show();
+
+    // 펀딩 일정 초기화
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    tomorrow.setHours(0, 0, 0, 0);
+
+    const defaultEndDate = new Date(tomorrow);
+    defaultEndDate.setDate(tomorrow.getDate() + 30);
+
+    const defaultSendDate = new Date(defaultEndDate);
+    defaultSendDate.setDate(defaultEndDate.getDate() + 7);
+
+    $('#funding-start-datetime').val(toKSTString(tomorrow));
+    $('#funding-end-datetime').val(toKSTString(defaultEndDate));
+    $('#funding-send-datetime').val(toKSTString(defaultSendDate));
+    $('#funding-period').text('30일');
+    $('#prepare-period').text('7일');
+
+    // 리워드 구성 초기화
+    fundingItems = [];
+    rewardItems = [];
+    rewardList = {"name":[], "amount":[], "funding": [], "reward": []};
+    $('.cam-la-pay-box-pe').remove();
+    $('.gi-se-input-va').val('');
+    $('#productionAmount').val('');
+    $('.fundingItemInput').val('');
+    $('.fundingAmountInput').val('');
+    $('.rewardItemInput').val('');
+    $('.rewardAmountInput').val('');
+
+    // 버튼 상태 초기화
+    $('.cam-la-in-box-bottom-in-end-btn').attr('disabled', true).removeClass('isActive');
+    $('.git-la-btn-ok').attr('disabled', true).removeClass('isActive');
+    $('.cam-la-pay-btn').attr('disabled', true).removeClass('isActive');
+
+    // 페이지 상태 초기화
+    $('.cam-la-in-box-top-in-na-all-ul-li').removeClass('check');
+    $('.cam-la-in-box-top-in-na-all-ul-li[data-target="info"]').addClass('check');
+    $('.cam-la-in-box-bo').addClass('hidden');
+    $('.cam-la-in-box-bo.info').removeClass('hidden');
+    
+    // 다음 버튼 텍스트 초기화
+    $('.cam-la-in-box-bottom-in-end-btn-span').text('다음');
+
+    console.log('Page has been initialized');
+}
