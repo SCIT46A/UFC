@@ -14,6 +14,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -46,11 +48,25 @@ public class UserController {
     @GetMapping("/delete")
     public String delete(
         HttpSession session,
-        @RequestParam(name = "userId") Long userId) {
+            @RequestParam(name = "userId") Long userId) {
         userService.delete(userId);
         session.removeAttribute("loginUserId");
-        return "redirect:/";
+        return "logout";
     }
+    
+
+    
+    @PostMapping("/update")
+    public String postMethodName(
+            HttpServletRequest request
+            , userDTO
+
+            ) {
+        //TODO: process POST request
+        
+        return entity;
+    }
+    
     
 
 
@@ -69,14 +85,14 @@ public class UserController {
         return "user/mypage-reply";
     }
 
-    @GetMapping("/sponsor")
-    public String sponsor() {
-        return "user/mypage-sponsor";
+    @GetMapping("/donation")
+    public String donation() {
+        return "user/mypage-donation";
     }
 
-    @GetMapping("/sponsor/detail")
+    @GetMapping("/donation/detail")
     public String alarmDetail() {
-        return "user/mypage-sponsor-detail";
+        return "user/mypage-donation-detail";
     }
 
     // 유저 정보 수정 창 조회

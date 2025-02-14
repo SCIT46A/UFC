@@ -48,6 +48,30 @@ document.addEventListener('DOMContentLoaded', () => {
     profileAdClose.classList.add('hidden');
   });
 
+  // function userUpdate() {
+  //   const userDTO = {
+  //     profileImg: profileImg.src,
+  //     profileName: profileName.value,
+  //     profileSh: profileSh.value,
+  //     profilePh: profilePh.value,
+  //     profileAd: profileAd.value,
+  //   }
+
+  //   fetch('/user/update', {
+  //     method: 'POST',
+  //     body: JSON.stringify(userDTO),
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => {
+  //     if (data.success) {
+  //       alert('프로필 수정 완료');
+  //     } else {
+  //       alert('프로필 수정 실패');
+  //     }
+  //   })
+
+  // }
+
   // 다음 주소 API
   function execPostCode() {
     new daum.Postcode({

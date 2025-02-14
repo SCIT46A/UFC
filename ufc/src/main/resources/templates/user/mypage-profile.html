@@ -156,8 +156,8 @@
                       <span class="main-in-box-na-box-pe-span">
                         <div class="main-in-box-na-box-pe-span-in">
                           <a 
-                          href="/src/main/resources/templates/user/mypage-sponsor.html"
-                          th:href="@{/user/sponsor}"
+                          href="/src/main/resources/templates/user/mypage-donation.html"
+                          th:href="@{/user/donation}"
                           >내가 후원한 캠페인</a>
                         </div>
                       </span>
@@ -190,7 +190,7 @@
                         <div class="main-in-content-in-pe-title">
                           <p>프로필 사진</p>
                           <button class="pro-edit-btn">프로필 변경하기</button>
-                          <button class="pro-edit-btn-save hidden">저장</button>
+                          <button class="pro-edit-btn-save hidden" onclick="userUpdate()">저장</button>
                         </div>
                         <!-- 아래 내용 -->
                         <div class="main-in-content-in-pe-content pro-img">
