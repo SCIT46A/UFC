@@ -8,17 +8,15 @@ document.addEventListener("DOMContentLoaded", function () {
             const page = this.getAttribute("data-page");
 
             console.log(`📢 선택된 페이지: ${page}`);
+            // ✅ 모든 페이지에서 CSS를 미리 로드
+            loadCampaignStyles(); // 캠페인 CSS 항상 로드
 
             // 캠페인 운영 현황 (카운트 업데이트 필요)
             if (page === "campaign-status") {
                 fetchCampaignStatus();
-                loadCampaignStyles();
                 setTimeout(updateCampaignCounts, 500); // ✅ 딜레이 추가
             }
-            // 캠페인 승인 관리
-            else if (page === "campaign-approval") {
-                fetchCampaignApproval();
-            }
+
             // 캠페인 신고 관리
             else if (page === "campaign-report") {
                 fetchCampaignReport();
@@ -60,7 +58,7 @@ function fetchCampaignStatus() {
     ])
         .then(([campaigns, campaignGoals, materialDonations]) => {
             if (!Array.isArray(campaigns) || !Array.isArray(campaignGoals) || !Array.isArray(materialDonations)) {
-                throw new Error("🚨 서버에서 예상치 못한 응답을 받았습니다.");
+                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
             }
 
             // ✅ 데이터를 글로벌 변수에 저장
@@ -91,16 +89,16 @@ function updateCampaignCounts() {
     if (!ongoingCountElem || !pendingCountElem || !completedCountElem) {
         if (retryCount < 5) {  // 최대 5번까지만 재시도
             retryCount++;
-            console.warn(`⏳ 캠페인 카운트 요소가 아직 생성되지 않았습니다. 500ms 후 재시도... (시도: ${retryCount}/5)`);
+            console.warn(`캠페인 카운트 요소가 아직 생성되지 않았습니다. 500ms 후 재시도... (시도: ${retryCount}/5)`);
             setTimeout(updateCampaignCounts, 500);
         } else {
-            console.error("🚨 캠페인 카운트 요소를 찾을 수 없습니다. 실행 중단.");
+            console.error("캠페인 카운트 요소를 찾을 수 없습니다. 실행 중단.");
         }
         return;
     }
 
     if (!allCampaigns || allCampaigns.length === 0) {
-        console.warn("📢 캠페인 데이터가 없습니다.");
+        console.warn("캠페인 데이터가 없습니다.");
         return;
     }
 
@@ -139,7 +137,7 @@ function filterCampaigns(type) {
     const now = new Date();
 
     if (!allCampaignGoals || !allMaterialDonations) {
-        console.warn("⏳ 데이터 로딩 중... 필터링을 나중에 다시 실행하세요.");
+        console.warn("데이터 로딩 중... 필터링을 나중에 다시 실행하세요.");
         return;
     }
 
@@ -151,7 +149,7 @@ function filterCampaigns(type) {
     if (selectedCard) {
         selectedCard.classList.add("active");
     } else {
-        console.warn(`🚨 ${type}-card 요소가 없음`);
+        console.warn(`${type}-card 요소가 없음`);
         return;
     }
 
@@ -216,7 +214,7 @@ function generateCampaignStatusTable(campaigns, campaignGoals, materialDonations
 
                 <div class="tracking-card" id="pending-card" onclick="filterCampaigns('pending')">
                     <div class="card-content">
-                        <span>대기 중인 캠페인</span>
+                        <span>승인 대기 캠페인</span>
                     </div>
                     <div class="count" id="pending-count">0건</div>
                 </div>
@@ -277,7 +275,6 @@ function resetFilterUI() {
     }, 500);  // 500ms 후 실행하여 요소가 렌더링될 시간을 줌
 }
 
-// 📌 연도 & 분기를 기준으로 캠페인 필터링
 // 📌 연도 & 분기를 기준으로 캠페인 필터링 (현재 선택된 상태 반영)
 function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
@@ -342,7 +339,7 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
                         <th style="width: 12%">시작일</th>
                         <th style="width: 12%">종료일</th>
                         <th style="width: 8%">생성자</th>
-                        <th style="width: 35%">펀딩 진행률</th>
+                        <th style="width: 35%">펀딩 진행률 / 승인</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -357,8 +354,6 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
         const goalQuantity = goal ? goal.quantityRequired : 0;
         const fundingPercentage = goalQuantity > 0 ? Math.min(100, (donations / goalQuantity) * 100) : 0;
 
-        console.log(`📢 캠페인 [ID: ${campaign.campaignId}] 목표: ${goalQuantity}, 기부된 수량: ${donations}, 진행률: ${fundingPercentage}%`);
-
         let fundingStatusHTML = `
             <div class="progress-bar-container">
                 <div class="progress-bar" style="width: ${fundingPercentage}%; background-color: #16A34A;"></div>
@@ -366,8 +361,9 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
             </div>
         `;
 
+        // ✅ 대기 중 캠페인일 경우 승인 버튼 표시
         if (!campaign.campaignStatus) {
-            fundingStatusHTML = `<span class="pending-text">승인 대기중</span>`;
+            fundingStatusHTML = `<button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button>`;
         }
 
         tableHTML += `
@@ -385,6 +381,7 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
     tableHTML += `</tbody></table></div>`;
     return tableHTML;
 }
+
 
 // ✅ 종료된 캠페인 테이블 생성 (펀딩 진행률 → 펀딩 결과)
 function generateCompletedCampaignTable(campaigns, campaignGoals, materialDonations) {
@@ -493,105 +490,6 @@ function generateOngoingCampaignTable(campaigns, campaignGoals, materialDonation
 }
 
 
-
-// 2. 캠페인 승인 관리
-
-// ✅ 캠페인 승인 대기 목록 조회
-function fetchCampaignApproval() {
-    fetch("/api/campaigns-pending")
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (!Array.isArray(data)) {
-                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
-            }
-            document.getElementById("content").innerHTML = generateCampaignApprovalTable(data);
-
-            console.log("✅ 캠페인 승인 대기 목록이 로드됨");
-
-
-        })
-        .catch(error => {
-            console.error("❌ 캠페인 승인 대기 목록 로드 오류:", error);
-            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
-        });
-}
-
-
-
-
-// ✅ 캠페인 승인 요청
-function approveCampaign(campaignId) {
-    fetch(`/api/campaigns-pending/${campaignId}/approve`, {  // ✅ 올바른 엔드포인트 사용
-        method: "PUT",
-    })
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
-            }
-            return response.text();
-        })
-        .then(message => {
-            alert(message);
-            fetchCampaignApproval();  // ✅ 승인 후 목록 갱신
-        })
-        .catch(error => {
-            console.error("❌ 캠페인 승인 오류:", error);
-            alert("승인 중 오류가 발생했습니다.");
-        });
-}
-// ✅ 캠페인 승인 대기 테이블 생성
-function generateCampaignApprovalTable(campaigns) {
-    if (!campaigns || campaigns.length === 0) {
-        return `<h2>캠페인 승인 대기</h2><p>승인 대기 중인 캠페인이 없습니다.</p>`;
-    }
-
-    let tableHTML = `
-        <h2>캠페인 승인 대기</h2>
-        <div class="table-container">
-            <table>
-                <thead>
-                    <tr>
-                        <th>캠페인 ID</th>
-                        <th>제목</th>
-                        <th>시작일</th>
-                        <th>종료일</th>
-                        <th>생성일</th>
-                        <th>생성자 ID</th>
-                        <th>승인</th>
-                    </tr>
-                </thead>
-                <tbody>
-    `;
-
-    campaigns.forEach(campaign => {
-        tableHTML += `
-            <tr>
-                <td>${campaign.campaignId}</td>
-                <td>${campaign.title}</td>
-                <td>${campaign.startDate ? new Date(campaign.startDate).toLocaleDateString() : "N/A"}</td>
-                <td>${campaign.endDate ? new Date(campaign.endDate).toLocaleDateString() : "N/A"}</td>
-                <td>${campaign.createdDate ? new Date(campaign.createdDate).toLocaleDateString() : "N/A"}</td>
-                <td>${campaign.createdById || "N/A"}</td>
-                <td>
-                    ${campaign.campaignStatus
-            ? "✔ 승인 완료"
-            : `<button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button>`
-        }
-                </td>
-            </tr>
-        `;
-    });
-
-    tableHTML += `</tbody></table></div>`;
-    return tableHTML;
-}
-
-
 // 3. 캠페인 신고 관리
 function fetchCampaignReport() {
     fetch("/api/campaign-report")
@@ -632,6 +530,8 @@ function generateCampaignReportTable(campaignReport) {
                         <th>신고 이유</th>
                         <th>신고자 ID</th>
                         <th>신고 날짜</th>
+                        <th>조치</th>
+                        <th>저장</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -645,6 +545,19 @@ function generateCampaignReportTable(campaignReport) {
                 <td>${report.reason}</td>
                 <td>${report.reporterId}</td>
                 <td>${new Date(report.date).toLocaleDateString()}</td>
+                <td>
+                    ${report.status === 'registed' ? `
+                        <select id="action-${report.reportId}">
+                            <option value="3">3일 정지</option>
+                            <option value="5">5일 정지</option>
+                            <option value="100">영구 정지</option>
+                            <option value="rejected">반려</option>
+                        </select>
+                    ` : report.status === 'ok' ? "처리 완료" : "반려됨"}
+                </td>
+                <td>
+                    ${report.status === 'registed' ? `<button onclick="processUserReport(${report.reportId})">저장</button>` : "-"}
+                </td>
             </tr>
         `;
     });
@@ -744,15 +657,16 @@ function generateCreatorApprovalTable(creators) {
 
 // 유저 신고 관리
 function fetchUserReport() {
-    fetch("/api/user-reports")  // 🚀 API 엔드포인트 호출 (서버에서 JSON 데이터를 반환)
+    fetch("/api/user-reports")
         .then(response => response.json())
         .then(data => {
+            console.log("🚀 API 응답 데이터:", data); // ✅ userUpdatedAt 값 확인
             document.getElementById("content").innerHTML = generateUserReportTable(data);
         })
         .catch(error => {
             console.error("❌ 유저 신고 목록 로드 오류:", error);
-            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>유저 신고 데이터를 불러오지 못했습니다.</p>`;
         });
+
 }
 
 // 유저 신고 관리 페이지 테이블 동적 생성
@@ -783,54 +697,108 @@ function generateUserReportTable(userReports) {
     `;
 
     userReports.forEach(report => {
-        const userStatus = report.userStatus ? "✅ 활동 중" : "❌ 정지 중";
+        let accountStatus = "";
+        let actionColumn = "";
+        let reasonColumn = "";
+        let saveButtonColumn = "";
+
+        let banEndDate = report.userUpdatedAt ? new Date(report.userUpdatedAt) : null;
+        let today = new Date();
+
+        // ✅ 날짜 비교를 위한 "연-월-일" 포맷으로 변환
+        today.setHours(0, 0, 0, 0);
+        if (banEndDate) {
+            banEndDate.setHours(0, 0, 0, 0);
+        }
+
+        let daysRemaining = banEndDate ? Math.ceil((banEndDate - today) / (1000 * 60 * 60 * 24)) : null;
+
+        console.log("🚀 Debug:", {
+            reportId: report.reportId,
+            updatedAt: report.updatedAt,
+            banEndDate: banEndDate,
+            today: today,
+            daysRemaining: daysRemaining
+        });
+
+        if (report.status === "registed") {
+            accountStatus = `<span style="color: #CE201B;">🚨 신고</span>`;
+            actionColumn = `
+            <select id="action-${report.reportId}">
+                <option value="3">3일 정지</option>
+                <option value="5">5일 정지</option>
+                <option value="100">영구 정지</option>
+                <option value="rejected">보류</option>
+            </select>
+        `;
+            reasonColumn = `<input type="text" id="reason-${report.reportId}" placeholder="사유 입력">`;
+            saveButtonColumn = `<button onclick="processUserReport(${report.reportId})">저장</button>`;
+
+        } else if (report.status === "ok") {
+            accountStatus = `<span style="color: green;">✅ 조치 완료</span>`;
+
+            if (daysRemaining !== null && daysRemaining > 0) {
+                actionColumn = `<span style="color: red;">정지 ${daysRemaining}일 남음</span>`;
+            } else {
+                actionColumn = `<span style="color: gray;">정지 기간 만료</span>`;
+            }
+
+            reasonColumn = `<span>${report.statusReason ? report.statusReason : "-"}</span>`;
+
+            saveButtonColumn = "-";
+
+        } else if (report.status === "rejected") {
+            accountStatus = `<span style="color: blue;">✔ 활동 중</span>`;
+            actionColumn = "보류";
+            reasonColumn = "-";
+            saveButtonColumn = "-";
+        }
 
         tableHTML += `
-            <tr>
-                <td>${report.reportId}</td>
-                <td>${report.userId}</td>
-                <td>${report.reason}</td>
-                <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
-                <td>${report.reportedById}</td>
-                <td>${userStatus}</td>
-                <td>
-                    ${report.status === 'registed' ? `
-                        <select id="action-${report.reportId}">
-                            <option value="3">3일 정지</option>
-                            <option value="5">5일 정지</option>
-                            <option value="100">영구 정지</option>
-                            <option value="rejected">반려</option>
-                        </select>
-                    ` : report.status === 'ok' ? "처리 완료" : "반려됨"}
-                </td>
-                <td>
-                    ${report.status === 'registed' ? `<input type="text" id="reason-${report.reportId}" placeholder="사유 입력">` : "-"}
-                </td>
-                <td>
-                    ${report.status === 'registed' ? `<button onclick="processUserReport(${report.reportId})">저장</button>` : "-"}
-                </td>
-            </tr>
-        `;
+        <tr>
+            <td>${report.reportId}</td>
+            <td>${report.userId}</td>
+            <td>${report.reason}</td>
+            <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
+            <td>${report.reportedById}</td>
+            <td>${accountStatus}</td>
+            <td>${actionColumn}</td>
+            <td>${reasonColumn}</td>
+            <td>${saveButtonColumn}</td>
+        </tr>
+    `;
     });
 
     tableHTML += `</tbody></table></div>`;
     return tableHTML;
 }
 
-// ✅ 유저 신고 처리 함수
+
+// ✅ 신고 처리 요청 (저장 버튼 클릭 시 실행)
 function processUserReport(reportId) {
     const action = document.getElementById(`action-${reportId}`).value;
-    const reason = document.getElementById(`reason-${reportId}`).value;
+    const reason = document.getElementById(`reason-${reportId}`).value.trim();
+
+    if (!action || action === "rejected") {
+        alert("조치를 선택해주세요.");
+        return;
+    }
+
+    if (!reason) {
+        alert("사유를 입력해주세요.");
+        return;
+    }
 
     fetch("/api/user-reports/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportId, action, reason })
+        body: JSON.stringify({ reportId, action, reason }) // ✅ 사유 포함
     })
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
-            alert(data);
-            fetchUserReport(); // ✅ 업데이트 후 목록 새로고침
+            if (!data.success) throw new Error(data.message);
+            alert(data.message);
+            fetchUserReport(); // ✅ 신고 목록 갱신
         })
         .catch(error => {
             console.error("❌ 유저 신고 처리 오류:", error);

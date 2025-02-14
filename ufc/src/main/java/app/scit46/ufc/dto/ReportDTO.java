@@ -19,8 +19,17 @@ public class ReportDTO {
     private Long userId;
     private Long campaignId;
     private Long productId;
+    private LocalDateTime userUpdatedAt;
+    private String statusReason;
 
     public static ReportDTO toDTO(ReportEntity entity) {
+
+            String statusReason = (entity.getUser() != null) ? entity.getUser().getStatusReason() : null;
+
+            // ✅ 로그 추가 (statusReason 값 확인)
+            System.out.println("🚀 DTO 변환: reportId=" + entity.getReportId() +
+                    ", userId=" + (entity.getUser() != null ? entity.getUser().getUserId() : "null") +
+                    ", statusReason=" + statusReason);
         return ReportDTO.builder()
                 .reportId(entity.getReportId())
                 .status(entity.getStatus())
@@ -30,6 +39,8 @@ public class ReportDTO {
                 .userId(entity.getUser() != null ? entity.getUser().getUserId() : null)
                 .campaignId(entity.getCampaign() != null ? entity.getCampaign().getCampaignId() : null)
                 .productId(entity.getProduct() != null ? entity.getProduct().getProductId() : null)
+                .userUpdatedAt(entity.getUser() != null ? entity.getUser().getUpdatedAt() : null)
+                .statusReason(statusReason)
                 .build();
     }
 }

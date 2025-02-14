@@ -28,7 +28,7 @@ public class UserDTO {
     private String intro;
     private int isMarketed;
     private int userStatus;
-    private int statusReason;
+    private String statusReason;
 
     public static UserDTO toDTO(UserEntity entity) {
         return UserDTO.builder()

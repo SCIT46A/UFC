@@ -199,6 +199,8 @@ tbody tr:hover {
 
 .progress-bar {
     height: 100%;
+    width: 0%; /* JavaScript에서 동적으로 변경 */
+    background-color: #CE201B !important; /* ✅ 빨간색 적용 */
     transition: width 0.5s ease-in-out;
     border-radius: 8px;
 }

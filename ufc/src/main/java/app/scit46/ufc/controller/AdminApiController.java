@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,18 +51,26 @@ public class AdminApiController {
 
     // ✅ 유저 신고 조치 API
     @PostMapping("/user-reports/action")
-    public ResponseEntity<String> processUserReport(@RequestBody Map<String, String> request) {
+    public ResponseEntity<Map<String, Object>> processUserReport(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+
         try {
             Long reportId = Long.parseLong(request.get("reportId"));
             String action = request.get("action");
-            String reason = request.get("reason");
 
-            reportService.processUserReport(reportId, action, reason);
-            return ResponseEntity.ok("신고 처리 완료!");
+            reportService.processUserReport(reportId, action, null); // ✅ `banEndDate` 삭제
+
+            response.put("success", true);
+            response.put("message", "신고 처리가 완료되었습니다.");
+            return ResponseEntity.ok(response);
+
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("신고 처리 중 오류 발생: " + e.getMessage());
+            response.put("success", false);
+            response.put("message", "서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     // ✅ 캠페인 운영 현황 API (올바른 엔드포인트 유지)
     @GetMapping("/campaign-status")
