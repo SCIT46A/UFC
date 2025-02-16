@@ -66,7 +66,7 @@ public class UserEntity {
     private int userStatus;
 
     @Column(name = "status_reason")
-    private int statusReason;
+    private Integer statusReason;
 
     // OneToMany: Creators.own_user 참조
     @OneToMany(mappedBy = "ownUser", fetch = FetchType.LAZY)

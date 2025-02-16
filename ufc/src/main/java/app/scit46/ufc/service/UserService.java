@@ -1,5 +1,7 @@
 package app.scit46.ufc.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +28,24 @@ public class UserService {
     // 회원탈퇴
     @Transactional
     public void delete(Long userId) {
-    UserEntity user = userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
-    user.setUserStatus(0); 
-    userRepository.save(user);
-}
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        user.setUserStatus(0);
+        userRepository.save(user);
+    }
+    
+    //회원 정보 업데이트
+    @Transactional
+    public void userUpdate(UserDTO userDTO) {
+        Optional<UserEntity> temp = userRepository.findById(userDTO.getUserId());
+        if (!temp.isPresent())
+            return;
+        UserEntity entity = temp.get();
+        entity.setUserName(userDTO.getUserName());
+        entity.setIntro(userDTO.getIntro());
+        entity.setPhoneNumber(userDTO.getPhoneNumber());
+        entity.setUserAddress(userDTO.getUserAddress());
+    }
 // ------------------ CRUD ------------------ //End
 
     public UserEntity findUserByIdentity(String identity) {

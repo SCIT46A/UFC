@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function () {
   // profile edit Btn
   const profileEditBtn = document.querySelector('.pro-edit-btn');
   const profileEditBtnCancle = document.querySelector('.pro-edit-btn-save');
@@ -48,6 +48,15 @@ document.addEventListener('DOMContentLoaded', () => {
     profileAdClose.classList.add('hidden');
   });
 
+  const addressInput = document.querySelector('.address');
+  const addressDetailInput = document.querySelector('.address-detail');
+  const totalAddress = document.querySelector('.total-add');
+
+  function addressAdd() {
+    totalAddress.value = addressInput.value + addressDetailInput.value;
+  }
+  addressDetailInput.addEventListener('input', addressAdd);
+
   // function userUpdate() {
   //   const userDTO = {
   //     profileImg: profileImg.src,
@@ -71,104 +80,103 @@ document.addEventListener('DOMContentLoaded', () => {
   //   })
 
   // }
-
-  // 다음 주소 API
-  function execPostCode() {
-    new daum.Postcode({
-      oncomplete: function (data) {
-        document.querySelector('.address').value = data.address;
-        document.querySelector('.address').dispatchEvent(new Event('input')); // 변경 감지
-      },
-    }).open();
-  }
-  // profileImgBtnCancle.addEventListener("click", () => {
-  //     profileEditBtn.classList.remove("hidden");
-  //     profileImgBtnCancle.classList.add("hidden");
-  // });
-
-  // const profileNameBtn = document.querySelector(".pro-name-btn");
-  // const profileShBtn = document.querySelector(".pro-sh-btn");
-  // const profilePhBtn = document.querySelector(".pro-ph-btn");
-  // const profileAdBtn = document.querySelector(".pro-ad-btn");
-  // // close btb
-  // const profileNameBtnCancle = document.querySelector(".pro-name-btn-cancle");
-  // const profileShBtnCancle = document.querySelector(".pro-sh-btn-cancle");
-  // const profilePhBtnCancle = document.querySelector(".pro-ph-btn-cancle");
-  // const profileAdBtnCancle = document.querySelector(".pro-ad-btn-cancle");
-  // // 화면
-
-  // 숨겨진곳
-
-  // // 탈퇴버튼
-  // const profileRunBtn = document.querySelector(".pro-run");
-
-  // profileImgBtn.addEventListener("click", () => {
-  //     profileImg.classList.add("hidden");
-  //     profileImgBtn.classList.add("hidden");
-  //     // profileImgClose.classList.remove("hidden");
-  //     // profileImgBtnCancle.classList.remove("hidden");
-  // });
-
-  // profileImgBtnCancle.addEventListener("click", () => {
-  //     profileImg.classList.remove("hidden");
-  //     profileImgBtn.classList.remove("hidden");
-  //     profileImgClose.classList.add("hidden");
-  //     profileImgBtnCancle.classList.add("hidden");
-  // });
-
-  // profileNameBtn.addEventListener("click", () => {
-  //     profileName.classList.add("hidden");
-  //     profileNameBtn.classList.add("hidden");
-  //     profileNameClose.classList.remove("hidden");
-  //     profileNameBtnCancle.classList.remove("hidden");
-  // });
-
-  // profileNameBtnCancle.addEventListener("click", () => {
-  //     profileName.classList.remove("hidden");
-  //     profileNameBtn.classList.remove("hidden");
-  //     profileNameClose.classList.add("hidden");
-  //     profileNameBtnCancle.classList.add("hidden");
-  // });
-
-  // profileShBtn.addEventListener("click", () => {
-  //     profileSh.classList.add("hidden");
-  //     profileShBtn.classList.add("hidden");
-  //     profileShClose.classList.remove("hidden");
-  //     profileShBtnCancle.classList.remove("hidden");
-  // });
-
-  // profileShBtnCancle.addEventListener("click", () => {
-  //     profileSh.classList.remove("hidden");
-  //     profileShBtn.classList.remove("hidden");
-  //     profileShClose.classList.add("hidden");
-  //     profileShBtnCancle.classList.add("hidden");
-  // });
-
-  // profilePhBtn.addEventListener("click", () => {
-  //     profilePh.classList.add("hidden");
-  //     profilePhBtn.classList.add("hidden");
-  //     profilePhClose.classList.remove("hidden");
-  //     profilePhBtnCancle.classList.remove("hidden");
-  // });
-
-  // profilePhBtnCancle.addEventListener("click", () => {
-  //     profilePh.classList.remove("hidden");
-  //     profilePhBtn.classList.remove("hidden");
-  //     profilePhClose.classList.add("hidden");
-  //     profilePhBtnCancle.classList.add("hidden");
-  // });
-
-  // profileAdBtn.addEventListener("click", () => {
-  //     profileAd.classList.add("hidden");
-  //     profileAdBtn.classList.add("hidden");
-  //     profileAdClose.classList.remove("hidden");
-  //     profileAdBtnCancle.classList.remove("hidden");
-  // });
-
-  // profileAdBtnCancle.addEventListener("click", () => {
-  //     profileAd.classList.remove("hidden");
-  //     profileAdBtn.classList.remove("hidden");
-  //     profileAdClose.classList.add("hidden");
-  //     profileAdBtnCancle.classList.add("hidden");
-  // });
 });
+// 다음 주소 API
+function execPostCode() {
+  new daum.Postcode({
+    oncomplete: function (data) {
+      document.querySelector('.address').value = data.address;
+      document.querySelector('.address').dispatchEvent(new Event('input')); // 변경 감지
+    },
+  }).open();
+}
+// profileImgBtnCancle.addEventListener("click", () => {
+//     profileEditBtn.classList.remove("hidden");
+//     profileImgBtnCancle.classList.add("hidden");
+// });
+
+// const profileNameBtn = document.querySelector(".pro-name-btn");
+// const profileShBtn = document.querySelector(".pro-sh-btn");
+// const profilePhBtn = document.querySelector(".pro-ph-btn");
+// const profileAdBtn = document.querySelector(".pro-ad-btn");
+// // close btb
+// const profileNameBtnCancle = document.querySelector(".pro-name-btn-cancle");
+// const profileShBtnCancle = document.querySelector(".pro-sh-btn-cancle");
+// const profilePhBtnCancle = document.querySelector(".pro-ph-btn-cancle");
+// const profileAdBtnCancle = document.querySelector(".pro-ad-btn-cancle");
+// // 화면
+
+// 숨겨진곳
+
+// // 탈퇴버튼
+// const profileRunBtn = document.querySelector(".pro-run");
+
+// profileImgBtn.addEventListener("click", () => {
+//     profileImg.classList.add("hidden");
+//     profileImgBtn.classList.add("hidden");
+//     // profileImgClose.classList.remove("hidden");
+//     // profileImgBtnCancle.classList.remove("hidden");
+// });
+
+// profileImgBtnCancle.addEventListener("click", () => {
+//     profileImg.classList.remove("hidden");
+//     profileImgBtn.classList.remove("hidden");
+//     profileImgClose.classList.add("hidden");
+//     profileImgBtnCancle.classList.add("hidden");
+// });
+
+// profileNameBtn.addEventListener("click", () => {
+//     profileName.classList.add("hidden");
+//     profileNameBtn.classList.add("hidden");
+//     profileNameClose.classList.remove("hidden");
+//     profileNameBtnCancle.classList.remove("hidden");
+// });
+
+// profileNameBtnCancle.addEventListener("click", () => {
+//     profileName.classList.remove("hidden");
+//     profileNameBtn.classList.remove("hidden");
+//     profileNameClose.classList.add("hidden");
+//     profileNameBtnCancle.classList.add("hidden");
+// });
+
+// profileShBtn.addEventListener("click", () => {
+//     profileSh.classList.add("hidden");
+//     profileShBtn.classList.add("hidden");
+//     profileShClose.classList.remove("hidden");
+//     profileShBtnCancle.classList.remove("hidden");
+// });
+
+// profileShBtnCancle.addEventListener("click", () => {
+//     profileSh.classList.remove("hidden");
+//     profileShBtn.classList.remove("hidden");
+//     profileShClose.classList.add("hidden");
+//     profileShBtnCancle.classList.add("hidden");
+// });
+
+// profilePhBtn.addEventListener("click", () => {
+//     profilePh.classList.add("hidden");
+//     profilePhBtn.classList.add("hidden");
+//     profilePhClose.classList.remove("hidden");
+//     profilePhBtnCancle.classList.remove("hidden");
+// });
+
+// profilePhBtnCancle.addEventListener("click", () => {
+//     profilePh.classList.remove("hidden");
+//     profilePhBtn.classList.remove("hidden");
+//     profilePhClose.classList.add("hidden");
+//     profilePhBtnCancle.classList.add("hidden");
+// });
+
+// profileAdBtn.addEventListener("click", () => {
+//     profileAd.classList.add("hidden");
+//     profileAdBtn.classList.add("hidden");
+//     profileAdClose.classList.remove("hidden");
+//     profileAdBtnCancle.classList.remove("hidden");
+// });
+
+// profileAdBtnCancle.addEventListener("click", () => {
+//     profileAd.classList.remove("hidden");
+//     profileAdBtn.classList.remove("hidden");
+//     profileAdClose.classList.add("hidden");
+//     profileAdBtnCancle.classList.add("hidden");
+// });
