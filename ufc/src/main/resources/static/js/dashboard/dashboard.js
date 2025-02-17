@@ -1,84 +1,94 @@
-// document.addEventListener("DOMContentLoaded", function () {
-//     // 하위 메뉴 토글 기능
-//     document.querySelectorAll(".parent-menu").forEach(parent => {
-//         parent.addEventListener("click", function () {
-//             const targetMenu = document.getElementById(this.getAttribute("data-toggle") + "-menu");
-//             if (targetMenu) {
-//                 targetMenu.classList.toggle("active"); // 하위 메뉴 열고 닫기
-//             }
-//         });
-//     });
-
-//     // 메뉴 클릭 시 AJAX 로드
-//     document.querySelectorAll(".menu-item[data-url]").forEach(item => {
-//         item.addEventListener("click", function () {
-//             const url = this.getAttribute("data-url");
-//             fetch(url)
-//                 .then(response => response.text())
-//                 .then(html => {
-//                     document.querySelector(".content-wrapper").innerHTML = html;
-//                 })
-//                 .catch(error => console.error("페이지 로딩 오류:", error));
-//         });
-//     });
-// });
-
-
 document.addEventListener("DOMContentLoaded", function () {
-    initMenuEvents(); // ✅ 최초 로딩 시 메뉴 이벤트 등록
+    const contentWrapper = document.querySelector(".content-wrapper");
 
-    // 메뉴 클릭 시 AJAX로 fragment 로드
-    document.querySelectorAll(".menu-item[data-url]").forEach(item => {
-        item.addEventListener("click", function () {
-            const url = this.getAttribute("data-url");
+    console.log("✅ [INIT] dashboard.js 로드 완료");
 
-            fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    const contentWrapper = document.querySelector(".content-wrapper");
-                    contentWrapper.innerHTML = html;
-                    initMenuEvents(); // ✅ fragment 로드 후 이벤트 다시 등록
-                })
-                .catch(error => console.error("페이지 로딩 오류:", error));
-        });
-    });
-});
+    // ✅ 메뉴 클릭 이벤트 (이벤트 위임 적용)
+    document.addEventListener("click", function (event) {
+        const menuItem = event.target.closest(".menu-item[data-url]");
+        if (menuItem) {
+            event.preventDefault();
+            const url = menuItem.getAttribute("data-url");
+            console.log(`📌 [MENU CLICK] 메뉴 클릭 감지 → ${url}`);
 
-// ✅ 메뉴 이벤트를 별도 함수로 분리 (fragment 변경 시 재등록 가능하도록)
-function initMenuEvents() {
-    // 하위 메뉴 토글 기능
-    document.querySelectorAll(".parent-menu").forEach(parent => {
-        parent.removeEventListener("click", toggleSubMenu); // 중복 등록 방지
-        parent.addEventListener("click", toggleSubMenu);
+            loadFragment(url);
+
+            // 현재 선택된 메뉴 active 처리
+            document.querySelectorAll(".menu-item").forEach(menu => menu.classList.remove("active"));
+            menuItem.classList.add("active");
+        }
     });
 
-    // fragment 내의 추가된 버튼 이벤트 등록
-    document.querySelectorAll(".menu-item[data-url]").forEach(item => {
-        item.removeEventListener("click", loadFragmentPage); // 중복 등록 방지
-        item.addEventListener("click", loadFragmentPage);
+    // ✅ 하위 메뉴 토글 기능 (이벤트 위임 적용)
+    document.addEventListener("click", function (event) {
+        const parentMenu = event.target.closest(".parent-menu");
+        if (parentMenu) {
+            const targetMenu = document.getElementById(parentMenu.getAttribute("data-toggle") + "-menu");
+            if (targetMenu) {
+                targetMenu.classList.toggle("active");
+                console.log(`🔄 [MENU] 하위 메뉴 토글: ${parentMenu.getAttribute("data-toggle")}`);
+            }
+        }
     });
-}
 
-// ✅ 하위 메뉴 열고 닫기 함수
-function toggleSubMenu() {
-    const targetMenu = document.getElementById(this.getAttribute("data-toggle") + "-menu");
-    if (targetMenu) {
-        targetMenu.classList.toggle("active"); // 하위 메뉴 열고 닫기
+    function loadFragment(url) {
+        console.log(`🔄 [FRAGMENT] ${url} 로드 시작...`);
+
+        fetch(url)
+            .then(response => {
+                if (!response.ok) throw new Error(`❌ [ERROR] HTTP 오류: ${response.status}`);
+                return response.text();
+            })
+            .then(html => {
+                console.log(`✅ [FRAGMENT] ${url} 로드 완료!`);
+                contentWrapper.innerHTML = html;
+                executePageScripts(url); // ✅ 해당 fragment의 JS 실행
+            })
+            .catch(error => console.error("❌ [ERROR] 페이지 로딩 오류:", error));
     }
-}
 
-// ✅ AJAX로 fragment 로드하는 함수
-function loadFragmentPage(event) {
-    const url = this.getAttribute("data-url");
+    function executePageScripts(url) {
+        const scriptMapping = {
+            "/dashboard/delivery": { script: "/js/dashboard/delivery.js", init: "initDeliveryManagement" },
+            "/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
+            "/dashboard/settlements": { script: "/js/dashboard/settlement.js", init: "initSettlementManagement" },
+            "/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
+            "/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiryManagement" }
+        };
 
-    fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            const contentWrapper = document.querySelector(".content-wrapper");
-            contentWrapper.innerHTML = html;
-            initMenuEvents(); // ✅ fragment가 변경되면 다시 이벤트 등록
-        })
-        .catch(error => console.error("페이지 로딩 오류:", error));
+        // 기존 동적 스크립트 태그 제거
+        document.querySelectorAll(".dynamic-script").forEach(script => script.remove());
 
-    event.preventDefault(); // 기본 클릭 동작 방지
-}
+        if (scriptMapping[url]) {
+            const { script, init } = scriptMapping[url];
+
+            // ✅ 스크립트 로딩 후 해당 JS의 초기화 함수 실행
+            const newScript = document.createElement("script");
+            newScript.src = script;
+            newScript.defer = true;
+            newScript.classList.add("dynamic-script");
+
+            newScript.onload = function () {
+                console.log(`✅ [SCRIPT LOADED] ${script} 실행 완료`);
+                if (typeof window[init] === "function") {
+                    console.log(`⚡ [INIT CALL] ${init} 실행`);
+                    window[init](); // ✅ JS 파일에서 선언된 초기화 함수 실행
+                } else {
+                    console.warn(`⚠️ [WARNING] ${init} 함수가 정의되지 않음.`);
+                }
+            };
+
+            newScript.onerror = function () {
+                console.error(`❌ [ERROR] ${script} 로딩 실패`);
+            };
+
+            document.body.appendChild(newScript);
+        } else {
+            console.log(`⚠️ [WARNING] ${url}에 대한 매핑된 JS 없음`);
+        }
+    }
+});

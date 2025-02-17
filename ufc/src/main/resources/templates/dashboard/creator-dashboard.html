@@ -13,8 +13,8 @@
     <link rel="stylesheet" th:href="@{/css/dashboard/settlements.css}" />
     <link rel="stylesheet" th:href="@{/css/dashboard/campaign-management.css}" />
     <link rel="stylesheet" th:href="@{/css/dashboard/donation-management.css}" />
-    <!-- <link rel="stylesheet" th:href="@{/css/dashboard/reviews.css}" />
-    <link rel="stylesheet" th:href="@{/css/dashboard/inquiries.css}" /> -->
+    <link rel="stylesheet" th:href="@{/css/dashboard/inquiries.css}" />
+
 
     <title>UP-DA Creator Dashboard</title>
 </head>
@@ -75,17 +75,12 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/delivery'}"></div>
+            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
         </main>
     </div>
 
     <!-- JavaScript -->
     <script th:src="@{/js/dashboard/dashboard.js}" defer></script>
-    <script th:src="@{/js/dashboard/delivery.js}" defer></script>
-    <script th:src="@{/js/dashboard/product-management.js}" defer></script>
-    <script th:src="@{/js/dashboard/product-orders.js}" defer></script>
-    <script th:src="@{/js/dashboard/settlements.js}" defer></script>
-    <script th:src="@{/js/dashboard/campaign-management.js}" defer></script>
 </body>
 
 </html>

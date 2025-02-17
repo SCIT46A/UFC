@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!-- ✅ th:fragment 추가 -->
+    <div th:fragment="inquiries">
+        <div class="content-wrapper">
+            <div class="page-container">
+                <!-- Left Side: Inquiry List -->
+                <div class="inquiry-container">
+                    <!-- Search Bar -->
+                    <div class="search-bar">
+                        <input type="text" class="search-input" placeholder="대화내용, 닉네임, 태그 검색">
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="tab-navigation">
+                        <div class="tab active">전체 <span class="badge">2</span></div>
+                        <div class="tab">대기 <span class="badge">1</span></div>
+                        <div class="tab">진행중 <span>0</span></div>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="filters">
+                        <button class="filter-button">
+                            최근 3개월
+                            <span>▼</span>
+                        </button>
+                        <button class="filter-button">
+                            안읽음
+                            <span>▼</span>
+                        </button>
+                    </div>
+
+                    <!-- Inquiry List -->
+                    <ul class="inquiry-list">
+                        <li class="inquiry-item" th:each="inquiry : ${inquiries}"
+                            th:onclick="'selectInquiry(\'' + ${inquiry.id} + '\', this)'" th:data-id="${inquiry.id}">
+                            <div class="inquiry-header">
+                                <div class="user-avatar">
+                                    <span th:text="${#strings.substring(inquiry.userId, 0, 1)}">6</span>
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-id" th:text="${inquiry.userId}">6536****</span>
+                                    <span class="inquiry-date" th:text="${inquiry.date}">1월 2일</span>
+                                </div>
+                            </div>
+                            <div class="inquiry-preview" th:text="${inquiry.preview}">
+                                유아 용품 리워드 순위 작업 후...
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Right Side: Chat View -->
+                <div id="chatContainer" class="chat-container empty">
+                    채팅방을 선택해주세요
+                </div>
+            </div>
+
+            <div class="table-footer">
+                <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>
+                <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
+                <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard/inquiries.js}" async></script>
+</body>
+
+</html>

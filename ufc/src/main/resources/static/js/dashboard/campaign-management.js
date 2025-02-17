@@ -1,10 +1,41 @@
-function applyFilters() {
-    const status = document.getElementById('status').value;
-    const startDate = document.getElementById('startDate').value;
-    const endDate = document.getElementById('endDate').value;
+function initCampaignManagement() {
+    console.log("📢 캠페인 관리 JS 실행됨");
 
-    console.log('필터 적용:', { status, startDate, endDate });
-    // Implement AJAX call to backend for filtering
+    // 🔹 필터 적용
+    document.getElementById('status')?.addEventListener("change", applyFilters);
+    document.getElementById('startDate')?.addEventListener("change", applyFilters);
+    document.getElementById('endDate')?.addEventListener("change", applyFilters);
+
+    // 🔹 캠페인 등록 / 수정 모달
+    document.getElementById('campaignForm')?.addEventListener("submit", function (e) {
+        e.preventDefault();
+        console.log("캠페인 등록:", {
+            name: document.getElementById('campaignName').value,
+            startDate: document.getElementById('campaignStartDate').value,
+            endDate: document.getElementById('campaignEndDate').value,
+            description: document.getElementById('campaignDescription').value
+        });
+        closeCampaignModal();
+    });
+
+    // 🔹 모달 닫기 기능
+    document.getElementById('campaignModal')?.addEventListener("click", function (event) {
+        if (event.target === this) {
+            this.style.display = "none";
+        }
+    });
+
+    // 🔹 캠페인 미리보기
+    document.getElementById('previewCampaignBtn')?.addEventListener("click", previewCampaign);
+}
+
+function applyFilters() {
+    const status = document.getElementById('status')?.value;
+    const startDate = document.getElementById('startDate')?.value;
+    const endDate = document.getElementById('endDate')?.value;
+
+    console.log('📊 필터 적용:', { status, startDate, endDate });
+    // TODO: 서버 API 호출하여 필터링된 데이터 가져오기
 }
 
 function openCampaignModal(campaignId = null) {
@@ -12,56 +43,38 @@ function openCampaignModal(campaignId = null) {
     const detailsDiv = document.getElementById('campaignDetails');
 
     if (campaignId) {
-        // Edit existing campaign
-        // Fetch campaign details and populate the form
         detailsDiv.innerHTML = `<p>캠페인 ID ${campaignId}의 상세 정보를 불러오는 중...</p>`;
     } else {
-        // New campaign registration
         detailsDiv.innerHTML = `
-                    <form id="campaignForm">
-                        <div class="filter-group">
-                            <label for="campaignName">캠페인 이름:</label>
-                            <input type="text" id="campaignName" name="campaignName" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="campaignStartDate">시작일:</label>
-                            <input type="date" id="campaignStartDate" name="campaignStartDate" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="campaignEndDate">종료일:</label>
-                            <input type="date" id="campaignEndDate" name="campaignEndDate" required>
-                        </div>
-                        <div class="filter-group">
-                            <label for="campaignDescription">설명:</label>
-                            <textarea id="campaignDescription" name="campaignDescription" rows="4"></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary">캠페인 등록</button>
-                    </form>
-                `;
-
-        document.getElementById('campaignForm').onsubmit = function (e) {
-            e.preventDefault();
-            // Implement campaign registration logic
-            console.log('캠페인 등록:', {
-                name: document.getElementById('campaignName').value,
-                startDate: document.getElementById('campaignStartDate').value,
-                endDate: document.getElementById('campaignEndDate').value,
-                description: document.getElementById('campaignDescription').value
-            });
-            closeCampaignModal();
-        };
+            <form id="campaignForm">
+                <div class="filter-group">
+                    <label for="campaignName">캠페인 이름:</label>
+                    <input type="text" id="campaignName" name="campaignName" required>
+                </div>
+                <div class="filter-group">
+                    <label for="campaignStartDate">시작일:</label>
+                    <input type="date" id="campaignStartDate" name="campaignStartDate" required>
+                </div>
+                <div class="filter-group">
+                    <label for="campaignEndDate">종료일:</label>
+                    <input type="date" id="campaignEndDate" name="campaignEndDate" required>
+                </div>
+                <div class="filter-group">
+                    <label for="campaignDescription">설명:</label>
+                    <textarea id="campaignDescription" name="campaignDescription" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">캠페인 등록</button>
+            </form>
+        `;
     }
-
-    modal.style.display = 'block';
+    modal.style.display = "block";
 }
 
 function closeCampaignModal() {
-    document.getElementById('campaignModal').style.display = 'none';
+    document.getElementById('campaignModal').style.display = "none";
 }
 
 function viewCampaignDetails(campaignId) {
-    // Fetch campaign details from the server
-    // For demonstration, we'll use mock data
     const mockDetails = {
         id: campaignId,
         name: '여름 신제품 홍보',
@@ -73,36 +86,29 @@ function viewCampaignDetails(campaignId) {
     };
 
     const detailsHtml = `
-                <p><strong>캠페인 ID:</strong> ${mockDetails.id}</p>
-                <p><strong>이름:</strong> ${mockDetails.name}</p>
-                <p><strong>시작일:</strong> ${mockDetails.startDate}</p>
-                <p><strong>종료일:</strong> ${mockDetails.endDate}</p>
-                <p><strong>상태:</strong> ${mockDetails.status}</p>상태:</strong> ${mockDetails.status}</p>
-                <p><strong>제출 수:</strong> ${mockDetails.submissions}</p>
-                <p><strong>설명:</strong> ${mockDetails.description}</p>
-                <button class="btn btn-primary" onclick="editCampaign('${mockDetails.id}')">캠페인 수정</button>
-            `;
+        <p><strong>캠페인 ID:</strong> ${mockDetails.id}</p>
+        <p><strong>이름:</strong> ${mockDetails.name}</p>
+        <p><strong>시작일:</strong> ${mockDetails.startDate}</p>
+        <p><strong>종료일:</strong> ${mockDetails.endDate}</p>
+        <p><strong>상태:</strong> ${mockDetails.status}</p>
+        <p><strong>제출 수:</strong> ${mockDetails.submissions}</p>
+        <p><strong>설명:</strong> ${mockDetails.description}</p>
+        <button class="btn btn-primary" onclick="editCampaign('${mockDetails.id}')">캠페인 수정</button>
+    `;
 
     document.getElementById('campaignDetails').innerHTML = detailsHtml;
-    document.getElementById('campaignModal').style.display = 'block';
+    document.getElementById('campaignModal').style.display = "block";
 }
 
 function editCampaign(campaignId) {
-    // Implement edit functionality
-    console.log('캠페인 수정:', campaignId);
+    console.log("✏️ 캠페인 수정:", campaignId);
     openCampaignModal(campaignId);
 }
 
 function previewCampaign() {
-    // Implement preview functionality
-    console.log('캠페인 미리보기');
-    alert('현재 등록된 캠페인의 미리보기 기능은 개발 중입니다.');
+    console.log("👀 캠페인 미리보기");
+    alert("현재 등록된 캠페인의 미리보기 기능은 개발 중입니다.");
 }
 
-// Close the modal when clicking outside of it
-window.onclick = function (event) {
-    const modal = document.getElementById('campaignModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
-    }
-}
+// 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정
+document.addEventListener("reapplyEventListeners", initCampaignManagement);

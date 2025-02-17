@@ -1,19 +1,21 @@
-document.addEventListener("DOMContentLoaded", function () {
+function initDeliveryManagement() {
+    console.log("🚚 배송 관리 JS 실행됨");
+
     // ✅ "전체 선택" 체크박스 기능
     const selectAllCheckbox = document.getElementById("selectAll");
-    const productCheckboxes = document.querySelectorAll(".product-checkbox");
+    const deliveryCheckboxes = document.querySelectorAll(".delivery-checkbox");
 
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener("change", function () {
-            productCheckboxes.forEach((checkbox) => {
+            deliveryCheckboxes.forEach((checkbox) => {
                 checkbox.checked = this.checked;
             });
         });
 
         // 개별 체크박스 클릭 시 "전체 선택" 상태 업데이트
-        productCheckboxes.forEach((checkbox) => {
+        deliveryCheckboxes.forEach((checkbox) => {
             checkbox.addEventListener("change", function () {
-                selectAllCheckbox.checked = [...productCheckboxes].every((cb) => cb.checked);
+                selectAllCheckbox.checked = [...deliveryCheckboxes].every((cb) => cb.checked);
             });
         });
     }
@@ -53,4 +55,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function formatDate(date) {
         return date.toISOString().split("T")[0];
     }
-});
+}
+
+// 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정
+document.addEventListener("reapplyEventListeners", initDeliveryManagement);
