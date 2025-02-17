@@ -323,7 +323,7 @@
                                                                 </p>
                                                                 <!-- 달력 -->
                                                                 <div>
-                                                                    <input type="datetime-local" class="datetime-picker"
+                                                                    <input type="date" class="datetime-picker"
                                                                         id="funding-start-datetime" placeholder="일자선택"
                                                                         autocomplete="off" />
                                                                     <!-- 시작 일자 옆에 동적으로 메시지를 표시 -->
@@ -350,7 +350,7 @@
                                                                 </p>
                                                                 <!-- 달력 -->
                                                                 <div>
-                                                                    <input type="datetime-local" class="datetime-picker"
+                                                                    <input type="date" class="datetime-picker"
                                                                         id="funding-end-datetime" placeholder="일자선택"
                                                                         autocomplete="off" />
                                                                 </div>
@@ -371,7 +371,7 @@
                                                                 </p>
                                                                 <!-- 달력 -->
                                                                 <div>
-                                                                    <input type="datetime-local" class="datetime-picker"
+                                                                    <input type="date" class="datetime-picker"
                                                                         id="funding-send-datetime" placeholder="일자선택"
                                                                         autocomplete="off" />
                                                                 </div>
@@ -446,70 +446,11 @@
                                                     <div class="cam-gi-box-le-in-top">
                                                         <span class="cam-gi-box-le-in-top-title">
                                                             제작할 리워드
-                                                            <span id="rewardCount">2</span>
+                                                            <span id="rewardCount">0</span>
                                                         </span>
                                                     </div>
                                                     <ul class="cam-gi-box-le-in-bo">
-                                                        <!-- 각각의 리워드 -->
-                                                        <div class="cam-gi-box-le-in-bo-pe">
-                                                            <!-- 내용 -->
-                                                            <div>
-                                                                <button class="cam-gi-box-le-in-bo-pe-content">
-                                                                    <!-- 받는 기부품 -->
-                                                                    <strong>청바지
-                                                                        2개
-                                                                        +</strong>
-                                                                    <!-- 판매자가 입력한 리워드 이름 -->
-                                                                    <p>
-                                                                        선물제목
-                                                                    </p>
-                                                                    <!-- 리워드 구성품 -->
-                                                                    <ul>
-                                                                        <li>
-                                                                            가방
-                                                                            1개
-                                                                        </li>
-                                                                    </ul>
-                                                                    <span>예상
-                                                                        발송
-                                                                        시작일
-                                                                        :
-                                                                        <em>2025년
-                                                                            4월
-                                                                            18일</em></span>
-                                                                    <div class="cam-gi-box-le-in-bo-pe-content-div">
-                                                                        <em class="cam-gi-em">
-                                                                            <div class="cam-gi-em-in">
-                                                                                <svg viewBox="0 0 48 48">
-                                                                                    <path fill-rule="evenodd"
-                                                                                        clip-rule="evenodd"
-                                                                                        d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z">
-                                                                                    </path>
-                                                                                </svg>
-                                                                            </div>
-                                                                            <span class="cam-gi-em-in">0</span>
-                                                                            명이
-                                                                            선택
-                                                                        </em>
-                                                                        <div class="cam-gi-em-box">
-                                                                            <em>1개
-                                                                                남음</em>
-                                                                        </div>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                            <!-- 삭제버튼 -->
-                                                            <button class="cam-gi-de">
-                                                                <div class="cam-gi-de-in">
-                                                                    <svg viewBox="0 0 48 48">
-                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                                            d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z">
-                                                                        </path>
-                                                                    </svg>
-                                                                </div>
-                                                            </button>
-                                                        </div>
-                                                        <!-- 리워드 끝 -->
+                                                        <!-- 각각의 리워드 표시 영역 -->
                                                     </ul>
                                                 </div>
                                             </div>
@@ -604,7 +545,7 @@
                                                                 </button>
                                                             </div>
                                                             <div class="cam-la-pay-box">
-                                                                <div class="cam-la-pay-box-total">
+                                                                <div class="cam-la-pay-box-total reward">
                                                                     <span>리워드 상품</span>
                                                                 </div>
                                                                 <!-- 리워드 상품 나오는곳 -->
@@ -634,11 +575,9 @@
                                                                 </div>
                                                             </div>
                                                         </section>
-                                                        <div class="git-la-btn">
-                                                            <button class="git-la-btn-ok">
-                                                                <span>추가</span>
-                                                            </button>
-                                                        </div>
+                                                        <button class="git-la-btn-ok" id="rewardAddBtn" disabled>
+                                                            <span>추가</span>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

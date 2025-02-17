@@ -1046,79 +1046,18 @@ input[name="inputTag"] {
 }
 
 .datetime-picker {
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    padding: 0px 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid rgb(240, 240, 240);
-    background: white;
-    color: rgb(208, 208, 208);
-    &:focus-visible {
-        border: 1px solid rgb(74, 222, 128) !important;
-        outline: none;
-    }
-}
-/*
-.datepicker-nojquery{
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    padding: 0px 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid rgb(240, 240, 240);
-    background: white;
-    color: rgb(208, 208, 208);
+    color: #333 !important;
+    background-color: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    width: 100% !important;
 }
 
-.timepicker-nojquery{
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    padding: 0px 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid rgb(240, 240, 240);
-    background: white;
-    color: rgb(208, 208, 208);
-}
-*/
-.cam-la-ti-in-bo{
-    font-weight: 400;
-    font-size: 14px !important;
-    line-height: 24px !important;
-}
-
-.cam-la-ti-in-bo-a{
-    padding-top: 46px;
-    font-weight: 400;
-    font-size: 14px !important;
-    line-height: 24px !important;
-}
-
-.cam-la-ti-in-bo p{
-    margin-bottom: 0em;
-    margin-top: 0em;
-    font-weight: bold;
-    font-size: 11px;
-    line-height: 18px;
-    letter-spacing: -0.005em;
-    color: rgb(61, 61, 61);
-    display: flex;
+.date-info {
+    margin-top: 5px !important;
+    color: #666 !important;
+    font-size: 0.9em !important;
 }
 
 .cam-gi-box{
@@ -1604,11 +1543,13 @@ input[name="inputTag"] {
     border-radius: 0px 2px 2px 0px;
 }
 
+/*
 .git-la-btn{
     display: flex;
     flex-wrap: wrap;
     margin: 22px 0px 0px;
 }
+*/
 
 .git-la-btn-re{
     flex: 0 0 auto;
@@ -1637,27 +1578,30 @@ input[name="inputTag"] {
 }
 
 .git-la-btn-ok{
-    font-size: 12px;
-    line-height: 20px;
     cursor: default;
-    flex: 1 1 0%;
-    margin: 0px 0px 0px 10px;
+    font-weight: 500;
+    background: rgb(74, 222, 128);
+    width: 100%;
+    height: 40px;
+    color: white;
+    font-size: 12px !important;
+    line-height: 20px !important;
     display: inline-flex;
     -webkit-box-align: center;
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    height: 44px;
     white-space: nowrap;
     border-radius: 1px;
+    margin: 0px;
     border: 0px;
     outline: none;
-    font-weight: normal;
     box-sizing: border-box;
-    padding: 0px 24px;
-    pointer-events: none;
-    background-color: rgb(158, 158, 158);
-    -webkit-appearance: button;
+    padding: 0px 16px;
+    &:disabled {
+        background-color: rgb(158, 158, 158);
+        cursor: default;
+    }
     &.isActive {
         background-color: rgb(74, 222, 128);
     }
