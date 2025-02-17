@@ -10,7 +10,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.CampaignEntity;
+import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.service.CampaignService;
+import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,6 +29,8 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController {
 
     private final UserService userService;
+    private final MaterialDonationService materialDonationService;
+    private final CampaignService campaignService;
 
     // 유저 기본페이지 조회
     @GetMapping({"/",""})
@@ -43,7 +49,27 @@ public class UserController {
         return "user/mypage-profile";
     }
 
+    //유저 entity를 통한 도네이션 정보 조회
+    @GetMapping("/donation")
+    public String donation(
+            HttpServletRequest request
+        , Model model
+    ) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null; // 기본값 설정
 
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (loginUserId != null) {
+                //사용자 정보를 데이터베이스에서 조회
+                MaterialDonationEntity materialDonation = materialDonationService.donationFindByUserId(loginUserId);
+                CampaignEntity campaign = campaignService.campaignFindByCampaignId(materialDonation.getCampaign().getCampaignId());
+                model.addAttribute("materialDonation", materialDonation);
+                model.addAttribute("campaign", campaign);
+            }
+        }
+        return "user/mypage-donation";
+    }
 
     // 세션 날리는거 다시한번 체크하기
     @GetMapping("/delete")
@@ -56,18 +82,16 @@ public class UserController {
     }
     
 
-    @PostMapping("/update")
+    @PostMapping("/userUpdate")
     public String postMethodName(
             HttpServletRequest request
             , @ModelAttribute UserDTO userDTO
-            // ,@RequestParam(name="userName") String userName
-            // , @RequestParam(name = "intro") String intro
-            // , @RequestParam(name = "phoneNumber") String phoneNumbe
-            // , @RequestParam(name = "userAddress") String userAddress
             , RedirectAttributes rttr
     ) {
+        HttpSession session = request.getSession(false);
+        userDTO.setUserId((Long) session.getAttribute("loginUserId"));
         userService.userUpdate(userDTO);
-
+        
 
         return "redirect:/user";
     }
@@ -90,10 +114,7 @@ public class UserController {
         return "user/mypage-reply";
     }
 
-    @GetMapping("/donation")
-    public String donation() {
-        return "user/mypage-donation";
-    }
+
 
     @GetMapping("/donation/detail")
     public String alarmDetail() {

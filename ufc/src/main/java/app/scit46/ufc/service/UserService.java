@@ -6,8 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -37,6 +39,7 @@ public class UserService {
     //회원 정보 업데이트
     @Transactional
     public void userUpdate(UserDTO userDTO) {
+        System.out.println(userDTO.getUserId());
         Optional<UserEntity> temp = userRepository.findById(userDTO.getUserId());
         if (!temp.isPresent())
             return;
@@ -46,7 +49,9 @@ public class UserService {
         entity.setPhoneNumber(userDTO.getPhoneNumber());
         entity.setUserAddress(userDTO.getUserAddress());
     }
-// ------------------ CRUD ------------------ //End
+    // ------------------ CRUD ------------------ //End
+
+    //유저가 기부한 정보 조회
 
     public UserEntity findUserByIdentity(String identity) {
         return userRepository.findByOauthId(identity).orElse(null);
@@ -69,7 +74,10 @@ public class UserService {
 
     public UserEntity findById(Long userId) {
         return userRepository.findById(userId)
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+
+
 
 }

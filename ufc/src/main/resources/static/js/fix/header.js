@@ -42,7 +42,7 @@ $(function () {
     success: function (response) {
       console.log(response);
       // 일반유저
-      if (response.roles === 'USER') {
+      if (response.roles === 'ROLE_USER') {
         $('.header-box-top-pe').append(`
                     <div class="header-box-top-pe-my">
                         <div class="header-box-top-pe-my-in">
@@ -70,7 +70,7 @@ $(function () {
         initializeEventListeners();
       }
       // 판매자
-      else if (response.roles === 'CREATOR') {
+      else if (response.roles === 'ROLE_CREATOR') {
         $('.header-box-top-pe').append(`
                     <div class="header-box-top-pe-my-add">
                         <div class="header-box-top-pe-my-in">

@@ -191,7 +191,7 @@
                         <!-- 상단 -->
                         <div class="main-in-content-in-pe-title">
                           <p>프로필 사진</p>
-                          <button class="pro-edit-btn">프로필 변경하기</button>
+                          <button type="button" class="pro-edit-btn">프로필 변경하기</button>
                             <input type="submit" class="pro-edit-btn-save hidden" value="저장">
                         </div>
                         <!-- 아래 내용 -->
@@ -215,7 +215,7 @@
                               <div>
                                 <div class="ch-img-text-in">
                                   <span>
-                                    <input name="photoId" type="file" name="ch-img-btn" />
+                                    <input  type="file" name="ch-img-btn" />
                                     <label class="ch-img-btn-label" for="ch-img-btn" style="margin-top: 10px;">파일 업로드</label>
                                   </span>
                                 </div>
@@ -236,7 +236,7 @@
                         </div>
                         <!-- 아래 내용 -->
                         <div class="pro-name" th:text="${user.userName}">
-                          조관익
+                          
                         </div>
                         <!-- 버튼 눌렀을때 -->
                         <div class="pro-name-close hidden">
@@ -263,17 +263,17 @@
                         </div>
                         <!-- 아래 내용 -->
                         <div class="pro-sh" th:text="${user.intro}">
-                          끼에에에에에에에에엑
                         </div>
                         <!-- 버튼 눌렀을때 -->
                         <div class="pro-sh-close hidden">
                           <div>
                             <div class="name-in-span-text">
                               <textarea
-                              class="info-textarea"
+                                class="info-textarea"
                                 type="text"
                                 placeholder="소개를 입력해주세요."
                                 th:text="${user.intro}"
+                                name="intro"
                               ></textarea>
                             </div>
                           </div>
@@ -296,12 +296,15 @@
                               <span class="name-in-span">
                                 <!-- 수정 필요  -->
                                 <input
-                                  type="number"
+                                  type="text"
                                   name="phoneNumber"
-                                  placeholder="연락처를 입력해주세요."
+                                  oninput="autoHyphen2(this)"
+                                  maxlength="13"
+                                  placeholder="번호를 입력해주세요"
                                   th:value="${user.phoneNumber}"
                                   class="name-input"
                                 />
+                                <span class="phone-error"></span>
                               </span>
                             </div>
                           </div>
@@ -354,6 +357,7 @@
                                   type="text"
                                   class="input address-detail"
                                   placeholder="상세주소를 입력해주세요."
+                                  th:value="${user.userAddress}"
                                 />
                               </div>
                             </div>

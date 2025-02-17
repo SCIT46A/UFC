@@ -32,6 +32,18 @@ document.addEventListener('DOMContentLoaded', function () {
     profilePhClose.classList.remove('hidden');
     profileAdClose.classList.remove('hidden');
   });
+  // const addressInput = document.querySelector('.address');
+  // const addressDetailInput = document.querySelector('.address-detail');
+  // const totalAddress = document.querySelector('.total-add');
+  // addressDetailInput.addEventListener('input', addressAdd);
+
+  // function addressAdd() {
+  //   if ((addressInput.value = null)) {
+  //     totalAddress.value = addressDetailInput.value;
+  //   } else {
+  //     totalAddress.value = addressInput.value + addressDetailInput.value;
+  //   }
+  // }
 
   profileEditBtnCancle.addEventListener('click', () => {
     profileEditBtn.classList.remove('hidden');
@@ -46,41 +58,10 @@ document.addEventListener('DOMContentLoaded', function () {
     profileShClose.classList.add('hidden');
     profilePhClose.classList.add('hidden');
     profileAdClose.classList.add('hidden');
+    addressAdd;
   });
-
-  const addressInput = document.querySelector('.address');
-  const addressDetailInput = document.querySelector('.address-detail');
-  const totalAddress = document.querySelector('.total-add');
-
-  function addressAdd() {
-    totalAddress.value = addressInput.value + addressDetailInput.value;
-  }
-  addressDetailInput.addEventListener('input', addressAdd);
-
-  // function userUpdate() {
-  //   const userDTO = {
-  //     profileImg: profileImg.src,
-  //     profileName: profileName.value,
-  //     profileSh: profileSh.value,
-  //     profilePh: profilePh.value,
-  //     profileAd: profileAd.value,
-  //   }
-
-  //   fetch('/user/update', {
-  //     method: 'POST',
-  //     body: JSON.stringify(userDTO),
-  //   })
-  //   .then(response => response.json())
-  //   .then(data => {
-  //     if (data.success) {
-  //       alert('프로필 수정 완료');
-  //     } else {
-  //       alert('프로필 수정 실패');
-  //     }
-  //   })
-
-  // }
 });
+
 // 다음 주소 API
 function execPostCode() {
   new daum.Postcode({
@@ -90,93 +71,32 @@ function execPostCode() {
     },
   }).open();
 }
-// profileImgBtnCancle.addEventListener("click", () => {
-//     profileEditBtn.classList.remove("hidden");
-//     profileImgBtnCancle.classList.add("hidden");
-// });
 
-// const profileNameBtn = document.querySelector(".pro-name-btn");
-// const profileShBtn = document.querySelector(".pro-sh-btn");
-// const profilePhBtn = document.querySelector(".pro-ph-btn");
-// const profileAdBtn = document.querySelector(".pro-ad-btn");
-// // close btb
-// const profileNameBtnCancle = document.querySelector(".pro-name-btn-cancle");
-// const profileShBtnCancle = document.querySelector(".pro-sh-btn-cancle");
-// const profilePhBtnCancle = document.querySelector(".pro-ph-btn-cancle");
-// const profileAdBtnCancle = document.querySelector(".pro-ad-btn-cancle");
-// // 화면
+const autoHyphen2 = (target) => {
+  target.value = target.value
+    .replace(/[^0-9]/g, '')
+    .replace(/^(\d{0,3})(\d{0,4})(\d{0,4})$/g, '$1-$2-$3')
+    .replace(/(\-{1,2})$/g, '');
 
-// 숨겨진곳
+  // 변경 감지하여 버튼 활성화 체크
+  target.dispatchEvent(new Event('input'));
+};
 
-// // 탈퇴버튼
-// const profileRunBtn = document.querySelector(".pro-run");
+window.addEventListener('DOMContentLoaded', () => {
+  const addressInput = document.querySelector('.address');
+  const addressDetailInput = document.querySelector('.address-detail');
+  const totalAddress = document.querySelector('.total-add');
 
-// profileImgBtn.addEventListener("click", () => {
-//     profileImg.classList.add("hidden");
-//     profileImgBtn.classList.add("hidden");
-//     // profileImgClose.classList.remove("hidden");
-//     // profileImgBtnCancle.classList.remove("hidden");
-// });
+  // 페이지 로드 시 기본 주소값 설정
+  totalAddress.value =
+    (addressInput.value || '') + (addressDetailInput.value || '');
+});
 
-// profileImgBtnCancle.addEventListener("click", () => {
-//     profileImg.classList.remove("hidden");
-//     profileImgBtn.classList.remove("hidden");
-//     profileImgClose.classList.add("hidden");
-//     profileImgBtnCancle.classList.add("hidden");
-// });
+document.querySelector('.pro-edit-btn-save').addEventListener('click', () => {
+  const addressInput = document.querySelector('.address');
+  const addressDetailInput = document.querySelector('.address-detail');
+  const totalAddress = document.querySelector('.total-add');
 
-// profileNameBtn.addEventListener("click", () => {
-//     profileName.classList.add("hidden");
-//     profileNameBtn.classList.add("hidden");
-//     profileNameClose.classList.remove("hidden");
-//     profileNameBtnCancle.classList.remove("hidden");
-// });
-
-// profileNameBtnCancle.addEventListener("click", () => {
-//     profileName.classList.remove("hidden");
-//     profileNameBtn.classList.remove("hidden");
-//     profileNameClose.classList.add("hidden");
-//     profileNameBtnCancle.classList.add("hidden");
-// });
-
-// profileShBtn.addEventListener("click", () => {
-//     profileSh.classList.add("hidden");
-//     profileShBtn.classList.add("hidden");
-//     profileShClose.classList.remove("hidden");
-//     profileShBtnCancle.classList.remove("hidden");
-// });
-
-// profileShBtnCancle.addEventListener("click", () => {
-//     profileSh.classList.remove("hidden");
-//     profileShBtn.classList.remove("hidden");
-//     profileShClose.classList.add("hidden");
-//     profileShBtnCancle.classList.add("hidden");
-// });
-
-// profilePhBtn.addEventListener("click", () => {
-//     profilePh.classList.add("hidden");
-//     profilePhBtn.classList.add("hidden");
-//     profilePhClose.classList.remove("hidden");
-//     profilePhBtnCancle.classList.remove("hidden");
-// });
-
-// profilePhBtnCancle.addEventListener("click", () => {
-//     profilePh.classList.remove("hidden");
-//     profilePhBtn.classList.remove("hidden");
-//     profilePhClose.classList.add("hidden");
-//     profilePhBtnCancle.classList.add("hidden");
-// });
-
-// profileAdBtn.addEventListener("click", () => {
-//     profileAd.classList.add("hidden");
-//     profileAdBtn.classList.add("hidden");
-//     profileAdClose.classList.remove("hidden");
-//     profileAdBtnCancle.classList.remove("hidden");
-// });
-
-// profileAdBtnCancle.addEventListener("click", () => {
-//     profileAd.classList.remove("hidden");
-//     profileAdBtn.classList.remove("hidden");
-//     profileAdClose.classList.add("hidden");
-//     profileAdBtnCancle.classList.add("hidden");
-// });
+  totalAddress.value =
+    (addressInput.value || '') + (addressDetailInput.value || '');
+});

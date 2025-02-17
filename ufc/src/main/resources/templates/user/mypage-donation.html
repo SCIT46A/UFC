@@ -125,7 +125,8 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
+                                                            <!-- 펀딩한 개수가 필요함함 -->
+                                                                <span></span>-
                                                             </div>
                                                         </div>
                                                     </div>
@@ -296,6 +297,7 @@
                                                         <!-- 후원일 -->
                                                         <div
                                                             class="sup-content-main-box-in-content-date"
+                                                            th:value="${materialDonation.donatedDate}"
                                                         >
                                                             후원일 2025. 01. 31
                                                         </div>
@@ -305,6 +307,7 @@
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span
+                                                            th:value="${campaign.title}"
                                                                 >일하기 싫은
                                                                 직장인 그 자체
                                                                 +모지
