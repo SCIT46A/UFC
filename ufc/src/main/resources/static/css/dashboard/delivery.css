@@ -1,18 +1,3 @@
-@import url('variable.css');
-
-:root {
-    --primary: #16a34a;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --white: #ffffff;
-}
-
 /* Delivery Tracking Styles */
 .delivery-tracking {
     margin-bottom: 2rem;
@@ -26,14 +11,6 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
-}
-
-.text-red {
-    color: #ef4444;
-}
-
-.text-green {
-    color: var(--primary);
 }
 
 .tracking-grid {
@@ -53,7 +30,7 @@
 }
 
 .tracking-card.orange {
-    background: #fff7ed;
+    background: var(--orange);
 }
 
 .card-content {
@@ -92,61 +69,10 @@
     margin-left: 2px;
 }
 
-/* Search Section */
-.search-section {
-    margin-bottom: 20px;
-}
-
-.search-row {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.search-row label {
-    width: 100px;
-    color: var(--gray-700);
-}
 
 .full-width {
     width: 100%;
     max-width: 400px;
-}
-
-.date-range {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
-}
-
-.period-select {
-    width: 120px;
-}
-
-.date-inputs {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.period-buttons {
-    display: flex;
-    gap: 5px;
-}
-
-.period-buttons button {
-    padding: 5px 15px;
-    border: 1px solid var(--gray-300);
-    background: var(--white);
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-.period-buttons button.active {
-    background-color: var(--primary);
-    color: var(--white);
-    border-color: var(--primary);
 }
 
 @media (max-width: 768px) {
