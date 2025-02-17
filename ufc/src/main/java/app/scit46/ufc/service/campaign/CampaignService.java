@@ -6,7 +6,10 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.dto.custom.CreateCampaignDTO;
 import app.scit46.ufc.entity.CampaignEntity;
+import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -50,4 +53,36 @@ public class CampaignService {
         campaignRepository.deleteById(campaignId);
     }
     // ================== 기본적인 CRUD 기능 작성 ================== //End
+
+
+    public void createCampaign(CreateCampaignDTO ccDTO){
+        /*
+         * CreateCampaignDTO의 필드드
+         * private List<String> tagList; -> List<TagDTO>
+         * private String title; -> CampaignDTO
+         * private LocalDateTime startDate; -> CampaignDTO
+         * private LocalDateTime endDate; -> CampaignDTO
+         * private LocalDateTime sendDate; -> CampaignDTO
+         * private String description; -> CampaignDTO ??
+         * private List<Map<String, Number>> fundingItems; -> RewardMaterialDTO ??
+         * private List<Map<String, ?>> rewardList; -> RewardMaterialDTO
+         * private String imageUrl; -> ImageDTO
+         * private Long imageId; -> ImageDTO
+         */
+        // 태그 리스트 생성
+        List<TagDTO> tagList = ccDTO.getTagList().stream()
+                .map(tag -> TagDTO.builder()
+                        .content(tag)
+                        .build())
+                .collect(Collectors.toList());
+
+        // 캠페인 엔티티 생성
+        CampaignDTO campaign = CampaignDTO.builder()
+                .title(ccDTO.getTitle())
+                .description(ccDTO.getDescription())
+                .startDate(ccDTO.getStartDate())
+                .endDate(ccDTO.getEndDate())
+                .sendDate(ccDTO.getSendDate())
+                .build();
+    }
 }

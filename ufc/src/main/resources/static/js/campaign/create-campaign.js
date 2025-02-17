@@ -507,6 +507,8 @@ $(document).ready(function () {
         let fundingItem = $(this).closest('div').find('.fundingItemInput');
         let fundingAmount = $(this).closest('div').find('.fundingAmountInput');
         
+        rewardList.funding.push({name: fundingItem.val(), amount: parseInt(fundingAmount.val())});
+        
         let fundingTag = `
             <div class="cam-la-pay-box-pe">
                 <div class="cam-la-pay-box-pe-fname">${fundingItem.val()}</div>
@@ -518,8 +520,7 @@ $(document).ready(function () {
                 </button>
             </div>
         `;
-        rewardList.funding.push({name: fundingItem.val(), amount: fundingAmount.val()});
-        console.log('Funding items:', rewardList.funding);
+        
         $('.cam-la-pay-box-total.funding').parent().append(fundingTag);
         fundingItem.val('');
         fundingAmount.val('');
@@ -533,6 +534,8 @@ $(document).ready(function () {
         let rewardItem = $(this).closest('div').find('.rewardItemInput');
         let rewardAmount = $(this).closest('div').find('.rewardAmountInput');
         
+        rewardList.reward.push({name: rewardItem.val(), amount: parseInt(rewardAmount.val())});
+        
         let rewardTag = `
             <div class="cam-la-pay-box-pe">
                 <div class="cam-la-pay-box-pe-fname">${rewardItem.val()}</div>
@@ -544,8 +547,7 @@ $(document).ready(function () {
                 </button>
             </div>
         `;
-        rewardList.reward.push({name: rewardItem.val(), amount: rewardAmount.val()});
-        console.log('Reward items:', rewardList.reward);
+        
         $('.cam-la-pay-box-total:not(.funding)').parent().append(rewardTag);
         rewardItem.val('');
         rewardAmount.val('');
@@ -581,7 +583,7 @@ $(document).ready(function () {
         let rewardTargetAmount = "";
         let rewardSendDate = fundingSendDate.value;
         let rewardSelectedCount = 0;
-        let rewardLeftAmount = $("#productionAmount").val();
+        let rewardLeftAmount = parseInt($("#productionAmount").val());
         
         console.log('Adding reward with:', {
             title: rewardTitle,
@@ -717,9 +719,11 @@ $(document).ready(function () {
             sendData.description = campaignDescription.value;    // 캠페인 설명
             sendData.fundingItems = fundingItems; // 캠페인 목표 총 재료 수량 리스트
             sendData.rewardList = rewardItems; // 캠페인 목표 총 리워드 수량 리스트
-            sendData.startDate = fundingStartDate.value; // 캠페인 시작일
-            sendData.endDate = fundingEndDate.value;     // 캠페인 종료일
-            sendData.sendDate = fundingSendDate.value;   // 캠페인 발송일
+            sendData.startDate = new Date(fundingStartDate.value).toISOString(); // 캠페인 시작일
+            sendData.endDate = new Date(fundingEndDate.value).toISOString();     // 캠페인 종료일
+            sendData.sendDate = new Date(fundingSendDate.value).toISOString();   // 캠페인 발송일
+
+            console.log(JSON.stringify(sendData));
             
             // 이미지 파일 가져오기
             const imageFile = imageInput.files[0];
@@ -742,6 +746,8 @@ $(document).ready(function () {
             // 캠페인 데이터에 이미지 URL 추가
             sendData.imageUrl = uploadResult.imageUrl;
             sendData.imageId = uploadResult.imageId;
+
+            console.log(JSON.stringify(sendData));
             
             // 서버로 캠페인 데이터 전송
             const response = await $.ajax({

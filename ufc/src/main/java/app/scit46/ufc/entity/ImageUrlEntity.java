@@ -1,10 +1,12 @@
 package app.scit46.ufc.entity;
 
-import app.scit46.ufc.dto.PublicPhotoDTO;
+import app.scit46.ufc.dto.ImageUrlDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -13,22 +15,23 @@ import java.util.List;
 @ToString
 @Builder
 @Entity
-@Table(name = "PublicPhotos")
-public class PublicPhotoEntity {
+@Table(name = "ImageUrls")
+public class ImageUrlEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "photo_id")
-    private Long photoId;
+    @Column(name = "id")
+    private Long id;
 
-    @Column(name = "origin_name", nullable = false, unique = true, length = 255)
-    private String originName;
+    @Column(name = "image_id", nullable = false, unique = true, length = 32)
+    private String imageId; //uuid
 
-    @Column(name = "convert_name", nullable = false, unique = true, length = 300)
-    private String convertName;
+    @Column(name = "filename", nullable = false, unique = true, length = 255)
+    private String filename;
 
-    @Column(name = "uploaded_date", nullable = false)
-    private LocalDateTime uploadedDate;
+    @Column(name = "uploaded_at", nullable = false)
+    @CreationTimestamp
+    private LocalDateTime uploadedAt;
 
     // OneToMany: Materials.photo_id 참조
     @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY)
@@ -42,12 +45,12 @@ public class PublicPhotoEntity {
     @OneToMany(mappedBy = "photo", fetch = FetchType.LAZY)
     private List<CampaignEntity> campaigns;
 
-    public static PublicPhotoEntity toEntity(PublicPhotoDTO dto) {
+    public static ImageUrlEntity toEntity(ImageUrlDTO dto) {
         return builder()
-                .photoId(dto.getPhotoId())
-                .originName(dto.getOriginName())
-                .convertName(dto.getConvertName())
-                .uploadedDate(dto.getUploadedDate())
+                .id(dto.getId())
+                .imageId(dto.getImageId())
+                .filename(dto.getFilename())
+                .uploadedAt(dto.getUploadedAt())
                 .build();
     }
 }
