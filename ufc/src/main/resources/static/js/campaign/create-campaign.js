@@ -716,7 +716,7 @@ $(document).ready(function () {
             sendData.title = campaignTitle.value;   // 캠페인 제목
             sendData.description = campaignDescription.value;    // 캠페인 설명
             sendData.fundingItems = fundingItems; // 캠페인 목표 총 재료 수량 리스트
-            sendData.rewardList = rewardList; // 캠페인 목표 총 리워드 수량 리스트
+            sendData.rewardList = rewardItems; // 캠페인 목표 총 리워드 수량 리스트
             sendData.startDate = fundingStartDate.value; // 캠페인 시작일
             sendData.endDate = fundingEndDate.value;     // 캠페인 종료일
             sendData.sendDate = fundingSendDate.value;   // 캠페인 발송일
@@ -778,12 +778,6 @@ $(document).ready(function () {
         $('.loading-overlay').hide();
     }
     
-    // 캠페인 생성 버튼 클릭 이벤트
-    $('.cam-la-in-box-bottom-in-end-btn').on('click', function() {
-        if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 생성') {
-            submitCampaign();
-        }
-    });
 
     $(document).on('change', '.fundingItemInput, .fundingAmountInput, .rewardItemInput, .rewardAmountInput', checkFirstPageInput);
     // 페이지 입력 검사
@@ -827,6 +821,12 @@ $(document).ready(function () {
         }
         pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
         console.log(pageStatus);
+    });
+    // 캠페인 생성 버튼 클릭 이벤트
+    $('.cam-la-in-box-bottom-in-end-btn').on('click', function() {
+        if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 생성') {
+            submitCampaign();
+        }
     });
 
     // 캠페인 기획 페이지 뒤로가기 버튼
@@ -967,6 +967,49 @@ $(document).ready(function () {
     function updateFinalSummary() {
         console.log('Starting updateFinalSummary');
         console.log('rewardItems at start of summary:', JSON.stringify(rewardItems, null, 2));
+        
+        // 전체 필요 기부품 계산
+        function calculateTotalFundingItems() {
+            const totalFunding = {};
+            
+            rewardItems.forEach(rewardItem => {
+                const multiplier = rewardItem.amount; // 해당 리워드의 생산 수량
+                
+                rewardItem.funding.forEach(fundingItem => {
+                    const itemName = fundingItem.name;
+                    const itemAmount = parseInt(fundingItem.amount) * multiplier;
+                    
+                    if (totalFunding[itemName]) {
+                        totalFunding[itemName] += itemAmount;
+                    } else {
+                        totalFunding[itemName] = itemAmount;
+                    }
+                });
+            });
+            
+            return totalFunding;
+        }
+        
+        // 전체 필요 기부품 표시
+        const totalFunding = calculateTotalFundingItems();
+        const totalFundingList = $('#totalFundingList');
+        totalFundingList.empty();
+        
+        Object.entries(totalFunding).forEach(([itemName, amount]) => {
+            totalFundingList.append(`
+                <tr>
+                    <td>${itemName}</td>
+                    <td>${amount}개</td>
+                </tr>
+            `);
+        });
+        
+        // fundingItems 업데이트
+        fundingItems = Object.entries(totalFunding).map(([name, amount]) => ({
+            [name]: amount
+        }));
+        
+        console.log('Updated fundingItems:', fundingItems);
         
         // 기본 정보
         $('#final-campaign-title').text($('input[name="title"]').val());

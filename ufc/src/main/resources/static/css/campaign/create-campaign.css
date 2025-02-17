@@ -2191,3 +2191,33 @@ input[type="datetime-local"]:focus {
     color: #333;
     font-weight: 500;
 }
+
+/* 전체 필요 기부품 테이블 스타일 */
+.funding-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.funding-summary-table th,
+.funding-summary-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.funding-summary-table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #333;
+}
+
+.funding-summary-table td {
+    color: #666;
+}
+
+.funding-summary-table td:last-child {
+    color: #333;
+    font-weight: 500;
+    text-align: right;
+}
