@@ -23,8 +23,4 @@ public class CreatorController {
         return "creator/creator-campaign";
     }
 
-    @GetMapping("/delivery")
-    public String delivery() {
-        return "creator/creator-delivery";
-    }
 }

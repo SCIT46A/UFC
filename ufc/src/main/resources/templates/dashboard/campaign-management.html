@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!-- ✅ th:fragment 추가 -->
+    <div th:fragment="campaign-management">
+        <div class="content-wrapper">
+            <!-- Campaign Summary -->
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>총 캠페인 수</h3>
+                    <p th:text="${totalCampaigns}">50</p>
+                </div>
+                <div class="summary-card">
+                    <h3>진행 중</h3>
+                    <p th:text="${inProgressCampaigns}">20</p>
+                </div>
+                <div class="summary-card">
+                    <h3>종료</h3>
+                    <p th:text="${closedCampaigns}">15</p>
+                </div>
+                <div class="summary-card">
+                    <h3>목표 달성</h3>
+                    <p th:text="${achievedCampaigns}">10</p>
+                </div>
+                <div class="summary-card">
+                    <h3>제출 수</h3>
+                    <p th:text="${totalSubmissions}">500</p>
+                </div>
+            </div>
+
+            <!-- Filters Section -->
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="status">상태:</label>
+                    <select id="status" name="status">
+                        <option value="all">전체</option>
+                        <option value="full">모집 완료</option>
+                        <option value="in-progress">진행 중</option>
+                        <option value="closed">종료</option>
+                        <option value="achieved">목표 달성</option>
+                        <option value="unachieved">목표 미달성</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="startDate">시작일:</label>
+                    <input type="date" id="startDate" name="startDate">
+                </div>
+                <div class="filter-group">
+                    <label for="endDate">종료일:</label>
+                    <input type="date" id="endDate" name="endDate">
+                </div>
+                <button class="btn btn-primary" onclick="applyFilters()">필터 적용</button>
+            </div>
+
+            <!-- Campaign Actions -->
+            <div class="filters">
+                <button class="btn btn-secondary" onclick="openCampaignModal()">새 캠페인 등록</button>
+                <button class="btn btn-secondary" onclick="previewCampaign()">캠페인 미리보기</button>
+            </div>
+
+            <!-- Campaign Table -->
+            <table>
+                <thead>
+                    <tr>
+                        <th>캠페인 ID</th>
+                        <th>이름</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                        <th>상태</th>
+                        <th>제출 수</th>
+                        <th>액션</th>
+                    </tr>
+                </thead>
+                <tbody> <!-- 데이터가 있을 경우 -->
+                    <tr th:each="campaign : ${campaigns}" th:if="${not #lists.isEmpty(campaigns)}">
+                        <td th:text="${campaign.id}">CAM001</td>
+                        <td th:text="${campaign.name}">여름 신제품 홍보</td>
+                        <td th:text="${#temporals.format(campaign.startDate, 'yyyy-MM-dd')}">2024-06-01</td>
+                        <td th:text="${#temporals.format(campaign.endDate, 'yyyy-MM-dd')}">2024-08-31</td>
+                        <td>
+                            <span class="status-badge"
+                                th:classappend="${campaign.status == 'FULL' ? 'full' : 
+                                                               campaign.status == 'IN_PROGRESS' ? 'in-progress' : 
+                                                               campaign.status == 'CLOSED' ? 'closed' : 
+                                                               campaign.status == 'ACHIEVED' ? 'achieved' : 'unachieved'}" th:text="${campaign.status == 'FULL' ? '모집 완료' : 
+                                                        campaign.status == 'IN_PROGRESS' ? '진행 중' : 
+                                                        campaign.status == 'CLOSED' ? '종료' : 
+                                                        campaign.status == 'ACHIEVED' ? '목표 달성' : '목표 미달성'}">진행
+                                중</span>
+                        </td>
+                        <td th:text="${campaign.submissions}">150</td>
+                        <td>
+                            <button class="btn btn-primary"
+                                th:onclick="'viewCampaignDetails(\'' + ${campaign.id} + '\')'">상세
+                                보기</button>
+                        </td>
+                    </tr>
+
+                    <!-- 데이터가 없을 경우 -->
+                    <tr th:if="${campaigns==null or #lists.isEmpty(campaigns)}">
+                        <td colspan="8">
+                            <div class="empty-message">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <line x1="12" y1="8" x2="12" y2="12" />
+                                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                                </svg>
+                                데이터가 존재하지 않습니다.
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="table-footer">
+            <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>
+            <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
+            <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
+        </div>
+    </div>
+
+    <!-- Campaign Details Modal -->
+    <div id="campaignModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeCampaignModal()">&times;</span>
+            <h2>캠페인 상세 정보</h2>
+            <div id="campaignDetails"></div>
+        </div>
+    </div>
+    </div>
+</body>
+
+</html>

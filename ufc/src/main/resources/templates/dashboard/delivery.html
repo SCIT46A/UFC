@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!-- ✅ th:fragment 추가 -->
+    <div th:fragment="delivery">
+        <div class="content-wrapper">
+            <!-- Delivery Tracking Status -->
+            <section class="delivery-tracking">
+                <!-- <div class="tracking-header">
+                        <span class="text-red">배송지 확인해주세요!</span>
+                        <span class="text-green">발송처리를 진행해주세요</span>
+                    </div> -->
+
+                <div class="tracking-grid">
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper gray">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>발송기한 초과</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper gray">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <polyline points="12 6 12 12 16 14"></polyline>
+                                </svg>
+                            </div>
+                            <span>자동처리 예정</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper green">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="8" x2="8" y2="8"></line>
+                                    <line x1="16" y1="12" x2="8" y2="12"></line>
+                                    <line x1="16" y1="16" x2="8" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>신규주문/발주 건</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper gray">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                            </div>
+                            <span>신규주문/발주 처리</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                    <div class="tracking-card orange">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
+                            <span>발송처리 D-1</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                    <div class="tracking-card orange">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <span>발송마감 D-day</span>
+                        </div>
+                        <div class="count">0<span>건</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-row">
+                    <label>판매아이디</label>
+                    <select class="full-width">
+                        <option>전체</option>
+                    </select>
+                </div>
+                <div class="search-row">
+                    <label>기간</label>
+                    <div class="date-range">
+                        <select class="period-select">
+                            <option>주문일</option>
+                        </select>
+                        <div class="date-inputs">
+                            <input type="date" value="2024-11-04">
+                            <span>~</span>
+                            <input type="date" value="2025-02-04">
+                        </div>
+                        <div class="period-buttons">
+                            <button>오늘</button>
+                            <button>1주일</button>
+                            <button>1개월</button>
+                            <button class="active">3개월</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="btn-filter">조건</button>
+                    <button class="btn-search">검색</button>
+                </div>
+            </section>
+
+            <!-- Invoice Table Section -->
+            <section class="invoice-section">
+                <div class="table-header">
+                    <div class="left-section">
+                        <span>목록 (총 1개)</span>
+                        <select>
+                            <option>최근주문순</option>
+                        </select>
+                        <select>
+                            <option>100개씩 보기</option>
+                        </select>
+                    </div>
+                    <button class="btn-secondary">조회항목 설정</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="selectAll" />
+                                </th>
+                                <th>판매아이디</th>
+                                <th>주문번호</th>
+                                <th>주문상태</th>
+                                <th>상품번호</th>
+                                <th>상품명</th>
+                                <th>발송마감일</th>
+                                <th>택배사명(발송방법)</th>
+                                <th>송장번호</th>
+                                <th>발송정책</th>
+                            </tr>
+                        </thead>
+                        <tbody> <!-- 데이터가 있을 경우 -->
+                            <tr th:each="product : ${products}" th:if="${not #lists.isEmpty(products)}">
+                                <td><input type="checkbox" th:value="${product.id}"></td>
+                                <td th:text="${product.sellerId}">판매자ID</td>
+                                <td th:text="${product.orderNumber}">주문번호</td>
+                                <td th:text="${product.orderStatus}">주문상태</td>
+                                <td th:text="${product.productId}">상품번호</td>
+                                <td th:text="${product.productName}">상품명</td>
+                                <td th:text="${#temporals.format(product.dueDate, 'yyyy-MM-dd')}">발송마감일</td>
+                                <td th:text="${product.deliveryCompany}">택배사명(발송방법)</td>
+                                <td th:text="${product.trackingNumber != null ? product.trackingNumber : '-'}">송장번호</td>
+                                <td th:text="${product.deliveryPolicy}">발송정책</td>
+                            </tr>
+
+                            <!-- 데이터가 없을 경우 -->
+                            <tr th:if="${#lists.isEmpty(products)}">
+                                <td colspan="10">
+                                    <div class="empty-message">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        데이터가 존재하지 않습니다.
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>
+                    <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
+                    <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
+                </div>
+        </div>
+    </div>
+    </section>
+    </div>
+    <script th:src="@{/js/dashboard/delivery.js}" defer></script>
+</body>
+
+</html>
