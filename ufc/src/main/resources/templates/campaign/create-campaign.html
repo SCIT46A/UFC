@@ -588,79 +588,44 @@
                                 <!-- 4. 최종 확인 -->
                                 <div class="cam-la-in-box-bo final hidden">
                                     <div class="cam-la-in-box-bo-all">
-                                        <!-- 필요한 재료 요약 -->
-                                        <div class="cam-la-in-box-bo-all-de">
-                                            <dl class="cam-la-in-box-bo-all-de-dl">
-                                                <dt>필요한 재료 목록</dt>
-                                                <dd>캠페인 진행에 필요한 재료들의 총 수량입니다.</dd>
-                                            </dl>
-                                            <div class="cam-la-in-box-bo-all-de-div">
-                                                <div class="cam-la-in-box-bo-all-de-div-box">
-                                                    <div class="final-summary-box">
-                                                        <table class="final-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>재료명</th>
-                                                                    <th>필요 수량</th>
-                                                                    <th>현재 모인 수량</th>
-                                                                    <th>달성률</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody id="materialSummaryList">
-                                                                <!-- JavaScript로 동적 생성 -->
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
+                                        <!-- 캠페인 기본 정보 요약 -->
+                                        <div class="final-summary-section">
+                                            <h3>캠페인 기본 정보</h3>
+                                            <div class="final-summary-content">
+                                                <div class="summary-item">
+                                                    <label>캠페인 제목</label>
+                                                    <p id="final-campaign-title"></p>
+                                                </div>
+                                                <div class="summary-item">
+                                                    <label>캠페인 태그</label>
+                                                    <div id="final-campaign-tags" class="tag-container"></div>
+                                                </div>
+                                                <div class="summary-item">
+                                                    <label>캠페인 설명</label>
+                                                    <p id="final-campaign-desc"></p>
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
+                                        <!-- 펀딩 일정 요약 -->
+                                        <div class="final-summary-section">
+                                            <h3>펀딩 일정</h3>
+                                            <div class="final-summary-content">
+                                                <div class="summary-item">
+                                                    <label>펀딩 기간</label>
+                                                    <p id="final-funding-period"></p>
+                                                </div>
+                                                <div class="summary-item">
+                                                    <label>리워드 준비 기간</label>
+                                                    <p id="final-prepare-period"></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
                                         <!-- 리워드 구성 요약 -->
-                                        <div class="cam-la-in-box-bo-all-de">
-                                            <dl class="cam-la-in-box-bo-all-de-dl">
-                                                <dt>리워드 구성 정보</dt>
-                                                <dd>설정한 리워드의 구성과 수량을 확인해주세요.</dd>
-                                            </dl>
-                                            <div class="cam-la-in-box-bo-all-de-div">
-                                                <div class="cam-la-in-box-bo-all-de-div-box">
-                                                    <div class="final-summary-box">
-                                                        <div id="rewardSummaryList">
-                                                            <!-- JavaScript로 동적 생성 -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- 일정 요약 -->
-                                        <div class="cam-la-in-box-bo-all-de">
-                                            <dl class="cam-la-in-box-bo-all-de-dl">
-                                                <dt>캠페인 진행 일정</dt>
-                                                <dd>캠페인의 전체 진행 일정을 확인해주세요.</dd>
-                                            </dl>
-                                            <div class="cam-la-in-box-bo-all-de-div">
-                                                <div class="cam-la-in-box-bo-all-de-div-box">
-                                                    <div class="final-summary-box">
-                                                        <div class="timeline-container">
-                                                            <div class="timeline-item">
-                                                                <div class="timeline-date" id="finalStartDate"></div>
-                                                                <div class="timeline-label">펀딩 시작</div>
-                                                            </div>
-                                                            <div class="timeline-item">
-                                                                <div class="timeline-date" id="finalEndDate"></div>
-                                                                <div class="timeline-label">펀딩 종료</div>
-                                                            </div>
-                                                            <div class="timeline-item">
-                                                                <div class="timeline-date" id="finalSendDate"></div>
-                                                                <div class="timeline-label">리워드 발송</div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="period-summary">
-                                                            <div>펀딩 기간: <span id="finalFundingPeriod"></span></div>
-                                                            <div>준비 기간: <span id="finalPreparePeriod"></span></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                        <div class="final-summary-section">
+                                            <h3>리워드 구성</h3>
+                                            <div id="final-rewards-list" class="final-summary-content">
                                             </div>
                                         </div>
                                     </div>

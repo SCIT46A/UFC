@@ -1572,7 +1572,6 @@ input[name="inputTag"] {
     font-weight: normal;
     padding: 0px 24px;
     border: 1px solid rgb(240, 240, 240);
-    color: rgb(61, 61, 61);
     -webkit-appearance: button;
     text-transform: none;
 }
@@ -2067,4 +2066,128 @@ input[type="datetime-local"]:focus {
     border-left: 4px solid transparent;
     border-right: 4px solid transparent;
     border-bottom: 4px solid #ff4444;
+}
+
+/* 최종 확인 페이지 스타일 */
+.final-summary-section {
+    margin-bottom: 40px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.final-summary-section h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgb(74, 222, 128);
+}
+
+.final-summary-content {
+    padding: 0 16px;
+}
+
+.summary-item {
+    margin-bottom: 20px;
+}
+
+.summary-item label {
+    display: block;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.summary-item p {
+    color: #333;
+    line-height: 1.6;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-container span {
+    padding: 4px 12px;
+    background: rgb(74, 222, 128);
+    color: white;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+/* 리워드 요약 스타일 */
+.reward-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.reward-title {
+    color: rgb(74, 222, 128);
+    font-size: 18px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgb(74, 222, 128);
+}
+
+.reward-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+}
+
+.reward-name, .reward-amount {
+    font-size: 16px;
+}
+
+.reward-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.funding-items, .reward-items-list {
+    background: white;
+    padding: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.reward-items ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reward-items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.reward-items li:last-child {
+    border-bottom: none;
+}
+
+.item-name {
+    color: #666;
+}
+
+.item-amount {
+    color: #333;
+    font-weight: 500;
 }
