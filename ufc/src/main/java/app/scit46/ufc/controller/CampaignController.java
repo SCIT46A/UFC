@@ -50,6 +50,16 @@ public class CampaignController {
         return "campaign/create-campaign";
     }
 
+    @GetMapping("/active")
+    public String active() {
+        return "campaign/active-campaign";
+    }
+
+    @GetMapping("/upcoming")
+    public String upcoming() {
+        return "campaign/upcoming-campaign";
+    }
+
 
 }
 

@@ -12,4 +12,6 @@ import java.util.List;
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
     @Query("SELECT c FROM CampaignEntity c WHERE REPLACE(c.title, ' ', '') LIKE %:normalizedKeyword%")
     List<CampaignEntity> searchCampaignByTitleIgnoreSpace(@Param("normalizedKeyword") String normalizedKeyword);
+
+    List<CampaignEntity> findByTitleContaining(String title);
 }

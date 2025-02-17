@@ -26,13 +26,11 @@ public class CampaignService {
 
 //  현재 시간 기준 진행중인 캠페인들
     public List<CampaignDTO> getAllCampaigns() {
-        LocalDateTime now = LocalDateTime.now(); // 현재 시간 가져오기
 
-        List<CampaignDTO> campaigns = campaignRepository.findAll().stream()
-                .filter(c -> c.getStartDate().isBefore(now) && c.getEndDate().isAfter(now)) // 필터 적용
+        List<CampaignDTO> campaigns = campaignRepository.findAll()
+                .stream() // 필터 적용
                 .map(CampaignDTO::toDTO) // DTO 변환
                 .collect(Collectors.toList()); // 리스트로 변환
-
         return campaigns;
     }
 

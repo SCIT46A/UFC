@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -46,6 +48,12 @@ public class ApiController {
         return searchService.search_target(keyword);
     }
 
+    @GetMapping("/searchTagBox")
+    public List<TagDTO> searchTag(@RequestParam("keyword") String keyword) {
+        log.info(searchService.search_target(keyword).toString());
+        return searchService.searchTagTarget(keyword);
+    }
+
     //  알림상태 확인하는거
     @GetMapping("/checkAlert")
     public List<UserAlertDTO> checkAlert(HttpServletRequest request) {
@@ -76,10 +84,31 @@ public class ApiController {
     }
 
     // 검색시 사용하는 검색창
-@GetMapping("/search/{type}/{query}")
-    public List<CampaignDTO> findCampaign() {
-        List<CampaignDTO> campaigns = campaignService.getAllCampaigns();
-        return campaigns;
+    @GetMapping("/search/{type}/{query}")
+    public ResponseEntity<List<SearchResultDTO>> searchByType(
+            @PathVariable("type") String type,
+            @PathVariable("query") String query,
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "donation", required = false) String donationFilter,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters) {
+
+        // ✅ type이 "tag"인 경우
+        if ("tag".equals(type)) {
+            tagFilters = tagFilters != null ? new ArrayList<>(tagFilters) : new ArrayList<>();
+            if (!query.equals("all")) {
+                tagFilters.add(query); // query를 태그 필터에 추가
+            }
+            query = ""; // 전체 데이터를 가져오도록 query를 빈 문자열로 설정
+        }
+
+
+        List<SearchResultDTO> results = searchService.search(query, sortType, donationFilter, tagFilters);
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/search/active")
+    public ResponseEntity<List<CampaignDTO>> searchActive() {
+        return null;
     }
 
 
