@@ -377,24 +377,6 @@ input[type="number"] {
     opacity: 0.9;
 }
 
-.btn-filter,
-.btn-search {
-    padding: 6px 16px;
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-}
-
-.btn-filter {
-    border: var(--border-medium);
-    background-color: var(--white);
-}
-
-.btn-search {
-    background-color: var(--primary);
-    color: var(--white);
-    border: none;
-}
-
 /* SEARCH & FILTER ACTIONS */
 .search-actions {
     display: flex;
@@ -649,7 +631,7 @@ input[type="number"] {
     gap: 0.25rem;
 }
 
-date-range {
+.date-range {
     display: flex;
     align-items: center;
     gap: 10px;
