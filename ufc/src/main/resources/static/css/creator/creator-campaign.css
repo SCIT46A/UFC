@@ -2194,3 +2194,11 @@ em{
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
     border-radius: 9999px;
 }
+
+.item {
+    display: none;  /* 기본적으로 숨김 */
+}
+
+.visible {
+    display: block; /* 보이는 항목 */
+}

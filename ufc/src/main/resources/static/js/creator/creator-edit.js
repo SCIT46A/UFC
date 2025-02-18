@@ -265,40 +265,77 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-// 수정되어진 내용들을 creator-campaign 페이지로 전송
-function update_profile() {
-    let profileData = {
-        nickname:
-        document.querySelector(".club-detail-introduction").textContent
-    };
-
-    fetch("/", {
-        method: "POST",
-        headers: { "Content-Type":"application/json" },
-        body: JSON.stringify(profileData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log("수정완료:", data);
-        window.location.href = "creator-campaign.html";
-    })
-    .catch(error => console.error("에러발생: ", error));
-}
 
 // 창작가 프로필 수정 버튼 클릭 시 수정 -> 실제로 수정하면 그 값이 적용되는 것은 아직 구현 x
 document.addEventListener("DOMContentLoaded", function() {
 const seller_edit = document.querySelector(".img-form-button");
 seller_edit.addEventListener("click", function() {
+    alert("프로필이 수정되었습니다.")
     window.location.href = "../../templates/creator/creator-campaign.html";
 });
 });
 
+
 // 창작가 프로필 수정 취소 클릭 시 창작가 캠페인 사이트로 이동
 document.addEventListener("DOMContentLoaded", function() {
     const seller_edit_cancel = document.querySelector(".img-form-prev-button");
-    seller_edit_cancel.addEventListener("click", function() {
-        if (".img-form-prev-button") {
-            window.location.href = "../../templates/creator/creator-campaign.html";
-        };
+        seller_edit_cancel.addEventListener("click", function() {
+            let cancel_edit = confirm ("작성된 내용이 사라집니다. 정말로 취소하시겠습니까?");
+                if (!cancel_edit) {
+                    return;
+                }
+                window.location.href = "../../templates/creator/creator-campaign.html";
+            });
     });
+
+//
+document.addEventListener("DOMContentLoaded", function() {
+    const newName = document.querySelector(".club-detail-name");
+    const newCompany = document.querySelector(".company_name");
+    const newIntro = document.querySelector(".club-detail-introduction");
+    const newCover = document.querySelector(".cover-thumbnail-wrap");
+    const newProfile = document.querySelector(".img-form-thumbnail-wrap");
+    const saveProfile = document.querySelector(".img-form-button");
+
+    // 기존 데이터 불러오기 (수정 시 이전 값 유지)
+    if (localStorage.getItem("profileName")) {
+        newName.value = localStorage.getItem("profileName");
+    }
+
+    if (localStorage.getItem("profileCompany")) {
+        newCompany.value = localStorage.getItem("profileCompany");
+    }
+
+    if (localStorage.getItem("profileIntro")) {
+        newIntro.value = localStorage.getItem("profileIntro");
+    }
+
+    // 저장 버튼 클릭 시 데이터 저장
+    saveProfile.addEventListener("click", function() {
+        localStorage.setItem("profileName", newName.value);
+        localStorage.setItem("profileCompany", newCompany.value);
+        localStorage.setItem("profileIntro", newIntro.value);
+
+        // 이미지 파일 저장
+        const coverFile = newCover.files[0];
+        if (coverFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("coverImage", e.target.result);
+            };
+            reader.readAsDataURL(coverFile);
+        }
+
+        const profileFile = newProfile.files[0];
+        if (profileFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("profileImage", e.target.result);
+            };
+            reader.readAsDataURL(profileFile);
+        }
+
+        alert("프로필이 저장되었습니다.");
+        window.location.href = "creator-campaign.html"; // 페이지 이동
     });
+});

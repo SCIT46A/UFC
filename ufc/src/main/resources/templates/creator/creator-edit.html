@@ -138,7 +138,7 @@
                 </div>
                 <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
                 <!-- 개설 3단계: 창작가에 대한 소개글 입력 -->
-                <div class="img-form-wrap" style="display: block;">
+                <div class="img-form-wrap" style="display: block;" enctype="multipart/form-data">
                     
                     
                     <div class="img-form-content-wrap">
@@ -162,6 +162,7 @@
                                         </span>
                                         <div class="cover-hidden">
                                             <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*">
+                                            <img id="cover_preview" src="default-cover.png"><br>
                                         </div>
                                         <div class="cover-delete-wrap">
                                             <img src="/staticfiles/images/club/club-create/cover_delete_icon_white.png" class="cover-delete">
@@ -180,12 +181,13 @@
                                             </div>
                                             <div class="img-form-hidden">
                                                 <input type="file" id="profile-image" accept="image/*" data-ratio="1:1">
+                                                <img id="profile_preview" src="default-profile.png"><br>
                                             </div>
                                         </div>
                                         <div class="club-detail-title-wrap">
                                             <div class="club-detail-name-wrap">
                                                 <div>
-                                                    <input type="text"  class="club-detail-name" name="nickname" value="" placeholder="변경할 이름을 입력하세요.">
+                                                    <input type="text"  class="club-detail-name" name="nickname" value="" placeholder="변경할 창작가명을 입력하세요.">
                                                 </div>
                                                 <div>
                                                     <input type="text" class="company_name" name="company_name" value="" placeholder="상호명을 입력하세요.">
@@ -224,7 +226,7 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
     </main>
