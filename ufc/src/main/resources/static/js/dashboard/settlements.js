@@ -3,12 +3,12 @@ function initSettlementManagement() {
 
     window.applyFilters = function () {
         const status = document.getElementById("status")?.value;
-        const period = document.getElementById("period")?.value;
-        const year = document.getElementById("year")?.value;
+        const startDate = document.querySelector(".date-range input[type='date']")?.value;
+        const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value;
 
-        if (!status || !period || !year) return; // 요소가 없으면 실행 안함
+        if (!status || !startDate || !endDate) return;
 
-        console.log("📊 필터 적용:", { status, period, year });
+        console.log("📊 필터 적용:", { status, startDate, endDate });
     };
 
     window.downloadExcel = function () {
@@ -73,6 +73,40 @@ function initSettlementManagement() {
             modal.style.display = "none";
         }
     };
+
+    document.querySelectorAll(".period-buttons button").forEach(button => {
+        button.addEventListener("click", function () {
+            document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+            updateDateRange(this.textContent);
+        });
+    });
+
+    function updateDateRange(period) {
+        const endDate = new Date();
+        let startDate = new Date();
+
+        switch (period) {
+            case "오늘":
+                break;
+            case "1주일":
+                startDate.setDate(endDate.getDate() - 7);
+                break;
+            case "1개월":
+                startDate.setMonth(endDate.getMonth() - 1);
+                break;
+            case "3개월":
+                startDate.setMonth(endDate.getMonth() - 3);
+                break;
+        }
+
+        document.querySelectorAll(".date-range input[type='date']")[0].value = formatDate(startDate);
+        document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
+    }
+
+    function formatDate(date) {
+        return date.toISOString().split("T")[0];
+    }
 }
 
 // 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정

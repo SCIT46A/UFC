@@ -6,34 +6,36 @@
     <!-- ✅ th:fragment 추가 -->
     <div th:fragment="product-orders">
         <div class="content-wrapper">
-            <div class="status-grid">
-                <div class="status-card">
-                    <span class="title">결제완료</span>
-                    <span class="count" th:text="${paymentCompletedCount}">15</span>
+            <section class="card-container">
+                <div class="status-grid">
+                    <div class="status-card">
+                        <span>결제완료</span>
+                        <span class="count" th:text="${paymentCompletedCount}">15</span>
+                    </div>
+                    <div class="status-card">
+                        <span>배송준비중</span>
+                        <span class="count" th:text="${deliveryReadyCount}">8</span>
+                    </div>
+                    <div class="status-card">
+                        <span>배송중</span>
+                        <span class="count" th:text="${inDeliveryCount}">12</span>
+                    </div>
+                    <div class="status-card">
+                        <span>배송완료</span>
+                        <span class="count" th:text="${deliveryCompletedCount}">45</span>
+                    </div>
+                    <div class="status-card warning">
+                        <span>취소/교환 요청</span>
+                        <span class="count" th:text="${cancelExchangeCount}">3</span>
+                    </div>
                 </div>
-                <div class="status-card">
-                    <span class="title">배송준비중</span>
-                    <span class="count" th:text="${deliveryReadyCount}">8</span>
-                </div>
-                <div class="status-card">
-                    <span class="title">배송중</span>
-                    <span class="count" th:text="${inDeliveryCount}">12</span>
-                </div>
-                <div class="status-card">
-                    <span class="title">배송완료</span>
-                    <span class="count" th:text="${deliveryCompletedCount}">45</span>
-                </div>
-                <div class="status-card warning">
-                    <span class="title">취소/교환 요청</span>
-                    <span class="count" th:text="${cancelExchangeCount}">3</span>
-                </div>
-            </div>
+            </section>
 
             <!-- Batch Actions -->
             <div class="batch-actions">
-                <button class="btn" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
-                <button class="btn" onclick="changeOrderStatus()">주문상태 변경</button>
-                <button class="btn" onclick="processSelectedOrders()">선택주문 처리</button>
+                <button class="btn btn-secondary" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
+                <button class="btn btn-secondary" onclick="changeOrderStatus()">주문상태 변경</button>
+                <button class="btn btn-secondary" onclick="processSelectedOrders()">선택주문 처리</button>
                 <button class="btn btn-warning">취소요청 처리</button>
                 <button class="btn btn-warning">교환요청 처리</button>
             </div>
@@ -57,20 +59,38 @@
                     </select>
                 </div>
                 <div class="search-row">
-                    <label>주문기간</label>
+                    <label>주문 기간</label>
                     <div class="date-range">
                         <input type="date" class="search-input">
                         <span>~</span>
                         <input type="date" class="search-input">
+                        <div class="period-buttons">
+                            <button class="active">오늘</button>
+                            <button>1주일</button>
+                            <button>1개월</button>
+                            <button>3개월</button>
+                        </div>
                     </div>
                 </div>
-                <div class="search-row">
+                <div class="search-actions">
                     <button class="btn btn-primary">검색</button>
-                    <button class="btn">초기화</button>
+                    <button class="btn btn-secondary">초기화</button>
                 </div>
             </div>
 
             <!-- Order Table -->
+            <div class="table-header">
+                <div class="left-section">
+                    <span>목록 (총 1개)</span>
+                    <select>
+                        <option>최근주문순</option>
+                    </select>
+                    <select>
+                        <option>100개씩 보기</option>
+                    </select>
+                </div>
+                <button class="btn-secondary">조회항목 설정</button>
+            </div>
             <div class="table-container">
                 <table class="order-table">
                     <thead>

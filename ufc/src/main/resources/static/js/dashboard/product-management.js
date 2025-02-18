@@ -21,39 +21,41 @@ function initProductManagement() {
     }
 
     // ✅ 기간 선택 버튼 기능
-    document.querySelectorAll(".period-buttons button").forEach(button => {
+    const periodButtons = document.querySelectorAll(".period-buttons button");
+    periodButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            document.querySelectorAll(".period-buttons button").forEach(b => b.classList.remove("active"));
+            periodButtons.forEach((btn) => btn.classList.remove("active"));
             button.classList.add("active");
-
-            const today = new Date();
-            let startDate = new Date(); // `today`를 변경하지 않고 새 객체 사용
-            const startDateInput = document.querySelector(".date-range input:first-child");
-            const endDateInput = document.querySelector(".date-range input:last-child");
-
-            if (!startDateInput || !endDateInput) return; // 날짜 입력 필드가 없는 경우 실행하지 않음
-
-            endDateInput.valueAsDate = today;
-
-            switch (button.textContent.trim()) {
-                case "오늘":
-                    startDate = today;
-                    break;
-                case "1주일":
-                    startDate.setDate(today.getDate() - 7);
-                    break;
-                case "1개월":
-                    startDate.setMonth(today.getMonth() - 1);
-                    break;
-                case "3개월":
-                    startDate.setMonth(today.getMonth() - 3);
-                    break;
-            }
-
-            startDateInput.valueAsDate = startDate;
-            console.log(`📅 기간 선택됨: ${button.textContent.trim()} ( ${startDate.toISOString().split("T")[0]} ~ ${today.toISOString().split("T")[0]} )`);
+            updateDateRange(button.textContent);
         });
     });
+
+    // ✅ 날짜 범위 업데이트
+    window.updateDateRange = function (period) {
+        const endDate = new Date();
+        let startDate = new Date();
+
+        switch (period) {
+            case "오늘":
+                break;
+            case "1주일":
+                startDate.setDate(endDate.getDate() - 7);
+                break;
+            case "1개월":
+                startDate.setMonth(endDate.getMonth() - 1);
+                break;
+            case "3개월":
+                startDate.setMonth(endDate.getMonth() - 3);
+                break;
+        }
+
+        document.querySelectorAll("input[type='date']")[0].value = formatDate(startDate);
+        document.querySelectorAll("input[type='date']")[1].value = formatDate(endDate);
+    };
+
+    window.formatDate = function (date) {
+        return date.toISOString().split("T")[0];
+    };
 
     // ✅ 상품 수정 기능 (예제 로직)
     window.editProduct = function (id) {

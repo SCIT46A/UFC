@@ -6,34 +6,41 @@
     <!-- ✅ 정산 관리 프래그먼트 -->
     <div th:fragment="settlements">
         <div class="content-wrapper">
-            <!-- Summary Section -->
-            <div class="summary-grid">
-                <div class="summary-card">
-                    <h3>총 매출</h3>
-                    <p th:text="${#numbers.formatDecimal(totalSales, 0, 'COMMA', 0, 'POINT')} + '원'">1,000,000원
-                    </p>
+            <section class="card-container">
+                <!-- Summary Section -->
+                <div class="status-grid">
+                    <div class="status-card">
+                        <span>총 매출</span>
+                        <p th:text="${#numbers.formatDecimal(totalSales, 0, 'COMMA', 0, 'POINT')} + '원'">1,000,000원
+                        </p>
+                    </div>
+                    <div class="status-card">
+                        <span>정산 예정</span>
+                        <p th:text="${#numbers.formatDecimal(scheduledSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            500,000원</p>
+                    </div>
+                    <div class="status-card">
+                        <span>정산 완료</span>
+                        <p th:text="${#numbers.formatDecimal(completedSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            400,000원</p>
+                    </div>
+                    <div class="status-card">
+                        <span>정산 대기</span>
+                        <p th:text="${#numbers.formatDecimal(pendingSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            100,000원</p>
+                    </div>
                 </div>
-                <div class="summary-card">
-                    <h3>정산 예정</h3>
-                    <p th:text="${#numbers.formatDecimal(scheduledSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                        500,000원</p>
-                </div>
-                <div class="summary-card">
-                    <h3>정산 완료</h3>
-                    <p th:text="${#numbers.formatDecimal(completedSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                        400,000원</p>
-                </div>
-                <div class="summary-card">
-                    <h3>정산 대기</h3>
-                    <p th:text="${#numbers.formatDecimal(pendingSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                        100,000원</p>
-                </div>
-            </div>
 
-            <!-- Filters Section -->
-            <div class="filters">
-                <div class="filter-group">
-                    <label for="status">상태:</label>
+            </section>
+
+            <!-- Download Buttons -->
+            <div class="batch-actions">
+                <button class="btn btn-secondary" onclick="downloadExcel()">엑셀 다운로드</button>
+                <button class="btn btn-secondary" onclick="downloadCSV()">CSV 다운로드</button>
+            </div>
+            <div class="search-section">
+                <div class="search-row">
+                    <label>정산 상태</label>
                     <select id="status" name="status">
                         <option value="all">전체</option>
                         <option value="scheduled">정산 예정</option>
@@ -41,71 +48,90 @@
                         <option value="pending">정산 대기</option>
                     </select>
                 </div>
-                <div class="filter-group">
-                    <label for="period">기간:</label>
-                    <input type="month" id="period" name="period">
+                <div class="search-row">
+                    <label>정산 기간</label>
+                    <div class="date-range">
+                        <input type="date" class="search-input">
+                        <span>~</span>
+                        <input type="date" class="search-input">
+                        <div class="period-buttons">
+                            <button class="active">오늘</button>
+                            <button>1주일</button>
+                            <button>1개월</button>
+                            <button>3개월</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="filter-group">
-                    <label for="year">연도:</label>
-                    <input type="number" id="year" name="year" min="2000" max="2099" step="1">
+                <div class="search-actions">
+                    <button class="btn btn-primary">검색</button>
+                    <button class="btn btn-secondary">초기화</button>
                 </div>
-                <button class="btn btn-primary" onclick="applyFilters()">필터 적용</button>
             </div>
 
-            <!-- Download Buttons -->
-            <div class="filters">
-                <button class="btn btn-secondary" onclick="downloadExcel()">엑셀 다운로드</button>
-                <button class="btn btn-secondary" onclick="downloadCSV()">CSV 다운로드</button>
-            </div>
-            <h1>정산 내역 15건</h1>
             <!-- Settlement Table -->
-            <table>
-                <thead>
-                    <tr>
-                        <th>정산 ID</th>
-                        <th>날짜</th>
-                        <th>금액</th>
-                        <th>상태</th>
-                        <th>액션</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- 데이터가 있을 경우 -->
-                    <tr th:each="settlement : ${settlements}" th:if="${not #lists.isEmpty(settlements)}">
-                        <td th:text="${settlement.id}">SET001</td>
-                        <td th:text="${#temporals.format(settlement.date, 'yyyy-MM-dd')}">2024-02-16</td>
-                        <td th:text="${#numbers.formatDecimal(settlement.amount, 0, 'COMMA', 0, 'POINT')} + '원'">50,000원
-                        </td>
-                        <td>
-                            <span class="status-badge" th:classappend="${settlement.status == 'SCHEDULED' ? 'scheduled' : 
+            <div class="table-header">
+                <div class="left-section">
+                    <span>목록 (총 1개)</span>
+                    <select>
+                        <option>최근주문순</option>
+                    </select>
+                    <select>
+                        <option>100개씩 보기</option>
+                    </select>
+                </div>
+                <button class="btn-secondary">조회항목 설정</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>정산 ID</th>
+                            <th>날짜</th>
+                            <th>금액</th>
+                            <th>상태</th>
+                            <th>액션</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 데이터가 있을 경우 -->
+                        <tr th:each="settlement : ${settlements}" th:if="${not #lists.isEmpty(settlements)}">
+                            <td th:text="${settlement.id}">SET001</td>
+                            <td th:text="${#temporals.format(settlement.date, 'yyyy-MM-dd')}">2024-02-16</td>
+                            <td th:text="${#numbers.formatDecimal(settlement.amount, 0, 'COMMA', 0, 'POINT')} + '원'">
+                                50,000원
+                            </td>
+                            <td>
+                                <span class="status-badge" th:classappend="${settlement.status == 'SCHEDULED' ? 'scheduled' : 
                                                 settlement.status == 'COMPLETED' ? 'completed' : 'pending'}" th:text="${settlement.status == 'SCHEDULED' ? '정산 예정' : 
                                           settlement.status == 'COMPLETED' ? '정산 완료' : '정산 대기'}">정산 예정
-                            </span>
-                        </td>
-                        <td>
-                            <button class="btn btn-primary" th:onclick="'viewDetails(\'' + ${settlement.id} + '\')'">상세
-                                보기</button>
-                        </td>
-                    </tr>
+                                </span>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary"
+                                    th:onclick="'viewDetails(\'' + ${settlement.id} + '\')'">상세
+                                    보기</button>
+                            </td>
+                        </tr>
 
-                    <!-- 데이터가 없을 경우 -->
-                    <tr th:if="${#lists.isEmpty(settlements)}">
-                        <td colspan="5">
-                            <div class="empty-message">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10" />
-                                    <line x1="12" y1="8" x2="12" y2="12" />
-                                    <line x1="12" y1="16" x2="12.01" y2="16" />
-                                </svg>
-                                데이터가 존재하지 않습니다.
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
+                        <!-- 데이터가 없을 경우 -->
+                        <tr th:if="${#lists.isEmpty(settlements)}">
+                            <td colspan="5">
+                                <div class="empty-message">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
+                                    데이터가 존재하지 않습니다.
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
 
-            </table>
+                </table>
+            </div>
         </div>
         <div class="table-footer">
             <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>

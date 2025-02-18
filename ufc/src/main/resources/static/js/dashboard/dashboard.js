@@ -53,11 +53,11 @@ document.addEventListener("DOMContentLoaded", function () {
             "/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
-            "/dashboard/settlements": { script: "/js/dashboard/settlement.js", init: "initSettlementManagement" },
+            "/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
             "/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
             "/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
             "/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
-            "/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiryManagement" }
+            "/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
         };
 
         // 기존 동적 스크립트 태그 제거

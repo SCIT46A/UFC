@@ -5,28 +5,30 @@
     <div th:fragment="product-management">
         <div class="content-wrapper">
             <!-- Status Cards -->
-            <div class="status-grid">
-                <div class="status-card" th:data-status="full">
-                    <span>전체</span>
-                    <span class="count" th:text="${fullCount}">0</span>
+            <section class="card-container">
+                <div class="status-grid">
+                    <div class="status-card" th:data-status="full">
+                        <span>전체</span>
+                        <span class="count" th:text="${fullCount}">0</span>
+                    </div>
+                    <div class="status-card" th:data-status="on-sale">
+                        <span>판매중</span>
+                        <span class="count" th:text="${onSaleCount}">0</span>
+                    </div>
+                    <div class="status-card" th:data-status="waiting">
+                        <span>판매대기</span>
+                        <span class="count" th:text="${waitingCount}">0</span>
+                    </div>
+                    <div class="status-card" th:data-status="out-of-stock">
+                        <span>품절</span>
+                        <span class="count" th:text="${outOfStockCount}">0</span>
+                    </div>
+                    <div class="status-card" th:data-status="stopped">
+                        <span>판매중지</span>
+                        <span class="count" th:text="${stoppedCount}">0</span>
+                    </div>
                 </div>
-                <div class="status-card" th:data-status="on-sale">
-                    <span>판매중</span>
-                    <span class="count" th:text="${onSaleCount}">0</span>
-                </div>
-                <div class="status-card" th:data-status="waiting">
-                    <span>판매대기</span>
-                    <span class="count" th:text="${waitingCount}">0</span>
-                </div>
-                <div class="status-card" th:data-status="out-of-stock">
-                    <span>품절</span>
-                    <span class="count" th:text="${outOfStockCount}">0</span>
-                </div>
-                <div class="status-card" th:data-status="stopped">
-                    <span>판매중지</span>
-                    <span class="count" th:text="${stoppedCount}">0</span>
-                </div>
-            </div>
+            </section>
 
             <!-- Search Section -->
             <div class="search-section">
@@ -49,20 +51,32 @@
                         <span>~</span>
                         <input type="date" class="search-input">
                         <div class="period-buttons">
-                            <button type="button">오늘</button>
-                            <button type="button">1주일</button>
-                            <button type="button">1개월</button>
-                            <button type="button">3개월</button>
+                            <button class="active">오늘</button>
+                            <button>1주일</button>
+                            <button>1개월</button>
+                            <button>3개월</button>
                         </div>
                     </div>
                 </div>
-                <div class="search-row">
+                <div class="search-actions">
                     <button class="btn btn-primary">검색</button>
                     <button class="btn btn-secondary">초기화</button>
                 </div>
             </div>
 
             <!-- Product Table -->
+            <div class="table-header">
+                <div class="left-section">
+                    <span>목록 (총 1개)</span>
+                    <select>
+                        <option>최근주문순</option>
+                    </select>
+                    <select>
+                        <option>100개씩 보기</option>
+                    </select>
+                </div>
+                <button class="btn-secondary">조회항목 설정</button>
+            </div>
             <div class="table-container">
                 <table class="product-table">
                     <thead>

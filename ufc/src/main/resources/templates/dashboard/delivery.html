@@ -7,7 +7,7 @@
     <div th:fragment="delivery">
         <div class="content-wrapper">
             <!-- Delivery Tracking Status -->
-            <section class="delivery-tracking">
+            <section class="card-container">
                 <!-- <div class="tracking-header">
                         <span class="text-red">배송지 확인해주세요!</span>
                         <span class="text-green">발송처리를 진행해주세요</span>
@@ -114,15 +114,15 @@
                             <option>주문일</option>
                         </select>
                         <div class="date-inputs">
-                            <input type="date" value="2024-11-04">
+                            <input type="date">
                             <span>~</span>
-                            <input type="date" value="2025-02-04">
+                            <input type="date">
                         </div>
                         <div class="period-buttons">
-                            <button>오늘</button>
+                            <button class="active">오늘</button>
                             <button>1주일</button>
                             <button>1개월</button>
-                            <button class="active">3개월</button>
+                            <button>3개월</button>
                         </div>
                     </div>
                 </div>

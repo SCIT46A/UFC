@@ -84,6 +84,54 @@ function initProductOrders() {
 
         console.log("📦 선택된 주문 일괄 처리:", selectedOrders);
     };
+
+    // 🔹 필터 적용
+    document.getElementById('status')?.addEventListener("change", applyFilters);
+    document.querySelector(".date-range input[type='date']")?.addEventListener("change", applyFilters);
+    document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.addEventListener("change", applyFilters);
+
+    document.querySelectorAll(".period-buttons button").forEach(button => {
+        button.addEventListener("click", function () {
+            document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+            updateDateRange(this.textContent);
+        });
+    });
+
+    function updateDateRange(period) {
+        const endDate = new Date();
+        let startDate = new Date();
+
+        switch (period) {
+            case "오늘":
+                break;
+            case "1주일":
+                startDate.setDate(endDate.getDate() - 7);
+                break;
+            case "1개월":
+                startDate.setMonth(endDate.getMonth() - 1);
+                break;
+            case "3개월":
+                startDate.setMonth(endDate.getMonth() - 3);
+                break;
+        }
+
+        document.querySelectorAll(".date-range input[type='date']")[0].value = formatDate(startDate);
+        document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
+    }
+
+    function formatDate(date) {
+        return date.toISOString().split("T")[0];
+    }
+
+}
+
+function applyFilters() {
+    const status = document.getElementById('status')?.value;
+    const startDate = document.querySelector(".date-range input[type='date']")?.value;
+    const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value;
+
+    console.log('📊 필터 적용:', { status, startDate, endDate });
 }
 
 // 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정

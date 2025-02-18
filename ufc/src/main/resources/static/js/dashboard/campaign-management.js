@@ -3,10 +3,43 @@ function initCampaignManagement() {
 
     // 🔹 필터 적용
     document.getElementById('status')?.addEventListener("change", applyFilters);
-    document.getElementById('startDate')?.addEventListener("change", applyFilters);
-    document.getElementById('endDate')?.addEventListener("change", applyFilters);
+    document.querySelector(".date-range input[type='date']")?.addEventListener("change", applyFilters);
+    document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.addEventListener("change", applyFilters);
 
-    // 🔹 캠페인 등록 / 수정 모달
+    document.querySelectorAll(".period-buttons button").forEach(button => {
+        button.addEventListener("click", function () {
+            document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+            updateDateRange(this.textContent);
+        });
+    });
+
+    function updateDateRange(period) {
+        const endDate = new Date();
+        let startDate = new Date();
+
+        switch (period) {
+            case "오늘":
+                break;
+            case "1주일":
+                startDate.setDate(endDate.getDate() - 7);
+                break;
+            case "1개월":
+                startDate.setMonth(endDate.getMonth() - 1);
+                break;
+            case "3개월":
+                startDate.setMonth(endDate.getMonth() - 3);
+                break;
+        }
+
+        document.querySelectorAll(".date-range input[type='date']")[0].value = formatDate(startDate);
+        document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
+    }
+
+    function formatDate(date) {
+        return date.toISOString().split("T")[0];
+    }
+
     document.getElementById('campaignForm')?.addEventListener("submit", function (e) {
         e.preventDefault();
         console.log("캠페인 등록:", {
@@ -18,24 +51,21 @@ function initCampaignManagement() {
         closeCampaignModal();
     });
 
-    // 🔹 모달 닫기 기능
     document.getElementById('campaignModal')?.addEventListener("click", function (event) {
         if (event.target === this) {
             this.style.display = "none";
         }
     });
 
-    // 🔹 캠페인 미리보기
     document.getElementById('previewCampaignBtn')?.addEventListener("click", previewCampaign);
 }
 
 function applyFilters() {
     const status = document.getElementById('status')?.value;
-    const startDate = document.getElementById('startDate')?.value;
-    const endDate = document.getElementById('endDate')?.value;
+    const startDate = document.querySelector(".date-range input[type='date']")?.value;
+    const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value;
 
     console.log('📊 필터 적용:', { status, startDate, endDate });
-    // TODO: 서버 API 호출하여 필터링된 데이터 가져오기
 }
 
 function openCampaignModal(campaignId = null) {
