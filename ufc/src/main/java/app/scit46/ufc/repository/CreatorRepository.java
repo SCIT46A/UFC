@@ -13,6 +13,6 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
     // ✅ 승인 대기 중인 창작자 목록 (creator_status = false)
     List<CreatorEntity> findByCreatorStatusFalse();
 
-    @Query("SELECT c FROM CreatorEntity c JOIN FETCH c.ownUser WHERE c.creatorStatus = false")
+    @Query("SELECT c FROM CreatorEntity c JOIN FETCH c.ownUser WHERE c.creatorStatus = 0")
     List<CreatorEntity> findByCreatorStatusFalseWithUser();
 }

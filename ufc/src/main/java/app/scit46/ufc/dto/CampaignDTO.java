@@ -20,7 +20,7 @@ public class CampaignDTO {
     private Long createdById;
     private Boolean isSuccess;
     private Long photoId;
-    private Boolean campaignStatus;
+    private Integer campaignStatus;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
         return CampaignDTO.builder()

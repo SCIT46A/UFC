@@ -31,6 +31,40 @@ public class AdminApiController {
         this.creatorService = creatorService;
     }
 
+    // ✅ 펀딩 대기 캠페인 목록 조회 API 추가
+    @GetMapping("/campaigns-funding-waiting")
+    public ResponseEntity<List<CampaignDTO>> getFundingWaitingCampaigns() {
+        return ResponseEntity.ok(campaignService.getFundingWaitingCampaigns());
+    }
+
+    // 승인 일괄처리
+    @PatchMapping("/campaigns/approve")
+    public ResponseEntity<Map<String, Object>> approveMultipleCampaigns(@RequestBody Map<String, List<Long>> request) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            List<Long> campaignIds = request.get("campaignIds");
+
+            if (campaignIds == null || campaignIds.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "승인할 캠페인을 선택하세요.");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            campaignService.approveMultipleCampaigns(campaignIds);  // ✅ 서비스에서 일괄 승인 처리
+
+            response.put("success", true);
+            response.put("message", campaignIds.size() + "개 캠페인이 승인되었습니다.");
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "캠페인 승인 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+
+
     // ✅ 공지사항 목록 조회 API
     @GetMapping("/notices")
     public ResponseEntity<List<NoticeDTO>> getAllNotices() {
@@ -112,17 +146,20 @@ public class AdminApiController {
         return ResponseEntity.ok(campaignService.getPendingCampaigns());
     }
 
-    // ✅ **캠페인 승인 API** (URL 통일)
     @PutMapping("/campaigns/{campaignId}/approve")
-    public ResponseEntity<String> approveCampaign(@PathVariable Long campaignId) {
+    public ResponseEntity<Map<String, String>> approveCampaign(@PathVariable Long campaignId) {
+        Map<String, String> response = new HashMap<>();
+
         try {
             campaignService.approveCampaign(campaignId);
-            return ResponseEntity.ok("캠페인이 승인되었습니다.");
+            response.put("message", "캠페인이 승인되었습니다.");
+            return ResponseEntity.ok(response); // ✅ JSON 형식 응답
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("캠페인 승인 중 오류 발생: " + e.getMessage());
+            response.put("message", "캠페인 승인 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 
     // ✅ 창작자 승인 대기 목록 조회 API
     @GetMapping("/creator-approval")

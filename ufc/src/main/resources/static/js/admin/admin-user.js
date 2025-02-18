@@ -49,7 +49,6 @@ document.addEventListener("DOMContentLoaded", function () {
 let allCampaigns = [];
 let allCampaignGoals = [];
 let allMaterialDonations = [];
-
 function fetchCampaignStatus() {
     Promise.all([
         fetch("/api/campaign-status").then(res => res.json()),
@@ -68,7 +67,7 @@ function fetchCampaignStatus() {
 
             console.log("✅ 데이터 로드 완료:", allCampaigns, allCampaignGoals, allMaterialDonations);
 
-            // ✅ 처음 페이지에서도 모든 데이터 전달
+            // ✅ 데이터가 로드된 후 테이블 생성
             document.getElementById("content").innerHTML = generateCampaignStatusTable(allCampaigns, allCampaignGoals, allMaterialDonations);
 
             // ✅ 요소가 생성된 후 updateCampaignCounts 실행 (100ms 지연)
@@ -80,58 +79,49 @@ function fetchCampaignStatus() {
         });
 }
 
-let retryCount = 0;
+
+// ✅ 캠페인 개수 업데이트 (4개 상태 반영)
 function updateCampaignCounts() {
     const ongoingCountElem = document.getElementById("ongoing-count");
     const pendingCountElem = document.getElementById("pending-count");
     const completedCountElem = document.getElementById("completed-count");
+    const preparedCountElem = document.getElementById("prepared-count"); // 🔥 추가된 카드
 
-    if (!ongoingCountElem || !pendingCountElem || !completedCountElem) {
-        if (retryCount < 5) {  // 최대 5번까지만 재시도
-            retryCount++;
-            console.warn(`캠페인 카운트 요소가 아직 생성되지 않았습니다. 500ms 후 재시도... (시도: ${retryCount}/5)`);
-            setTimeout(updateCampaignCounts, 500);
-        } else {
-            console.error("캠페인 카운트 요소를 찾을 수 없습니다. 실행 중단.");
-        }
-        return;
-    }
-
-    if (!allCampaigns || allCampaigns.length === 0) {
-        console.warn("캠페인 데이터가 없습니다.");
+    if (!ongoingCountElem || !pendingCountElem || !completedCountElem || !preparedCountElem) {
+        console.error("⛔ 캠페인 카운트 요소를 찾을 수 없습니다.");
         return;
     }
 
     const now = new Date().getTime();
-    let ongoingCount = 0;
-    let pendingCount = 0;
-    let completedCount = 0;
+    let ongoingCount = 0, pendingCount = 0, completedCount = 0, preparedCount = 0;
 
     allCampaigns.forEach(campaign => {
         const startDate = new Date(campaign.startDate).getTime();
         const endDate = new Date(campaign.endDate).getTime();
 
-        if (!campaign.campaignStatus) {
-            pendingCount++;
+        if (campaign.campaignStatus === 0) {
+            pendingCount++; // 승인 대기
+        } else if (startDate > now) {
+            preparedCount++; // 펀딩 대기 🔥 추가
         } else if (startDate <= now && now <= endDate) {
-            ongoingCount++;
+            ongoingCount++; // 진행 중
         } else if (endDate < now) {
-            completedCount++;
+            completedCount++; // 종료됨
         }
     });
 
     ongoingCountElem.textContent = `${ongoingCount}건`;
     pendingCountElem.textContent = `${pendingCount}건`;
     completedCountElem.textContent = `${completedCount}건`;
+    preparedCountElem.textContent = `${preparedCount}건`; // 🔥 추가된 카드 반영
 
-    console.log(`📢 캠페인 개수 업데이트 완료: 진행(${ongoingCount}), 대기(${pendingCount}), 종료(${completedCount})`);
+    console.log(`📢 캠페인 개수 업데이트 완료: 진행(${ongoingCount}), 대기(${pendingCount}), 종료(${completedCount}), 펀딩 대기(${preparedCount})`);
 }
 
 
 // ✅ 현재 필터 상태 저장
 let currentFilter = "ongoing"; // 기본값: 진행 중 캠페인
-
-// 📌 진행 중, 대기 중, 종료된 캠페인 필터링
+// ✅ 카드 클릭 시 필터링 (펀딩 대기 추가)
 function filterCampaigns(type) {
     let filteredCampaigns = [];
     const now = new Date();
@@ -141,15 +131,20 @@ function filterCampaigns(type) {
         return;
     }
 
-    currentFilter = type; // ✅ 현재 필터 상태 업데이트
+    currentFilter = type;
 
-    document.querySelectorAll(".tracking-card").forEach(card => card.classList.remove("active"));
+    // ✅ 모든 카드의 기존 선택 효과 제거
+    document.querySelectorAll(".tracking-card").forEach(card => card.classList.remove("selected-card"));
+
+    // ✅ 현재 선택한 카드에 테두리 효과 추가
     const selectedCard = document.getElementById(`${type}-card`);
-
     if (selectedCard) {
-        selectedCard.classList.add("active");
-    } else {
-        console.warn(`${type}-card 요소가 없음`);
+        selectedCard.classList.add("selected-card"); // 🔥 선택된 카드 강조!
+    }
+
+    if (type === "pending") {
+        filteredCampaigns = allCampaigns.filter(campaign => campaign.campaignStatus === 0);
+        document.getElementById("table-container").innerHTML = generatePendingCampaignTable(filteredCampaigns);
         return;
     }
 
@@ -157,30 +152,26 @@ function filterCampaigns(type) {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const startDate = new Date(campaign.startDate);
             const endDate = new Date(campaign.endDate);
-            return startDate <= now && now <= endDate;
+            return campaign.campaignStatus === 1 && startDate <= now && now <= endDate;
         });
-
-        document.getElementById("table-container").innerHTML = generateOngoingCampaignTable(
-            filteredCampaigns, allCampaignGoals, allMaterialDonations
-        );
-
-        return;
-    }
-
-    resetFilterUI();
-
-    if (type === "pending") {
-        filteredCampaigns = allCampaigns.filter(campaign => !campaign.campaignStatus);
     } else if (type === "completed") {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const endDate = new Date(campaign.endDate);
-            return endDate < now;
+            return campaign.campaignStatus === 1 && endDate < now;
+        });
+    } else if (type === "prepared") {
+        filteredCampaigns = allCampaigns.filter(campaign => {
+            const startDate = new Date(campaign.startDate);
+            return campaign.campaignStatus === 1 && startDate > now;
         });
     }
 
-    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
+    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns);
     updateCampaignCounts();
 }
+
+
+
 
 // ✅ 캠페인 현황 페이지 CSS 로드
 function loadCampaignStyles() {
@@ -195,8 +186,8 @@ function loadCampaignStyles() {
 }
 
 
-// 캠페인 현황 페이지 테이블 동적 생성
-function generateCampaignStatusTable(campaigns, campaignGoals, materialDonations) {
+// ✅ 캠페인 현황 페이지 테이블 생성 (카드 4개 추가)
+function generateCampaignStatusTable(campaigns) {
     return `
         <section class="delivery-tracking">
             <div class="tracking-header">
@@ -218,6 +209,14 @@ function generateCampaignStatusTable(campaigns, campaignGoals, materialDonations
                     </div>
                     <div class="count" id="pending-count">0건</div>
                 </div>
+                
+                
+                <div class="tracking-card" id="prepared-card" onclick="filterCampaigns('prepared')"> 
+                    <div class="card-content">
+                        <span>펀딩 대기 캠페인</span> <!-- 🔥 추가된 카드 -->
+                    </div>
+                    <div class="count" id="prepared-count">0건</div>
+                </div>
 
                 <div class="tracking-card" id="completed-card" onclick="filterCampaigns('completed')">
                     <div class="card-content">
@@ -227,14 +226,13 @@ function generateCampaignStatusTable(campaigns, campaignGoals, materialDonations
                 </div>
             </div>
 
-            ${generateFilterUI()}  <!-- ✅ 연도/분기 필터 추가 -->
+            ${generateFilterUI()}  
             <div id="table-container">
-                ${generateCampaignTable(campaigns, campaignGoals, materialDonations)}
+                ${generateCampaignTable(campaigns)}
             </div>
         </section>
     `;
 }
-
 //날짜
 function generateFilterUI() {
     const currentYear = new Date().getFullYear();
@@ -259,72 +257,59 @@ function generateFilterUI() {
     `;
 }
 
-// 📌 다른 버튼(진행/대기/종료)을 클릭할 때 필터 초기화
-function resetFilterUI() {
-    setTimeout(() => {
-        const yearSelect = document.getElementById("year-select");
-        const quarterSelect = document.getElementById("quarter-select");
 
-        if (!yearSelect || !quarterSelect) {
-            console.warn("⏳ 필터 UI 요소가 아직 생성되지 않았습니다. 실행 중단.");
-            return;
-        }
-
-        yearSelect.selectedIndex = 0;
-        quarterSelect.selectedIndex = 0;
-    }, 500);  // 500ms 후 실행하여 요소가 렌더링될 시간을 줌
-}
-
-// 📌 연도 & 분기를 기준으로 캠페인 필터링 (현재 선택된 상태 반영)
 function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
 
-    const quarterStartMonth = (selectedQuarter - 1) * 3 + 1;
+    // ✅ 분기 시작 월과 종료 월 설정
+    const quarterStartMonth = (selectedQuarter - 1) * 3;
     const quarterEndMonth = quarterStartMonth + 2;
 
-    const now = new Date();
+    // ✅ 선택한 분기의 시작일과 종료일 설정
+    const quarterStartDate = new Date(selectedYear, quarterStartMonth, 1);
+    const quarterEndDate = new Date(selectedYear, quarterEndMonth + 1, 0, 23, 59, 59);
 
-    // ✅ 현재 필터 상태를 반영한 캠페인 목록 가져오기
-    let filteredCampaigns = [];
+    console.log(`🔍 검색 범위: ${quarterStartDate.toISOString()} ~ ${quarterEndDate.toISOString()}`);
+    console.log(`📌 현재 선택된 필터: ${currentFilter}`);
 
-    if (currentFilter === "ongoing") {
-        filteredCampaigns = allCampaigns.filter(campaign => {
-            const startDate = new Date(campaign.startDate);
-            const endDate = new Date(campaign.endDate);
-            return startDate <= now && now <= endDate;
-        });
-    } else if (currentFilter === "pending") {
-        filteredCampaigns = allCampaigns.filter(campaign => !campaign.campaignStatus);
-    } else if (currentFilter === "completed") {
-        filteredCampaigns = allCampaigns.filter(campaign => {
-            const endDate = new Date(campaign.endDate);
-            return endDate < now;
-        });
-    } else {
-        // 기본적으로 전체 목록
-        filteredCampaigns = allCampaigns;
+    // ✅ 첫 검색 시에는 기본 필터를 all로 설정, 하지만 카드 클릭 후에는 유지
+    if (currentFilter === "ongoing" && !document.querySelector(".tracking-card.active")) {
+        currentFilter = "all";
     }
 
-    // ✅ 선택된 날짜 범위에 맞게 필터링 적용
-    const dateFilteredCampaigns = filteredCampaigns.filter(campaign => {
-        const startDate = new Date(campaign.startDate);
-        const campaignYear = startDate.getFullYear();
-        const campaignMonth = startDate.getMonth() + 1;
+    console.log(`📌 적용할 필터 상태: ${currentFilter}`);
 
-        return campaignYear === selectedYear && campaignMonth >= quarterStartMonth && campaignMonth <= quarterEndMonth;
+    let filteredCampaigns = allCampaigns.filter(campaign => {
+        const startDate = new Date(campaign.startDate);
+        const endDate = new Date(campaign.endDate);
+
+        let matchesFilter = (currentFilter === "all");
+
+        if (currentFilter === "ongoing") {
+            matchesFilter = (startDate <= new Date() && endDate >= new Date());
+        } else if (currentFilter === "pending") {
+            matchesFilter = !campaign.campaignStatus;
+        } else if (currentFilter === "completed") {
+            matchesFilter = (endDate < new Date());
+        } else if (currentFilter === "prepared") {
+            matchesFilter = (campaign.campaignStatus === 1 && startDate > new Date());
+        }
+
+        let matchesDate = (startDate.getFullYear() === selectedYear &&
+            startDate.getMonth() + 1 >= quarterStartMonth + 1 &&
+            startDate.getMonth() + 1 <= quarterEndMonth + 1);
+
+        return matchesFilter && matchesDate;
     });
 
-    // ✅ 필터링된 캠페인 테이블 렌더링
-    document.getElementById("table-container").innerHTML = generateCampaignTable(dateFilteredCampaigns, allCampaignGoals, allMaterialDonations);
+    // ✅ 검색 결과를 테이블에 반영
+    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
 
-    console.log(`🔎 검색 결과: ${dateFilteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
+    console.log(`✅ 최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
 }
 
-
-
-
-function generateCampaignTable(campaigns, campaignGoals = [], materialDonations = []) {
+function generateCampaignTable(campaigns) {
     if (campaigns.length === 0) {
         return `<div class="empty-message"><p>🚫 등록된 캠페인이 없습니다.</p></div>`;
     }
@@ -346,8 +331,8 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
     `;
 
     campaigns.forEach(campaign => {
-        const goal = campaignGoals.find(goal => goal.campaignId === campaign.campaignId);
-        const donations = materialDonations
+        const goal = allCampaignGoals.find(goal => goal.campaignId === campaign.campaignId);
+        const donations = allMaterialDonations
             .filter(donation => donation.campaignId === campaign.campaignId)
             .reduce((sum, donation) => sum + donation.quantity, 0);
 
@@ -381,6 +366,106 @@ function generateCampaignTable(campaigns, campaignGoals = [], materialDonations 
     tableHTML += `</tbody></table></div>`;
     return tableHTML;
 }
+
+function generatePendingCampaignTable(campaigns) {
+    if (campaigns.length === 0) {
+        return `<div class="empty-message"><p>🚫 승인 대기 중인 캠페인이 없습니다.</p></div>`;
+    }
+
+    let tableHTML = `
+        <div class="table-container">
+            <div class="table-header">
+                <button onclick="approveSelectedCampaigns()" class="bulk-approve-btn">선택된 캠페인 승인</button>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th><input type="checkbox" id="select-all" onclick="toggleAllCheckboxes(this)"></th>
+                        <th>캠페인 ID</th>
+                        <th>제목</th>
+                        <th>시작일</th>
+                        <th>종료일</th>
+                        <th>생성자</th>
+                        <th>승인</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    campaigns.forEach(campaign => {
+        tableHTML += `
+            <tr id="campaign-row-${campaign.campaignId}">
+                <td><input type="checkbox" class="campaign-checkbox" value="${campaign.campaignId}"></td>
+                <td>${campaign.campaignId}</td>
+                <td>${campaign.title}</td>
+                <td>${new Date(campaign.startDate).toLocaleDateString()}</td>
+                <td>${new Date(campaign.endDate).toLocaleDateString()}</td>
+                <td>${campaign.createdById || "정보 없음"}</td>
+                <td><button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button></td>
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table></div>`;
+
+    return tableHTML;
+}
+
+
+function toggleAllCheckboxes(selectAllCheckbox) {
+    const checkboxes = document.querySelectorAll(".campaign-checkbox");
+    checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
+}
+function approveSelectedCampaigns() {
+    const selectedCheckboxes = document.querySelectorAll(".campaign-checkbox:checked");
+
+    if (selectedCheckboxes.length === 0) {
+        alert("승인할 캠페인을 선택하세요.");
+        return;
+    }
+
+    selectedCheckboxes.forEach(checkbox => {
+        const campaignId = parseInt(checkbox.value);
+        approveCampaign(campaignId);
+    });
+}
+
+let allPendingCampaigns = [];
+function approveCampaign(campaignId) {
+    fetch(`/api/campaigns/${campaignId}/approve`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(`✅ 캠페인 ${campaignId} 승인 완료:`, data);
+
+            // ✅ 승인 완료 후 알림 팝업
+            alert("✅ 승인처리 되었습니다.");
+
+            // ✅ 최신 데이터를 가져와 카드 숫자 업데이트!
+            fetchCampaignStatus(); // 캠페인 전체 데이터를 다시 불러와서 카드 개수 업데이트
+            fetchPendingCampaigns(); // 승인 대기 캠페인 목록 다시 불러오기
+        })
+        .catch(error => {
+            console.error("❌ 캠페인 승인 오류:", error);
+        });
+}
+
+
+
+function fetchPendingCampaigns() {
+    fetch("/api/campaigns-pending")
+        .then(response => response.json())
+        .then(data => {
+            allPendingCampaigns = data; // ✅ 데이터를 전역 변수에 저장
+            document.getElementById("table-container").innerHTML = generatePendingCampaignTable(allPendingCampaigns);
+        })
+        .catch(error => {
+            console.error("❌ 승인 대기 캠페인 불러오기 오류:", error);
+        });
+}
+
 
 
 // ✅ 종료된 캠페인 테이블 생성 (펀딩 진행률 → 펀딩 결과)

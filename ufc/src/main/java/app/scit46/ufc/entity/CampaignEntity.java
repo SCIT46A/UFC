@@ -34,7 +34,7 @@ public class CampaignEntity {
     private LocalDateTime createdDate;
 
     @Column(name = "campaign_status", nullable = false)
-    private Boolean campaignStatus;
+    private Integer campaignStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)

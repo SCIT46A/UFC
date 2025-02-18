@@ -28,6 +28,6 @@ public class CreatorServiceImpl implements CreatorService { // ✅ 인터페이�
     public void approveCreator(Long creatorId) {
         CreatorEntity creator = creatorRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("창작자를 찾을 수 없습니다."));
-        creator.setCreatorStatus(true);
+        creator.setCreatorStatus(1);
     }
 }

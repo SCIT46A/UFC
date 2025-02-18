@@ -4,16 +4,18 @@ import app.scit46.ufc.entity.CampaignEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
 
     // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
-    @Query("SELECT c FROM CampaignEntity c JOIN FETCH c.createdBy WHERE c.campaignStatus = false")
+    @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = 0")
     List<CampaignEntity> findByPendingApproval();
 
-    // ✅ 전체 캠페인 조회 (N+1 문제 해결)
-    @Query("SELECT c FROM CampaignEntity c JOIN FETCH c.createdBy")
-    List<CampaignEntity> findAllWithCreator();
+
+    // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
+    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(int campaignStatus, LocalDateTime startDate);
 }
