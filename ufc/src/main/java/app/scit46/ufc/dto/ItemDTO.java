@@ -1,7 +1,6 @@
 package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.ItemEntity;
-import app.scit46.ufc.entity.PublicPhotoEntity;
 import lombok.*;
 
 @Getter
@@ -15,7 +14,7 @@ public class ItemDTO {
     private String name;
     private String description;
     private Integer price;
-    private PublicPhotoEntity photo;
+    private Long photo;
 
     public static ItemDTO toDTO(ItemEntity entity) {
         return ItemDTO.builder()
@@ -23,7 +22,7 @@ public class ItemDTO {
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
-                .photo(entity.getPhoto())
+                .photo(entity.getPhoto().getId())
                 .build();
     }
 }

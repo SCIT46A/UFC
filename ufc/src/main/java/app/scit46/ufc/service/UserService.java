@@ -42,6 +42,13 @@ public class UserService {
 //    }
 // ------------------ CRUD ------------------ //End
 
+    // 유저 이름으로 유저 조회 -> 유저 아이디 반환
+    public Long findUserIdByUserName(String userName) {
+        UserEntity user = userRepository.findByUserName(userName).orElse(null);
+        return user.getUserId();
+    }
+
+    // OAuth 인증정보로 유저 조회(회원정보조회)
     public UserEntity findUserByIdentity(String identity) {
         return userRepository.findByOauthId(identity).orElse(null);
     }

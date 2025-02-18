@@ -22,13 +22,14 @@ public class CampaignService {
 
     // 캠페인 생성
     public void createCampaign(CampaignDTO campaignDTO) {
-        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO);
+        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO, null, null);
         campaignRepository.save(campaign);
     }
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
     public List<CampaignDTO> readCampaignList(String searchKeyword) {
-        List<CampaignEntity> campaigns = campaignRepository.findByTitleContainingOrTagsContaining(searchKeyword, searchKeyword);
+        List<CampaignEntity> campaigns = campaignRepository.findByTitleContaining(searchKeyword); //임시조치
+        //List<CampaignEntity> campaigns = campaignRepository.findByTitleContainingOrTagsContaining(searchKeyword, searchKeyword);
         return campaigns.stream().map(CampaignDTO::toDTO).collect(Collectors.toList());
     }
 
@@ -66,8 +67,8 @@ public class CampaignService {
          * private String description; -> CampaignDTO ??
          * private List<Map<String, Number>> fundingItems; -> RewardMaterialDTO ??
          * private List<Map<String, ?>> rewardList; -> RewardMaterialDTO
-         * private String imageUrl; -> ImageDTO
-         * private Long imageId; -> ImageDTO
+         * private String imageUrl; -> ImageDTO xx
+         * private Long imageId; -> ImageDTO xx
          */
         // 태그 리스트 생성
         List<TagDTO> tagList = ccDTO.getTagList().stream()

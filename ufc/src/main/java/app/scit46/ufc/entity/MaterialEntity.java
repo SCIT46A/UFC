@@ -28,7 +28,7 @@ public class MaterialEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PublicPhotoEntity photo;
+    private ImageUrlEntity photo;
 
     // OneToMany: CampaignGoals.material 참조
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
@@ -42,7 +42,7 @@ public class MaterialEntity {
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
     private List<RewardMaterialEntity> rewardMaterials;
 
-    public static MaterialEntity toEntity(MaterialDTO dto, PublicPhotoEntity photo) {
+    public static MaterialEntity toEntity(MaterialDTO dto, ImageUrlEntity photo) {
         return MaterialEntity.builder()
                 .materialId(dto.getMaterialId())
                 .name(dto.getName())

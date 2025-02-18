@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApiController {
 
-    private CampaignService campaignService;
+    private final CampaignService campaignService;
 
     @PostMapping("/campaign/create")    
     public ResponseEntity<String> createCampaign(@RequestBody CreateCampaignDTO campaign) {

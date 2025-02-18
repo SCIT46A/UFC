@@ -6,6 +6,8 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,13 +26,20 @@ public class CampaignEntity {
     @Column(name = "title", nullable = false, length = 150)
     private String title;
 
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
+    @Column(name = "send_date", nullable = false)
+    private LocalDateTime sendDate;
+
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -42,7 +51,7 @@ public class CampaignEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PublicPhotoEntity photo;
+    private ImageUrlEntity photo;
 
     // OneToMany relationships
     @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY)
@@ -70,13 +79,15 @@ public class CampaignEntity {
     @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static CampaignEntity toEntity(CampaignDTO dto, CreatorEntity createdBy, PublicPhotoEntity photo) {
+    public static CampaignEntity toEntity(CampaignDTO dto, CreatorEntity createdBy, ImageUrlEntity photo) {
         return CampaignEntity.builder()
-                .campaignId(dto.getCampaignId())
+                //.campaignId(dto.getCampaignId())  // 기본키 자동 생성이므로 주석처리
                 .title(dto.getTitle())
+                .description(dto.getDescription())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .createdDate(dto.getCreatedDate())
+                .sendDate(dto.getSendDate())
+                //.createdDate(dto.getCreatedDate())  // 기본키 자동 생성이므로 주석처리
                 .createdBy(createdBy)
                 .isSuccess(dto.getIsSuccess())
                 .photo(photo)

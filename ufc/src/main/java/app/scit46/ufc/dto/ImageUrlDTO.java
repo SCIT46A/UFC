@@ -19,6 +19,7 @@ public class ImageUrlDTO {
     private String imageId;
     private String filename;
     private LocalDateTime uploadedAt;
+    private Long uploadedBy;
 
     public static ImageUrlDTO toDTO(ImageUrlEntity entity){
         return ImageUrlDTO.builder()
@@ -26,6 +27,7 @@ public class ImageUrlDTO {
                 .imageId(entity.getImageId())
                 .filename(entity.getFilename())
                 .uploadedAt(entity.getUploadedAt())
+                .uploadedBy(entity.getUploadedBy().getUserId())
                 .build();
     }
 }

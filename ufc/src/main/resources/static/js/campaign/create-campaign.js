@@ -724,35 +724,27 @@ $(document).ready(function () {
             sendData.sendDate = new Date(fundingSendDate.value).toISOString();   // 캠페인 발송일
 
             console.log(JSON.stringify(sendData));
-            
+
             // 이미지 파일 가져오기
             const imageFile = imageInput.files[0];
             
             if (!imageFile) {
-                alert('캠페인 이미지를 선택해주세요.');
+                alert('캠페인 이미지가 등록되지 않았습니다.');
                 return;
             }
             
             // 로딩 표시
             showLoading();
             
-            // Cloudflare에 이미지 업로드
-            const uploadResult = await imageUploader.uploadImage(imageFile);
-            
-            if (!uploadResult.success) {
-                throw new Error('이미지 업로드에 실패했습니다.');
-            }
-            
-            // 캠페인 데이터에 이미지 URL 추가
-            sendData.imageUrl = uploadResult.imageUrl;
-            sendData.imageId = uploadResult.imageId;
+            // 캠페인 데이터에 이미지 첨부
+            sendData.image = imageFile;
 
             console.log(JSON.stringify(sendData));
             
             // 서버로 캠페인 데이터 전송
             const response = await $.ajax({
-                url: '/api/campaigns',
-            type: 'POST',
+                url: '/api/campaign/create',
+                type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(sendData)
             });

@@ -1,7 +1,6 @@
 package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.entity.PrivatePhotoEntity;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -23,7 +22,7 @@ public class UserDTO {
     private String roles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private PrivatePhotoEntity photoId;
+    private Long photoId;
     private String intro;
     private int isMarketed;
     private int userStatus;
@@ -41,7 +40,7 @@ public class UserDTO {
                 .roles(entity.getRoles())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
-                .photoId(entity.getPhotoId())
+                .photoId(entity.getPhotoId().getId())
                 .intro(entity.getIntro())
                 .isMarketed(entity.getIsMarketed())
                 .userStatus(entity.getUserStatus())

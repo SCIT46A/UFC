@@ -25,7 +25,7 @@ public class CreatorEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "business_cert")
-    private PrivatePhotoEntity businessCert;
+    private ImageUrlEntity businessCert;
 
     @Column(name = "b_regist_number", nullable = false, length = 30)
     private String bRegistNumber;
@@ -41,11 +41,11 @@ public class CreatorEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "back_img_url")
-    private PrivatePhotoEntity backImgUrl;
+    private ImageUrlEntity backImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pro_img_url")
-    private PrivatePhotoEntity proImgUrl;
+    private ImageUrlEntity proImgUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "own_user", nullable = false)
@@ -64,9 +64,9 @@ public class CreatorEntity {
     private List<LikeEntity> likes;
 
     public static CreatorEntity toEntity(CreatorDTO dto,
-                                         PrivatePhotoEntity businessCert,
-                                         PrivatePhotoEntity backImgUrl,
-                                         PrivatePhotoEntity proImgUrl,
+                                         ImageUrlEntity businessCert,
+                                         ImageUrlEntity backImgUrl,
+                                         ImageUrlEntity proImgUrl,
                                          UserEntity ownUser) {
         return CreatorEntity.builder()
                 .creatorId(dto.getCreatorId())
