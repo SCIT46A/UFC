@@ -440,7 +440,7 @@ $(document).ready(function () {
 
     let fundingItems = []; //[{"name": '', "amount": ''}] rewardList.funding의 name별 amount를 더하여 표현(1.1배 증가 예정)
     let rewardItems = []; //[{"name": '', "amount": ''}] rewardList.reward의 name별 amount를 더하여 표현(1.1배 증가 예정)
-    let rewardList = {"name":[], "amount":[], "funding": [], "reward": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
+    let rewardList = {"name":"", "amount":0, "funding": [], "reward": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
 
 
     // 리워드 입력 필드 포커스 이벤트
@@ -722,8 +722,12 @@ $(document).ready(function () {
             sendData.startDate = new Date(fundingStartDate.value).toISOString(); // 캠페인 시작일
             sendData.endDate = new Date(fundingEndDate.value).toISOString();     // 캠페인 종료일
             sendData.sendDate = new Date(fundingSendDate.value).toISOString();   // 캠페인 발송일
+            sendData.userName = document.querySelector(".header-box-top-pe-my-in-name").textContent; // 헤더의 사용자 이름(검토 필요)
 
             console.log(JSON.stringify(sendData));
+
+            // 로딩 표시
+            showLoading();
 
             // 이미지 파일 가져오기
             const imageFile = imageInput.files[0];
@@ -731,14 +735,28 @@ $(document).ready(function () {
             if (!imageFile) {
                 alert('캠페인 이미지가 등록되지 않았습니다.');
                 return;
+            }else{
+                try {
+                    const formData = new FormData();
+                    formData.append('file', imageFile);
+
+                    const response = await fetch('/api/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('이미지 업로드에 실패했습니다.');
+                    }
+
+                    const imageUrl = await response.text();
+                    sendData.imageId = imageUrl;
+                } catch (error) {
+                    console.error('Error:', error);
+                    throw error;
+                }
             }
             
-            // 로딩 표시
-            showLoading();
-            
-            // 캠페인 데이터에 이미지 첨부
-            sendData.image = imageFile;
-
             console.log(JSON.stringify(sendData));
             
             // 서버로 캠페인 데이터 전송
@@ -752,7 +770,7 @@ $(document).ready(function () {
             // 성공 시 처리
             if (response.success) {
                 alert('캠페인이 성공적으로 등록되었습니다.');
-                window.location.href = '/campaigns/' + response.campaignId;
+                window.location.href = '/campaign/' + response.campaignId;
             } else {
                 throw new Error(response.message || '캠페인 등록에 실패했습니다.');
             }

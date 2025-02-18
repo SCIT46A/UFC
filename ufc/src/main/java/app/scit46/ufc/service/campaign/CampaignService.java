@@ -6,25 +6,32 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.custom.CreateCampaignDTO;
+import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.entity.CampaignEntity;
+import app.scit46.ufc.entity.CampaignTagEntity;
 import app.scit46.ufc.entity.TagEntity;
+import app.scit46.ufc.repository.CreatorRepository;
+import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
+import app.scit46.ufc.repository.tag.CampaignTagRepository;
+import app.scit46.ufc.service.material.MaterialService;
+import app.scit46.ufc.service.material.RewardMaterialService;
+import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class CampaignService {
     private final CampaignRepository campaignRepository;
+    private final CreatorRepository creatorRepository;
+    private final UserRepository userRepository;
+    private final TagService tagService;
+    private final CampaignTagRepository campaignTagRepository;
+    private final MaterialService materialService;
+    private final RewardMaterialService rewardMaterialService;
+    
 
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
-
-    // 캠페인 생성
-    public void createCampaign(CampaignDTO campaignDTO) {
-        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO, null, null);
-        campaignRepository.save(campaign);
-    }
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
     public List<CampaignDTO> readCampaignList(String searchKeyword) {
@@ -33,13 +40,13 @@ public class CampaignService {
         return campaigns.stream().map(CampaignDTO::toDTO).collect(Collectors.toList());
     }
 
-
     // 캠페인 조회
     public CampaignDTO readCampaign(Long campaignId) {   
         CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
         return CampaignDTO.toDTO(campaign);
     }   
 
+    // 캠페인 수정 / 캠페인 아이디와 캠페인 요소 받아서 수정
     public CampaignEntity updateCampaign(Long campaignId, CampaignDTO campaignDTO) {
         CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
         if (campaign != null) {
@@ -53,10 +60,19 @@ public class CampaignService {
     public void deleteCampaign(Long campaignId) {
         campaignRepository.deleteById(campaignId);
     }
+    
+    // 캠페인 생성
+    public Long createCampaign(CampaignDTO campaignDTO, Long creatorId, String imageId) {
+        // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
+        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO, creatorId, imageId);
+        // 캠페인 엔티티 저장 후 캠페인 아이디 반환
+        return campaignRepository.save(campaign).getCampaignId();
+    }
+
     // ================== 기본적인 CRUD 기능 작성 ================== //End
 
-
-    public void createCampaign(CreateCampaignDTO ccDTO){
+    // GenerateCampaign -> 
+    public Long createCampaign(GenerateCampaignDTO ccDTO){
         /*
          * CreateCampaignDTO의 필드드
          * private List<String> tagList; -> List<TagDTO>
@@ -64,18 +80,15 @@ public class CampaignService {
          * private LocalDateTime startDate; -> CampaignDTO
          * private LocalDateTime endDate; -> CampaignDTO
          * private LocalDateTime sendDate; -> CampaignDTO
-         * private String description; -> CampaignDTO ??
+         * private String description; -> CampaignDTO
          * private List<Map<String, Number>> fundingItems; -> RewardMaterialDTO ??
          * private List<Map<String, ?>> rewardList; -> RewardMaterialDTO
          * private String imageUrl; -> ImageDTO xx
          * private Long imageId; -> ImageDTO xx
          */
-        // 태그 리스트 생성
-        List<TagDTO> tagList = ccDTO.getTagList().stream()
-                .map(tag -> TagDTO.builder()
-                        .content(tag)
-                        .build())
-                .collect(Collectors.toList());
+        
+        // 이미 저장처리된 이미지 아이디 조회
+        String imageId = ccDTO.getImageId();
 
         // 캠페인 엔티티 생성
         CampaignDTO campaign = CampaignDTO.builder()
@@ -85,5 +98,57 @@ public class CampaignService {
                 .endDate(ccDTO.getEndDate())
                 .sendDate(ccDTO.getSendDate())
                 .build();
+
+        // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser -> UserEntity.userId -> CreatorEntity.creatorId)
+        Long creatorId = creatorRepository.findByOwnUser(userRepository.findByUserName(ccDTO.getUserName()).get()).getCreatorId();
+
+        // 캠페인 생성 및 캠페인 아이디 반환
+        Long campaignId = createCampaign(campaign, creatorId, imageId);
+
+        // 태그 리스트 생성
+        // List<TagDTO> tagList = ccDTO.getTagList().stream()
+        //         .map(tag -> TagDTO.builder()
+        //                 .content(tag)
+        //                 .build())
+        //         .collect(Collectors.toList());
+
+        // 지정된 태그를 저장/조회 후 태그 아이디 리스트 반환
+        List<Integer> tagIds = tagService.saveAndFindTagIds(ccDTO.getTagList());
+
+        // 태그 아이디와 캠페인 아이디를 CampaignTagEntity(태그 아이디와 캠페인 아이디를 연결하는 엔티티)에 저장
+        for (Integer tagId : tagIds) {
+            CampaignTagEntity campaignTag = CampaignTagEntity.builder()
+                    .campaign(CampaignEntity.builder().campaignId(campaignId).build())
+                    .tag(TagEntity.builder().tagId(tagId).build())
+                    .build();
+
+            campaignTagRepository.save(campaignTag);
+        }
+
+        List<Long> materialIds = materialService.addMaterial(ccDTO.getFundingItems());
+
+        // 펀딩 아이템 생성
+        for (GenerateCampaignDTO.RewardListDTO fundingItem : ccDTO.getFundingItems()) {
+            
+        }
+
+        // 리워드 생성
+        for (GenerateCampaignDTO.RewardListDTO rewardList : ccDTO.getRewardList()) {
+
+        }
+
+        return campaignId;
+    }
+
+    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO){
+        CampaignDTO campaign = CampaignDTO.builder()
+                .title(ccDTO.getTitle())
+                .description(ccDTO.getDescription())
+                .startDate(ccDTO.getStartDate())
+                .endDate(ccDTO.getEndDate())
+                .sendDate(ccDTO.getSendDate())
+                .build();
+
+        updateCampaign(campaignId, campaign);
     }
 }

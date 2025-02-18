@@ -23,8 +23,8 @@ public class MaterialEntity {
     @Column(name = "name", nullable = false, unique = true, length = 100)
     private String name;
 
-    @Column(name = "description", length = 255)
-    private String description;
+    //@Column(name = "description", length = 255)
+    //private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
@@ -46,7 +46,7 @@ public class MaterialEntity {
         return MaterialEntity.builder()
                 .materialId(dto.getMaterialId())
                 .name(dto.getName())
-                .description(dto.getDescription())
+                //.description(dto.getDescription())
                 .photo(photo)
                 .build();
     }

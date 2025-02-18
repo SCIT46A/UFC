@@ -29,7 +29,7 @@ public class CampaignTagEntity {
 
     public static CampaignTagEntity toEntity(CampaignTagDTO dto, CampaignEntity campaign, TagEntity tag) {
         return CampaignTagEntity.builder()
-                .cTagId(dto.getCTagId())
+                //.cTagId(dto.getCTagId())  // 기본값 자동 생성
                 .campaign(campaign)
                 .tag(tag)
                 .build();

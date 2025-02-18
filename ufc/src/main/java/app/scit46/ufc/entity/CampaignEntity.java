@@ -1,6 +1,8 @@
 package app.scit46.ufc.entity;
 
 import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.ImageUrlDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -79,18 +81,18 @@ public class CampaignEntity {
     @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static CampaignEntity toEntity(CampaignDTO dto, CreatorEntity createdBy, ImageUrlEntity photo) {
+    public static CampaignEntity toEntity(CampaignDTO dto, Long createdBy, String photo) {
         return CampaignEntity.builder()
-                //.campaignId(dto.getCampaignId())  // 기본키 자동 생성이므로 주석처리
+                //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
                 .title(dto.getTitle())
                 .description(dto.getDescription())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
                 .sendDate(dto.getSendDate())
-                //.createdDate(dto.getCreatedDate())  // 기본키 자동 생성이므로 주석처리
-                .createdBy(createdBy)
+                //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
+                .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
                 .isSuccess(dto.getIsSuccess())
-                .photo(photo)
+                .photo(ImageUrlEntity.builder().imageId(photo).build())
                 .build();
     }
 }

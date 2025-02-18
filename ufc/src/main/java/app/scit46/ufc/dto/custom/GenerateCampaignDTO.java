@@ -19,9 +19,10 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @Builder
-public class CreateCampaignDTO {
+public class GenerateCampaignDTO {
     // Tag
-    private List<String> tagList;
+    private String userName; // 헤더에 존재하는 사용자 이름(검토 필요)
+    private List<String> tagList; // 태그 리스트 -> 캠페인과 연결된 CampaignTagDTO/Entity와 연계 필요
     // Campaign
     private String title;
     private String description;
@@ -31,14 +32,15 @@ public class CreateCampaignDTO {
     // Reward / Material
     private List<RewardListDTO> fundingItems;
     private List<RewardListDTO> rewardList;
-    // Image
-    private MultipartFile image;
+    // Image 선행 로직으로 이미지가 먼저 업로드 된 후 반환된 이미지 ID를 받아옴옴
+    private String imageId;
+    //private MultipartFile image;
 
     @Getter
     @Setter
     public class RewardListDTO {
         private String name; // -> ItemDTO
-        private String amount; // -> Reward
+        private Integer amount; // -> Reward
     }
 
     //private String imageUrl; // 이미지 자체를 받아오는 것으로 변경
