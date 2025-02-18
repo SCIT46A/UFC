@@ -100,10 +100,7 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-    // ✅ 모든 태그를 포함하는지 확인하는 메서드
-    private boolean containsAllTags(List<String> dtoTags, List<String> searchTags) {
-        return searchTags.stream().allMatch(dtoTags::contains);
-    }
+
 
 
 
@@ -116,8 +113,13 @@ public class SearchService {
                                            String donationFilter,
                                            List<String> tagFilters) {
         List<SearchResultDTO> results = searchRepository.findSearchResults(keyword);
+
+        // 🔹 유사도 기반 정렬 추가 (Levenshtein Distance 사용)
+        results.sort(Comparator.comparingInt(dto -> SimilarityUtil.computeDistance(dto.getTitle(), keyword)));
+
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
+
 
     /**
      * ② 진행 중인 캠페인 조회
@@ -154,6 +156,40 @@ public class SearchService {
         List<SearchResultDTO> results = searchRepository.findSales();
         return applyFiltersAndSorting(results, sortType, null, tagFilters);
     }
+
+//  5. 주목할 만한 캠페인 3개
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> findLowestDonationRateCampaigns(){
+        return searchRepository.findLowestDonationRateCampaigns();
+    }
+
+    //  6. 인기있는 캠페인 10개
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> findTop10CampaignsByLikes(){
+        return searchRepository.findTop10CampaignsByLikes();
+    }
+
+    //  7. 인기있는 상품 10개
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> findTop10ProductsByLikes(){
+        return searchRepository.findTop10ProductsByLikes();
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /**
      * 공통 필터 및 정렬 적용 메서드

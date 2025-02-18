@@ -732,6 +732,20 @@ main {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
 
+.main-resent-all-add{
+    transform: translate3d(0px, 0px, 0px);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    box-sizing: content-box;
+    margin-left: auto;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
 .main-resent-pe{
     width: 224px;
     margin-right: 12px;
@@ -894,9 +908,10 @@ main {
 }
 
 .image-container {
-    position: relative;  /* 부모 요소를 기준으로 위치 조정 가능하게 설정 */
-    display: inline-block; /* 이미지 크기에 맞게 조정 */
-    width: 100%; /* 부모 크기를 100%로 유지 */
+    width: 100%;
+    position: relative;
+    flex: 0  100%; /* 한 개씩 표시 */
+    
 }
 
 .main-container-title {
@@ -925,3 +940,19 @@ main {
     position: relative;
 }
 
+.image-container img{
+    width: 100%;
+    display: block;
+}
+
+.slider-container{
+    width: 100%;
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    position: relative;
+}
+
+.slider{
+    display: flex; /* 한 줄 배치 */
+    transition: transform 0.5s ease-in-out;
+    width: 300%; /* 3개의 이미지니까 300% */
+}

@@ -135,6 +135,24 @@ public class ApiController {
         return ResponseEntity.ok(results);
     }
 
+    @GetMapping("/lowertDonation")
+    public ResponseEntity<List<SearchResultDTO>> lowertDonation() {
+        List<SearchResultDTO> results = searchService.findLowestDonationRateCampaigns();
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/likeTopCampaign")
+    public ResponseEntity<List<SearchResultDTO>> findTop10CampaignsByLikes() {
+        List<SearchResultDTO> results = searchService.findTop10CampaignsByLikes();
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/likeTopProduct")
+    public ResponseEntity<List<SearchResultDTO>> findTop10ProductsByLikes() {
+        List<SearchResultDTO> results = searchService.findTop10ProductsByLikes();
+        return ResponseEntity.ok(results);
+    }
+
 
 
 }

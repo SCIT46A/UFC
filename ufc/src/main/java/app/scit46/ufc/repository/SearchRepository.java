@@ -54,13 +54,13 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "    NULL AS donationPercentage, " +
             "    NULL AS createdDate, " +
             "    CAST((SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) AS SIGNED) AS likes, " +
-                    "    (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
-                    "         JOIN Tags t ON pt.tag_id = t.tag_id " +
-                    "         WHERE pt.product_id = p.product_id) AS tags " +
-                    "  FROM Products p " +
-                    "  INNER JOIN Items i ON i.item_id = p.item_id " +
-                    "  WHERE i.name LIKE CONCAT('%', :keyword, '%') " +
-                    ") AS results",
+            "    (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
+            "         JOIN Tags t ON pt.tag_id = t.tag_id " +
+            "         WHERE pt.product_id = p.product_id) AS tags " +
+            "  FROM Products p " +
+            "  INNER JOIN Items i ON i.item_id = p.item_id " +
+            "  WHERE i.name LIKE CONCAT('%', :keyword, '%') " +
+            ") AS results",
     nativeQuery = true)
     List<SearchResultDTO> findSearchResults(@Param("keyword") String keyword);
 
@@ -127,11 +127,93 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  NULL AS donationPercentage, " +
             "  NULL AS createdDate, " +
             "  CAST((SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) AS SIGNED) AS likes, " +
-                    "  (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
-                    "         JOIN Tags t ON pt.tag_id = t.tag_id " +
-                    "         WHERE pt.product_id = p.product_id) AS tags " +
-                    "FROM Products p " +
-                    "INNER JOIN Items i ON i.item_id = p.item_id",
+            "  (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
+            "         JOIN Tags t ON pt.tag_id = t.tag_id " +
+            "         WHERE pt.product_id = p.product_id) AS tags " +
+            "FROM Products p " +
+            "INNER JOIN Items i ON i.item_id = p.item_id",
     nativeQuery = true)
     List<SearchResultDTO> findSales();
+
+
+    /**
+     * 캠페인 좋아요 많은 순 상위 10개 조회
+     */
+    @Query(value = "SELECT " +
+            "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
+            "  'campaign' AS type, " +
+            "  CAST(c.photo_id AS SIGNED) AS imageId, " +
+            "  (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = c.created_by) AS sellerName, " +
+            "  c.title AS title, " +
+            "  (SELECT cb.title FROM CampaignBoards cb WHERE cb.campaign_id = c.campaign_id " +
+            "         ORDER BY cb.created_date DESC LIMIT 1) AS description, " +
+            "  NULL AS price, " +
+            "  CAST(DATEDIFF(c.end_date, CURRENT_DATE) AS SIGNED) AS remainingDays, " +
+            "  CAST(IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md WHERE md.campaign_id = c.campaign_id), 0) AS SIGNED) AS donatedQuantity, " +
+            "  IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md WHERE md.campaign_id = c.campaign_id) * 100.0 / " +
+            "         NULLIF((SELECT SUM(cg.quantity_required) FROM CampaignGoals cg WHERE cg.campaign_id = c.campaign_id), 0), 0) AS donationPercentage, " +
+            "  c.created_date AS createdDate, " +
+            "  CAST((SELECT COUNT(*) FROM Likes l WHERE l.campaign_id = c.campaign_id) AS SIGNED) AS likes, " +
+            "  (SELECT GROUP_CONCAT(t.content) FROM CampaignTags ct " +
+            "         JOIN Tags t ON ct.tag_id = t.tag_id " +
+            "         WHERE ct.campaign_id = c.campaign_id) AS tags " +
+            "FROM Campaigns c " +
+            "ORDER BY (SELECT COUNT(*) FROM Likes l WHERE l.campaign_id = c.campaign_id) DESC " +
+            "LIMIT 10",
+            nativeQuery = true)
+    List<SearchResultDTO> findTop10CampaignsByLikes();
+
+    /**
+     * 제품 좋아요 많은 순 상위 10개 조회
+     */
+    @Query(value = "SELECT " +
+            "  CAST(p.product_id AS SIGNED) AS originalId, " +
+            "  'product' AS type, " +
+            "  CAST(i.photo_id AS SIGNED) AS imageId, " +
+            "  (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = p.created_by) AS sellerName, " +
+            "  i.name AS title, " +
+            "  i.description AS description, " +
+            "  i.price AS price, " +
+            "  NULL AS remainingDays, " +
+            "  NULL AS donatedQuantity, " +
+            "  NULL AS donationPercentage, " +
+            "  NULL AS createdDate, " +
+            "  CAST((SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) AS SIGNED) AS likes, " +
+            "  (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
+            "         JOIN Tags t ON pt.tag_id = t.tag_id " +
+            "         WHERE pt.product_id = p.product_id) AS tags " +
+            "FROM Products p " +
+            "INNER JOIN Items i ON i.item_id = p.item_id " +
+            "ORDER BY (SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) DESC " +
+            "LIMIT 10",
+            nativeQuery = true)
+    List<SearchResultDTO> findTop10ProductsByLikes();
+
+    // 예) 최근 생성된 순서로 캠페인 3개만 가져오기
+    @Query(value = "SELECT " +
+            "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
+            "  'campaign' AS type, " +
+            "  CAST(c.photo_id AS SIGNED) AS imageId, " +
+            "  (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = c.created_by) AS sellerName, " +
+            "  c.title AS title, " +
+            "  (SELECT cb.title FROM CampaignBoards cb WHERE cb.campaign_id = c.campaign_id " +
+            "         ORDER BY cb.created_date DESC LIMIT 1) AS description, " +
+            "  NULL AS price, " +
+            "  CAST(DATEDIFF(c.end_date, CURRENT_DATE) AS SIGNED) AS remainingDays, " +
+            "  CAST(IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md " +
+            "               WHERE md.campaign_id = c.campaign_id), 0) AS SIGNED) AS donatedQuantity, " +
+            "  IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md WHERE md.campaign_id = c.campaign_id) " +
+            "         * 100.0 / NULLIF((SELECT SUM(cg.quantity_required) FROM CampaignGoals cg " +
+            "                          WHERE cg.campaign_id = c.campaign_id), 0), 0) AS donationPercentage, " +
+            "  c.created_date AS createdDate, " +
+            "  CAST((SELECT COUNT(*) FROM Likes l WHERE l.campaign_id = c.campaign_id) AS SIGNED) AS likes, " +
+            "  (SELECT GROUP_CONCAT(t.content) FROM CampaignTags ct " +
+            "         JOIN Tags t ON ct.tag_id = t.tag_id " +
+            "         WHERE ct.campaign_id = c.campaign_id) AS tags " +
+            "FROM Campaigns c " +
+            "WHERE c.start_date <= CURRENT_DATE AND c.end_date >= CURRENT_DATE " +
+            "ORDER BY donationPercentage ASC " +
+            "LIMIT 3",
+            nativeQuery = true)
+    List<SearchResultDTO> findLowestDonationRateCampaigns();
 }
