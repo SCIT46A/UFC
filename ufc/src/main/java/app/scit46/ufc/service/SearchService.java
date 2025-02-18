@@ -105,123 +105,123 @@ public class SearchService {
         return searchTags.stream().allMatch(dtoTags::contains);
     }
 
-    @Transactional
-    public List<SearchResultDTO> search(String keyword, String sortType, String donationFilter, List<String> tagFilters) {
-        List<SearchResultDTO> results = new ArrayList<>();
 
-        // ✅ 전체 데이터를 가져오도록 변경
-        List<CampaignEntity> campaigns = keyword.isEmpty() ? campaignRepository.findAll() : campaignRepository.findByTitleContaining(keyword);
-        for (CampaignEntity campaign : campaigns) {
-            Long imageId = (campaign.getPhoto() != null) ? campaign.getPhoto().getPhotoId() : null;
-            String sellerName = (campaign.getCreatedBy() != null) ? campaign.getCreatedBy().getBName() : "Unknown";
-            String description = campaign.getBoards().isEmpty() ? "" : campaign.getBoards().get(0).getTitle();
-            LocalDateTime now = LocalDateTime.now();
-            long remainingDays = ChronoUnit.DAYS.between(now, campaign.getEndDate());
 
-            int totalDonated = campaign.getMaterialDonations().stream().mapToInt(d -> d.getQuantity()).sum();
-            int totalRequired = campaign.getCampaignGoals().stream().mapToInt(g -> g.getQuantityRequired()).sum();
-            double donationPercentage = totalRequired > 0 ? ((double) totalDonated / totalRequired) * 100 : 0;
+//    ---------------------------------------------------------------------------------
 
-            int likes = likeRepository.countByCampaign(campaign);
-            List<String> tags = campaign.getCampaignTags().stream().map(ct -> ct.getTag().getContent()).collect(Collectors.toList());
 
-            SearchResultDTO dto = SearchResultDTO.builder()
-                    .originalId(campaign.getCampaignId())
-                    .type("campaign")
-                    .imageId(imageId)
-                    .sellerName(sellerName)
-                    .title(campaign.getTitle())
-                    .description(description)
-                    .price(null)
-                    .remainingDays(remainingDays)
-                    .donatedQuantity(totalDonated)
-                    .donationPercentage(donationPercentage)
-                    .createdDate(campaign.getCreatedDate())
-                    .likes(likes)
-                    .tags(tags)
-                    .build();
-            results.add(dto);
-        }
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> searchAll(String keyword,
+                                           String sortType,
+                                           String donationFilter,
+                                           List<String> tagFilters) {
+        List<SearchResultDTO> results = searchRepository.findSearchResults(keyword);
+        return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
+    }
 
-        // ✅ 전체 데이터를 가져오도록 변경
-        List<ProductEntity> products = keyword.isEmpty() ? productRepository.findAll() : productRepository.findByItem_NameContaining(keyword);
-        for (ProductEntity product : products) {
-            Long imageId = (product.getItem().getPhoto() != null) ? product.getItem().getPhoto().getPhotoId() : null;
-            String sellerName = (product.getCreatedBy() != null) ? product.getCreatedBy().getBName() : "Unknown";
-            String title = product.getItem().getName();
-            String description = product.getItem().getDescription();
-            Integer price = product.getItem().getPrice();
-            int likes = likeRepository.countByProduct(product);
-            List<String> tags = product.getProductTags().stream().map(pt -> pt.getTag().getContent()).collect(Collectors.toList());
+    /**
+     * ② 진행 중인 캠페인 조회
+     * → 전체 진행 중인 데이터를 불러온 후 태그, 기부 퍼센트, 정렬 필터를 적용
+     */
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> getOngoingCampaigns(String sortType,
+                                                     String donationFilter,
+                                                     List<String> tagFilters) {
+        List<SearchResultDTO> results = searchRepository.findOngoingCampaigns();
+        return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
+    }
 
-            SearchResultDTO dto = SearchResultDTO.builder()
-                    .originalId(product.getProductId())
-                    .type("product")
-                    .imageId(imageId)
-                    .sellerName(sellerName)
-                    .title(title)
-                    .description(description)
-                    .price(price)
-                    .remainingDays(null)
-                    .donatedQuantity(null)
-                    .donationPercentage(null)
-                    .createdDate(null)
-                    .likes(likes)
-                    .tags(tags)
-                    .build();
-            results.add(dto);
-        }
+    /**
+     * ③ 진행 예정인 캠페인 조회
+     * → 전체 진행 예정 데이터를 불러온 후 태그, 기부 퍼센트, 정렬 필터를 적용
+     */
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> getUpcomingCampaigns(String sortType,
+                                                      String donationFilter,
+                                                      List<String> tagFilters) {
+        List<SearchResultDTO> results = searchRepository.findUpcomingCampaigns();
+        return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
+    }
 
-        // ✅ 태그 필터 적용 (모든 태그를 포함하는 항목만 남김)
+    /**
+     * ④ 판매 (제품) 조회
+     * → 전체 판매 데이터를 불러온 후 태그와 정렬 필터를 적용
+     * (제품은 기부 퍼센트 필터 대상이 아님)
+     */
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> getSales(String sortType,
+                                          List<String> tagFilters) {
+        List<SearchResultDTO> results = searchRepository.findSales();
+        return applyFiltersAndSorting(results, sortType, null, tagFilters);
+    }
+
+    /**
+     * 공통 필터 및 정렬 적용 메서드
+     * - tagFilters: DTO의 tags(콤마 구분 문자열)를 분리하여 포함 여부 확인
+     * - donationFilter: 캠페인 타입에만 적용
+     * - sortType: 최신(latest), 마감일(deadline), 좋아요(like) 등
+     */
+    private List<SearchResultDTO> applyFiltersAndSorting(List<SearchResultDTO> results,
+                                                         String sortType,
+                                                         String donationFilter,
+                                                         List<String> tagFilters) {
+        // 1. 태그 필터 적용 (이미 List<String> 타입)
         if (tagFilters != null && !tagFilters.isEmpty()) {
             results = results.stream()
-                    .filter(dto -> containsAllTags(dto.getTags(), tagFilters))
+                    .filter(dto -> {
+                        if (dto.getTags() != null && !dto.getTags().isEmpty()) {
+                            return dto.getTags().containsAll(tagFilters);
+                        }
+                        return false;
+                    })
                     .collect(Collectors.toList());
         }
 
-        // ✅ 기부 퍼센트 필터링 추가
+        // 2. 기부 퍼센트 필터 (캠페인 타입에만 적용)
         if (donationFilter != null) {
-            switch (donationFilter) {
-                case "below50":  // 50% 이하
-                    results = results.stream()
-                            .filter(dto -> dto.getDonationPercentage() != null && dto.getDonationPercentage() <= 50)
-                            .collect(Collectors.toList());
-                    break;
-                case "between51to100":  // 51~100%
-                    results = results.stream()
-                            .filter(dto -> dto.getDonationPercentage() != null && dto.getDonationPercentage() > 50 && dto.getDonationPercentage() < 100)
-                            .collect(Collectors.toList());
-                    break;
-                case "above100":  // 100% 이상
-                    results = results.stream()
-                            .filter(dto -> dto.getDonationPercentage() != null && dto.getDonationPercentage() >= 100)
-                            .collect(Collectors.toList());
-                    break;
-            }
+            results = results.stream()
+                    .filter(dto -> {
+                        if ("campaign".equals(dto.getType()) && dto.getDonationPercentage() != null) {
+                            double perc = dto.getDonationPercentage();
+                            switch (donationFilter) {
+                                case "below50": return perc <= 50;
+                                case "between51to100": return perc > 50 && perc < 100;
+                                case "above100": return perc >= 100;
+                                default: return true;
+                            }
+                        }
+                        // 제품은 기부 퍼센트 필터 적용 대상이 아님
+                        return true;
+                    })
+                    .collect(Collectors.toList());
         }
 
-        // ✅ 정렬 적용
-        if (sortType == null || sortType.equals("null")) {
-            results.sort(Comparator.comparingInt(dto -> SimilarityUtil.computeDistance(dto.getTitle(), keyword)));
-        } else {
+        // 3. 정렬 처리
+        if (sortType != null) {
             switch (sortType) {
                 case "latest":
-                    results.sort(Comparator.comparing(SearchResultDTO::getCreatedDate, Comparator.nullsLast(Comparator.reverseOrder())));
+                    results.sort(Comparator.comparing(SearchResultDTO::getCreatedDate,
+                            Comparator.nullsLast(Comparator.reverseOrder())));
                     break;
                 case "deadline":
-                    results = results.stream().filter(dto -> dto.getRemainingDays() != null).collect(Collectors.toList());
-                    results.sort(Comparator.comparing(SearchResultDTO::getRemainingDays, Comparator.nullsLast(Comparator.naturalOrder())));
+                    results = results.stream()
+                            .filter(dto -> dto.getRemainingDays() != null)
+                            .collect(Collectors.toList());
+                    results.sort(Comparator.comparing(SearchResultDTO::getRemainingDays,
+                            Comparator.nullsLast(Comparator.naturalOrder())));
                     break;
                 case "like":
-                    results.sort(Comparator.comparing((SearchResultDTO dto) -> dto.getLikes() == null ? 0 : dto.getLikes()).reversed());
+                    results.sort(Comparator.comparing(
+                                    (SearchResultDTO dto) -> dto.getLikes() == null ? 0 : dto.getLikes())
+                            .reversed());
                     break;
                 default:
-                    results.sort(Comparator.comparingInt(dto -> SimilarityUtil.computeDistance(dto.getTitle(), keyword)));
+                    break;
             }
         }
-
         return results;
     }
+
 
 
 

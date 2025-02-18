@@ -102,13 +102,37 @@ public class ApiController {
         }
 
 
-        List<SearchResultDTO> results = searchService.search(query, sortType, donationFilter, tagFilters);
+        List<SearchResultDTO> results = searchService.searchAll(query, sortType, donationFilter, tagFilters);
         return ResponseEntity.ok(results);
     }
 
     @GetMapping("/search/active")
-    public ResponseEntity<List<CampaignDTO>> searchActive() {
-        return null;
+    public ResponseEntity<List<SearchResultDTO>> searchActive(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "donation", required = false) String donationFilter,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters
+    ) {
+        List<SearchResultDTO> results = searchService.getOngoingCampaigns( sortType, donationFilter, tagFilters);
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/search/upcoming")
+    public ResponseEntity<List<SearchResultDTO>> searchUpcoming(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "donation", required = false) String donationFilter,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters
+    ) {
+        List<SearchResultDTO> results = searchService.getUpcomingCampaigns(sortType, donationFilter, tagFilters);
+        return ResponseEntity.ok(results);
+    }
+
+    @GetMapping("/search/product")
+    public ResponseEntity<List<SearchResultDTO>> searchproduct(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters
+    ) {
+        List<SearchResultDTO> results = searchService.getSales(sortType, tagFilters);
+        return ResponseEntity.ok(results);
     }
 
 

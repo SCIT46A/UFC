@@ -33,21 +33,6 @@ $(function () {
         return sortMap[selectedSort.textContent.trim()] || "like";
     }
 
-    /** ✅ 선택된 기부 필터 가져오기 */
-    function getDonationFilter() {
-        const selectedDonation = document.querySelector(".main-top-in-content-target-box-span-btn-spab");
-        if (!selectedDonation) return "전체보기"; // 기본값
-
-        const donationMap = {
-            "전체보기": "all",
-            "50% 이하": "below50",
-            "51% ~ 100%": "between51to100",
-            "100%이상": "above100"
-        };
-
-        return donationMap[selectedDonation.textContent.trim()] || "all";
-    }
-
 
     /** ✅ 선택된 태그 목록 가져오기 */
     function getSelectedTags() {
@@ -58,17 +43,15 @@ $(function () {
     /** ✅ 검색 요청 실행 */
     function fetchSearchResults() {
         const sortType = getSortType();
-        const donationFilter = getDonationFilter();
         const tagFilters = getSelectedTags();
-        console.log(sortType, donationFilter, tagFilters);
+        console.log(sortType, tagFilters);
 
 
         $.ajax({
-            url: `/api/search/upcoming`,
+            url: `/api/search/product`,
             method: "GET",
             data: {
                 sort: sortType,
-                donation: donationFilter,
                 tags: tagFilters
             },
             success: (response) => {
@@ -81,9 +64,9 @@ $(function () {
                             htmlResult += `
                                 <div class="main-bo-in-bo-pe">
                                     <div class="main-bo-in-bo-pe-box">
-                                        <a href="/campaign/detail/${data.originalId}" class="main-bo-in-bo-pe-box-a">
+                                        <a href="/product/detail/${data.originalId}" class="main-bo-in-bo-pe-box-a">
                                             <div class="main-bo-in-bo-pe-box-a-img">
-                                                <img src="/images/fix/logo.png" alt="" class="main-bo-in-bo-pe-box-a-img-size" />
+                                                <img alt="" src="/images/fix/logo.png" class="main-bo-in-bo-pe-box-a-img-size" />
                                                 <div class="main-like-btn">
                                                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
@@ -104,15 +87,10 @@ $(function () {
                                                     </div>
                                                 </div>
                                                 <div class="main-funding">
-                                                    <div class="main-funding-top">
+                                                    <div class="main-funding-top-add">
                                                         <div>
-                                                            <span class="main-funding-top-per">${data.donationPercentage}%</span>
-                                                            <span class="main-funding-top-pri">${data.donatedQuantity}개 모임</span>
+                                                            <span class="main-funding-top-per-add">${data.price}원</span>
                                                         </div>
-                                                        <em>${data.remainingDays}일 남음</em>
-                                                    </div>
-                                                    <div class="main-funding-bo" data-percentage="${data.donationPercentage}">
-                                                        <div class="progress-bar"></div>
                                                     </div>
                                                 </div>
                                             </div>
