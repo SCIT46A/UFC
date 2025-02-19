@@ -265,54 +265,77 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
+
+// 창작가 프로필 수정 버튼 클릭 시 수정 -> 실제로 수정하면 그 값이 적용되는 것은 아직 구현 x
 document.addEventListener("DOMContentLoaded", function() {
-    let btn1 = document.querySelector(".img-form-button");
-            btn1.addEventListener("click", function() {
-            window.location.href="/ufc/src/main/resources/templates/index.html";
-        });
+const seller_edit = document.querySelector(".img-form-button");
+seller_edit.addEventListener("click", function() {
+    alert("프로필이 수정되었습니다.")
+    window.location.href = "../../templates/creator/creator-campaign.html";
+});
 });
 
-// 창작가 프로필 설정하지 않고 취소하기 할 시 창작가 개설하기 패이지로 리다이렉트
+
+// 창작가 프로필 수정 취소 클릭 시 창작가 캠페인 사이트로 이동
 document.addEventListener("DOMContentLoaded", function() {
-    let skip = document.querySelector(".img-form-skip");
-        skip.addEventListener("click", function() {
-            let cancel_check = confirm ("작성된 내용이 사라집니다. 정말로 취소하시겠습니까?");
-             if (!cancel_check) {
-                return;
-             }
-            window.location.href="/ufc/src/main/resources/templates/index.html";
-        });
-});
+    const seller_edit_cancel = document.querySelector(".img-form-prev-button");
+        seller_edit_cancel.addEventListener("click", function() {
+            let cancel_edit = confirm ("작성된 내용이 사라집니다. 정말로 취소하시겠습니까?");
+                if (!cancel_edit) {
+                    return;
+                }
+                window.location.href = "../../templates/creator/creator-campaign.html";
+            });
+    });
 
-function creator_nickname() {
-    document.querySelector('.display_name').textContent = document.querySelector('.name-form-input').value;
-}
+//
+document.addEventListener("DOMContentLoaded", function() {
+    const newName = document.querySelector(".club-detail-name");
+    const newCompany = document.querySelector(".company_name");
+    const newIntro = document.querySelector(".club-detail-introduction");
+    const newCover = document.querySelector(".cover-thumbnail-wrap");
+    const newProfile = document.querySelector(".img-form-thumbnail-wrap");
+    const saveProfile = document.querySelector(".img-form-button");
 
-function update_seller_regist_name() {
-    document.querySelector('.display_seller_name').textContent = document.getElementById('seller_regist_name').value;
-}
-
-function creator_intro() {
-    document.querySelector('.display_creator_intro').textContent = document.querySelector('.desc-form-input').value;
-}
-
-document.getElementById("seller_regist_number").addEventListener("input", function (e) {
-    let value = e.target.value.replace(/\D/g, "");  // 숫자만 남기기
-    if (value.length > 10) value - value.slice(0, 10);  // 10자리 제한
-
-    // 형식 맞추기: xxx-xx-xxxxx
-    let formattedValue = "";
-    if (value.length > 0) formattedValue += value.substring(0, 3);
-    if (value.length > 3) formattedValue += "-" + value.substring(3, 5);
-    if (value.length > 5) formattedValue += "-" + value.substring(5);
-
-    e.target.value = formattedValue;
-});
-
-// 숫자만 입력 가능하도록 키 입력 필터링
-document.getElementById("seller_regist_number").addEventListener("keydown", function (e) {
-    if (!/[\d]/.test(e.key) && e.key !== "Backspace" && e.key !== "Tab") {
-        e.preventDefault();
+    // 기존 데이터 불러오기 (수정 시 이전 값 유지)
+    if (localStorage.getItem("profileName")) {
+        newName.value = localStorage.getItem("profileName");
     }
+
+    if (localStorage.getItem("profileCompany")) {
+        newCompany.value = localStorage.getItem("profileCompany");
+    }
+
+    if (localStorage.getItem("profileIntro")) {
+        newIntro.value = localStorage.getItem("profileIntro");
+    }
+
+    // 저장 버튼 클릭 시 데이터 저장
+    saveProfile.addEventListener("click", function() {
+        localStorage.setItem("profileName", newName.value);
+        localStorage.setItem("profileCompany", newCompany.value);
+        localStorage.setItem("profileIntro", newIntro.value);
+
+        // 이미지 파일 저장
+        const coverFile = newCover.files[0];
+        if (coverFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("coverImage", e.target.result);
+            };
+            reader.readAsDataURL(coverFile);
+        }
+
+        const profileFile = newProfile.files[0];
+        if (profileFile) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                localStorage.setItem("profileImage", e.target.result);
+            };
+            reader.readAsDataURL(profileFile);
+        }
+
+        alert("프로필이 저장되었습니다.");
+        window.location.href = "creator-campaign.html"; // 페이지 이동
+    });
 });

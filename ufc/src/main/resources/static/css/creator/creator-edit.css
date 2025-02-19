@@ -1031,6 +1031,8 @@ input::placeholder {
     flex-direction: column;
     align-items: flex-end;
     justify-content: center;
+    position: relative;
+    top: -100px;
 }
 
 .img-form-button-wrap {
@@ -1129,6 +1131,14 @@ input::placeholder {
     opacity: 0;
 }
 
+.company_name {
+    margin-left: 15px;
+    font-weight: 100;
+    font-size: 1rem;
+    line-height: 2rem;
+    opacity: 1;
+}
+
 .post-header-logo-image {
     width: 130px !important;
 }
@@ -1156,6 +1166,19 @@ input::placeholder {
     margin-top: -6rem;
     justify-content: space-between;
     display: flex;
+}
+
+.profile-edit-creator-wrap {
+    position: relative;
+    top: -125px;
+}
+
+.profile-edit-creator {
+    font-weight: 700;
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    position: relative;
+    top: -20px;
 }
 
 .club-profile-image {
@@ -1187,14 +1210,6 @@ input::placeholder {
     font-weight: 700;
     font-size: 1.5rem;
     line-height: 2rem;
-}
-
-.company_name {
-    margin-left: 15px;
-    font-weight: 100;
-    font-size: 1rem;
-    line-height: 2rem;
-    opacity: .5;
 }
 
 .club-detail-stats-wrap {
