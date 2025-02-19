@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>진행중인 캠페인</title>
+        <title>진행중인 물품</title>
         <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -16,8 +16,8 @@
         />
         <link
             rel="stylesheet"
-            th:href="@{/css/campaign/all-campaign.css}"
-            href="../../static/css/campaign/all-campaign.css"
+            th:href="@{/css/product/allProduct.css}"
+            href="../../static/css/product/allProduct.css"
         />
         <link
             rel="stylesheet"
@@ -29,9 +29,9 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/compaign/all-compaign.js" defer></script>
+        <script src="../../static/js/product/allProduct.js" defer></script>
         <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-        <script th:src="@{/js/compaign/all-compaign.js}" defer></script>
+        <script th:src="@{/js/product/allProduct.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
@@ -54,35 +54,6 @@
                                             <div
                                                 class="main-top-in-content-target-box"
                                             >
-                                                <!-- 달성률 -->
-                                                <span
-                                                    class="main-top-in-content-target-box-span"
-                                                >
-                                                    <button
-                                                        class="main-top-in-content-target-box-span-btn"
-                                                    >
-                                                        <span
-                                                            class="main-top-in-content-target-box-span-btn-spab"
-                                                            >달성률</span
-                                                        >
-                                                        <!-- 열림기준 -->
-                                                        <span class="icon-open"
-                                                            ><div
-                                                                name="arrow1-down"
-                                                                class="Icon__SVGICON-sc-bv7y1u-0 fuBkMs FilterUIButton__StyledSVGIcon-sc-aco6bu-0 fXaCUQ"
-                                                            >
-                                                                <svg
-                                                                    viewBox="0 0 48 48"
-                                                                >
-                                                                    <path
-                                                                        fill-rule="evenodd"
-                                                                        clip-rule="evenodd"
-                                                                        d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
-                                                                    ></path>
-                                                                </svg></div
-                                                        ></span>
-                                                    </button>
-                                                </span>
                                                 <!-- 검색 모달 -->
                                                 <div class="main-modal-per">
                                                     <div
@@ -174,11 +145,6 @@
                                                                         class="main-modal-per-in-con-box-choice-in-add off"
                                                                     >
                                                                         좋아요 많은순
-                                                                    </div>
-                                                                    <div
-                                                                        class="main-modal-per-in-con-box-choice-in-add off"
-                                                                    >
-                                                                        마감 임박순
                                                                     </div>
                                                                     <div
                                                                             class="main-modal-per-in-con-box-choice-in-add off"

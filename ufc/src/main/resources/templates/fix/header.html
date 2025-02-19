@@ -144,26 +144,124 @@
                                 <!-- 진짜 창 -->
                                 <div class="modal-login-in">
                                     <!-- 각각의 내용 넣기 -->
-                                    <div class="modal-login-pe">
-                                        <a th:href="@{/user}">프로필</a>
+                                    <div class="al-in-box-warp-pe">
+                                        <div>
+                                            <div
+                                                class="al-in-box-warp-pe-img"
+                                            ></div>
+                                        </div>
+
+                                        <div class="al-in-box-warp-pe-content">
+                                            <div
+                                                class="al-in-box-warp-pe-content-box"
+                                            >
+                                                <div
+                                                    class="al-in-box-warp-pe-content-box-top"
+                                                >
+                                                    좋아하신<b>헬로, 팜!</b>
+                                                    프로젝트에 창작자의 새
+                                                    게시글이 올라왔습니다.
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-login-bar"></div>
-                                    <div class="modal-login-pe">
-                                        <a th:href="@{/campaign/intro}"
-                                            >캠페인 만들기</a
-                                        >
+                                    <div class="al-in-box-warp-pe">
+                                        <div>
+                                            <div
+                                                class="al-in-box-warp-pe-img"
+                                            ></div>
+                                        </div>
+
+                                        <div class="al-in-box-warp-pe-content">
+                                            <div
+                                                class="al-in-box-warp-pe-content-box"
+                                            >
+                                                <div
+                                                    class="al-in-box-warp-pe-content-box-top"
+                                                >
+                                                    좋아하신<b>헬로, 팜!</b>
+                                                    프로젝트에 창작자의 새
+                                                    게시글이 올라왔습니다.
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="modal-login-bar"></div>
-                                    <a
-                                        class="modal-login-pe"
-                                        th:href="@{/logout}"
-                                        >로그아웃</a
-                                    >
+                                    <div class="al-in-box-warp-pe">
+                                        <div>
+                                            <div
+                                                class="al-in-box-warp-pe-img"
+                                            ></div>
+                                        </div>
+
+                                        <div class="al-in-box-warp-pe-content">
+                                            <div
+                                                class="al-in-box-warp-pe-content-box"
+                                            >
+                                                <div
+                                                    class="al-in-box-warp-pe-content-box-top"
+                                                >
+                                                    좋아하신<b>헬로, 팜!</b>
+                                                    프로젝트에 창작자의 새
+                                                    게시글이 올라왔습니다.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <!-- 닫기위한 전체 창 -->
                                 <div
                                     class="modal-login-close"
-                                    id="modal-controller-add"
+                                    id="modal-controller-alert"
+                                ></div>
+                            </div>
+                            <!-- 검색창 모달 -->
+                            <div class="modal-search">
+                                <!-- 진짜 창 -->
+                                <div class="modal-login-in">
+                                    <div class="modal-re-search-box">
+                                        <!-- 추천 태그 나오게 -->
+                                        <div class="modal-re-search-box-top">
+                                            <!-- 각각의 태그 반복 -->
+                                        </div>
+                                        <!-- 검색결과 나오는곳 -->
+                                        <div class="modal-re-search-box-bo">
+                                            <div
+                                                class="modal-re-search-box-bo-box"
+                                            >
+                                                <div
+                                                    class="modal-re-search-box-bo-box-in"
+                                                >
+                                                    <div
+                                                        class="modal-re-search-box-bo-box-in-se"
+                                                    >
+                                                        <!-- 각각의태그나옴 -->
+                                                        <div>
+                                                            검색 결과가
+                                                            없습니다.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-re-search-box-recent">
+                                            <div
+                                                class="modal-re-search-box-recent-top"
+                                            >
+                                                <div>최근검색어</div>
+                                                <span>전체삭제</span>
+                                            </div>
+                                            <div
+                                                class="modal-re-search-box-recent-bo"
+                                            >
+                                                <!--                                                각각의div  -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 닫기위한 전체 창 -->
+                                <div
+                                    class="modal-login-close"
+                                    id="modal-controller-search"
                                 ></div>
                             </div>
                         </div>
@@ -174,13 +272,13 @@
                             <div class="header-nav-in-me">
                                 <!-- 여기에 이제 넣고싶은거 카테고리 빼고 추가 -->
                                 <!-- 사실상 여기부터 반복 -->
-                                <div class="header-nav-home">
+                                <a class="header-nav-home" href="/campaign/active">
                                     진행 중인 캠페인
-                                </div>
-                                <div class="header-nav-home">
+                                </a>
+                                <a class="header-nav-home" href="/campaign/upcoming">
                                     진행 예정 캠페인
-                                </div>
-                                <div class="header-nav-home">구매</div>
+                                </a>
+                                <a class="header-nav-home" href="/product/all">구매</a>
                             </div>
                         </div>
                     </div>

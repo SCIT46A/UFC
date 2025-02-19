@@ -39,6 +39,10 @@ public class ProductEntity {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductDeliveryEntity> productDeliveries;
 
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
+    private List<ProductTagEntity> productTags;
+
+
     public static ProductEntity toEntity(ProductDTO dto, ItemEntity item, CreatorEntity createdBy) {
         return ProductEntity.builder()
                 .productId(dto.getProductId())

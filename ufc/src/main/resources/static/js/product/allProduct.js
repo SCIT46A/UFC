@@ -9,22 +9,6 @@ $(function () {
 
 
 
-
-    const pathParts = window.location.pathname.split("/");
-    const query = decodeURIComponent(pathParts[pathParts.length - 1]);
-
-    if (!query) return; // 검색어가 없으면 종료
-
-    const pathPartsAdd = window.location.pathname.split("/");
-    const type = pathPartsAdd[pathPartsAdd.length - 2]; // URL에서 "type" 가져오기
-    const queryAdd = decodeURIComponent(pathPartsAdd[pathPartsAdd.length - 1]); // URL에서 "query" 가져오기
-
-
-    // ✅ type이 "tag"이면 기본적으로 query를 태그로 추가
-    if (type === "tag" && queryAdd) {
-        addTag(queryAdd);
-    }
-
     // 디바운스 함수 (직접 구현)
     function debounce(func, delay) {
         let timeout;
@@ -49,21 +33,6 @@ $(function () {
         return sortMap[selectedSort.textContent.trim()] || "like";
     }
 
-    /** ✅ 선택된 기부 필터 가져오기 */
-    function getDonationFilter() {
-        const selectedDonation = document.querySelector(".main-top-in-content-target-box-span-btn-spab");
-        if (!selectedDonation) return "전체보기"; // 기본값
-
-        const donationMap = {
-            "전체보기": "all",
-            "50% 이하": "below50",
-            "51% ~ 100%": "between51to100",
-            "100%이상": "above100"
-        };
-
-        return donationMap[selectedDonation.textContent.trim()] || "all";
-    }
-
 
     /** ✅ 선택된 태그 목록 가져오기 */
     function getSelectedTags() {
@@ -74,17 +43,15 @@ $(function () {
     /** ✅ 검색 요청 실행 */
     function fetchSearchResults() {
         const sortType = getSortType();
-        const donationFilter = getDonationFilter();
         const tagFilters = getSelectedTags();
-        console.log(sortType, donationFilter, tagFilters);
-        const effectiveQuery = (type === "tag" && tagFilters.length === 0) ? "all" : query;
+        console.log(sortType, tagFilters);
+
 
         $.ajax({
-            url: `/api/search/${type}/${encodeURIComponent(effectiveQuery)}`,
+            url: `/api/search/product`,
             method: "GET",
             data: {
                 sort: sortType,
-                donation: donationFilter,
                 tags: tagFilters
             },
             success: (response) => {
@@ -94,7 +61,6 @@ $(function () {
 
                 if (response.length > 0) {
                     response.forEach((data) => {
-                        if (data.type === "product") {
                             htmlResult += `
                                 <div class="main-bo-in-bo-pe">
                                     <div class="main-bo-in-bo-pe-box">
@@ -132,51 +98,8 @@ $(function () {
                                     </div>
                                 </div>
                             `;
-                        } else {
-                            htmlResult += `
-                                <div class="main-bo-in-bo-pe">
-                                    <div class="main-bo-in-bo-pe-box">
-                                        <a href="/campaign/detail/${data.originalId}" class="main-bo-in-bo-pe-box-a">
-                                            <div class="main-bo-in-bo-pe-box-a-img">
-                                                <img src="/images/fix/logo.png" alt="" class="main-bo-in-bo-pe-box-a-img-size" />
-                                                <div class="main-like-btn">
-                                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path
-                                                            d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
-                                                            fill="black" fill-opacity="0.25" stroke="white" stroke-width="1.6"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                            </div>
-                                            <div class="main-bo-in-bo-pe-box-a-title">
-                                                <div class="main-bo-in-bo-pe-box-a-title-top">
-                                                    <div class="main-bo-in-bo-pe-box-a-title-top-se">
-                                                        <div>${data.sellerName}</div>
-                                                    </div>
-                                                    <div class="main-bo-in-bo-pe-box-a-title-mi">
-                                                        <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
-                                                        <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
-                                                    </div>
-                                                </div>
-                                                <div class="main-funding">
-                                                    <div class="main-funding-top">
-                                                        <div>
-                                                            <span class="main-funding-top-per">${data.donationPercentage}%</span>
-                                                            <span class="main-funding-top-pri">${data.donatedQuantity}개 모임</span>
-                                                        </div>
-                                                        <em>${data.remainingDays}일 남음</em>
-                                                    </div>
-                                                    <div class="main-funding-bo" data-percentage="${data.donationPercentage}">
-                                                        <div class="progress-bar"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-                            `;
                         }
-                    });
+                    );
                 } else {
                     htmlResult = "<div>검색 결과가 없습니다!</div>";
                 }

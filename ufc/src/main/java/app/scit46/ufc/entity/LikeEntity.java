@@ -29,7 +29,7 @@ public class LikeEntity {
     private CreatorEntity creator;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", nullable = false)
+    @JoinColumn(name = "campaign_id")
     private CampaignEntity campaign;
 
     // 선택적

@@ -18,12 +18,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     checkBoxAdd.addEventListener("change", function () {
         hiddenInput.value = this.checked ? "1" : "0";
+        validateInputs(); // 체크 변경 시 유효성 검사
     });
 
     function validateInputs() {
         const isAddressFilled = addressInput.value.trim() !== "";
         const isAddressDetailFilled = addressDetailInput.value.trim() !== "";
         const isPhoneFilled = phoneInput.value.trim() !== "";
+        const isCheckboxChecked = [...checkboxes].every(
+            (checkbox) => checkbox.checked
+        ); // 필수 체크박스 체크 여부 확인
 
         // 주소 입력 확인
         if (!isAddressFilled || !isAddressDetailFilled) {
@@ -39,21 +43,46 @@ document.addEventListener("DOMContentLoaded", function () {
             errorPhone.classList.add("hidden"); // 에러 숨김
         }
 
-        // 모든 필수 입력 값이 채워졌는지 확인하여 버튼 활성화
-        submitButton.disabled = !(
+        // 모든 필수 입력 값이 채워졌는지 확인하여 버튼 활성화 및 스타일 변경
+        if (
             isAddressFilled &&
             isAddressDetailFilled &&
-            isPhoneFilled
-        );
+            isPhoneFilled &&
+            isCheckboxChecked
+        ) {
+            submitButton.disabled = false;
+            submitButton.style.backgroundColor = "#16A34A"; // 배경 초록색
+            submitButton.style.cursor = "pointer";
+
+            // 마우스 이벤트 핸들러 추가 전 기존 핸들러 제거
+            submitButton.onmouseover = function () {
+                submitButton.style.backgroundColor = "#4ade80"; // 호버 시 연한 초록색
+            };
+            submitButton.onmouseleave = function () {
+                submitButton.style.backgroundColor = "#16A34A"; // 원래 색 복구
+            };
+        } else {
+            submitButton.disabled = true;
+            submitButton.style.backgroundColor = "#F2F4F5"; // 기본 스타일로 초기화
+            submitButton.style.cursor = "default";
+
+            // 버튼이 비활성화되면 호버 효과도 제거
+            submitButton.onmouseover = null;
+            submitButton.onmouseleave = null;
+        }
+
+        // 주소 합치기
         totalAddress.value =
             addressInput.value + "#" + addressDetailInput.value;
-        console.log(totalAddress.value);
     }
 
-    // 입력 필드 변경 시 유효성 검사
+    // 입력 필드 및 체크박스 변경 시 유효성 검사 실행
     addressInput.addEventListener("input", validateInputs);
     addressDetailInput.addEventListener("input", validateInputs);
     phoneInput.addEventListener("input", validateInputs);
+    checkboxes.forEach((checkbox) =>
+        checkbox.addEventListener("change", validateInputs)
+    );
 
     // 제출 버튼 클릭 시 유효성 검사 실행
     submitButton.addEventListener("click", function (event) {

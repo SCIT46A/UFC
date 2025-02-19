@@ -16,8 +16,8 @@
         />
         <link
             rel="stylesheet"
-            th:href="@{/css/campaign/all-campaign.css}"
-            href="../../static/css/campaign/all-campaign.css"
+            th:href="@{/css/campaign/expected-campaign.css}"
+            href="../../static/css/campaign/expected-campaign.css"
         />
         <link
             rel="stylesheet"
@@ -29,9 +29,9 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/compaign/all-compaign.js" defer></script>
+        <script src="../../static/js/compaign/expected-compaign.js" defer></script>
         <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-        <script th:src="@{/js/compaign/all-compaign.js}" defer></script>
+        <script th:src="@{/js/compaign/expected-compaign.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
@@ -49,7 +49,6 @@
                             <div class="main-top">
                                 <div class="main-top-in">
                                     <div class="main-top-in-content">
-                                        <!-- 최상단 셀렉트박스 -->
                                         <div class="main-top-in-content-target">
                                             <div
                                                 class="main-top-in-content-target-box"
@@ -109,7 +108,10 @@
                                                                     </div>
                                                                     <div
                                                                         class="main-modal-per-in-con-box-choice-in off"
-                                                                    >51% ~ 100%</div>
+                                                                    >
+                                                                        50% ~
+                                                                        100%
+                                                                    </div>
                                                                     <div
                                                                         class="main-modal-per-in-con-box-choice-in off"
                                                                     >
@@ -131,8 +133,8 @@
                                                         class="main-top-in-content-target-box-span-btn-re"
                                                     >
                                                         <span
-                                                            class="main-top-in-content-target-box-span-btn-spab-add"
-                                                            >전체보기</span
+                                                            class="main-top-in-content-target-box-span-btn-spab"
+                                                            >재료</span
                                                         >
                                                         <!-- 열림기준 -->
                                                         <span class="icon-open"
@@ -166,24 +168,24 @@
                                                                     class="main-modal-per-in-con-box-choice-add"
                                                                 >
                                                                     <div
-                                                                        class="main-modal-per-in-con-box-choice-in-add on"
+                                                                        class="main-modal-per-in-con-box-choice-in on"
                                                                     >
                                                                         전체보기
                                                                     </div>
                                                                     <div
-                                                                        class="main-modal-per-in-con-box-choice-in-add off"
+                                                                        class="main-modal-per-in-con-box-choice-in off"
                                                                     >
-                                                                        좋아요 많은순
+                                                                        청바지
                                                                     </div>
                                                                     <div
-                                                                        class="main-modal-per-in-con-box-choice-in-add off"
+                                                                        class="main-modal-per-in-con-box-choice-in off"
                                                                     >
-                                                                        마감 임박순
+                                                                        병뚜껑
                                                                     </div>
                                                                     <div
-                                                                            class="main-modal-per-in-con-box-choice-in-add off"
+                                                                        class="main-modal-per-in-con-box-choice-in off"
                                                                     >
-                                                                        최신순
+                                                                        이것저것
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -191,59 +193,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- 검색창 -->
-                                            <div class="main-search-box-all">
-                                                <div
-                                                    class="modal-search-box-in-top-input-img"
-                                                >
-                                                    <svg
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        class="w-5 h-5"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                                            clip-rule="evenodd"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    placeholder="태그를 입력해주세요"
-                                                    class="main-search-box"
-                                                />
-                                                <!-- 모달 검색창 -->
-                                            </div>
-                                        </div>
-                                        <!-- 태그 검색 하는곳 -->
-                                        <div class="main-search-tag">
-                                            <!-- 각각의 태그 들어가는곳 -->
-
                                         </div>
                                     </div>
-                                </div>
-                                <div class="modal-tag-search">
-                                    <!-- 진짜 창 -->
-                                    <div class="modal-login-in">
-                                        <div class="modal-re-search-box">
-                                            <!-- 추천 태그 나오게 -->
-                                            <div
-                                                class="modal-re-search-box-top-add"
-                                            >
-                                                <!-- 각각의 태그 반복 -->
-                                                <div>
-                                                    검색어를 입력해주세요!.
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 닫기위한 전체 창 -->
-                                    <div
-                                        class="modal-login-close"
-                                        id="modal-controller-tag-search"
-                                    ></div>
                                 </div>
                             </div>
                             <!-- 캠페인 들어가는 부분 -->
@@ -251,12 +202,11 @@
                                 <div class="main-bo-in">
                                     <!--몇개인지 카운트 하는곳 -->
                                     <div class="main-bo-in-top">
-
+                                        <span>000</span>개의 캠페인이 있습니다
                                     </div>
                                     <!-- 내용들 반복하는곳 -->
                                     <div class="main-bo-in-bo">
                                         <!-- 각각의 내용이 들어가는 곳 -->
-
 
                                         <!-- 무한 스크롤 제작~ -->
                                     </div>

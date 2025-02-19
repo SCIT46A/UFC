@@ -1,20 +1,19 @@
 package app.scit46.ufc.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import app.scit46.ufc.dto.CampaignDTO;
 import app.scit46.ufc.dto.CampaignGoalDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.CampaignEntity;
-import app.scit46.ufc.entity.CampaignGoalEntity;
-import app.scit46.ufc.entity.MaterialDonationEntity;
-import app.scit46.ufc.repository.CampaignRepository;
 import app.scit46.ufc.repository.CampaignGoalRepository;
+import app.scit46.ufc.repository.CampaignRepository;
 import app.scit46.ufc.repository.MaterialDonationRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CampaignService {

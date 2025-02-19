@@ -31,7 +31,7 @@ main{
 .main{
     position: relative;
     display: block;
-    width: 1200px;
+    width: 100%;
     -webkit-box-flex: 1;
     flex-grow: 1;
     background: rgb(255, 255, 255);
@@ -76,7 +76,6 @@ main{
     height: 100%;
     overflow: auto hidden;
     padding-left: 20px;
-    justify-content: space-between;
 }
 
 .main-top-in-content-target-box{
@@ -131,13 +130,6 @@ main{
     position: relative;
 }
 
-.main-top-in-content-target-box-span-btn-spab-add{
-    padding-left: 5px;
-    padding-right: 35px;
-    font-size: 0.8rem;
-    position: relative;
-}
-
 .icon-open{
     right: 7px;
     top: 50%;
@@ -173,7 +165,7 @@ main{
 }
 
 .main-bo-in-top span{
-    color: #16A34A;
+    color: rgb(255, 87, 87);
 }
 
 .main-bo-in-bo{
@@ -186,7 +178,7 @@ main{
 }
 
 .main-bo-in-bo-pe{
-    width: 33%;
+    width: 25%;
     margin: 0px;
     box-sizing: border-box;
     padding: 8px 10px;
@@ -323,16 +315,6 @@ main{
     justify-content: space-between;
 }
 
-.main-funding-top-add{
-    display: flex;
-    -webkit-box-align: center;
-    align-items: center;
-    margin: 0px;
-    flex-wrap: wrap;
-    -webkit-box-pack: justify;
-    justify-content: right;
-}
-
 em{
     font-size: 11px;
     line-height: 21px;
@@ -342,15 +324,8 @@ em{
 }
 
 .main-funding-top-per{
-    color: #16a34a;
+    color: rgb(235, 75, 56);
     font-size: 14px;
-    font-weight: bold;
-    line-height: 120%;
-}
-
-.main-funding-top-per-add{
-    color: #16a34a;
-    font-size: 18px;
     font-weight: bold;
     line-height: 120%;
 }
@@ -371,22 +346,12 @@ em{
     margin: 4px 0px 0px;
 }
 
-/*.main-funding-bo::after{*/
-/*    content: "";*/
-/*    width: var(--progress-width, 0%); !* jQuery에서 동적 값 적용 *!*/
-/*    display: block;*/
-/*    height: 100%;*/
-/*    background: #16a34a;*/
-/*}*/
-
-.main-funding-bo .progress-bar {
-    position: absolute;
-    top: 0;
-    left: 0;
+.main-funding-bo::after{
+    content: "";
+    width: 12334%;
+    display: block;
     height: 100%;
-    width: 0%; /* 초기 상태 */
-    background-color: #16a34a; /* 초록색 진행 바 */
-    transition: width 0.5s ease-in-out; /* 애니메이션 */
+    background: rgb(235, 75, 56);
 }
 
 .main-like-btn{
@@ -410,8 +375,8 @@ em{
     width: 107px;
     height: 203px;
     z-index: 9000;
-    top: 147px;
-    left: 6%;
+    top: 139px;
+    left: 6.5%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.4);
     border-radius: 999px;
@@ -466,16 +431,9 @@ em{
     line-height: 34px;
 }
 
-.main-modal-per-in-con-box-choice-in-add{
-    border: 0px;
-    font-size: 1rem;
-    height: 34px;
-    line-height: 34px;
-}
-
 .on{
     font-weight: bold;
-    color: #16A34A;
+    color: rgb(250, 101, 99);
     border-bottom: 1px solid rgb(242, 242, 242);
     white-space: nowrap;
     cursor: pointer;
@@ -515,8 +473,8 @@ em{
     width: 107px;
     height: 203px;
     z-index: 9000;
-    top: 146px;
-    left: 13.5%;
+    top: 139px;
+    left: 14%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.4);
     border-radius: 999px;
@@ -562,120 +520,4 @@ em{
     background: rgb(255, 255, 255);
     position: relative;
     z-index: 2;
-}
-
-.main-search-tag{
-    gap: 6px 6px;
-    margin-top: 10px;
-    overflow-x: auto;
-    flex-wrap: wrap;
-    display: flex;
-    box-sizing: border-box;
-    padding-left: 20px;
-}
-
-.main-search-tag-pe{
-    --tw-text-opacity: 1;
-    color: rgb(255 255 255 / var(--tw-text-opacity));
-    font-weight: 300;
-    font-size: .8125rem;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    padding-left: .75rem;
-    padding-right: .75rem;
-    --tw-bg-opacity: 1;
-    background-color: #16A34A;
-    display: flex;
-    border-radius: 4px;
-}
-
-.main-search-tag-pe-btn{
-    align-items: center;
-    display: flex;
-    margin-left: .25rem;
-    transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-backdrop-filter;
-    transition-timing-function: cubic-bezier(.4,0,.2,1);
-    transition-duration: .15s;
-    text-align: left;
-    cursor: pointer;
-    -webkit-appearance: button;
-    background-color: transparent;
-    background-image: none;
-    
-}
-
-.main-search-tag-pe-btn svg{
-    width: 1rem;
-    height: 1rem;
-    display: block;
-    vertical-align: middle;
-}
-
-.main-search-box{
-    --tw-drop-shadow: drop-shadow(0 1px 1px rgba(0, 0, 0, .05));
-    filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
-    padding-right: 1.5rem;
-    padding-left: 3.5rem;
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-    border-radius: .375rem;
-    text-overflow: ellipsis;
-    width: 100%;
-    height: 3rem;
-    appearance: none;
-    border-color: rgba(0, 0, 0, .1);
-    font-size: .9375rem;
-    border-width: 1px;
-    line-height: 1.5rem;
-    --tw-shadow: 0 0 #0000;
-    color: black;
-    border: 1px solid rgb(228, 228, 228);
-}
-
-.main-search-box:focus-visible {
-    outline: none;
-    box-shadow: none;
-}
-
-.main-search-box-all{
-    --tw-space-x-reverse: 0;
-    position: relative;
-}
-
-.modal-tag-search {
-    display: none;
-    position: absolute;
-    top: 63%;
-    left: 926px;
-    width: 276px;
-    min-height: 200px;
-    background: white;
-    border: 1px solid rgb(228, 228, 228);
-    border-radius: 4px;
-    z-index: 3000;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-}
-
-.modal-re-search-box-top-add{
-    flex-wrap: wrap;
-    display: flex;
-    position: relative;
-    flex-shrink: 0;
-    width: 100%;
-    gap: 8px 8px;
-}
-
-.modal-re-search-box-top-tag-add{
-    flex-shrink: 0;
-    display: flex;
-    position: relative;
-    flex-direction: row;
-    align-items: center;
-    border-radius: 20px;
-    background-color: #f2f4f6;
-    cursor: pointer;
-    width: fit-content;
-    box-sizing: content-box;
-    text-decoration: none;
 }
