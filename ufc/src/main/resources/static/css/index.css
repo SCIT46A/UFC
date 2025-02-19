@@ -7,6 +7,11 @@ body {
     padding: 0;
 }
 
+main {
+    background-color: #ffffff;
+    margin-bottom: 50px;
+}
+
 .container {
     width: 100%;
     max-width: 1200px;
@@ -150,7 +155,6 @@ body {
 
 .py-20 {
     padding-top: 5rem;
-    padding-bottom: 5rem;
 }
 
 .px-4 {
@@ -415,11 +419,11 @@ body {
 
 .main-item{
     padding-top: 20px;
-    margin-bottom: 40px;
     position: relative;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+    margin-bottom: 30px;
 }
 
 .main-item-titie{
@@ -564,7 +568,7 @@ body {
 }
 
 .main-item-main-count{
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
     padding: 4px 0px 0px 11px;
     margin-right: -4px;
     z-index: 1;
@@ -644,7 +648,7 @@ body {
     font-size: 14px;
     font-weight: bold;
     line-height: 120%;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
 }
 
 .main-item-main-tag{
@@ -728,8 +732,22 @@ body {
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
 
+.main-resent-all-add{
+    transform: translate3d(0px, 0px, 0px);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    box-sizing: content-box;
+    margin-left: auto;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
 .main-resent-pe{
-    width: 192px;
+    width: 224px;
     margin-right: 12px;
     flex-shrink: 0;
     height: 100%;
@@ -810,7 +828,7 @@ body {
 }
 
 .main-resent-content-box-se-in{
-    font-size: 11px;
+    font-size: 13px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(84, 84, 84);
@@ -828,7 +846,7 @@ body {
 }
 
 .main-resent-content-box-content-a{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(28, 28, 28);
@@ -847,10 +865,10 @@ body {
     display: flex;
     align-items: flex-end;
     margin-bottom: 6px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     line-height: 120%;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
@@ -877,7 +895,7 @@ body {
     background-color: rgb(248, 248, 248);
     height: 18px;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     display: flex;
     -webkit-box-align: center;
@@ -887,4 +905,54 @@ body {
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+}
+
+.image-container {
+    width: 100%;
+    position: relative;
+    flex: 0  100%; /* 한 개씩 표시 */
+    
+}
+
+.main-container-title {
+    position: absolute;
+    bottom: 83%;
+    left: 0%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.main-container-title-in {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 14px;
+    width: fit-content; /* 내용 크기에 맞춰 박스 크기 조정 */
+    max-width: 100%;
+
+    position: relative;
+}
+
+.image-container img{
+    width: 100%;
+    display: block;
+}
+
+.slider-container{
+    width: 100%;
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    position: relative;
+}
+
+.slider{
+    display: flex; /* 한 줄 배치 */
+    transition: transform 0.5s ease-in-out;
+    width: 300%; /* 3개의 이미지니까 300% */
 }

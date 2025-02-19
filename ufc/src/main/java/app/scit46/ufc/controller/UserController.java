@@ -1,7 +1,6 @@
 package app.scit46.ufc.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.entity.CampaignEntity;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
@@ -78,16 +76,16 @@ public class UserController {
 
                 List<MaterialDonationEntity> donations = materialDonationService.donationFindByUserId(loginUserId);
 
-                List<CampaignEntity> campaign = donations.stream()
-                        .map(donation -> campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
-                        .flatMap(List::stream)
-                        .collect(Collectors.toList());
+                // List<CampaignEntity> campaign = donations.stream()
+                //         .map(donation -> campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+                //         .flatMap(List::stream)
+                //         .collect(Collectors.toList());
 
                 // 총 개수 계산
                 int donationCount = donations.size();
                 model.addAttribute("user", user);
                 model.addAttribute("donations", donations);
-                model.addAttribute("campaign", campaign);
+                // model.addAttribute("campaign", campaign);
                 model.addAttribute("donationCount", donationCount);
             }
         }
@@ -195,7 +193,7 @@ public class UserController {
         return "/login/joindetail";
     }
 
-    @PostMapping("/joindetail")
+    @PostMapping("/joinProc")
     public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check ,
                                    @RequestParam("address") String address,
                                    @RequestParam("phone") String phone,

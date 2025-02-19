@@ -23,6 +23,7 @@ public class CreatorDTO {
     private PrivatePhotoEntity backImgUrl;
     private PrivatePhotoEntity proImgUrl;
     private UserEntity ownUser;
+    private Integer creatorStatus;
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()
@@ -36,6 +37,7 @@ public class CreatorDTO {
                 .backImgUrl(entity.getBackImgUrl())
                 .proImgUrl(entity.getProImgUrl())
                 .ownUser(entity.getOwnUser())
+                .creatorStatus(entity.getCreatorStatus())
                 .build();
     }
 }

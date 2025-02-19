@@ -2,6 +2,7 @@ package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.PrivatePhotoEntity;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import java.time.LocalDateTime;
 
@@ -27,7 +28,7 @@ public class UserDTO {
     private String intro;
     private int isMarketed;
     private int userStatus;
-    private int statusReason;
+    private String statusReason;
 
     public static UserDTO toDTO(UserEntity entity) {
         return UserDTO.builder()

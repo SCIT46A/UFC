@@ -2,6 +2,7 @@ package app.scit46.ufc.service;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -20,6 +21,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         // Role generate
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ADMIN", "USER","CREATOR");
 
+
+
         // nameAttributeKey
         String userNameAttributeName = userRequest.getClientRegistration()
                 .getProviderDetails()
@@ -30,4 +33,5 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
     }
+
 }
