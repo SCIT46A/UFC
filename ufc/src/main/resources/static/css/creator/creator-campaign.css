@@ -838,6 +838,38 @@ button, input, optgroup, select, textarea {
     font-size: .8125rem;
 }
 
+.show-more-btn-in-progress-wrap {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem*(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem*var(--tw-space-y-reverse));
+}
+
+.show-more-btn-in-progress {
+    padding: 1rem;
+    border: color gray;
+    border-width: 2px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    display: flex;
+}
+
+.show-more-counts {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.25rem*var(--tw-space-x-reverse));
+    margin-left: calc(0.25rem*(1 - var(--tw-space-x-reverse)));
+    --tw-text-opacity: 1;
+    color: rgb(135 141 145/var(--tw-text-opacity));
+}
+
+.show-more-arrow-in-progress {
+    --tw-space-x-reverse: 0;
+    margin-right: calc(0.25rem*var(--tw-space-x-reverse));
+    margin-left: calc(0.25rem*(1 - var(--tw-space-x-reverse)));
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
 .show-more-btn-wrap {
     --tw-space-y-reverse: 0;
     margin-top: calc(1rem*(1 - var(--tw-space-y-reverse)));
