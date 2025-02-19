@@ -10,7 +10,6 @@ $(function () {
         window.location.href = `/search/search/${encodeURIComponent(searchText)}`;
     }
 
-
     // 최초 알림창 확인
     $.ajax({
         url: "/api/checkAlert",
@@ -25,9 +24,7 @@ $(function () {
         }
     });
 
-
     //  로그인정보가 보고 나타내기
-
     $.ajax({
         url: "/api/checkLogin",
         method: "GET",
@@ -131,7 +128,7 @@ $(function () {
                 );
                 initializeEventListeners();
             }
-        },
+        }
     });
 
     $.ajax({
@@ -159,7 +156,7 @@ $(function () {
                 `);
 
             })
-        },
+        }
 
     });
 
@@ -182,17 +179,13 @@ $(function () {
 
     }
 
-
-
-
-// 쿠키에서 검색 기록 가져오는 함수
+    // 쿠키에서 검색 기록 가져오는 함수
     function getSearchHistory() {
         const cookie = document.cookie
             .split("; ")
             .find(row => row.startsWith("searchHistory="));
 
         if (!cookie) {
-
             return [];
         }
 
@@ -206,12 +199,9 @@ $(function () {
         }
     }
 
-
-
     // 최근 검색어 표시하는 함수
     function displaySearchHistory() {
         const history = getSearchHistory();
-
 
         $(".modal-re-search-box-recent-bo").html(""); // 기존 내용 초기화
 
@@ -233,20 +223,16 @@ $(function () {
         }
     }
 
-
     // 🔹 모든 페이지에서 검색 기록을 자동으로 로드하여 표시
     $(document).ready(function () {
         displaySearchHistory(); // ✅ 모든 페이지에서 검색 기록 표시
     });
-
-
 
     // 특수문자를 이스케이프하는 함수 (정규식용)
     function escapeRegExp(string) {
         if (!string) return "";  // 🔹 string이 없으면 빈 문자열 반환
         return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-
 
     /**
      * text에서 query와 일치하는 부분을 <em> 태그로 감싸서 리턴합니다.
@@ -270,9 +256,6 @@ $(function () {
         }
     }
 
-
-
-
     $(document).on("input", ".modal-search-box-in-top-input-in", function () {
         const keyword = $(this).val().trim();
 
@@ -280,8 +263,6 @@ $(function () {
             $(".modal-re-search-box-bo-box-in-se").html(""); // 검색창 비우기
             return;
         }
-
-
 
         $.ajax({
             url: "/api/searchBox",
@@ -329,11 +310,7 @@ $(function () {
             }
         });
 
-
     });
-
-
-
 
     $(document).on("keydown", ".modal-search-box-in-top-input-in", function (event) {
         if ($(".modal-search").css("display") === "flex" && event.key === "Enter") {
@@ -359,9 +336,7 @@ $(function () {
         // 삭제한 검색어 UI에서 제거
         $(this).closest(".modal-re-search-box-recent-bo-pe").remove();
 
-
     });
-
 
     $(document).on("click", ".modal-re-search-box-recent-top span", function () {
         // ✅ 검색 기록 쿠키 완전히 삭제 (모든 경로에서 삭제되도록)
@@ -370,10 +345,7 @@ $(function () {
         // ✅ 검색 기록 UI에서 제거
         $(".modal-re-search-box-recent-bo").html(`<div>최근 검색 기록이 없습니다.</div>`);
 
-
     });
-
-
 
     // 🔹 이벤트 리스너 초기화 함수 (AJAX 이후 실행)
     function initializeEventListeners() {
@@ -384,15 +356,12 @@ $(function () {
             console.error("Lucide not loaded");
         }
 
-        // Current Year Update
-        const yearElement = document.getElementById("current-year");
-        if (yearElement) {
-            yearElement.textContent = new Date().getFullYear();
-        }
+        $(document).on('click', '.header-box-top-pe-my-add', function () {
+          $('.modal-login-add').css('display', 'flex');
+        });
 
-        // Login Modal (AJAX 후 추가된 요소에 이벤트 바인딩)
-        $(document).on("click", ".header-box-top-pe-my", function () {
-            $(".modal-login").css("display", "flex");
+        $(document).on('click', '#modal-controller-add', function () {
+          $('.modal-login-add').css('display', 'none');
         });
 
         $(document).on("click", "#modal-controller", function () {
@@ -423,6 +392,5 @@ $(function () {
         $(document).on("click", "#modal-controller-search", function () {
             $(".modal-search").css("display", "none");
         });
-
     }
 });

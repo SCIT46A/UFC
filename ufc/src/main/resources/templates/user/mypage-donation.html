@@ -16,8 +16,8 @@
         />
         <link
             rel="stylesheet"
-            th:href="@{/css/user/mypage-sponsor.css}"
-            href="../../static/css/user/mypage-sponsor.css"
+            th:href="@{/css/user/mypage-donation.css}"
+            href="../../static/css/user/mypage-donation.css"
         />
         <link
             rel="stylesheet"
@@ -29,8 +29,8 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/user/mypage-sponsor.js" defer></script>
-        <script th:src="@{/js/user/mypage-sponsor.js}" defer></script>
+        <!-- <script src="../../static/js/user/mypage-donation.js" defer></script>
+        <script th:src="@{/js/user/mypage-donation.js}" defer></script> -->
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
@@ -125,123 +125,69 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
+                                                            <!-- 펀딩한 개수가 필요함함 -->
+                                                                <span></span>-
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="main-in-box-pro-btn">
-                                            <button
-                                                class="main-in-box-pro-btn-in"
-                                            >
-                                                프로필 편집
-                                            </button>
-                                        </div>
+
                                     </div>
                                 </div>
                                 <!-- 내비게이션바 -->
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">프로필</a>
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">작성한 후기</a>
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span current"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/"
-                                                        >내가 후원한 캠페인</a
-                                                    >
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/"
-                                                        >좋아요 누른 캠페인</a
-                                                    >
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">알림</a>
-                                                </div>
-                                            </span>
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-profile.html"
+                                            th:href="@{/user}"
+                                            >프로필</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-reply.html"
+                                            th:href="@{/user/reply}"
+                                            >작성한 후기</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span current">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-donation.html"
+                                            th:href="@{/user/donation}"
+                                            >내가 후원한 캠페인</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in ">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-like.html"
+                                            th:href="@{/user/like}"
+                                            >좋아요 누른 캠페인</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-badge.html"
+                                            th:href="@{/user/badge}"
+                                            >뱃지</a>
+                                            </div>
+                                        </span>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
+
                             </div>
                             <!-- 각각의 나올것들 -->
                             <div class="sup">
-                                <div class="sup-title">
-                                    <div class="sup-title-se">
-                                        <select
-                                            name="choice"
-                                            id=""
-                                            class="sup-title-se-in"
-                                        >
-                                            <option value="진행중">
-                                                진행중
-                                            </option>
-                                            <option value="진행중">종료</option>
-                                        </select>
-                                    </div>
-                                    <div class="sup-title-input">
-                                        <div class="sup-title-input-in">
-                                            <span
-                                                class="sup-title-input-in-span"
-                                            >
-                                                <div
-                                                    class="sup-title-input-in-span-img"
-                                                >
-                                                    <svg viewBox="0 0 48 48">
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M21.8113 37.22C13.3064 37.22 6.4025 30.3161 6.4025 21.8113C6.4025 13.3064 13.3064 6.4025 21.8113 6.4025C30.3161 6.4025 37.22 13.3064 37.22 21.8113C37.22 30.3161 30.3161 37.22 21.8113 37.22ZM45.3246 42.2229L37.22 34.1172C44.0239 25.6124 42.6231 13.1063 34.1182 6.4025C30.9174 3.70097 26.714 2.20011 22.5117 2H21.8113H21.1109C10.805 2.40023 2.40023 10.7049 2 21.0108V21.7112V22.3115C2.30017 33.2177 11.4053 41.8226 22.3115 41.5225C26.614 41.4224 30.7163 39.9215 34.1182 37.22L42.2229 45.3246C43.1234 46.2251 44.4251 46.2251 45.3246 45.3246C46.2251 44.5242 46.2251 43.1224 45.3246 42.2229Z"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                                <input
-                                                    type="text"
-                                                    inputmode="text"
-                                                    placeholder="프로젝트를 검색하세요"
-                                                    autocapitalize="off"
-                                                    autocomplete="off"
-                                                    class="sup-title-input-in-span-input"
-                                                    value=""
-                                                />
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
                                 <div class="sup-content">
                                     <div class="sup-content-in">
                                         <!-- 위에 몇개인지 나오고 -->
@@ -249,87 +195,148 @@
                                             <div
                                                 class="sup-content-in-title-text"
                                             >
-                                                <span>1</span>건의 후원내역이
+                                                <span th:text="${donationCount}">1</span>건의 후원내역이
                                                 있습니다
                                             </div>
                                         </div>
                                         <!-- 각각의 후원내역 나옴 -->
                                         <!-- 여기서 반복 -->
-                                        <div class="sup-content-main">
+                                        <div class="sup-content-main" th:each="donation, status : ${donations}">
                                             <div class="sup-content-main-box">
-                                                <div
-                                                    class="sup-content-main-box-in"
-                                                >
+                                                <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
+                                                    <div>
+                                                        <div class="sup-content-main-box-in-img">
+                                                            <!-- 이미지가 있다면 여기에 추가 -->
+                                                        </div>
+                                                    </div>
                                                     <!-- 내용 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-content"
-                                                    >
+                                                    <div class="sup-content-main-box-in-content">
                                                         <!-- 후원일 -->
-                                                        <div
-                                                            class="sup-content-main-box-in-content-date"
-                                                        >
-                                                            후원일 2025. 01. 31
+                                                        <div class="sup-content-main-box-in-content-date">
+                                                            <!-- <span th:text="${#temporals.format(donation.donatedDate, 'yyyy.MM.dd')}"></span> -->
                                                         </div>
                                                         <!-- 제목 -->
-                                                        <a
-                                                            href="/"
-                                                            class="sup-content-main-box-in-content-title"
-                                                        >
-                                                            <span
-                                                                >일하기 싫은
-                                                                직장인 그 자체
-                                                                +모지
-                                                                키링+</span
-                                                            >
+                                                        <a th:href="@{/user/donation/detail}" class="sup-content-main-box-in-content-title">
+                                                            <!-- <span th:text="${campaign.title}"></span> -->
                                                         </a>
                                                         <!-- 구성 -->
-                                                        <ul
-                                                            class="sup-content-main-box-in-content-in"
-                                                        >
-                                                            <!-- 구성품들 -->
+                                                        <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                <span
-                                                                    >Go to work
-                                                                    패키지</span
-                                                                >
+                                                                ㅎㅎㅎ
+                                                                <!-- <span th:text="${components}"></span> -->
                                                             </li>
                                                         </ul>
                                                         <!-- 비용 -->
-                                                        <div
-                                                            class="sup-content-main-box-in-content-pr"
-                                                        >
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-le"
-                                                            >
-                                                                청바지 20개
+                                                        <div class="sup-content-main-box-in-content-pr">
+                                                            <p class="sup-content-main-box-in-content-pr-le">
+                                                                ㅎㅎㅎㅎ
+                                                                <!-- <span th:text="${campaign[index.index].cost}"></span> -->
                                                             </p>
-                                                            <!-- 배송완료면 빼면됨 -->
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-ri"
-                                                            >
-                                                                2025.02.06 배송
-                                                                예정
+                                                            <p class="sup-content-main-box-in-content-pr-ri">
+                                                                <!-- <span th:text="${#dates.format(donation.donatedDate.plusDays(7), 'yyyy.MM.dd')}"></span> 배송 예정 -->
                                                             </p>
                                                         </div>
                                                     </div>
+                                                    <div class="sup-content-main-box-in-result-img">
+                                                        <!-- <img th:src="@{/images/} + (${campaign[status.index].isSuccess} ? 'achieve.png' : 'fail.png')" alt="결과 이미지" /> -->
+                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
                                         </div>
                                         <!-- 2번째 -->
+                                        <!-- <div class="sup-content-main">
+                                            <div class="sup-content-main-box">
+                                                <div
+                                                    class="sup-content-main-box-in"
+                                                >
+                                                    <!-- 이미지 -->
+                                                     <div>
+                                                        <div>
+
+                                                            <div
+                                                            class="sup-content-main-box-in-img"
+                                                            ></div>
+                                                        </div>
+                                                    <!-- 내용 -->
+                                                     
+                                                    <div
+                                                        class="sup-content-main-box-in-content"
+                                                    >
+                                                        <!-- 후원일 -->
+                                                        <div
+                                                            class="sup-content-main-box-in-content-date"
+                                                            th:value="${donation.donatedDate}"
+                                                        >
+                                                            후원일 2025. 01. 31
+                                                        </div>
+                                                        <!-- 제목 -->
+                                                        <a
+                                                            th:href="@{/user/donation/detail}"
+                                                            class="sup-content-main-box-in-content-title"
+                                                        >
+                                                            <span
+                                                            th:value="${campaign.title}"
+                                                                >일하기 싫은
+                                                                직장인 그 자체
+                                                                +모지
+                                                                키링+</span
+                                                            >
+                                                        </a>
+                                                        <!-- 구성 -->
+                                                        <ul
+                                                            class="sup-content-main-box-in-content-in"
+                                                        >
+                                                            <!-- 구성품들 -->
+                                                            <li>
+                                                                <span
+                                                                    >Go to work
+                                                                    패키지</span
+                                                                >
+                                                            </li>
+                                                        </ul>
+                                                        <!-- 비용 -->
+                                                        <div
+                                                            class="sup-content-main-box-in-content-pr"
+                                                        >
+                                                            <p
+                                                                class="sup-content-main-box-in-content-pr-le"
+                                                            >
+                                                                청바지 20개
+                                                            </p>
+                                                            <!-- 배송완료면 빼면됨 -->
+                                                            <p
+                                                                class="sup-content-main-box-in-content-pr-ri"
+                                                            >
+                                                                2025.02.06 배송
+                                                                예정
+                                                            </p>
+                                                        </div>
+                                                        </div>
+                                                        </div>
+                                                        <div
+                                                        class="sup-content-main-box-in-result-img">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <!-- 3번째 -->
                                         <div class="sup-content-main">
                                             <div class="sup-content-main-box">
                                                 <div
                                                     class="sup-content-main-box-in"
                                                 >
                                                     <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
+                                                     <div>
+                                                        <div>
+
+                                                            <div
+                                                            class="sup-content-main-box-in-img"
+                                                            ></div>
+                                                        </div>
                                                     <!-- 내용 -->
+                                                     
                                                     <div
                                                         class="sup-content-main-box-in-content"
                                                     >
@@ -341,7 +348,7 @@
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/user/donation/detail}"
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span
@@ -380,74 +387,14 @@
                                                                 예정
                                                             </p>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="sup-content-main">
-                                            <div class="sup-content-main-box">
-                                                <div
-                                                    class="sup-content-main-box-in"
-                                                >
-                                                    <!-- 이미지 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-img"
-                                                    ></div>
-                                                    <!-- 내용 -->
-                                                    <div
-                                                        class="sup-content-main-box-in-content"
-                                                    >
-                                                        <!-- 후원일 -->
-                                                        <div
-                                                            class="sup-content-main-box-in-content-date"
-                                                        >
-                                                            후원일 2025. 01. 31
                                                         </div>
-                                                        <!-- 제목 -->
-                                                        <a
-                                                            href="/"
-                                                            class="sup-content-main-box-in-content-title"
-                                                        >
-                                                            <span
-                                                                >일하기 싫은
-                                                                직장인 그 자체
-                                                                +모지
-                                                                키링+</span
-                                                            >
-                                                        </a>
-                                                        <!-- 구성 -->
-                                                        <ul
-                                                            class="sup-content-main-box-in-content-in"
-                                                        >
-                                                            <!-- 구성품들 -->
-                                                            <li>
-                                                                <span
-                                                                    >Go to work
-                                                                    패키지</span
-                                                                >
-                                                            </li>
-                                                        </ul>
-                                                        <!-- 비용 -->
+                                                        </div>
                                                         <div
-                                                            class="sup-content-main-box-in-content-pr"
-                                                        >
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-le"
-                                                            >
-                                                                청바지 20개
-                                                            </p>
-                                                            <!-- 배송완료면 빼면됨 -->
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-ri"
-                                                            >
-                                                                2025.02.06 배송
-                                                                예정
-                                                            </p>
+                                                        class="sup-content-main-box-in-result-img">
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
+                                            </div> 
                                     </div>
                                 </div>
                             </div>

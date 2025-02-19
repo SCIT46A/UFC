@@ -1,31 +1,22 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.*;
-import app.scit46.ufc.entity.UserAlertEntity;
-import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.repository.UserAlertRepository;
-import app.scit46.ufc.service.*;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.Collections;
-import java.util.List;
+import app.scit46.ufc.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Controller
+@RequiredArgsConstructor
 public class MainController {
 
-  @Autowired
-  private UserService userService;
+  private final UserService userService;
 
   @GetMapping("/")
   public String index(HttpServletRequest request, Model model) {

@@ -1,5 +1,6 @@
 package app.scit46.ufc.service;
 
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,20 +15,19 @@ import app.scit46.ufc.entity.CampaignEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
 import app.scit46.ufc.repository.CampaignRepository;
 import app.scit46.ufc.repository.MaterialDonationRepository;
+import lombok.RequiredArgsConstructor;
+
 
 @Service
+@RequiredArgsConstructor
 public class CampaignService {
+
     private final CampaignRepository campaignRepository;
     private final CampaignGoalRepository campaignGoalRepository;
     private final MaterialDonationRepository materialDonationRepository;
 
-    // ✅ 생성자 주입
-    public CampaignService(CampaignRepository campaignRepository,
-                           CampaignGoalRepository campaignGoalRepository,
-                           MaterialDonationRepository materialDonationRepository) {
-        this.campaignRepository = campaignRepository;
-        this.campaignGoalRepository = campaignGoalRepository;
-        this.materialDonationRepository = materialDonationRepository;
+    public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
+      return campaignRepository.findByCampaignId(campaignId);
     }
 
     //펀딩 대기 중인
