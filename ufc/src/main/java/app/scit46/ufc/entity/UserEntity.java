@@ -70,7 +70,7 @@ public class UserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PrivatePhotoEntity photoId;
+    private ImageUrlEntity photoId;
 
     @Column(name = "intro")
     private String intro;
@@ -112,7 +112,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 
-    public static UserEntity toEntity(UserDTO userDTO, PrivatePhotoEntity photoId) {
+    public static UserEntity toEntity(UserDTO userDTO, ImageUrlEntity photoId) {
         return UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .oauthId(userDTO.getOauthId())

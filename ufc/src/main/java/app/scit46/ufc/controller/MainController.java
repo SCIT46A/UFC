@@ -41,7 +41,7 @@ public class MainController {
 
   @GetMapping("/info")
   public String info() {
-    return "upda/info";
+    return "info";
   }
 
 }

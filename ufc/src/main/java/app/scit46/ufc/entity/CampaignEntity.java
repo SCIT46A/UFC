@@ -1,10 +1,27 @@
 package app.scit46.ufc.entity;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import app.scit46.ufc.dto.CampaignDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -24,13 +41,20 @@ public class CampaignEntity {
     @Column(name = "title", nullable = false, length = 150)
     private String title;
 
+    @Column(name = "description", nullable = false, length = 255)
+    private String description;
+
     @Column(name = "start_date", nullable = false)
     private LocalDateTime startDate;
 
     @Column(name = "end_date", nullable = false)
     private LocalDateTime endDate;
 
+    @Column(name = "send_date", nullable = false)
+    private LocalDateTime sendDate;
+
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @Column(name = "campaign_status", nullable = false)
@@ -45,7 +69,7 @@ public class CampaignEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PublicPhotoEntity photo;
+    private ImageUrlEntity photo;
 
     // OneToMany relationships
     @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY)
@@ -73,16 +97,18 @@ public class CampaignEntity {
     @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static CampaignEntity toEntity(CampaignDTO dto, CreatorEntity createdBy, PublicPhotoEntity photo) {
+    public static CampaignEntity toEntity(CampaignDTO dto, Long createdBy, String photo) {
         return CampaignEntity.builder()
-                .campaignId(dto.getCampaignId())
+                //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
                 .title(dto.getTitle())
+                .description(dto.getDescription())
                 .startDate(dto.getStartDate())
                 .endDate(dto.getEndDate())
-                .createdDate(dto.getCreatedDate())
-                .createdBy(createdBy)
+                .sendDate(dto.getSendDate())
+                //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
+                .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
                 .isSuccess(dto.getIsSuccess())
-                .photo(photo)
+                .photo(ImageUrlEntity.builder().imageId(photo).build())
                 .campaignStatus(dto.getCampaignStatus())
                 .build();
     }

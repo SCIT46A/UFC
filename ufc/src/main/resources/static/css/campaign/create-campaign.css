@@ -52,8 +52,11 @@ main{
     background: rgb(255, 255, 255);
     height: 100%;
     overflow-y: auto;
+    overflow-x: hidden;
+    padding: 36px 32px;
 }
 
+/*
 .cam-in{
     flex: 1 1 0%;
     display: flex;
@@ -63,6 +66,7 @@ main{
     align-items: center;
     padding: 36px 32px;
 }
+
 
 .cam-in-box{
     display: flex;
@@ -76,12 +80,22 @@ main{
     flex-direction: column;
     gap: 40px;
 }
+*/
 
 .cam-in-box-bo{
     display: flex;
     width: 100%;
     flex-direction: column;
     margin: 0px auto;
+}
+
+.cam-in-box-bo h1 {
+    margin-top: 0em;
+    margin: calc(2rem - 0.14285em) 0em 1rem;
+    font-weight: 700;
+    color: rgb(13, 13, 13);
+    font-size: 24px !important;
+    line-height: 32px !important;
 }
 
 .cam-in-box-bo h2{
@@ -100,6 +114,21 @@ main{
     font-size: 14px !important;
     line-height: 24px !important;
     margin: 0em 0em 1em;
+}
+
+.cam-in-box-title-text {
+    width: 100%;
+    height: 40px;
+    resize: none;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid rgb(229, 229, 229);
+    overflow: auto;
+    color: inherit;
+    font: inherit;
+    margin: 0;
 }
 
 .cam-in-box-content{
@@ -147,10 +176,9 @@ main{
     padding: 0px 16px;
     pointer-events: none;
     -webkit-appearance: button;
-}
-
-.cam-in-box-item{
-
+    &.isActive{
+        background: rgb(74, 222, 128);
+    }
 }
 
 .cam-in-box-item-ul{
@@ -165,22 +193,13 @@ main{
     margin: 0px 8px 10px 0px;
 }
 
-.ul-btn{
+input[name="inputTag"] {
+    min-width: 60px;
+    width: auto;
+    transition: width 0.1s;
+    border: none;
     outline: none;
-    border: 1px solid rgb(240, 240, 240);
-    border-radius: 52px;
-    height: 36px;
-    background: rgb(255, 255, 255);
-    padding: 0px 18px;
-    -webkit-appearance: button;
-    cursor: pointer;
-    text-transform: none;
-}
-
-.isActive{
-    background: rgb(248, 100, 83);
-    color: rgb(255, 255, 255);
-    border: 1px solid rgb(248, 100, 83);
+    background: transparent;
 }
 
 .cam-ag{
@@ -258,27 +277,6 @@ main{
     justify-content: space-between;
 }
 
-.cam-back-btn{
-    padding: 0px;
-    cursor: pointer;
-    display: inline-flex;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    height: 40px;
-    white-space: nowrap;
-    border-radius: 1px;
-    margin: 0px;
-    border: 0px;
-    outline: none;
-    font-weight: normal;
-    box-sizing: border-box;
-    background-color: transparent;
-    color: rgb(61, 61, 61);
-    -webkit-appearance: button;
-}
-
 .cam-create-btn{
     width: 88px;
     font-weight: bold;
@@ -291,29 +289,19 @@ main{
     height: 40px;
     white-space: nowrap;
     border-radius: 1px;
-    margin: 0px;
+    margin-left: auto;
     border: 0px;
     outline: none;
     font-weight: normal;
     box-sizing: border-box;
     padding: 0px 16px;
-    background-color: rgb(248, 100, 83);
+    background-color: rgb(158, 158, 158);
     color: white;
+    &.isActive{
+        background-color: rgb(74, 222, 128);
+    }
 }
 
-.cam-back-btn-svg{
-    margin-right: 5px;
-    margin-bottom: 1px;
-    display: inline-flex;
-}
-
-.cam-back-btn-svg svg{
-    position: relative;
-    top: 3px;
-    overflow: hidden;
-    width: 1em;
-    height: 1em;
-}
 
 .cam-create-btn span{
     font-weight: bold;
@@ -336,7 +324,7 @@ main{
     box-shadow: rgba(0, 0, 0, 0.04) 0px 1px 8px, rgba(0, 0, 0, 0.02) 0px 1px 0px;
 }
 
-.cam-la-in-box-top{
+.cam-la-in-box-bottom{
     top: 0px;
     z-index: 100;
     width: 100%;
@@ -350,7 +338,7 @@ main{
     transform: translateY(0px);
 }
 
-.cam-la-in-box-top-in{
+.cam-la-in-box-bottom-in{
     width: 1080px;
     height: 100%;
     margin: 0px auto;
@@ -360,7 +348,7 @@ main{
     position: relative;
 }
 
-.cam-la-in-box-top-in-back{
+.cam-la-in-box-bottom-in-back{
     position: relative;
     z-index: 1;
     display: flex;
@@ -373,19 +361,19 @@ main{
     margin-top: 25px;
 }
 
-.cam-la-in-box-top-in-back-in{
+.cam-la-in-box-bottom-in-back-in{
     margin-right: 9px;
     display: inline-flex;
     align-self: center;
 }
 
-.cam-la-in-box-top-in-back-in svg{
+.cam-la-in-box-bottom-in-back-in svg{
     overflow: hidden;
     width: 1em;
     height: 1em;
 }
 
-.cam-la-in-box-top-in-end{
+.cam-la-in-box-bottom-in-end{
     position: relative;
     z-index: 1;
     display: flex;
@@ -393,11 +381,10 @@ main{
     align-items: center;
 }
 
-.cam-la-in-box-top-in-end-btn{
-    background: rgb(240, 240, 240);
+.cam-la-in-box-bottom-in-end-btn{
     cursor: default;
     font-weight: 500;
-    background: rgb(248, 100, 83);
+    background: rgb(74, 222, 128);
     width: 112px;
     height: 40px;
     color: white;
@@ -415,6 +402,10 @@ main{
     outline: none;
     box-sizing: border-box;
     padding: 0px 16px;
+    &:disabled{
+        background-color: rgb(158, 158, 158);
+        cursor: default;
+    }
 }
 
 .cam-la-in-box-top-in-title{
@@ -485,7 +476,7 @@ main{
     display: block;
     width: 100%;
     height: 2px;
-    background: rgb(248, 100, 83);
+    background: rgb(74, 222, 128);
 }
 
 .cam-la-in-box-bo{
@@ -501,7 +492,6 @@ main{
 .cam-la-in-box-bo-all-de{
     display: flex;
     padding-bottom: 48px;
-    margin-bottom: 56px;
     -webkit-box-pack: justify;
     justify-content: space-between;
     border-bottom: 1px solid rgb(240, 240, 240);
@@ -572,24 +562,47 @@ main{
     -webkit-box-align: center;
     align-items: center;
     border-radius: 1px;
+    &:focus{
+        border: 1px solid rgb(74, 222, 128);
+        outline: none;
+    }
 }
 
-.cam-la-in-box-bo-all-de-div-box-img{
+.cam-la-in-box-bo-all-de-div-box-textarea {
+    width: 100%;
+    height: 104px;
+    resize: none;
+    padding: 10px 16px;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+    border: 1px solid rgb(228, 228, 228);
+    overflow: auto;
+    color: inherit;
+    font: inherit;
+    margin: 0;
+    &:focus {
+        border: 1px solid rgb(74, 222, 128);
+        outline: none;
+    }
+}
+
+.cam-la-in-box-bo-all-de-div-box-img {
     display: flex;
     flex-wrap: wrap;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: center;
     justify-content: center;
     width: 100%;
-    padding: 13px;
+    padding: 16px;
     margin-bottom: 25px;
     background: white;
-    border: 1px solid rgb(240, 240, 240);
+    border: 1px solid rgb(74, 222, 128);
     box-sizing: border-box;
     border-radius: 4px;
     position: relative;
-    transition: border 0.4s;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(74, 222, 128, 0.1);
 }
 
 .cam-img-span{
@@ -617,6 +630,20 @@ main{
     display: inline-flex
     ;
         align-self: center;
+}
+
+.cam-img-span i div svg{
+    overflow: hidden;
+    fill: rgb(248, 100, 83);
+    width: 1em;
+    height: 1em;
+}
+
+.cam-img-span i div svg{
+    overflow: hidden;
+    fill: rgb(248, 100, 83);
+    width: 1em;
+    height: 1em;
 }
 
 .cam-img-span i div svg{
@@ -661,9 +688,8 @@ main{
     opacity: 0;
 }
 
-.cam-img-re{
+.cam-img-re {
     display: flex;
-    flex-wrap: wrap;
     width: 100%;
     border: 1px solid rgb(240, 240, 240);
     border-radius: 4px;
@@ -671,81 +697,61 @@ main{
     margin-bottom: 12px;
 }
 
-.cam-img-re-box{
+.cam-img-re-box {
     display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: justify;
-    justify-content: space-between;
-    flex: 1 1 0%;
-    padding: 12px 12px 15px;
-    background: white;
-}
-
-.cam-img-re-box-sh{
-    width: 110px;
-    height: 110px;
+    width: 100%;  /* 전체 너비 사용 */
     position: relative;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: white;
+    padding: 10px;  /* 여백 추가 */
 }
 
-.cam-img-re-box-sh span{
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    padding: 2px 4px;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    font-size: 9px;
-    line-height: 11px;
-    color: white;
-    background: rgb(254, 95, 76);
+.cam-img-re-box-sh {
+    width: 100%;  /* 전체 너비 사용 */
+    position: relative;
+    overflow: hidden;
 }
 
-.cam-img-re-box-sh img{
+.cam-img-re-box-sh img {
+    /* position: absolute; */
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    vertical-align: bottom;
-    border: 0;
 }
 
-.cam-img-re-box-btn{
-    display: flex;
+.cam-img-re-box-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    padding: 8px;
+    transition: all 0.2s ease;
 }
 
-.cam-img-re-box-btn-in{
+.cam-img-re-box-btn-in {
     display: flex;
-    -webkit-box-align: center;
     align-items: center;
-    -webkit-box-pack: center;
     justify-content: center;
-    width: 48px;
-    height: 36px;
-    background: white;
-    font-size: 14px;
-    margin-left: 8px;
-    border: 1px solid rgb(240, 240, 240);
-    border-radius: 4px;
-    -webkit-appearance: button;
+    width: 24px;
+    height: 24px;
+    background: transparent;
+    border: none;
     cursor: pointer;
-    text-transform: none;
+    padding: 0;
 }
 
-.cam-img-re-box-btn-in div{
-    display: inline-flex;
-    align-self: center;
+.cam-img-re-box-btn-in svg {
+    fill: white;
+    width: 16px;
+    height: 16px;
 }
 
-.cam-img-re-box-btn-in div svg{
-    overflow: hidden;
-    width: 1em;
-    height: 1em;
+.cam-img-re-box-btn:hover {
+    background: rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
 }
 
 .cam-tag{
@@ -830,7 +836,7 @@ main{
 }
 
 .cam-wr-title{
-    color: rgb(229, 60, 65);
+    color: rgb(248, 100, 83);
     font-size: 12px;
     font-weight: bold;
     line-height: 120%;
@@ -847,7 +853,7 @@ main{
     overflow: hidden;
     position: relative;
     margin-right: 8px;
-    fill: rgb(229, 60, 65);
+    fill: rgb(248, 100, 83);
     font-size: 13.5px;
     width: 1em;
     height: 1em;
@@ -902,6 +908,10 @@ main{
     outline: 0px;
     box-sizing: border-box;
     background: white;
+    &.isActive {
+        color: rgb(255, 255, 255);
+        background: rgb(74, 222, 128);
+    }
 }
 
 .cam-la-pay-box{
@@ -1035,60 +1045,19 @@ main{
     margin: 0em 0em 1em;
 }
 
-.datepicker{
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    padding: 0px 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid rgb(240, 240, 240);
-    background: white;
-    color: rgb(208, 208, 208);
+.datetime-picker {
+    color: #333 !important;
+    background-color: #f8f9fa !important;
+    border: 1px solid #ced4da !important;
+    padding: 8px !important;
+    border-radius: 4px !important;
+    width: 100% !important;
 }
 
-.timepicker{
-    display: flex;
-    flex-wrap: wrap;
-    -webkit-box-align: center;
-    align-items: center;
-    width: 100%;
-    height: 40px;
-    text-align: left;
-    padding: 0px 14px;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid rgb(240, 240, 240);
-    background: white;
-    color: rgb(208, 208, 208);
-}
-
-.cam-la-ti-in-bo{
-    font-weight: 400;
-    font-size: 14px !important;
-    line-height: 24px !important;
-}
-
-.cam-la-ti-in-bo-a{
-    padding-top: 46px;
-    font-weight: 400;
-    font-size: 14px !important;
-    line-height: 24px !important;
-}
-
-.cam-la-ti-in-bo p{
-    margin-bottom: 0em;
-    margin-top: 0em;
-    font-weight: bold;
-    font-size: 11px;
-    line-height: 18px;
-    letter-spacing: -0.005em;
-    color: rgb(61, 61, 61);
-    display: flex;
+.date-info {
+    margin-top: 5px !important;
+    color: #666 !important;
+    font-size: 0.9em !important;
 }
 
 .cam-gi-box{
@@ -1097,7 +1066,7 @@ main{
     width: 100%;
     min-height: calc(-298px + 100vh);
     position: relative;
-    padding: 0px 0px 98px;
+    padding: 0px 0px 28px;
     margin-top: -34px;
     -webkit-box-pack: justify;
     justify-content: space-between;
@@ -1281,7 +1250,7 @@ main{
     background: rgb(253, 244, 243);
     border: 1px solid rgb(255, 222, 219);
     margin: 0px;
-    color: rgb(248, 100, 83);
+    color: rgb(74, 222, 128);
     word-break: break-all;
     white-space: normal;
     font-size: 11px !important;
@@ -1574,11 +1543,13 @@ main{
     border-radius: 0px 2px 2px 0px;
 }
 
+/*
 .git-la-btn{
     display: flex;
     flex-wrap: wrap;
     margin: 22px 0px 0px;
 }
+*/
 
 .git-la-btn-re{
     flex: 0 0 auto;
@@ -1601,39 +1572,42 @@ main{
     font-weight: normal;
     padding: 0px 24px;
     border: 1px solid rgb(240, 240, 240);
-    color: rgb(61, 61, 61);
-    background: white;
     -webkit-appearance: button;
     text-transform: none;
 }
 
 .git-la-btn-ok{
-    font-size: 12px;
-    line-height: 20px;
     cursor: default;
-    flex: 1 1 0%;
-    margin: 0px 0px 0px 10px;
+    font-weight: 500;
+    background: rgb(74, 222, 128);
+    width: 100%;
+    height: 40px;
+    color: white;
+    font-size: 12px !important;
+    line-height: 20px !important;
     display: inline-flex;
     -webkit-box-align: center;
     align-items: center;
     -webkit-box-pack: center;
     justify-content: center;
-    height: 44px;
     white-space: nowrap;
     border-radius: 1px;
+    margin: 0px;
     border: 0px;
     outline: none;
-    font-weight: normal;
     box-sizing: border-box;
-    padding: 0px 24px;
-    color: white;
-    pointer-events: none;
-    background-color: rgb(228, 228, 228);
-    -webkit-appearance: button;
+    padding: 0px 16px;
+    &:disabled {
+        background-color: rgb(158, 158, 158);
+        cursor: default;
+    }
+    &.isActive {
+        background-color: rgb(74, 222, 128);
+    }
 }
 
 .git-la-btn-ok span{
-    color: rgb(158, 158, 158);
+    color: white;
 }
 
 .cam-pro-top{
@@ -1695,7 +1669,7 @@ main{
 .cam-pro-bo-le-box-in-div svg{
     overflow: hidden;
     margin: 0px 8px 0px 0px;
-    fill: rgb(248, 100, 83);
+    fill: rgb(74, 222, 128);
     width: 1em;
     height: 1em;
 }
@@ -1818,9 +1792,6 @@ main{
     font-weight: normal;
     padding: 0px 16px;
     -webkit-appearance: button;
-    text-transform: none;
-    overflow: visible;
-    cursor: pointer;
 }
 
 .cam-info-img-ri-box-btn div{
@@ -1829,7 +1800,7 @@ main{
 }
 
 .cam-info-img-ri-box-btn div svg{
-    fill: rgb(248, 100, 83);
+    fill: rgb(74, 222, 128);
     margin-right: 9px;
     overflow: hidden;
     width: 1em;
@@ -1841,4 +1812,412 @@ main{
     word-break: break-all;
     margin: 0em 0em 1em;
     line-height: 1.7em;
+}
+
+/* 이미지 업로드 관련 CSS */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(74, 222, 128, 0.2);
+    border-top: 3px solid rgb(74, 222, 128);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.cam-la-in-box-bo-all-de-div-box-img {
+    transition: border-color 0.3s ease;
+}
+
+.cam-la-in-box-bo-all-de-div-box-img.drag-over {
+    border-color: rgb(74, 222, 128);
+}
+
+#previewImage {
+    transition: opacity 0.3s ease;
+}
+
+.error-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.error-box {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-left: 4px solid rgb(74, 222, 128);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    animation: slideIn 0.3s ease;
+}
+
+.error-box.fade-out {
+    animation: slideOut 0.3s ease;
+}
+
+.error-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+
+.error-message {
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* 호버 효과 */
+.cam-la-in-box-bo-all-de-div-box-img:hover {
+    border-color: rgb(34, 197, 94);
+    box-shadow: 0 4px 6px rgba(74, 222, 128, 0.2);
+    transform: translateY(-1px);
+}
+
+/* 클릭 효과 */
+.cam-la-in-box-bo-all-de-div-box-img:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(74, 222, 128, 0.1);
+}
+
+/* 이미지 미리보기 영역의 span 태그 (대표 이미지 텍스트) */
+.cam-img-re-box-sh span {
+    display: none;  /* 이미지가 있을 때는 텍스트 숨김 */
+}
+
+/* 이미지가 없을 때만 텍스트 표시 */
+.cam-img-re-box-sh:not(:has(img[style*="display: block"])) span {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 4px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    font-size: 9px;
+    line-height: 11px;
+    color: white;
+    background: rgb(74, 222, 128);
+    z-index: 1;
+}
+
+/* 펀딩 기간 초과 알림 스타일 */
+.period-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    transform: translateX(120%);
+    transition: transform 0.3s ease;
+}
+
+.period-alert.show {
+    transform: translateX(0);
+}
+
+.period-alert-content {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-left: 4px solid rgb(74, 222, 128);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 16px;
+    border-radius: 4px;
+}
+
+.period-alert-icon {
+    margin-right: 12px;
+    font-size: 20px;
+}
+
+.period-alert-message {
+    color: #333;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.default-date-message {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 14px;
+    color: #999;
+    vertical-align: middle;
+}
+
+/* 날짜 선택기 스타일 */
+input[type="datetime-local"] {
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333;
+    background-color: white;
+}
+
+input[type="datetime-local"]:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+
+/* 날짜 알림창 스타일 */
+.date-alert {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #ff4444;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+}
+
+.date-alert.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.date-alert-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-alert-icon {
+    font-size: 20px;
+}
+
+.date-alert-message {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.upda-tag-custom.tag-active {
+    background-color: rgb(74, 222, 128);
+    color: white;
+}
+
+.upda-tag-custom.tag-duplicate {
+    background-color: #ffe6e6;
+    border: 1px solid #ff4444;
+}
+
+.duplicate-tooltip {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #ff4444;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    margin-top: 4px;
+    z-index: 1000;
+}
+
+.duplicate-tooltip::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 4px solid #ff4444;
+}
+
+/* 최종 확인 페이지 스타일 */
+.final-summary-section {
+    margin-bottom: 40px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+.final-summary-section h3 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgb(74, 222, 128);
+}
+
+.final-summary-content {
+    padding: 0 16px;
+}
+
+.summary-item {
+    margin-bottom: 20px;
+}
+
+.summary-item label {
+    display: block;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.summary-item p {
+    color: #333;
+    line-height: 1.6;
+}
+
+.tag-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag-container span {
+    padding: 4px 12px;
+    background: rgb(74, 222, 128);
+    color: white;
+    border-radius: 16px;
+    font-size: 14px;
+}
+
+/* 리워드 요약 스타일 */
+.reward-item {
+    background: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.reward-title {
+    color: rgb(74, 222, 128);
+    font-size: 18px;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid rgb(74, 222, 128);
+}
+
+.reward-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 12px;
+    background: white;
+    border-radius: 4px;
+}
+
+.reward-name, .reward-amount {
+    font-size: 16px;
+}
+
+.reward-items {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.funding-items, .reward-items-list {
+    background: white;
+    padding: 16px;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.section-title {
+    color: #333;
+    margin-bottom: 12px;
+    font-size: 16px;
+}
+
+.reward-items ul {
+    list-style: none;
+    padding: 0;
+}
+
+.reward-items li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.reward-items li:last-child {
+    border-bottom: none;
+}
+
+.item-name {
+    color: #666;
+}
+
+.item-amount {
+    color: #333;
+    font-weight: 500;
+}
+
+/* 전체 필요 기부품 테이블 스타일 */
+.funding-summary-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.funding-summary-table th,
+.funding-summary-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.funding-summary-table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #333;
+}
+
+.funding-summary-table td {
+    color: #666;
+}
+
+.funding-summary-table td:last-child {
+    color: #333;
+    font-weight: 500;
+    text-align: left;
 }

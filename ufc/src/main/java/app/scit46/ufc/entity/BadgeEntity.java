@@ -28,7 +28,7 @@ public class BadgeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PrivatePhotoEntity photo;
+    private ImageUrlEntity photo;
 
     // OneToMany: UserBadges.badge 참조
     @OneToMany(mappedBy = "badge", fetch = FetchType.LAZY)
@@ -38,7 +38,7 @@ public class BadgeEntity {
     @OneToMany(mappedBy = "targetBadge", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static BadgeEntity toEntity(BadgeDTO dto, PrivatePhotoEntity photo) {
+    public static BadgeEntity toEntity(BadgeDTO dto, ImageUrlEntity photo) {
         return BadgeEntity.builder()
                 .badgeId(dto.getBadgeId())
                 .name(dto.getName())

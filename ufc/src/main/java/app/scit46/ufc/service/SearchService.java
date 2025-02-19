@@ -1,24 +1,28 @@
 package app.scit46.ufc.service;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.SearchDTO;
-import app.scit46.ufc.dto.SearchResultDTO;
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.entity.CampaignEntity;
-import app.scit46.ufc.entity.ProductEntity;
-import app.scit46.ufc.entity.SearchEntity;
-import app.scit46.ufc.entity.TagEntity;
-import app.scit46.ufc.repository.*;
-import app.scit46.ufc.util.HangulUtils;
-import app.scit46.ufc.util.SimilarityUtil;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.*;
-import java.util.stream.Collectors;
+import app.scit46.ufc.dto.SearchDTO;
+import app.scit46.ufc.dto.SearchResultDTO;
+import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.entity.SearchEntity;
+import app.scit46.ufc.entity.TagEntity;
+import app.scit46.ufc.repository.LikeRepository;
+import app.scit46.ufc.repository.ProductRepository;
+import app.scit46.ufc.repository.SearchRepository;
+import app.scit46.ufc.repository.TagRepository;
+import app.scit46.ufc.repository.campaign.CampaignRepository;
+import app.scit46.ufc.util.HangulUtils;
+import app.scit46.ufc.util.SimilarityUtil;
 
 @Service
 public class SearchService {

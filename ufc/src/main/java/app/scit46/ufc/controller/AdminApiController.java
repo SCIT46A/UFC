@@ -1,19 +1,31 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.*;
-import app.scit46.ufc.service.NoticeService;
-import app.scit46.ufc.service.CampaignService;
-import app.scit46.ufc.service.ReportService;
-import app.scit46.ufc.service.CreatorService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.CampaignGoalDTO;
+import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.NoticeDTO;
+import app.scit46.ufc.dto.ReportDTO;
+import app.scit46.ufc.service.CreatorService;
+import app.scit46.ufc.service.NoticeService;
+import app.scit46.ufc.service.ReportService;
+import app.scit46.ufc.service.campaign.CampaignService;
 
 @RestController
 @RequestMapping("/api")
@@ -176,13 +188,14 @@ public class AdminApiController {
                     map.put("address", creator.getAddress());
                     map.put("creatorStatus", creator.getCreatorStatus());
 
-                    if (creator.getOwnUser() != null) {
-                        map.put("userId", creator.getOwnUser().getUserId());
-                        map.put("userName", creator.getOwnUser().getUserName());
-                        map.put("email", creator.getOwnUser().getEmail());
-                        map.put("createdAt", creator.getOwnUser().getCreatedAt() != null ? creator.getOwnUser().getCreatedAt().toString() : null);
-                        map.put("updatedAt", creator.getOwnUser().getUpdatedAt() != null ? creator.getOwnUser().getUpdatedAt().toString() : null);
-                    }
+                    // 창작자 승인 대기 목록에서 유저 정보는 필요 없을 듯 하여 주석처리
+                    // if (creator.getOwnUser() != null) {
+                    //     map.put("userId", creator.getOwnUser().getUserId());
+                    //     map.put("userName", creator.getOwnUser().getUserName());
+                    //     map.put("email", creator.getOwnUser().getEmail());
+                    //     map.put("createdAt", creator.getOwnUser().getCreatedAt() != null ? creator.getOwnUser().getCreatedAt().toString() : null);
+                    //     map.put("updatedAt", creator.getOwnUser().getUpdatedAt() != null ? creator.getOwnUser().getUpdatedAt().toString() : null);
+                    // }
                     return map;
                 })
                 .collect(Collectors.toList());

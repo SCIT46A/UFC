@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 
@@ -29,13 +32,28 @@ public class CreatorService {
         return CreatorDTO.toDTO(creatorRepository.findById(id).orElse(null));
     }
 
+    public List<CreatorDTO> getPendingCreators() {
+        return creatorRepository.findByCreatorStatusFalseWithUser().stream()
+                .map(CreatorDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void approveCreator(Long creatorId) {
+        CreatorEntity creator = creatorRepository.findById(creatorId)
+                .orElseThrow(() -> new RuntimeException("창작자를 찾을 수 없습니다."));
+        creator.setCreatorStatus(1);
+    }
+
     // 검토 필요
     public void updateCreator(CreatorDTO creator) {
         creatorRepository.save(CreatorEntity.toEntity(creator,
-                creator.getBusinessCert(),
-                creator.getBackImgUrl(),
-                creator.getProImgUrl(),
-                creator.getOwnUser()));
+                ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
+                ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
+                ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
+                UserDTO.builder().userId(creator.getOwnUser()).build()));
     }
+
+    
 
 }

@@ -31,13 +31,13 @@ public class ItemEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PublicPhotoEntity photo;
+    private ImageUrlEntity photo;
 
     // OneToMany: Products.item 참조
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<ProductEntity> products;
 
-    public static ItemEntity toEntity(ItemDTO dto, PublicPhotoEntity photo) {
+    public static ItemEntity toEntity(ItemDTO dto, ImageUrlEntity photo) {
         return ItemEntity.builder()
                 .itemId(dto.getItemId())
                 .name(dto.getName())

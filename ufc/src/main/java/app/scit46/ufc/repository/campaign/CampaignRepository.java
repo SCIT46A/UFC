@@ -1,4 +1,4 @@
-package app.scit46.ufc.repository;
+package app.scit46.ufc.repository.campaign;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -6,14 +6,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import app.scit46.ufc.entity.CampaignEntity;
 
-
-@Repository
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
-    
+
     List<CampaignEntity> findByCampaignId(Long campaignId);
 
     // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
@@ -27,4 +24,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> searchCampaignByTitleIgnoreSpace(@Param("normalizedKeyword") String normalizedKeyword);
 
     List<CampaignEntity> findByTitleContaining(String title);
+
+    //List<CampaignEntity> findByTitleContainingOrTagsContaining(String searchKeyword, String searchKeyword2);
+    
 }
