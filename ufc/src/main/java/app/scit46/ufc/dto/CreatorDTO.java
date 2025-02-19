@@ -26,7 +26,7 @@ public class CreatorDTO {
     private Long backImgUrl;
     private Long proImgUrl;
     private Long ownUser;
-    private Integer creatorStatus;
+    private Boolean creatorStatus;
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()

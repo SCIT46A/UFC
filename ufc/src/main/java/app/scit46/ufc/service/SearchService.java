@@ -19,8 +19,8 @@ import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.repository.LikeRepository;
 import app.scit46.ufc.repository.ProductRepository;
 import app.scit46.ufc.repository.SearchRepository;
-import app.scit46.ufc.repository.TagRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
+import app.scit46.ufc.repository.tag.TagRepository;
 import app.scit46.ufc.util.HangulUtils;
 import app.scit46.ufc.util.SimilarityUtil;
 

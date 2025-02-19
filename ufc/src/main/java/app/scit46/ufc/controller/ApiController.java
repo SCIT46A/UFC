@@ -1,31 +1,34 @@
 package app.scit46.ufc.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.SearchDTO;
+import app.scit46.ufc.dto.SearchResultDTO;
+import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.dto.UserAlertDTO;
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
-import app.scit46.ufc.service.campaign.CampaignService;
-import lombok.RequiredArgsConstructor;
-
-import app.scit46.ufc.dto.*;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.*;
+import app.scit46.ufc.service.SearchService;
+import app.scit46.ufc.service.UserAlertService;
+import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.tag.TagService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")

@@ -57,7 +57,7 @@ public class CreatorEntity {
     private String address;
 
     @Column(name = "creator_status", nullable = false)
-    private Integer creatorStatus;
+    private Boolean creatorStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "back_img_url")

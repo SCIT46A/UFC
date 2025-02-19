@@ -42,7 +42,7 @@ public class CreatorService {
     public void approveCreator(Long creatorId) {
         CreatorEntity creator = creatorRepository.findById(creatorId)
                 .orElseThrow(() -> new RuntimeException("창작자를 찾을 수 없습니다."));
-        creator.setCreatorStatus(1);
+        creator.setCreatorStatus(true);
     }
 
     // 검토 필요
