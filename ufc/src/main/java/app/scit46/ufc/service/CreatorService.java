@@ -1,9 +1,11 @@
 package app.scit46.ufc.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 
@@ -16,12 +18,24 @@ public class CreatorService {
         this.creatorRepository = creatorRepository;
     }
 
-    public List<CreatorEntity> getAllCreators() {
-        return creatorRepository.findAll();
+    public List<CreatorDTO> getAllCreators() {
+        return creatorRepository.findAll().stream()
+                .map(CreatorDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
-    public CreatorEntity getCreator(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getCreator'");
+    // 검토 필요
+    public CreatorDTO getCreator(Long id) {
+        return CreatorDTO.toDTO(creatorRepository.findById(id).orElse(null));
     }
+
+    // 검토 필요
+    public void updateCreator(CreatorDTO creator) {
+        creatorRepository.save(CreatorEntity.toEntity(creator,
+                creator.getBusinessCert(),
+                creator.getBackImgUrl(),
+                creator.getProImgUrl(),
+                creator.getOwnUser()));
+    }
+
 }
