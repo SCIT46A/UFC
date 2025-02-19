@@ -1,0 +1,523 @@
+body{
+    margin: 0px;
+    padding: 0px;
+    overflow-x: hidden;
+    min-width: 320px;
+    background: #f6f5f5;
+    font-size: 14px;
+    line-height: 1.7em;
+    color: rgba(0, 0, 0, 0.87);
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    line-height: 1.7em;
+    color: rgba(0, 0, 0, 0.87);
+    box-sizing: inherit;
+}
+
+main{
+    
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+}
+
+.main{
+    position: relative;
+    display: block;
+    width: 100%;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    background: rgb(255, 255, 255);
+}
+
+.main-container{
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: -0.015em;
+    font-weight: 400;
+    background: #fff;
+    color: #3d3d3d;
+    border-bottom: 1px solid rgb(245, 245, 245);
+}
+
+.main-top{
+    background: rgb(255, 255, 255);
+    box-sizing: border-box;
+    position: relative;
+}
+
+.main-top-in{
+    height: 100%;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    position: relative;
+}
+
+.main-top-in-content{
+    margin-top: 24px;
+    width: 100%;
+    position: relative;
+    z-index: 99;
+}
+
+.main-top-in-content-target{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: auto hidden;
+    padding-left: 20px;
+}
+
+.main-top-in-content-target-box{
+    display: inline-flex;
+    padding-right: 50px;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.main-top-in-content-target-box-span{
+    display: flex;
+    position: relative;
+    height: 34px;
+    line-height: 34px;
+    box-sizing: border-box;
+    margin: 0px 8px 0px 0px;
+    border-radius: 3px;
+    border: 1px solid rgb(230, 230, 230);
+    background: rgb(255, 255, 255);
+    color: rgb(72, 72, 72);
+    padding: 0px;
+    overflow: hidden;
+
+}
+
+.main-top-in-content-target-box-span-btn{
+    outline: 0;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    height: 100%;
+    background: rgb(255, 255, 255);
+    color: rgb(85, 85, 85);
+    font-weight: normal;
+}
+
+.main-top-in-content-target-box-span-btn-re{
+    outline: 0;
+    cursor: pointer;
+    position: relative;
+    border: 0px;
+    height: 100%;
+    background: rgb(255, 255, 255);
+    color: rgb(85, 85, 85);
+    font-weight: normal;
+}
+
+.main-top-in-content-target-box-span-btn-spab{
+    padding-left: 5px;
+    padding-right: 35px;
+    font-size: 0.8rem;
+    position: relative;
+}
+
+.icon-open{
+    right: 7px;
+    top: 50%;
+    width: 16px;
+    margin: 1px 0px 0px;
+    border: 0px;
+    background: 0px center;
+    padding: 0px;
+    outline: none;
+    font-size: 8px;
+    line-height: 0;
+    transform: translateY(-50%);
+    position: absolute !important;
+}
+
+.main-bo{
+    min-height: 150px;
+    position: relative;
+    height: auto;
+    padding: 0px;
+}
+
+.main-bo-in{
+    color: rgb(51, 51, 51);
+}
+
+.main-bo-in-top{
+    font-size: 14px;
+    line-height: 24px;
+    color: rgb(61, 61, 61);
+    padding: 6px 24px 10px;
+    letter-spacing: -0.08px;
+}
+
+.main-bo-in-top span{
+    color: rgb(255, 87, 87);
+}
+
+.main-bo-in-bo{
+    display: flex;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0px 16px;
+}
+
+.main-bo-in-bo-pe{
+    width: 25%;
+    margin: 0px;
+    box-sizing: border-box;
+    padding: 8px 10px;
+}
+
+.main-bo-in-bo-pe-box{
+    display: flex;
+    flex-direction: column;
+    min-width: 136px;
+    width: 100%;
+    transition: width 0.2s ease-in-out, transform 0.2s ease-in-out;
+    transform-origin: center center;
+}
+
+.main-bo-in-bo-pe-box-a{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+}
+
+.main-bo-in-bo-pe-box-a-img{
+    flex: 0 0 auto;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    width: 100%;
+    height: 100%;
+    transition: 0.2s ease-in-out;
+    overflow: hidden;
+    border-radius: 8px;
+    transform-origin: center center;
+}
+
+.main-bo-in-bo-pe-box-a-img-size{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: 0.2s ease-in-out;
+    border: 0;
+}
+
+.main-bo-in-bo-pe-box-a-title{
+    position: relative;
+    text-align: left;
+    width: 100%;
+    margin-top: 12px;
+    margin-left: 0px;
+    padding: 0px 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-bo-in-bo-pe-box-a-title-top{
+    -webkit-box-flex: 1;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4px;
+}
+
+.main-bo-in-bo-pe-box-a-title-top-se{
+    display: flex
+;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    margin-bottom: 4px;
+    -webkit-box-align: center;
+    align-items: center;
+    text-align: center;
+}
+
+
+.main-bo-in-bo-pe-box-a-title-top-se div{
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 120%;
+    color: rgb(84, 84, 84);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 1;
+}
+
+.main-bo-in-bo-pe-box-a-title-mi{
+    height: 80px;
+    margin-bottom: 9px;
+}
+
+.main-bo-in-bo-pe-box-a-title-mi-title{
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 120%;
+    color: rgb(28, 28, 28);
+    margin-bottom: 6px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+}
+
+.main-bo-in-bo-pe-box-a-title-mi-content{
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 150%;
+    color: rgb(109, 109, 109);
+}
+
+.main-bo-in-bo-pe-box-a-title-bo{
+    width: 100%;
+    height: 18px;
+    margin-bottom: 12px;
+}
+
+.main-bo-in-bo-pe-box-a-title-bo-in{
+    display: flex;
+    gap: 4px;
+}
+
+.main-funding{
+    width: 100%;
+}
+
+.main-funding-top{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    margin: 0px;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+}
+
+em{
+    font-size: 11px;
+    line-height: 21px;
+    font-style: normal;
+    font-weight: 700;
+    color: rgb(84, 84, 84);
+}
+
+.main-funding-top-per{
+    color: rgb(235, 75, 56);
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 120%;
+}
+
+.main-funding-top-pri{
+    margin-left: 4px;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 120%;
+    color: rgb(84, 84, 84);
+}
+
+.main-funding-bo{
+    overflow: hidden;
+    background: rgb(158, 158, 158);
+    height: 3px;
+    position: relative;
+    margin: 4px 0px 0px;
+}
+
+.main-funding-bo::after{
+    content: "";
+    width: 12334%;
+    display: block;
+    height: 100%;
+    background: rgb(235, 75, 56);
+}
+
+.main-like-btn{
+    position: absolute;
+    z-index: 10;
+    bottom: 0px;
+    right: 0px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.main-modal-per {
+    position: absolute;
+    width: 107px;
+    height: 203px;
+    z-index: 9000;
+    top: 139px;
+    left: 6.5%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 999px;
+    display: none;
+}
+
+
+.main-modal-per-in{
+    position: absolute;
+    padding: 0px;
+    width: auto;
+    min-height: auto;
+    z-index: 9999;
+    transform: none;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    border: 1px solid rgb(230, 230, 230);
+    overflow: hidden;
+    background: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.main-modal-per-in-con{
+    height: 100%;
+    overflow: visible;
+}
+
+.main-modal-per-in-con-box{
+    width: auto;
+    top: auto;
+    left: auto;
+    border-radius: 4px;
+    border: 0px;
+    box-shadow: none;
+    padding: 4px 0px;
+    background: rgb(255, 255, 255);
+    position: static;
+}
+
+.main-modal-per-in-con-box-choice{
+    background: rgb(255, 255, 255);
+    position: relative;
+    z-index: 2;
+}
+
+.main-modal-per-in-con-box-choice-in{
+    border: 0px;
+    font-size: 1rem;
+    height: 34px;
+    line-height: 34px;
+}
+
+.on{
+    font-weight: bold;
+    color: rgb(250, 101, 99);
+    border-bottom: 1px solid rgb(242, 242, 242);
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0px 16px 0px 12px;
+    min-width: 130px;
+    height: 49px;
+    line-height: 49px;
+    font-size: 0.8rem;
+}
+
+.off{
+    font-weight: normal;
+    color: inherit;
+    border-bottom: 1px solid rgb(242, 242, 242);
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 0px 16px 0px 12px;
+    min-width: 130px;
+    height: 49px;
+    line-height: 49px;
+    font-size: 0.8rem;
+}
+
+.main-modal-per-close {
+    position: fixed; /* 화면 전체를 덮도록 설정 */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent; /* 투명 배경 */
+    z-index: 1995; /* 모달 바로 아래 레이어 */
+    display: none;
+}
+
+.main-modal-per-add {
+    position: absolute;
+    width: 107px;
+    height: 203px;
+    z-index: 9000;
+    top: 139px;
+    left: 14%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 999px;
+    display: none;
+}
+
+
+.main-modal-per-in-add{
+    position: absolute;
+    padding: 0px;
+    width: auto;
+    min-height: auto;
+    z-index: 9999;
+    transform: none;
+    border-radius: 4px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 4px 0px;
+    border: 1px solid rgb(230, 230, 230);
+    overflow: hidden;
+    background: rgb(255, 255, 255);
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+}
+
+.main-modal-per-in-con-add{
+    height: 100%;
+    overflow: visible;
+}
+
+.main-modal-per-in-con-box-add{
+    width: auto;
+    top: auto;
+    left: auto;
+    border-radius: 4px;
+    border: 0px;
+    box-shadow: none;
+    padding: 4px 0px;
+    background: rgb(255, 255, 255);
+    position: static;
+}
+
+.main-modal-per-in-con-box-choice-add{
+    background: rgb(255, 255, 255);
+    position: relative;
+    z-index: 2;
+}

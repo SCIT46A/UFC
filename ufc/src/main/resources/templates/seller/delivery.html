@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 로고 만들어지면 href수정 -->
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/seller/delivery.css}"
+            href="../../static/css/seller/delivery.css"
+        />
+
+        <title>UP-DA :: 판매자 페이지</title>
+    </head>
+    <script src="../../static/js/seller/delivery.js"></script>
+    <script th:src="@{/css/seller/delivery.js}"></script>
+    <body>
+        <!-- 헤더 먼저 해야합니다. 나중에 색상은 바꿔야합니다! -->
+        <header class="header-all">
+            <div class="header-logo-text">
+                <a href="" class="header-logo">
+                    <img
+                        class="header-logo-icon"
+                        src="../../static/images/fix/logo.png"
+                        alt="로고"
+                    />
+                </a>
+                <div class="header-slash">|</div>
+                <div class="header-admin-text">
+                    <span>seller Center</span>
+                </div>
+            </div>
+        </header>
+        <!-- 헤더  끝 좌측 안내부분 시작 -->
+        <main class="main-all">
+            <!-- 공통으로 들어가는 좌측부분 -->
+            <nav class="main-nav-wrap">
+                <!-- 위에 로그인 정보 및 로그아웃 칸 -->
+                <div class="main-admin-info">
+                    <div class="main-admin-wrap">
+                        <div class="main-admin-container">
+                            <button class="main-admin-button">
+                                <img
+                                    class="main-admin-image"
+                                    src="/staticfiles/images/teenplay_logo/logo1.png"
+                                    alt="admin사진"
+                                />
+                                <!-- 여기 중간에 뭐 이상한거 있긴한데 의미 없어보임 일단은 보류 -->
+                                <div class="main-admin-image-warp"></div>
+                            </button>
+                        </div>
+                        <h2 class="main-admin-name">UP-DA</h2>
+                        <a href="" class="main-admin-logout">
+                            <button class="main-admin-logout-button">
+                                <div class="main-admin-logout-warp">
+                                    <div>로그아웃</div>
+                                </div>
+                            </button>
+                        </a>
+                    </div>
+                </div>
+                <!-- 메뉴 선택할수 있는 칸 -->
+                <ul class="main-admin-select">
+                    <!-- 유저관리 -->
+                    <li class="main-user">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/admin-user-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-texta">유저 관리</span>
+                        </a>
+                    </li>
+                    <!-- 쪽지 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/message-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">쪽지 관리</span>
+                        </a>
+                    </li>
+                    <!-- 틴플레이관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/play-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">틴 플레이 관리</span>
+                        </a>
+                    </li>
+                    <!-- 게시글 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/post-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">게시글 관리</span>
+                        </a>
+                    </li>
+                    <!-- 전체모임 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/meeting-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">전체 모임관리</span>
+                        </a>
+                    </li>
+                    <!-- 축제관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/festival-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">축제 관리</span>
+                        </a>
+                    </li>
+                    <!-- 공지사항 관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/loudspeaker-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">공지사항 관리</span>
+                        </a>
+                    </li>
+                    <!-- 댓글관리 -->
+                    <li class="main-user-other">
+                        <a href="" class="main-user-warp">
+                            <img
+                                class="main-user-image"
+                                src="/staticfiles/images/admin/all/comment-img.png"
+                                alt="user-image"
+                            />
+                            <span class="main-user-text">댓글 관리</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- 사실상 여기만 수정하면 모든게 끝입니다! -->
+            <div class="main-user-info-warp">
+                <div class="main-user-info-container">
+                    <div class="main-user-info-box">
+                        <div class="container">
+                            <h1>발송관리</h1>
+
+                            <!-- Filters -->
+                            <div class="filters">
+                                <div class="filter-row">
+                                    <div class="filter-group">
+                                        <label>판매아이디</label>
+                                        <select class="select-box">
+                                            <option>전체</option>
+                                        </select>
+                                    </div>
+                                    <div class="filter-group">
+                                        <label>검색조건</label>
+                                        <div class="search-group">
+                                            <select class="select-box">
+                                                <option>주문번호</option>
+                                            </select>
+                                            <input
+                                                type="text"
+                                                placeholder="주문번호를 입력해 주세요."
+                                                class="input-box"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="filter-group">
+                                    <label>기간</label>
+                                    <div class="date-filter">
+                                        <select class="select-box">
+                                            <option>주문일</option>
+                                        </select>
+
+                                        <div class="date-buttons">
+                                            <button class="btn-date">
+                                                오늘
+                                            </button>
+                                            <button class="btn-date">
+                                                1주일
+                                            </button>
+                                            <button class="btn-date">
+                                                1개월
+                                            </button>
+                                            <button class="btn-date active">
+                                                3개월
+                                            </button>
+                                        </div>
+
+                                        <div class="date-inputs">
+                                            <input
+                                                type="date"
+                                                value="2024-11-04"
+                                                class="input-box"
+                                            />
+                                            <span>~</span>
+                                            <input
+                                                type="date"
+                                                value="2025-02-04"
+                                                class="input-box"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="button-group">
+                                <button class="btn-secondary">초기화</button>
+                                <button class="btn-primary">검색</button>
+                            </div>
+
+                            <!-- Tabs -->
+                            <div class="tabs">
+                                <button class="tab-btn active">발송처리</button>
+                                <button class="tab-btn">
+                                    자동충전 발송처리
+                                </button>
+                                <button class="tab-btn">
+                                    자동충전 택배사관리
+                                </button>
+                                <button class="tab-btn">대량 발송처리</button>
+                                <button class="tab-btn">발송예정일 입력</button>
+                                <button class="tab-btn">판매취소</button>
+                                <button class="tab-btn">배송지 변경</button>
+                                <button class="tab-btn">주문서 출력</button>
+                                <button class="tab-btn">배송라벨 인쇄</button>
+                                <button class="tab-btn">
+                                    정산 예정금액 보기
+                                </button>
+                            </div>
+
+                            <!-- Table -->
+                            <div class="table-container">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input
+                                                    type="checkbox"
+                                                    id="selectAll"
+                                                />
+                                            </th>
+                                            <th>판매아이디</th>
+                                            <th>주문번호</th>
+                                            <th>주문상태</th>
+                                            <th>상품번호</th>
+                                            <th>상품명</th>
+                                            <th>발송마감일</th>
+                                            <th>택배사명(발송방법)</th>
+                                            <th>송장번호</th>
+                                            <th>발송정책</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="empty-state">
+                                            <td colspan="10">
+                                                <div class="empty-message">
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        stroke="currentColor"
+                                                        stroke-width="2"
+                                                        stroke-linecap="round"
+                                                        stroke-linejoin="round"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                        />
+                                                        <line
+                                                            x1="12"
+                                                            y1="8"
+                                                            x2="12"
+                                                            y2="12"
+                                                        />
+                                                        <line
+                                                            x1="12"
+                                                            y1="16"
+                                                            x2="12.01"
+                                                            y2="16"
+                                                        />
+                                                    </svg>
+                                                    데이터가 존재하지 않습니다.
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 밑에 페이지 선택 -->
+                </div>
+            </div>
+        </main>
+    </body>
+</html>
