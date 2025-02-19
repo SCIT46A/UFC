@@ -33,9 +33,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
+                        //.requestMatchers("/admin/**").hasRole("ADMIN")  // 관리자 페이지는 ADMIN 권한 필요
                         .requestMatchers("/**").permitAll()
+//                        .requestMatchers("/favicon.ico").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .csrf(csrf -> csrf.disable())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
@@ -43,6 +46,7 @@ public class SecurityConfig {
                         .failureHandler(authenticationFailureHandler)
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService))
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/")
@@ -55,6 +59,7 @@ public class SecurityConfig {
         http.addFilterBefore(oAuthSessionFilter, LogoutFilter.class);
         return http.build();
     }
+
 }
 
 
