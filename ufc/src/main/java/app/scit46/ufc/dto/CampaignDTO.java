@@ -1,8 +1,14 @@
 package app.scit46.ufc.dto;
 
-import app.scit46.ufc.entity.CampaignEntity;
-import lombok.*;
 import java.time.LocalDateTime;
+
+import app.scit46.ufc.entity.CampaignEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -22,6 +28,7 @@ public class CampaignDTO {
     private Long createdById;
     private Boolean isSuccess;
     private Long photoId;
+    private Integer campaignStatus;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
         return CampaignDTO.builder()
@@ -33,8 +40,10 @@ public class CampaignDTO {
                 .sendDate(entity.getSendDate())
                 .createdDate(entity.getCreatedDate())
                 .isSuccess(entity.getIsSuccess())
-                .createdById(entity.getCreatedBy() != null ? entity.getCreatedBy().getCreatorId() : null)
-                .photoId(entity.getPhoto() != null ? entity.getPhoto().getId() : null)
+                .createdById(entity.getCreatedBy().getCreatorId())
+                //.createdById(entity.getCreatedBy() != null ? entity.getCreatedBy().getCreatorId() : null)
+                .photoId(entity.getPhoto().getId())
+                .campaignStatus(entity.getCampaignStatus())
                 .build();
     }
 }

@@ -38,12 +38,16 @@ public class ReportEntity {
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", nullable = false)
+    @JoinColumn(name = "campaign_id", nullable = true)
     private CampaignEntity campaign;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
+
+    public boolean isValid() {
+        return user != null || campaign != null || product != null;
+    }
 
     public static ReportEntity toEntity(ReportDTO dto, UserEntity reportedBy, UserEntity user, CampaignEntity campaign, ProductEntity product) {
         return ReportEntity.builder()

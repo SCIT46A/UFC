@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link rel="stylesheet" th:href="@{/css/dashboard/dashboard-combined.css}" />
+
+    <title>UP-DA Creator Dashboard</title>
+</head>
+
+<body>
+    <div class="layout">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-logo-text">
+                <a href="" class="header-logo">
+                    <img class="header-logo-icon" th:src="@{/images/fix/logo.png}" alt="로고" />
+                </a>
+                <div class="header-slash">|</div>
+                <div class="header-content">
+                    <span>Creator Center</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <div class="profile-section">
+                    <div class="profile-image"></div>
+                    <div class="profile-name">UP-DA</div>
+                    <button class="logout-button">로그아웃</button>
+                </div>
+                <ul class="sidebar-menu">
+                    <!-- 판매 관련 -->
+                    <li class="menu-item parent-menu" data-toggle="products">
+                        판매 관리
+                    </li>
+                    <ul class="submenu" id="products-menu">
+                        <li class="menu-item" data-url="/dashboard/products/register">상품 등록</li>
+                        <li class="menu-item" data-url="/dashboard/products/management">상품 관리</li>
+                        <li class="menu-item" data-url="/dashboard/products/orders">주문/발송 관리</li>
+                        <li class="menu-item" data-url="/dashboard/delivery">배송 관리</li>
+                        <li class="menu-item" data-url="/dashboard/settlements">정산 관리</li>
+                    </ul>
+
+                    <!-- 캠페인 관련 -->
+                    <li class="menu-item parent-menu" data-toggle="campaigns">
+                        캠페인 관리
+                    </li>
+                    <ul class="submenu" id="campaigns-menu">
+                        <li class="menu-item" data-url="/dashboard/campaigns/register">캠페인 등록</li>
+                        <li class="menu-item" data-url="/dashboard/campaigns/management">캠페인 관리</li>
+                        <li class="menu-item" data-url="/dashboard/campaigns/donation/management">기부 내역/배송 관리</li>
+                    </ul>
+
+                    <!-- 기타 메뉴 -->
+                    <li class="menu-item parent-menu" data-url="/dashboard/reviews">후기 관리</li>
+                    <li class="menu-item parent-menu" data-url="/dashboard/inquiries">문의 관리</li>
+                </ul>
+
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
+        </main>
+    </div>
+
+    <!-- JavaScript -->
+    <script th:src="@{/js/dashboard/dashboard.js}" defer></script>
+</body>
+
+</html>

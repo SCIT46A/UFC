@@ -2,9 +2,6 @@ package app.scit46.ufc.dto.custom;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
-
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

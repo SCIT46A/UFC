@@ -1,19 +1,28 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.entity.UserEntity;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import app.scit46.ufc.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.MaterialDonationEntity;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -22,15 +31,99 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class UserController {
 
     private final UserService userService;
+    private final MaterialDonationService materialDonationService;
+    private final CampaignService campaignService;
 
+    // 유저 기본페이지 조회
     @GetMapping({"/",""})
-    public String index() {
+    public String index(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long userId = null; // 기본값 설정
+
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    model.addAttribute("user", user);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
+            }
+        }
         return "user/mypage-profile";
     }
+    
+    // 유저 도네이션 조회
+    // @GetMapping("/donation")
+    // public String donation(Model model) {
+    //     LocalDateTime donatedDate = LocalDateTime.now();
+    //     model.addAttribute("donatedDate", donatedDate);
+    //     return "user/mypage-donation";
+    // }
+    @GetMapping("/donation")
+    public String donation(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
 
-    @GetMapping("/alarm")
-    public String alarm() {
-        return "user/mypage-alarm";
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId");
+
+            if (loginUserId != null) {
+                UserEntity user = userService.findById(loginUserId);
+
+                List<MaterialDonationEntity> donations = materialDonationService.donationFindByUserId(loginUserId);
+
+                // List<CampaignEntity> campaign = donations.stream()
+                //         .map(donation -> campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+                //         .flatMap(List::stream)
+                //         .collect(Collectors.toList());
+
+                // 총 개수 계산
+                int donationCount = donations.size();
+                model.addAttribute("user", user);
+                model.addAttribute("donations", donations);
+                // model.addAttribute("campaign", campaign);
+                model.addAttribute("donationCount", donationCount);
+            }
+        }
+        return "user/mypage-donation";
+    }
+    
+
+    // 세션 날리는거 다시한번 체크하기
+    @GetMapping("/delete")
+    public String delete(
+        HttpSession session,
+            @RequestParam(name = "userId") Long userId) {
+        userService.delete(userId);
+        session.removeAttribute("loginUserId");
+        return "logout";
+    }
+    
+
+    @PostMapping("/userUpdate")
+    public String postMethodName(
+            HttpServletRequest request
+            , @ModelAttribute UserDTO userDTO
+            , RedirectAttributes rttr
+    ) {
+        HttpSession session = request.getSession(false);
+        userDTO.setUserId((Long) session.getAttribute("loginUserId"));
+        userService.userUpdate(userDTO);
+        
+
+        return "redirect:/user";
+    }
+    
+    
+
+
+    @GetMapping("/badge")
+    public String badge() {
+        return "user/mypage-badge";
     }
 
     @GetMapping("/like")
@@ -43,18 +136,31 @@ public class UserController {
         return "user/mypage-reply";
     }
 
-    @GetMapping("/sponsor")
-    public String sponsor() {
-        return "user/mypage-sponsor";
-    }
 
-    @GetMapping("/sponsor/detail")
+
+    @GetMapping("/donation/detail")
     public String alarmDetail() {
-        return "user/mypage-sponsor-detail";
+        return "user/mypage-donation-detail";
     }
 
+    // 유저 정보 수정 창 조회
     @GetMapping("/edit")
-    public String edit() {
+    public String edit(HttpServletRequest request, Model model) {
+    HttpSession session = request.getSession(false); // 세션 가져오기
+    Long userId = null; // 기본값 설정
+     if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    model.addAttribute("user", user);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
+            }
+        }
         return "user/mypage-profile-edit";
     }
 
@@ -67,9 +173,11 @@ public class UserController {
     }
 
     @GetMapping("/join")
-    public String joinDetailPage(HttpServletRequest request, Model model) {
+    public String joinDetailPage(HttpServletRequest request, Model model
+    ) {
         HttpSession session = request.getSession(false);
         if (session != null) {
+            
             // 세션에서 카카오 정보 꺼내기
             String identity = (String) session.getAttribute("identity");
             String nickname = (String) session.getAttribute("nickname");
@@ -85,7 +193,7 @@ public class UserController {
         return "/login/joindetail";
     }
 
-    @PostMapping("/joindetail")
+    @PostMapping("/joinProc")
     public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check ,
                                    @RequestParam("address") String address,
                                    @RequestParam("phone") String phone,
@@ -102,7 +210,6 @@ public class UserController {
         String email = (String) session.getAttribute("email");
         String find = (String) session.getAttribute("find");
 
-        log.info(address,phone,intro);
 
         // DB 저장 (UserDTO 만들거나 직접)
         UserDTO userDTO = new UserDTO();
@@ -117,7 +224,6 @@ public class UserController {
 
         // userService.add(...) 저장
         UserEntity savedUser = userService.saveUser(userDTO);
-        log.info(savedUser.toString());
 
         // 가입 완료 후, 세션에 로그인 정보 저장
         session.setAttribute("loginUserId", savedUser.getUserId());

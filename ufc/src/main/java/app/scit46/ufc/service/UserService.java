@@ -1,6 +1,9 @@
 package app.scit46.ufc.service;
 
+import java.util.Optional;
+
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.UserEntity;
@@ -14,33 +17,39 @@ public class UserService {
     private final UserRepository userRepository;
 
 // ------------------ CRUD ------------------
-    // 유저생성(회원가입)
-//    public UserDTO createUser(UserDTO userDTO) {
-//        UserEntity userEntity = UserEntity.toEntity(userDTO);
-//        userRepository.save(userEntity);
-//        return UserDTO.toDTO(userEntity);
-//    }
 
-//    // 유저조회(회원정보조회)
-//    public UserDTO readUserById(String userId) throws DBNotFoundException {
-//        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
-//        return UserDTO.toDTO(userEntity);
-//    }
-//
-//    // 유저수정(회원정보수정)
-//    public UserDTO updateUser(UserDTO userDTO) throws DBNotFoundException {
-//        userRepository.findById(userDTO.getUserId()).orElseThrow(() -> new DBNotFoundException("User not found for Update"));
-//        UserEntity userEntity = UserEntity.toEntity(userDTO);
-//        userRepository.save(userEntity);
-//        return UserDTO.toDTO(userEntity);
-//    }
-//
-//    // 유저삭제(회원탈퇴)
-//    public void deleteUser(String userId) throws DBNotFoundException {
-//        userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Delete"));
-//        userRepository.deleteById(userId);
-//    }
-// ------------------ CRUD ------------------ //End
+
+    // 유저조회(회원정보조회)
+    public UserDTO readUserById(Long userId) throws DBNotFoundException {
+        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
+        return UserDTO.toDTO(userEntity);
+    }
+
+    // 회원탈퇴
+    @Transactional
+    public void delete(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        user.setUserStatus(0);
+        userRepository.save(user);
+    }
+    
+    //회원 정보 업데이트
+    @Transactional
+    public void userUpdate(UserDTO userDTO) {
+        System.out.println(userDTO.getUserId());
+        Optional<UserEntity> temp = userRepository.findById(userDTO.getUserId());
+        if (!temp.isPresent())
+            return;
+        UserEntity entity = temp.get();
+        entity.setUserName(userDTO.getUserName());
+        entity.setIntro(userDTO.getIntro());
+        entity.setPhoneNumber(userDTO.getPhoneNumber());
+        entity.setUserAddress(userDTO.getUserAddress());
+    }
+    // ------------------ CRUD ------------------ //End
+
+    //유저가 기부한 정보 조회
 
     // 유저 이름으로 유저 조회 -> 유저 아이디 반환
     public Long findUserIdByUserName(String userName) {
@@ -67,6 +76,12 @@ public class UserService {
         user.setUserAddress(userDTO.getUserAddress());
         return userRepository.save(user);
     }
+
+    public UserEntity findById(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
 
 
 

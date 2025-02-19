@@ -1,14 +1,27 @@
 package app.scit46.ufc.entity;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.CreatorDTO;
-import app.scit46.ufc.dto.ImageUrlDTO;
-import jakarta.persistence.*;
-import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
+
+import app.scit46.ufc.dto.CampaignDTO;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -43,6 +56,9 @@ public class CampaignEntity {
     @Column(name = "created_date", nullable = false)
     @CreationTimestamp
     private LocalDateTime createdDate;
+
+    @Column(name = "campaign_status", nullable = false)
+    private Integer campaignStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
@@ -93,6 +109,7 @@ public class CampaignEntity {
                 .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
                 .isSuccess(dto.getIsSuccess())
                 .photo(ImageUrlEntity.builder().imageId(photo).build())
+                .campaignStatus(dto.getCampaignStatus())
                 .build();
     }
 }

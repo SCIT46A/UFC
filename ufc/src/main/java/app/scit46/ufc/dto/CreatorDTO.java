@@ -1,7 +1,12 @@
 package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.CreatorEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -21,6 +26,7 @@ public class CreatorDTO {
     private Long backImgUrl;
     private Long proImgUrl;
     private Long ownUser;
+    private Integer creatorStatus;
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()
@@ -34,6 +40,7 @@ public class CreatorDTO {
                 .backImgUrl(entity.getBackImgUrl().getId())
                 .proImgUrl(entity.getProImgUrl().getId())
                 .ownUser(entity.getOwnUser().getUserId())
+                .creatorStatus(entity.getCreatorStatus())
                 .build();
     }
 }

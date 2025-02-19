@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UP-DA :: 마이페이지</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/user/mypage-badge.css}"
+      href="../../static/css/user/mypage-badge.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/header.css}"
+      href="../../static/css/fix/header.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/footer.css}"
+      href="../../static/css/fix/footer.css"
+    />
+    <script src="../../static/js/user/mypage-badge.js" defer></script>
+    <script th:src="@{/js/user/mypage-badge.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+  </head>
+  <body>
+    <div th:replace="~{fix/header :: header}"></div>
+    <main>
+      <section id="projects" style="background-color: #ffffff">
+        <div class="delete hidden">
+          <div class="delete-in">
+            <div class="delete-in-box">
+              <div class="delete-in-box-in">
+                알림을 삭제하시면 알림 페이지에서 확인하실 수 없습니다.
+                삭제하시겠습니까?
+              </div>
+              <div class="delete-in-box-in-btn">
+                <button class="delete-cancle-btn">취소</button>
+                <button class="delete-btn">확인</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 주목할 만한 프로젝트 -->
+        <div class="container mx-auto px-4 target-project">
+          <div class="main">
+            <div class="main-in">
+              <!-- 공용으로 들어가는 상단 -->
+              <div class="main-in-box">
+                <!-- 프로필쪽 -->
+                <div class="main-in-box-pro">
+                  <div class="main-in-box-pro-le">
+                    <div class="main-in-box-pro-le-in">
+                      <img
+                        src="https://assets.tumblbug.com/profile/default_avatar.png"
+                        alt=""
+                        class="main-in-box-pro-le-in-img"
+                      />
+                      <div class="main-in-box-pro-le-in-box">
+                        <div class="main-in-box-pro-le-in-box-title">
+                          <div class="main-in-box-pro-le-in-box-title-in">
+                            up-da
+                          </div>
+                        </div>
+                        <div class="main-in-box-pro-le-in-box-content">
+                          <div class="main-in-box-pro-le-in-box-content-box">
+                            <div
+                              class="main-in-box-pro-le-in-box-content-box-in"
+                            >
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                              >
+                                팔로잉
+                                <svg
+                                  class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 18 18"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                    fill="#545454"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                              >
+                                -
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-box-pro-le-in-box-content-box-in"
+                            >
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                              >
+                                후원수
+                                <svg
+                                  class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 18 18"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                    fill="#545454"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                              >
+                                -
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 내비게이션바 -->
+                <div class="main-in-box-na">
+                  <div class="main-in-box-na-box">
+                    <div class="main-in-box-na-box-pe">
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-profile.html"
+                            th:href="@{/user}"
+                            >프로필</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-reply.html"
+                            th:href="@{/user/reply}"
+                            >작성한 후기</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-donation.html"
+                            th:href="@{/user/donation}"
+                            >내가 후원한 캠페인</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-like.html"
+                            th:href="@{/user/like}"
+                            >좋아요 누른 캠페인</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span current">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-alarm.html"
+                            th:href="@{/user/alarm}"
+                            >뱃지</a
+                          >
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- 각각의 나올것들 -->
+              <!-- 각각의 나올것들 -->
+              <div class="badge-container">
+                <div class="badge-grid">
+                  <!-- 뱃지 아이템 -->
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/1.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <!-- 추가 뱃지 아이템들 반복 -->
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/2.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image-gray">
+                      <img src="/images/badges/3.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/4.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image-gray">
+                      <img src="/images/badges/5.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image-gray">
+                      <img src="/images/badges/1.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/2.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/3.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/4.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                  <div class="badge-item">
+                    <div class="badge-image">
+                      <img src="/images/badges/5.png" alt="뱃지1" />
+                    </div>
+                    <div class="badge-info">
+                      <h3>첫 후원자</h3>
+                      <p>첫 번째 프로젝트 후원을 완료했습니다</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div th:replace="~{fix/footer :: footer}"></div>
+  </body>
+</html>

@@ -8,15 +8,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import app.scit46.ufc.dto.CampaignDTO;
 import app.scit46.ufc.service.campaign.CampaignService;
 import lombok.RequiredArgsConstructor;
 
+
 @Controller
-@RequestMapping("/campaign")
 @RequiredArgsConstructor
 public class CampaignController {
 
@@ -34,6 +33,11 @@ public class CampaignController {
         CampaignDTO campaign = campaignService.readCampaign(id);
         model.addAttribute("campaign", campaign);
         return "campaign/detail-campaign";
+    }
+
+    @GetMapping("/expected")
+    public String expectedCampaign() {
+        return "campaign/expected-campaign";
     }
 
     @GetMapping("/pay")
@@ -61,4 +65,17 @@ public class CampaignController {
         model.addAttribute("campaign", campaign);
         return "campaign/update-campaign";
     }
+    
+    @GetMapping("/active")
+    public String active() {
+        return "campaign/active-campaign";
+    }
+
+    @GetMapping("/upcoming")
+    public String upcoming() {
+        return "campaign/upcoming-campaign";
+    }
+
+
 }
+
