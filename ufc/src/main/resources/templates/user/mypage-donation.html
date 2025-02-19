@@ -29,8 +29,8 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/user/mypage-donation.js" defer></script>
-        <script th:src="@{/js/user/mypage-donation.js}" defer></script>
+        <!-- <script src="../../static/js/user/mypage-donation.js" defer></script>
+        <script th:src="@{/js/user/mypage-donation.js}" defer></script> -->
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
@@ -195,88 +195,58 @@
                                             <div
                                                 class="sup-content-in-title-text"
                                             >
-                                                <span>1</span>건의 후원내역이
+                                                <span th:text="${donationCount}">1</span>건의 후원내역이
                                                 있습니다
                                             </div>
                                         </div>
                                         <!-- 각각의 후원내역 나옴 -->
                                         <!-- 여기서 반복 -->
-                                        <div class="sup-content-main">
+                                        <div class="sup-content-main" th:each="donation, status : ${donations}">
                                             <div class="sup-content-main-box">
-                                                <div
-                                                    class="sup-content-main-box-in"
-                                                >
+                                                <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
-                                                     <div>
-                                                        <div>
-
-                                                            <div
-                                                            class="sup-content-main-box-in-img"
-                                                            ></div>
+                                                    <div>
+                                                        <div class="sup-content-main-box-in-img">
+                                                            <!-- 이미지가 있다면 여기에 추가 -->
                                                         </div>
+                                                    </div>
                                                     <!-- 내용 -->
-                                                     
-                                                    <div
-                                                        class="sup-content-main-box-in-content"
-                                                    >
+                                                    <div class="sup-content-main-box-in-content">
                                                         <!-- 후원일 -->
-                                                        <div
-                                                            class="sup-content-main-box-in-content-date"
-                                                        >
-                                                            후원일 2025. 01. 31
+                                                        <div class="sup-content-main-box-in-content-date">
+                                                            <!-- <span th:text="${#temporals.format(donation.donatedDate, 'yyyy.MM.dd')}"></span> -->
                                                         </div>
                                                         <!-- 제목 -->
-                                                        <a
-                                                            th:href="@{/user/donation/detail}"
-                                                            class="sup-content-main-box-in-content-title"
-                                                        >
-                                                            <span
-                                                                >일하기 싫은
-                                                                직장인 그 자체
-                                                                +모지
-                                                                키링+</span
-                                                            >
+                                                        <a th:href="@{/user/donation/detail}" class="sup-content-main-box-in-content-title">
+                                                            <!-- <span th:text="${campaign.title}"></span> -->
                                                         </a>
                                                         <!-- 구성 -->
-                                                        <ul
-                                                            class="sup-content-main-box-in-content-in"
-                                                        >
-                                                            <!-- 구성품들 -->
+                                                        <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                <span
-                                                                    >Go to work
-                                                                    패키지</span
-                                                                >
+                                                                ㅎㅎㅎ
+                                                                <!-- <span th:text="${components}"></span> -->
                                                             </li>
                                                         </ul>
                                                         <!-- 비용 -->
-                                                        <div
-                                                            class="sup-content-main-box-in-content-pr"
-                                                        >
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-le"
-                                                            >
-                                                                청바지 20개
+                                                        <div class="sup-content-main-box-in-content-pr">
+                                                            <p class="sup-content-main-box-in-content-pr-le">
+                                                                ㅎㅎㅎㅎ
+                                                                <!-- <span th:text="${campaign[index.index].cost}"></span> -->
                                                             </p>
-                                                            <!-- 배송완료면 빼면됨 -->
-                                                            <p
-                                                                class="sup-content-main-box-in-content-pr-ri"
-                                                            >
-                                                                2025.02.06 배송
-                                                                예정
+                                                            <p class="sup-content-main-box-in-content-pr-ri">
+                                                                <!-- <span th:text="${#dates.format(donation.donatedDate.plusDays(7), 'yyyy.MM.dd')}"></span> 배송 예정 -->
                                                             </p>
                                                         </div>
-                                                        </div>
-                                                        </div>
-                                                        <div
-                                                        class="sup-content-main-box-in-result-img">
-                                                        </div>
+                                                    </div>
+                                                    <div class="sup-content-main-box-in-result-img">
+                                                        <!-- <img th:src="@{/images/} + (${campaign[status.index].isSuccess} ? 'achieve.png' : 'fail.png')" alt="결과 이미지" /> -->
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        </div>
                                         <!-- 2번째 -->
-                                        <div class="sup-content-main">
+                                        <!-- <div class="sup-content-main">
                                             <div class="sup-content-main-box">
                                                 <div
                                                     class="sup-content-main-box-in"
@@ -297,7 +267,7 @@
                                                         <!-- 후원일 -->
                                                         <div
                                                             class="sup-content-main-box-in-content-date"
-                                                            th:value="${materialDonation.donatedDate}"
+                                                            th:value="${donation.donatedDate}"
                                                         >
                                                             후원일 2025. 01. 31
                                                         </div>
@@ -424,7 +394,7 @@
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div> 
                                     </div>
                                 </div>
                             </div>

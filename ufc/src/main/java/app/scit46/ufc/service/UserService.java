@@ -6,10 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 

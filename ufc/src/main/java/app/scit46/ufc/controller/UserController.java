@@ -1,5 +1,8 @@
 package app.scit46.ufc.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.CampaignEntity;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.CampaignService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
@@ -36,40 +40,60 @@ public class UserController {
     @GetMapping({"/",""})
     public String index(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false); // 세션 가져오기
-        Long loginUserId = null; // 기본값 설정
+        Long userId = null; // 기본값 설정
 
         if (session != null) {
-            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-            if (loginUserId != null) {
-                //사용자 정보를 데이터베이스에서 조회
-                UserEntity user = userService.findById(loginUserId);
-                model.addAttribute("user", user);
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    model.addAttribute("user", user);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
             }
         }
         return "user/mypage-profile";
     }
-
-    //유저 entity를 통한 도네이션 정보 조회
+    
+    // 유저 도네이션 조회
+    // @GetMapping("/donation")
+    // public String donation(Model model) {
+    //     LocalDateTime donatedDate = LocalDateTime.now();
+    //     model.addAttribute("donatedDate", donatedDate);
+    //     return "user/mypage-donation";
+    // }
     @GetMapping("/donation")
-    public String donation(
-            HttpServletRequest request
-        , Model model
-    ) {
+    public String donation(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
-        Long loginUserId = null; // 기본값 설정
+        Long loginUserId = null;
 
         if (session != null) {
-            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            loginUserId = (Long) session.getAttribute("loginUserId");
+
             if (loginUserId != null) {
-                //사용자 정보를 데이터베이스에서 조회
-                MaterialDonationEntity materialDonation = materialDonationService.donationFindByUserId(loginUserId);
-                CampaignEntity campaign = campaignService.campaignFindByCampaignId(materialDonation.getCampaign().getCampaignId());
-                model.addAttribute("materialDonation", materialDonation);
+                UserEntity user = userService.findById(loginUserId);
+
+                List<MaterialDonationEntity> donations = materialDonationService.donationFindByUserId(loginUserId);
+
+                List<CampaignEntity> campaign = donations.stream()
+                        .map(donation -> campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList());
+
+                // 총 개수 계산
+                int donationCount = donations.size();
+                model.addAttribute("user", user);
+                model.addAttribute("donations", donations);
                 model.addAttribute("campaign", campaign);
+                model.addAttribute("donationCount", donationCount);
             }
         }
         return "user/mypage-donation";
     }
+    
 
     // 세션 날리는거 다시한번 체크하기
     @GetMapping("/delete")
@@ -125,15 +149,20 @@ public class UserController {
     @GetMapping("/edit")
     public String edit(HttpServletRequest request, Model model) {
     HttpSession session = request.getSession(false); // 세션 가져오기
-    Long loginUserId = null; // 기본값 설정
-    if (session != null) {
-        loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-        if (loginUserId != null) {
-            //사용자 정보를 데이터베이스에서 조회
-            UserEntity user = userService.findById(loginUserId);
-            model.addAttribute("user", user);
+    Long userId = null; // 기본값 설정
+     if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    model.addAttribute("user", user);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
+            }
         }
-    }
         return "user/mypage-profile-edit";
     }
 
