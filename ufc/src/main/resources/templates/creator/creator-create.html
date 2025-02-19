@@ -33,39 +33,18 @@
                                 >새로운 창작가 생성</span
                             >
                         </div>
-                        <div class="name-form-icon-wrap">
-                            <div class="name-form-number-wrap">
-                                <span class="name-form-number">1</span>
+                        <div class="name-form-dash"></div>
+                        <div class="name-form-circle"></div>
+                        <div class="name-form-dash"></div>
+                        <div class="name-form-circle"></div>
+                    </div>
+                    <div class="name-form-content-wrap">
+                        <div class="name-form-text-wrap">
+                            <div class="name-form-text-title">
+                                팀의 이름을 입력해주세요.
                             </div>
                             <div class="name-form-dash"></div>
                             <div class="name-form-circle"></div>
-                            <div class="name-form-dash"></div>
-                            <div class="name-form-circle"></div>
-                        </div>
-                        <div class="name-form-content-wrap">
-                            <div class="name-form-text-wrap">
-                                <div class="name-form-text-title">
-                                    창작가의 이름을 입력해주세요.
-                                </div>
-                                <div class="name-form-text-content">
-                                    UPDA에서 창작가의 이름이 됩니다.
-                                    <br />
-                                    제작하신 제품의 성향에 맞는 이름을
-                                    정해주세요.
-                                </div>
-                                <div class="name-form-input-wrap">
-                                    <div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                class="name-form-input"
-                                                placeholder="ex) UPDA"
-                                                maxlength="10"
-                                                oninput="creator_nickname()"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
                                 <div
                                     class="desc-form-text-title"
                                     style="padding-top: 50px"
@@ -88,11 +67,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="name-form-button-wrap">
-                                    <button class="name-form-button disabled">
-                                        다음
-                                    </button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,99 +78,151 @@
                                 >새로운 창작가 생성</span
                             >
                         </div>
-                        <div class="desc-form-icon-wrap">
-                            <div class="desc-form-circle-blue"></div>
-                            <div class="desc-form-dash"></div>
-                            <div class="desc-form-number-wrap">
-                                <span class="desc-form-number">2</span>
+                        <div class="desc-form-dash"></div>
+                        <div class="desc-form-circle"></div>
+                    </div>
+                    <div class="desc-form-content-wrap">
+                        <div class="desc-form-text-wrap">
+                            <!-- 대괄호 안에는 이전에 입력한 창장가명을 넣습니다. -->
+                            <div class="desc-form-text-title">
+                                [UP-DA]에 창작자님에 대해 적어주세요.
                             </div>
-                            <div class="desc-form-dash"></div>
-                            <div class="desc-form-circle"></div>
+                            <div class="desc-form-text-content">
+                                사업자 등록번호
+                            </div>
+                            <div class="desc-form-input-wrap">
+                                <div>
+                                    <div>
+                                        <input type="text" class="desc-form-input" placeholder="사업자 등록번호"
+                                            maxlength="100" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="desc-form-text-content">상호</div>
+                            <div class="desc-form-input-wrap">
+                                <div>
+                                    <div>
+                                        <input type="text" class="desc-form-input" placeholder="사업자등록증에 있는 상호명 입력"
+                                            maxlength="100" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="desc-form-text-content">
+                                대표자 명
+                            </div>
+                            <div class="desc-form-input-wrap">
+                                <div>
+                                    <div>
+                                        <input type="text" class="desc-form-input" placeholder="대표자 명"
+                                            maxlength="100" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="desc-form-text-content">
+                                사업장 소재지
+                            </div>
+                            <div class="desc-form-input-wrap">
+                                <div>
+                                    <div>
+                                        <input type="text" class="desc-form-input" placeholder="사업장 소재지"
+                                            maxlength="100" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="desc-form-button-wrap">
+                                <button type="button" class="desc-form-prev-button">
+                                    이전 단계
+                                </button>
+                                <button type="button" class="desc-form-button disabled">
+                                    다음
+                                </button>
+                            </div>
                         </div>
-                        <div class="desc-form-content-wrap">
-                            <div class="desc-form-text-wrap">
-                                <!-- 대괄호 안에는 이전에 입력한 창작가명을 넣습니다. -->
-                                <div class="desc-form-text-title">
-                                    [UPDA]에 창작자님에 대해 적어주세요.
-                                </div>
-                                <div class="desc-form-text-content">
-                                    사업자 등록번호
-                                </div>
-                                <div class="desc-form-input-wrap">
-                                    <div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                class="desc-form-input"
-                                                id="seller_regist_number"
-                                                placeholder="예시) xxx-xx-xxxxx"
-                                                maxlength="12"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="desc-form-text-content">상호명</div>
-                                <div class="desc-form-input-wrap">
-                                    <div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                class="desc-form-input"
-                                                id="seller_regist_name"
-                                                placeholder="사업자등록증에 있는 상호명 입력"
-                                                maxlength="50"
-                                                oninput="update_seller_regist_name()"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="desc-form-text-content">
-                                    대표자 명
-                                </div>
-                                <div class="desc-form-input-wrap">
-                                    <div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                class="desc-form-input"
-                                                id="seller_regist_person"
-                                                placeholder="대표자 명"
-                                                maxlength="20"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="desc-form-text-content">
-                                    사업장 소재지
-                                </div>
-                                <div class="desc-form-input-wrap">
-                                    <div>
-                                        <div>
-                                            <input
-                                                type="text"
-                                                class="desc-form-input"
-                                                id="seller_regist_location"
-                                                placeholder="사업장 소재지"
-                                                maxlength="100"
-                                            />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="desc-form-button-wrap">
-                                    <button
-                                        type="button"
-                                        class="desc-form-prev-button"
-                                    >
-                                        이전 단계
-                                    </button>
-                                    <button
-                                        type="button"
-                                        class="desc-form-button disabled"
-                                    >
-                                        다음
-                                    </button>
-                                </div>
+                        <div class="desc-form-img-wrap">
+                            <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_03.png"
+                                alt="창장가생성 이미지" class="desc-form-img" />
+                            <div class="desc-form-chat-img-wrap">
+                                <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_04.png"
+                                    alt="메시지 이미지" class="desc-form-chat-img" />
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
+                <!-- 개설 3단계: 창장가에 대한 소개글 입력 -->
+                <div class="img-form-wrap">
+                    <div class="img-form-title-wrap">
+                        <span class="img-form-title">새로운 창작가 생성</span>
+                    </div>
+                    <div class="img-form-icon-wrap">
+                        <div class="img-form-circle-blue"></div>
+                        <div class="img-form-dash"></div>
+                        <div class="img-form-circle-blue"></div>
+                        <div class="img-form-dash"></div>
+                        <div class="img-form-number-wrap">
+                            <span class="img-form-number">3</span>
+                        </div>
+                    </div>
+                    <div class="img-form-content-wrap">
+                        <div class="img-form-text-wrap">
+                            <div class="img-form-text-title">
+                                [UP-DA] 창작가를 고유한 이미지로 꾸며주세요
+                            </div>
+                            <div class="img-form-text-content">
+                                창장가의 프로필, 창장가 커버가 직접 등록한
+                                이미지로 채워집니다.
+                            </div>
+                            <div class="img-form-profile-size-error">
+                                최대 10MB 이하의 이미지만 첨부할 수
+                                있습니다.
+                            </div>
+                            <div class="img-form-settings-wrap">
+                                <div class="cover-thumbnail-wrap" onclick="openCover()">
+                                    <div class="cover-thumbnail-container"></div>
+                                    <img class="cover-thumbnail"
+                                        src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png"
+                                        alt="커버 썸네일" />
+                                    <div class="cover-upload-wrap">
+                                        커버 업로드
+                                    </div>
+                                    <span class="upload-span-gray">&nbsp;&nbsp; 2000*263 이상 (7.6:1)
+                                    </span>
+                                    <div class="cover-hidden">
+                                        <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*" />
+                                    </div>
+                                    <div class="cover-delete-wrap">
+                                        <img src="/staticfiles/images/club/club-create/cover_delete_icon_white.png"
+                                            class="cover-delete" />
+                                        <img src="/staticfiles/images/club/club-detail/teenplay_delete_icon_hover.png"
+                                            class="cover-delete-hover" />
+                                    </div>
+                                </div>
+                                <div class="club-detail-wrap">
+                                    <div class="img-form-thumbnail-wrap" onclick="openProfile()">
+                                        <div class="img-form-thumbnail-bg"></div>
+                                        <div class="img-form-img-wrap">
+                                            <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png"
+                                                alt="썸네일" class="img-form-thumbnail" />
+                                            <div class="profile-delete-wrap">
+                                                <img src="/staticfiles/images/club/club-create/cover_delete_icon_white.png"
+                                                    class="profile-delete" />
+                                                <img src="/staticfiles/images/club/club-detail/teenplay_delete_icon_hover.png"
+                                                    class="profile-delete-hover" />
+                                            </div>
+                                        </div>
+                                        <div class="img-form-hidden">
+                                            <input type="file" id="profile-image" accept="image/*" data-ratio="1:1" />
+                                        </div>
+                                    </div>
+                                    <div class="club-detail-title-wrap">
+                                        <div class="club-detail-name-wrap">
+                                            <div class="club-detail-name">
+                                                UP-DA
+                                            </div>
+                                        </div>
+                                        <div class="club-detail-stats-wrap">
+                                            <span>
+                                                <span class="club-detail-stats-name">
                         </div>
                     </div>
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
@@ -271,7 +297,6 @@
                                         <div
                                             class="img-form-thumbnail-wrap"
                                             onclick="openProfile()"
-                                        >
                                             <div
                                                 class="img-form-thumbnail-bg"
                                             ></div>
@@ -373,9 +398,11 @@
                     </div>
                 </div>
             </div>
-        </main>
-        <div th:replace="~{fix/footer :: footer}"></div>
-    </body>
-    <script src="../../static/js/creator/creator-create.js"></script>
-    <script th:src="@{/js/creator/creator-create.js}" defer></script>
+        </div>
+    </main>
+    <div th:replace="~{fix/footer :: footer}"></div>
+</body>
+<script src="../../static/js/creator/creator-create.js"></script>
+<script th:src="@{/js/creator/creator-create.js}" defer></script>
+
 </html>

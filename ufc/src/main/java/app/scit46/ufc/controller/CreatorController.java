@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.service.CreatorService;
 import lombok.RequiredArgsConstructor;
 
@@ -21,13 +21,9 @@ public class CreatorController {
 
     private final CreatorService creatorService;
 
-    public CreatorController(CreatorService creatorService) {
-        this.creatorService = creatorService;
-    }
-
     @GetMapping("/creators")
     public String getCreators(Model model) {
-        List<CreatorEntity> creators = creatorService.getAllCreators();
+        List<CreatorDTO> creators = creatorService.getAllCreators();
         model.addAttribute("creators", creators);
         return "creators";
 
@@ -50,13 +46,13 @@ public class CreatorController {
 
     @GetMapping("/edit/{id}")
     public String editProfile(@PathVariable Long id, Model model) {
-        Creator creator = creatorService.getCreator(id);
+        CreatorDTO creator = creatorService.getCreator(id);
         model.addAttribute("creator", creator);
         return "creator/edit";
     }
 
     @PostMapping("/update")
-    public String updateProfile(@ModelAttribute Creator creator) {
+    public String updateProfile(@ModelAttribute CreatorDTO creator) {
         creatorService.updateCreator(creator);
         return "redirect:/creator/profile/" + creator.getCreatorId();
     }
