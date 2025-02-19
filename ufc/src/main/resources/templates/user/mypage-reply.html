@@ -273,71 +273,57 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="main-in-box-pro-btn">
-                                            <button
-                                                class="main-in-box-pro-btn-in"
-                                            >
-                                                프로필 편집
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                                 <!-- 내비게이션바 -->
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">프로필</a>
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span current"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">작성한 후기</a>
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/"
-                                                        >내가 후원한 캠페인</a
-                                                    >
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/"
-                                                        >좋아요 누른 캠페인</a
-                                                    >
-                                                </div>
-                                            </span>
-                                            <span
-                                                class="main-in-box-na-box-pe-span"
-                                            >
-                                                <div
-                                                    class="main-in-box-na-box-pe-span-in"
-                                                >
-                                                    <a href="/">알림</a>
-                                                </div>
-                                            </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-profile.html"
+                                            th:href="@{/user}"
+                                            >프로필</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span current">
+                                            <div class="main-in-box-na-box-pe-span-in ">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-reply.html"
+                                            th:href="@{/user/reply}"
+                                            >작성한 후기</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-donation.html"
+                                            th:href="@{/user/donation}"
+                                            >내가 후원한 캠페인</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-like.html"
+                                            th:href="@{/user/like}"
+                                            >좋아요 누른 캠페인</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-badge.html"
+                                            th:href="@{/user/badge}"
+                                            >뱃지</a>
+                                            </div>
+                                        </span>
                                         </div>
                                     </div>
+                                    </div>
                                 </div>
+
                             </div>
                             <!-- 각각의 나올것들 -->
                             <div class="content-box">

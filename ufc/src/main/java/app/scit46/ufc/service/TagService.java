@@ -1,13 +1,13 @@
 package app.scit46.ufc.service;
 
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.repository.TagRepository;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
+import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.repository.TagRepository;
 
 @Service
 public class TagService {
