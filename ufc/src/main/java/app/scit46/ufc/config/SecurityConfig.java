@@ -1,6 +1,8 @@
 package app.scit46.ufc.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -23,7 +25,8 @@ public class SecurityConfig {
     private final OAuthSessionFilter oAuthSessionFilter;
     private final AuthenticationFailureHandler authenticationFailureHandler;
 
-    //@Bean
+    @Bean
+    @Primary
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         
         http.authorizeHttpRequests(auth -> auth
