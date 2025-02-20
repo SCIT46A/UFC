@@ -49,15 +49,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function executePageScripts(url) {
         const scriptMapping = {
-            "/dashboard/delivery": { script: "/js/dashboard/delivery.js", init: "initDeliveryManagement" },
-            "/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
-            "/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
-            "/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
-            "/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
-            "/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
-            "/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
-            "/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
-            "/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
+            "/creator/dashboard/delivery": { script: "/js/dashboard/delivery.js", init: "initDeliveryManagement" },
+            "/creator/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/creator/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/creator/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
+            "/creator/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
+            "/creator/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/creator/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/creator/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
+            "/creator/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
         };
 
         // 기존 동적 스크립트 태그 제거
