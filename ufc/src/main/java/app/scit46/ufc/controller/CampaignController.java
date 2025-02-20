@@ -17,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
-
 @Controller
 @RequestMapping("/campaign")
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class CampaignController {
         if (session != null) {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
         }
-        String username = request.getUser(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
+        String username = request.getUserPrincipal().getName(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
         model.addAttribute("username", username);
         return "campaign/pay-campaign";
     }
@@ -75,7 +74,7 @@ public class CampaignController {
         model.addAttribute("campaign", campaign);
         return "campaign/update-campaign";
     }
-    
+
     @GetMapping("/active")
     public String active() {
         return "campaign/active-campaign";
@@ -86,6 +85,4 @@ public class CampaignController {
         return "campaign/upcoming-campaign";
     }
 
-
 }
-
