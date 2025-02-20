@@ -352,7 +352,7 @@ main {
   display: flex;
   margin: 0px 0px 12px;
   color: rgba(175, 175, 175, 0.8);
-  text-decoration: underline;
+  /* text-decoration: underline; */
   align-items: center;
   justify-content: center;
 }

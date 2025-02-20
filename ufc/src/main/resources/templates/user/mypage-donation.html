@@ -61,7 +61,7 @@
                                                     <div
                                                         class="main-in-box-pro-le-in-box-title-in"
                                                     >
-                                                        up-da
+                                                        <span th:text="${user.userName}">up-da</span>
                                                     </div>
                                                 </div>
                                                 <div
@@ -200,46 +200,49 @@
                                             </div>
                                         </div>
                                         <!-- 각각의 후원내역 나옴 -->
-                                        <!-- 여기서 반복 -->
-                                        <div class="sup-content-main" th:each="donation, status : ${donations}">
+                                        <div class="sup-content-main" th:each="donation : ${donations}">
                                             <div class="sup-content-main-box">
                                                 <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
                                                     <div>
                                                         <div class="sup-content-main-box-in-img">
-                                                            <!-- 이미지가 있다면 여기에 추가 -->
+                                                            <!-- 이미지는 campaigns에서 매칭되는 캠페인의 이미지를 사용 -->
+                                                            <img th:if="${campaigns.?[id == donation.campaignId][0]?.thumbnailUrl != null}"
+                                                                 th:src="${campaigns.?[id == donation.campaignId][0].thumbnailUrl}"
+                                                                 alt="캠페인 이미지"/>
                                                         </div>
                                                     </div>
                                                     <!-- 내용 -->
                                                     <div class="sup-content-main-box-in-content">
                                                         <!-- 후원일 -->
                                                         <div class="sup-content-main-box-in-content-date">
-                                                            <!-- <span th:text="${#temporals.format(donation.donatedDate, 'yyyy.MM.dd')}"></span> -->
+                                                            <span>후원일: </span>
+                                                            <span th:text="${#temporals.format(donations.donatedDate, 'yyyy.MM.dd')}"></span>
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a th:href="@{/user/donation/detail}" class="sup-content-main-box-in-content-title">
-                                                            <!-- <span th:text="${campaign.title}"></span> -->
+                                                            <!-- campaigns 리스트에서 현재 donation의 campaignId와 매칭되는 캠페인 찾기 -->
+                                                            <span th:text="${campaigns.?[id == donations.campaignId][0]?.title}">캠페인 제목</span>
                                                         </a>
                                                         <!-- 구성 -->
                                                         <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                ㅎㅎㅎ
-                                                                <!-- <span th:text="${components}"></span> -->
+                                                                <span th:text="${donations.components}">구성품</span>
                                                             </li>
                                                         </ul>
                                                         <!-- 비용 -->
                                                         <div class="sup-content-main-box-in-content-pr">
                                                             <p class="sup-content-main-box-in-content-pr-le">
-                                                                ㅎㅎㅎㅎ
-                                                                <!-- <span th:text="${campaign[index.index].cost}"></span> -->
+                                                                <span th:text="${donations.amount}">후원 금액</span>
                                                             </p>
                                                             <p class="sup-content-main-box-in-content-pr-ri">
-                                                                <!-- <span th:text="${#dates.format(donation.donatedDate.plusDays(7), 'yyyy.MM.dd')}"></span> 배송 예정 -->
+                                                                <span th:text="${#temporals.format(donations.sendDate, 'yyyy.MM.dd')}"></span> 배송 예정
                                                             </p>
                                                         </div>
                                                     </div>
+                                                    <!-- 결과 이미지 -->
                                                     <div class="sup-content-main-box-in-result-img">
-                                                        <!-- <img th:src="@{/images/} + (${campaign[status.index].isSuccess} ? 'achieve.png' : 'fail.png')" alt="결과 이미지" /> -->
+                                                        <!-- <img th:src="@{/images/} + ${donation.isSuccess ? 'achieve.png' : 'fail.png'}" alt="결과 이미지" /> -->
                                                     </div>
                                                 </div>
                                             </div>
@@ -267,13 +270,12 @@
                                                         <!-- 후원일 -->
                                                         <div
                                                             class="sup-content-main-box-in-content-date"
-                                                            th:value="${donation.donatedDate}"
+                                                            th:value="${donations.donatedDate}"
                                                         >
                                                             후원일 2025. 01. 31
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a
-                                                            th:href="@{/user/donation/detail}"
                                                             class="sup-content-main-box-in-content-title"
                                                         >
                                                             <span

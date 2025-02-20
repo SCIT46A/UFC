@@ -20,6 +20,7 @@ import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import app.scit46.ufc.repository.tag.CampaignTagRepository;
+import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.material.MaterialService;
 import app.scit46.ufc.service.material.RewardMaterialService;
 import app.scit46.ufc.service.tag.TagService;
@@ -38,6 +39,7 @@ public class CampaignService {
     private final RewardMaterialService rewardMaterialService;
     private final CampaignGoalRepository campaignGoalRepository;
     private final MaterialDonationRepository materialDonationRepository;
+    private final MaterialDonationService materialDonationService;
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
@@ -230,7 +232,25 @@ public class CampaignService {
     @Transactional(readOnly = true)
     public List<MaterialDonationDTO> getAllMaterialDonations() {
         return materialDonationRepository.findAll().stream()
-                .map(MaterialDonationDTO::toDTO)  // Entity → DTO 변환
+                .map(MaterialDonationDTO::toDTO) // Entity → DTO 변환
+                .collect(Collectors.toList());
+    }
+
+    
+    // // 캠페인 기부한 내역 조회
+    // public List<MaterialDonationDTO> getMaterialDonationsByCampaignId(Long campaignId) {
+    //     return materialDonationRepository.findByCampaignId(campaignId)
+    //             .stream()
+    //             .map(MaterialDonationDTO::toDTO)
+    //             .collect(Collectors.toList());
+    // }
+
+
+    // 캠페인 기부한 내역 조회
+    public List<CampaignDTO> getCampaignsByUserId(List<Long> campaignId) {
+        return campaignRepository.findByCampaignIdIn(campaignId)
+                .stream()
+                .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
 }

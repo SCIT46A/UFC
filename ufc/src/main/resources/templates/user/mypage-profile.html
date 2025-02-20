@@ -11,13 +11,13 @@
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
     <link
       rel="stylesheet"
-      th:href="@{/css/user/mypage-profile.css}"
-      href="../../static/css/user/mypage-profile.css"
+      th:href="@{/css/fix/header.css}"
+      href="../../static/css/fix/header.css"
     />
     <link
       rel="stylesheet"
-      th:href="@{/css/fix/header.css}"
-      href="../../static/css/fix/header.css"
+      th:href="@{/css/user/mypage-profile.css}"
+      href="../../static/css/user/mypage-profile.css"
     />
     <link
       rel="stylesheet"
@@ -35,7 +35,7 @@
     <main>
       <section id="projects" style="background-color: #ffffff">
         <!-- 주목할 만한 프로젝트 -->
-        <div class="container mx-auto px-4 target-project">
+        <div class="container target-project">
           <div class="main">
             <div class="main-in">
               <!-- 공용으로 들어가는 상단 -->
@@ -52,7 +52,7 @@
                       <div class="main-in-box-pro-le-in-box">
                         <div class="main-in-box-pro-le-in-box-title">
                           <div class="main-in-box-pro-le-in-box-title-in">
-                            up-da
+                            <span th:text="${user.userName}">up-da</span>
                           </div>
                         </div>
                         <div class="main-in-box-pro-le-in-box-content">
