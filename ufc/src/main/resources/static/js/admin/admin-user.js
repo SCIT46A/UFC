@@ -51,9 +51,9 @@ let allCampaignGoals = [];
 let allMaterialDonations = [];
 function fetchCampaignStatus() {
     Promise.all([
-        fetch("/api/campaign-status").then(res => res.json()),
-        fetch("/api/campaign-goals").then(res => res.json()),
-        fetch("/api/material-donations").then(res => res.json())
+        fetch("/api/admin/campaign-status").then(res => res.json()),
+        fetch("/api/admin/campaign-goals").then(res => res.json()),
+        fetch("/api/admin/material-donations").then(res => res.json())
     ])
         .then(([campaigns, campaignGoals, materialDonations]) => {
             if (!Array.isArray(campaigns) || !Array.isArray(campaignGoals) || !Array.isArray(materialDonations)) {
@@ -450,7 +450,7 @@ function approveSelectedCampaigns() {
 
 let allPendingCampaigns = [];
 function approveCampaign(campaignId) {
-    fetch(`/api/campaigns/${campaignId}/approve`, {
+    fetch(`/api/admin/campaigns/${campaignId}/approve`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" }
     })
@@ -472,7 +472,7 @@ function approveCampaign(campaignId) {
 
 
 function fetchPendingCampaigns() {
-    fetch("/api/campaigns-pending")
+    fetch("/api/admin/campaigns-pending")
         .then(response => response.json())
         .then(data => {
             allPendingCampaigns = data; // ✅ 데이터를 전역 변수에 저장
@@ -487,7 +487,7 @@ function fetchPendingCampaigns() {
 
 // 3. 캠페인 신고 관리
 function fetchCampaignReport() {
-    fetch("/api/campaign-report")
+    fetch("/api/admin/campaign-report")
         .then(response => {
             if (!response.ok) {
                 return response.text().then(err => { throw new Error(err); });
@@ -566,7 +566,7 @@ function generateCampaignReportTable(campaignReport) {
 
 // ✅ 창작자 승인 대기 목록 조회
 function fetchCreatorApproval() {
-    fetch("/api/creator-approval")
+    fetch("/api/admin/creator-approval")
         .then(response => {
             if (!response.ok) {
                 return response.text().then(err => {
@@ -652,7 +652,7 @@ function generateCreatorApprovalTable(creators) {
 
 // 유저 신고 관리
 function fetchUserReport() {
-    fetch("/api/user-reports")
+    fetch("/api/admin/user-reports")
         .then(response => response.json())
         .then(data => {
             console.log("🚀 API 응답 데이터:", data); // ✅ userUpdatedAt 값 확인
@@ -784,7 +784,7 @@ function processUserReport(reportId) {
         return;
     }
 
-    fetch("/api/user-reports/action", {
+    fetch("/api/admin/user-reports/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ reportId, action, reason }) // ✅ 사유 포함
@@ -817,26 +817,23 @@ function loadNoticeStyles() {
         document.head.appendChild(link);
     }
 }
-
 // ✅ 공지사항 데이터 가져와서 화면에 표시
 function fetchNotice() {
-    loadNoticeStyles(); // ✅ CSS 로드 추가
-
-    fetch("/api/notices")
+    return fetch("/api/admin/notices")
         .then(response => {
             if (!response.ok) return response.text().then(err => { throw new Error(err); });
             return response.json();
         })
         .then(data => {
             if (!Array.isArray(data)) throw new Error("🚨 서버에서 예상치 못한 응답을 받았습니다.");
-
-            document.getElementById("content").innerHTML = generateNoticeTable(data); // ✅ 리스트 렌더링
+            document.getElementById("content").innerHTML = generateNoticeTable(data); // ✅ 리스트 갱신
         })
         .catch(error => {
             console.error("❌ 공지사항 목록 로드 오류:", error);
             document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
         });
 }
+
 
 // ✅ 공지사항 테이블 생성 (제목 클릭 시 팝업)
 function generateNoticeTable(notices) {
@@ -907,15 +904,18 @@ function closeNoticePopup() {
 
 // ✅ 공지사항 등록 요청
 function submitNotice() {
-    const title = document.getElementById("notice-title").value.trim();
-    const content = document.getElementById("notice-content").value.trim();
+    const titleInput = document.getElementById("notice-title");
+    const contentInput = document.getElementById("notice-content");
+
+    const title = titleInput.value.trim();
+    const content = contentInput.value.trim();
 
     if (!title || !content) {
         alert("제목과 내용을 모두 입력하세요.");
         return;
     }
 
-    fetch("/api/notices/create", {
+    fetch("/api/admin/notices/create", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, content })
@@ -925,17 +925,19 @@ function submitNotice() {
             return response.json();
         })
         .then(() => {
-            alert("공지사항이 등록되었습니다!");
-            fetchNotice(); // ✅ 공지사항 목록 갱신
+            alert("📢 공지사항이 등록되었습니다!");
+
+            return fetchNotice();
+        })
+        .then(() => {
+            // ✅ 공지사항 목록이 업데이트된 후 입력 필드 초기화
+            titleInput.value = "";
+            contentInput.value = "";
         })
         .catch(error => {
             console.error("❌ 공지사항 등록 오류:", error);
             alert("공지사항 등록 중 오류가 발생했습니다.");
         });
-
-    // ✅ 입력 필드 초기화
-    document.getElementById("notice-title").value = "";
-    document.getElementById("notice-content").value = "";
 }
 
 

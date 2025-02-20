@@ -28,7 +28,7 @@ import app.scit46.ufc.service.ReportService;
 import app.scit46.ufc.service.campaign.CampaignService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/admin")
 public class AdminApiController {
 
     private final NoticeService noticeService;
