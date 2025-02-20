@@ -1,10 +1,11 @@
 package app.scit46.ufc.repository;
 
-import app.scit46.ufc.entity.CampaignEntity;
-import app.scit46.ufc.entity.LikeEntity;
-import app.scit46.ufc.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+
+import app.scit46.ufc.entity.LikeEntity;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
+import app.scit46.ufc.entity.product.ProductEntity;
 
 @Repository
 public interface LikeRepository extends JpaRepository<LikeEntity, Long> {

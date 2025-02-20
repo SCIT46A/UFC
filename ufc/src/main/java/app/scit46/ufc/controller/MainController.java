@@ -18,6 +18,7 @@ public class MainController {
 
   private final UserService userService;
 
+  // 메인페이지 라우터
   @GetMapping("/")
   public String index(HttpServletRequest request, Model model) {
     HttpSession session = request.getSession(false); // 세션 가져오기
@@ -31,6 +32,7 @@ public class MainController {
     return "index";
   }
 
+  // 메인페이지에서 검색한 결과를 검색결과 페이지로 보여주기 위한 라우터
   @GetMapping("/search/{type}/{query}")
   public String searchBox(@PathVariable("query") String query, @PathVariable("type") String type, Model model) {
     model.addAttribute("searchText", query);
@@ -38,7 +40,7 @@ public class MainController {
     return "campaign/all-campaign"; // 검색어를 포함한 뷰 반환
   }
 
-
+  // 업다 소개페이지 라우터
   @GetMapping("/info")
   public String info() {
     return "info";
