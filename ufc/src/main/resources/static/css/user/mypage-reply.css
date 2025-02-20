@@ -189,6 +189,7 @@ main {
   display: flex;
   overflow: auto hidden;
   position: relative;
+  width: 1200px;
 }
 
 .main-in-box-na-box::after {
@@ -374,7 +375,7 @@ main {
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  max-width: 1150px;
+  max-width: 1200px;
 }
 
 .content-box-in-cam {
