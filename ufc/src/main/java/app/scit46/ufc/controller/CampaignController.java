@@ -62,8 +62,8 @@ public class CampaignController {
     }
 
     @GetMapping("/create") // 헤더에 존재하는 사용자 정보를 가져옴?
-    public String create(@AuthenticationPrincipal UserDetails userDetails, Model model) {
-        String username = userDetails.getUsername(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
+    public String create(HttpServletRequest request, Model model) {
+        String username = request.getUserPrincipal().getName(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
         model.addAttribute("username", username);
         return "campaign/create-campaign";
     }

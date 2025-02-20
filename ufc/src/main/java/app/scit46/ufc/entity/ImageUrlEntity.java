@@ -36,7 +36,7 @@ public class ImageUrlEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "photo_id")
     private Long id;
 
     @Column(name = "image_id", nullable = false, unique = true, length = 32)

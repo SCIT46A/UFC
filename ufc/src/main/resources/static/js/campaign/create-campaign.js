@@ -705,8 +705,6 @@ $(document).ready(function () {
 // 3. 리워드 구성 END
 
 // 4. 최종 확인
-    // Cloudflare Images 업로더 인스턴스 생성
-    const imageUploader = new CloudflareImageUploader();
 
     // 이미지 업로드 후 캠페인 데이터 전송
     async function submitCampaign() {
