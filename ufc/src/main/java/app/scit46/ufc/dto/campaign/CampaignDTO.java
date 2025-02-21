@@ -2,6 +2,9 @@ package app.scit46.ufc.dto.campaign;
 
 import java.time.LocalDateTime;
 
+import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.cloudflare.Image;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,10 +27,9 @@ public class CampaignDTO {
     private LocalDateTime endDate;
     private LocalDateTime sendDate;
     private LocalDateTime createdDate;
-    // createdBy와 photo는 필요에 따라 DTO 또는 ID(Long)로 처리 가능
-    private Long createdById;
+    private CreatorDTO createdBy; // ✅ CreatorDTO 포함
     private Boolean isSuccess;
-    private Long photoId;
+    private ImageUrlDTO photo; // ✅ PhotoDTO 포함
     private Integer campaignStatus;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
@@ -40,9 +42,8 @@ public class CampaignDTO {
                 .sendDate(entity.getSendDate())
                 .createdDate(entity.getCreatedDate())
                 .isSuccess(entity.getIsSuccess())
-                .createdById(entity.getCreatedBy().getCreatorId())
-                //.createdById(entity.getCreatedBy() != null ? entity.getCreatedBy().getCreatorId() : null)
-                .photoId(entity.getPhoto().getId())
+                .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅ CreatorDTO 변환
+                .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
                 .campaignStatus(entity.getCampaignStatus())
                 .build();
     }
