@@ -18,16 +18,16 @@ public class ProductDeliveryDTO {
     private Long pDeliveryId;
     private String invoice;
     private String status;
-    private Long productId;
-    private Long payId;
+    private ProductDTO product; // ✅ ProductDTO 포함
+    private ProductPaymentDTO pay; // ✅ ProductPaymentDTO 포함
 
     public static ProductDeliveryDTO toDTO(ProductDeliveryEntity entity) {
         return ProductDeliveryDTO.builder()
                 .pDeliveryId(entity.getPDeliveryId())
                 .invoice(entity.getInvoice())
                 .status(entity.getStatus())
-                .productId(entity.getProduct() != null ? entity.getProduct().getProductId() : null)
-                .payId(entity.getPay() != null ? entity.getPay().getPayId() : null)
+                .product(entity.getProduct() != null ? ProductDTO.toDTO(entity.getProduct()) : null) // ✅ ProductDTO 변환
+                .pay(entity.getPay() != null ? ProductPaymentDTO.toDTO(entity.getPay()) : null) // ✅ ProductPaymentDTO 변환
                 .build();
     }
 }

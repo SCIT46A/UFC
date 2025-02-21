@@ -7,6 +7,7 @@ $(function () {
     const $modalReSearchBoxTopAdd = $(".modal-re-search-box-top-add");
     const $mainSearchTag = $(".main-search-tag");
 
+    console.log("asd")
 
 
     // 디바운스 함수 (직접 구현)
