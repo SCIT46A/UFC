@@ -38,14 +38,14 @@ public class CreatorDashboardController {
         return "dashboard/campaign-management :: campaign-management";
     }
 
-    @GetMapping("/campaigns/donation/management")
-    public String getDonationManagementPage() {
-        return "dashboard/donation-management :: donation-management";
+    @GetMapping("/campaigns/donation/orders")
+    public String getDonationOrdersPage() {
+        return "dashboard/donation-orders :: donation-orders";
     }
 
-    @GetMapping("/delivery")
-    public String getDeliveryPage() {
-        return "dashboard/delivery :: delivery";
+    @GetMapping("/campaigns/reward/delivery")
+    public String getRewardDeliveryPage() {
+        return "dashboard/reward-delivery :: reward-delivery";
     }
 
     @GetMapping("/reviews")

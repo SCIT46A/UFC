@@ -1,4 +1,4 @@
-function initDonationManagement() {
+function initDonationOrders() {
     console.log("🎁 기부 내역 관리 JS 실행됨");
 
     // ✅ "전체 선택" 체크박스 기능 (체크박스가 있는지 확인 후 실행)
@@ -134,4 +134,4 @@ function applyFilters() {
 }
 
 // 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정
-document.addEventListener("reapplyEventListeners", initDonationManagement);
+document.addEventListener("reapplyEventListeners", initDonationOrders);

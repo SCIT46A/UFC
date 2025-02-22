@@ -49,14 +49,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function executePageScripts(url) {
         const scriptMapping = {
-            "/creator/dashboard/delivery": { script: "/js/dashboard/delivery.js", init: "initDeliveryManagement" },
             "/creator/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/creator/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/creator/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
             "/creator/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
             "/creator/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
             "/creator/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
-            "/creator/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
+            "/creator/dashboard/campaigns/donation/orders": { script: "/js/dashboard/donation-orders.js", init: "initDonationOrders" },
+            "/creator/dashboard/campaigns/reward/delivery": { script: "/js/dashboard/reward-delivery.js", init: "initRewardDeliveryManagement" },
             "/creator/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
         };
 

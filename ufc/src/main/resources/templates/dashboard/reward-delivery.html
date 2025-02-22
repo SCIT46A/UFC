@@ -4,7 +4,7 @@
 <body>
 
     <!-- ✅ th:fragment 추가 -->
-    <div th:fragment="delivery">
+    <div th:fragment="reward-delivery">
         <div class="content-wrapper">
             <!-- Delivery Tracking Status -->
             <section class="card-container">
@@ -102,7 +102,7 @@
             <!-- Search Section -->
             <section class="search-section">
                 <div class="search-row">
-                    <label>판매아이디</label>
+                    <label>캠페인아이디</label>
                     <select class="full-width">
                         <option>전체</option>
                     </select>
@@ -150,33 +150,35 @@
                             <th>
                                 <input type="checkbox" id="selectAll" />
                             </th>
-                            <th>판매아이디</th>
-                            <th>주문번호</th>
-                            <th>주문상태</th>
-                            <th>상품번호</th>
-                            <th>상품명</th>
+                            <th>캠페인아이디</th>
+                            <th>기부번호</th>
+                            <th>기부자명</th>
+                            <th>기부자연락처</th>
+                            <th>기부자주소</th>
+                            <th>리워드내역</th>
                             <th>발송마감일</th>
                             <th>택배사명(발송방법)</th>
                             <th>송장번호</th>
-                            <th>발송정책</th>
+                            <th>발송처리</th>
+                            <th>배송상태</th>
                         </tr>
                     </thead>
-                    <tbody> <!-- 데이터가 있을 경우 -->
-                        <tr th:each="product : ${products}" th:if="${not #lists.isEmpty(products)}">
-                            <td><input type="checkbox" th:value="${product.id}"></td>
-                            <td th:text="${product.sellerId}">판매자ID</td>
-                            <td th:text="${product.orderNumber}">주문번호</td>
-                            <td th:text="${product.orderStatus}">주문상태</td>
-                            <td th:text="${product.productId}">상품번호</td>
-                            <td th:text="${product.productName}">상품명</td>
-                            <td th:text="${#temporals.format(product.dueDate, 'yyyy-MM-dd')}">발송마감일</td>
-                            <td th:text="${product.deliveryCompany}">택배사명(발송방법)</td>
-                            <td th:text="${product.trackingNumber != null ? product.trackingNumber : '-'}">송장번호</td>
-                            <td th:text="${product.deliveryPolicy}">발송정책</td>
+                    <!-- <tbody>
+                        <tr th:each="delivery : ${deliveries}" th:if="${not #lists.isEmpty(deliveries)}">
+                            <td><input type="checkbox" th:value="${delivery.r_delivery_id}"></td>
+                            <td th:text="${delivery.sellerId}">판매자ID</td>
+                            <td th:text="${delivery.orderNumber}">주문번호</td>
+                            <td th:text="${delivery.status}">주문상태</td>
+                            <td th:text="${delivery.productId}">상품번호</td>
+                            <td th:text="${delivery.productName}">상품명</td>
+                            <td th:text="${#temporals.format(delivery.dueDate, 'yyyy-MM-dd')}">발송마감일</td>
+                            <td th:text="${delivery.deliveryCompany}">택배사명(발송방법)</td>
+                            <td th:text="${delivery.invoice != null ? delivery.invoice : '-'}">송장번호</td>
+                            <td th:text="${delivery.deliveryPolicy}">발송정책</td>
                         </tr>
 
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${#lists.isEmpty(products)}">
+                       
+                        <tr th:if="${#lists.isEmpty(deliveries)}">
                             <td colspan="10">
                                 <div class="empty-message">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
@@ -190,7 +192,12 @@
                                 </div>
                             </td>
                         </tr>
+                    </tbody> -->
+
+                    <tbody id="delivery-table-body">
+                        <!-- JS에서 동적으로 데이터 삽입 -->
                     </tbody>
+
                 </table>
             </div>
             <div class="table-footer">
@@ -203,7 +210,7 @@
     </section>
     </div>
 
-    <script th:src="@{/js/dashboard/delivery.js}" async></script>
+    <script th:src="@{/js/dashboard/reward-delivery.js}" async></script>
 </body>
 
 </html>
