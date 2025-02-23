@@ -16,8 +16,8 @@
         />
         <link
             rel="stylesheet"
-            th:href="@{/css/user/mypage-reply.css}"
-            href="../../static/css/user/mypage-reply.css"
+            th:href="@{/css/user/mypage-review.css}"
+            href="../../static/css/user/mypage-review.css"
         />
         <link
             rel="stylesheet"
@@ -29,8 +29,8 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/user/mypage-reply.js" defer></script>
-        <script th:src="@{/js/user/mypage-reply.js}" defer></script>
+        <script src="../../static/js/user/mypage-review.js" defer></script>
+        <script th:src="@{/js/user/mypage-review.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
@@ -202,7 +202,7 @@
                                                     <div
                                                         class="main-in-box-pro-le-in-box-title-in"
                                                     >
-                                                        up-da
+                                                       <span>Up-Da</span>
                                                     </div>
                                                 </div>
                                                 <div
@@ -290,7 +290,7 @@
                                         <span class="main-in-box-na-box-pe-span current">
                                             <div class="main-in-box-na-box-pe-span-in ">
                                             <a 
-                                            href="/src/main/resources/templates/user/mypage-reply.html"
+                                            href="/src/main/resources/templates/user/mypage-review.html"
                                             th:href="@{/user/reply}"
                                             >작성한 후기</a>
                                             </div>
@@ -337,7 +337,7 @@
                                 <!-- 내용들 -->
                                 <div>
                                     <!-- 각각의 내용들 들어감 -->
-                                    <div class="content-box-in">
+                                    <div class="content-box-in" th:each="campaignReviews : ${campaignReviews}">
                                         <!-- 유저 -->
                                         <div class="content-box-in-user">
                                             <div
@@ -345,7 +345,7 @@
                                             >
                                                 <img
                                                     src="https://tumblbug-upi.imgix.net/045e7d7b-558f-4991-9a29-2a56af73a065.jpg?auto=format%2Ccompress&ch=Save-Data&facepad=2.0&fit=facearea&h=200&mask=ellipse&w=200&s=59c42fd9237178b801e3e570a49486ec"
-                                                    alt=""
+                                                    alt="reviewcampaignimage"
                                                 />
                                                 <div
                                                     class="content-box-in-user-box-title"
@@ -353,7 +353,7 @@
                                                     <div
                                                         class="content-box-in-user-box-title-top"
                                                     >
-                                                        <a href="/">개굴개굴</a>
+                                                        <a thref="/">개굴개굴</a>
                                                     </div>
                                                     <div
                                                         class="content-box-in-user-box-title-bo"
@@ -369,7 +369,11 @@
                                                         >
                                                         <span
                                                             class="content-box-in-user-box-title-bo-ri"
-                                                            >후기 36</span
+                                                        >후기 </span>
+                                                        <span
+                                                            class="content-box-in-user-box-title-bo-ri"
+                                                            th:text="${reviewCount}"
+                                                            ></span
                                                         >
                                                     </div>
                                                 </div>
@@ -397,7 +401,7 @@
                                             </div>
                                         </div>
                                         <!-- 내용 -->
-                                        <div class="content-box-in-content">
+                                        <div class="content-box-in-content" th:text="${campaignReviews.content}">
                                             아동복이라고 써있어서 잉?
                                             하고열였는데 이 옷이네요. 색깔의
                                             퀄리티가 특히 좋았어요.상체 똑딱이가
@@ -426,7 +430,7 @@
                                                 <div
                                                     class="content-box-in-date-in-time"
                                                 >
-                                                    <span>2022.12.02</span>
+                                                    <span th:text="${campaignReviews.createdDate}"></span>
                                                 </div>
                                             </div>
                                         </div>

@@ -8,16 +8,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.fasterxml.jackson.annotation.JsonCreator.Mode;
+
 import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.CampaignReviewDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.service.CampaignReviewService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
@@ -36,6 +41,7 @@ public class UserController {
     private final UserService userService;
     private final MaterialDonationService materialDonationService;
     private final CampaignService campaignService;
+    private final CampaignReviewService campaignReviewService;
 
     // 유저 기본페이지 조회
     @GetMapping({"/",""})
@@ -58,8 +64,42 @@ public class UserController {
         }
         return "user/mypage-profile";
     }
+
+    @GetMapping("/review")
+    public String review(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        Long userId = null;
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId");
+            List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
+            model.addAttribute("campaignReviews", list);
+            model.addAttribute("userId", userId);
+            model.addAttribute("reviewCount", list.size());
+        }
+        return "user/mypage-review";
+    }
+
+    // public String review(HttpServletRequest request, Model model) {
+    //     HttpSession session =  request.getSession(false);
+    //     Long userId = null;
+        
+    //     if (session != null) {
+    //         userId = (Long) session.getAttribute("loginUserId");
+    //         if (userId != null) {
+    //             try {
+    //                 List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
+    //                 model.addAttribute("campaignReviews", list);
+    //             } catch (DBNotFoundException e) {
+    //                 model.addAttribute("error", "리뷰 정보를 찾을 수 없습니다.");
+    //             }
+    //         }
+    //     }
+    //     return "user/mypage-review";
+    // }
     
-    
+
+
+
     // 유저 정보 수정 창 조회
     @GetMapping("/edit")
     public String edit(HttpServletRequest request, Model model) {
@@ -157,14 +197,7 @@ public class UserController {
         return "user/mypage-like";
     }
 
-    @GetMapping("/reply")
-    public String reply(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        Long userId = (Long) session.getAttribute("loginUserId");
-        List<ReplyDTO> replies = replyService.findByUserId(userId);
-        model.addAttribute("replies", replies);
-        return "user/mypage-reply";
-    }
+
 
 
 
