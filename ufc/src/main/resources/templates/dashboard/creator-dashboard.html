@@ -66,6 +66,9 @@
 
         <!-- Main Content -->
         <main class="main-content">
+            <!-- ✅ Hidden Input 추가 (creatorId 유지) -->
+            <input type="hidden" id="creatorId" th:value="${creatorId}">
+
             <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
         </main>
     </div>

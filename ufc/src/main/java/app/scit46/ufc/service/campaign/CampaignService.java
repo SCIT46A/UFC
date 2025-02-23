@@ -42,16 +42,18 @@ public class CampaignService {
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
     public List<CampaignDTO> readCampaignList(String searchKeyword) {
-        List<CampaignEntity> campaigns = campaignRepository.findByTitleContaining(searchKeyword); //임시조치
-        //List<CampaignEntity> campaigns = campaignRepository.findByTitleContainingOrTagsContaining(searchKeyword, searchKeyword);
+        List<CampaignEntity> campaigns = campaignRepository.findByTitleContaining(searchKeyword); // 임시조치
+        // List<CampaignEntity> campaigns =
+        // campaignRepository.findByTitleContainingOrTagsContaining(searchKeyword,
+        // searchKeyword);
         return campaigns.stream().map(CampaignDTO::toDTO).collect(Collectors.toList());
     }
 
     // 캠페인 조회
-    public CampaignDTO readCampaign(Long campaignId) {   
+    public CampaignDTO readCampaign(Long campaignId) {
         CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
         return CampaignDTO.toDTO(campaign);
-    }   
+    }
 
     // 캠페인 수정 / 캠페인 아이디와 캠페인 요소 받아서 수정
     public CampaignEntity updateCampaign(Long campaignId, CampaignDTO campaignDTO) {
@@ -62,12 +64,12 @@ public class CampaignService {
             campaignRepository.save(campaign);
         }
         return campaign;
-    }   
+    }
 
     public void deleteCampaign(Long campaignId) {
         campaignRepository.deleteById(campaignId);
     }
-    
+
     // 캠페인 생성
     public Long createCampaign(CampaignDTO campaignDTO, Long creatorId, String imageId) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
@@ -78,8 +80,8 @@ public class CampaignService {
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
 
-    // GenerateCampaign -> 
-    public Long createCampaign(GenerateCampaignDTO ccDTO){
+    // GenerateCampaign ->
+    public Long createCampaign(GenerateCampaignDTO ccDTO) {
         /*
          * CreateCampaignDTO의 필드드
          * private List<String> tagList; -> List<TagDTO>
@@ -93,7 +95,7 @@ public class CampaignService {
          * private String imageUrl; -> ImageDTO xx
          * private Long imageId; -> ImageDTO xx
          */
-        
+
         // 이미 저장처리된 이미지 아이디 조회
         String imageId = ccDTO.getImageId();
 
@@ -106,18 +108,20 @@ public class CampaignService {
                 .sendDate(ccDTO.getSendDate())
                 .build();
 
-        // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser -> UserEntity.userId -> CreatorEntity.creatorId)
-        Long creatorId = creatorRepository.findByOwnUser(userRepository.findByUserName(ccDTO.getUserName()).get()).getCreatorId();
+        // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
+        // UserEntity.userId -> CreatorEntity.creatorId)
+        Long creatorId = creatorRepository.findByOwnUser(userRepository.findByUserName(ccDTO.getUserName()).get())
+                .getCreatorId();
 
         // 캠페인 생성 및 캠페인 아이디 반환
         Long campaignId = createCampaign(campaign, creatorId, imageId);
 
         // 태그 리스트 생성
         // List<TagDTO> tagList = ccDTO.getTagList().stream()
-        //         .map(tag -> TagDTO.builder()
-        //                 .content(tag)
-        //                 .build())
-        //         .collect(Collectors.toList());
+        // .map(tag -> TagDTO.builder()
+        // .content(tag)
+        // .build())
+        // .collect(Collectors.toList());
 
         // 지정된 태그를 저장/조회 후 태그 아이디 리스트 반환
         List<Integer> tagIds = tagService.saveAndFindTagIds(ccDTO.getTagList());
@@ -135,8 +139,9 @@ public class CampaignService {
         List<Long> materialIds = materialService.addMaterial(ccDTO.getFundingItems());
 
         // // 펀딩 아이템 생성
-        // for (GenerateCampaignDTO.RewardListDTO fundingItem : ccDTO.getFundingItems()) {
-            
+        // for (GenerateCampaignDTO.RewardListDTO fundingItem : ccDTO.getFundingItems())
+        // {
+
         // }
 
         // // 리워드 생성
@@ -147,7 +152,7 @@ public class CampaignService {
         return campaignId;
     }
 
-    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO){
+    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO) {
         CampaignDTO campaign = CampaignDTO.builder()
                 .title(ccDTO.getTitle())
                 .description(ccDTO.getDescription())
@@ -159,13 +164,11 @@ public class CampaignService {
         updateCampaign(campaignId, campaign);
     }
 
-
-
     public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
-      return campaignRepository.findByCampaignId(campaignId);
+        return campaignRepository.findByCampaignId(campaignId);
     }
 
-    //펀딩 대기 중인
+    // 펀딩 대기 중인
     public List<CampaignDTO> getFundingWaitingCampaigns() {
         LocalDateTime now = LocalDateTime.now();
         return campaignRepository.findByCampaignStatusAndStartDateAfter(1, now)
@@ -173,8 +176,6 @@ public class CampaignService {
                 .map(CampaignDTO::toDTO) // ✅ modelMapper 대신 직접 변환
                 .collect(Collectors.toList());
     }
-
-
 
     // ✅ 승인 대기 중인 캠페인 조회 (N+1 문제 해결)
     @Transactional(readOnly = true)
@@ -192,7 +193,6 @@ public class CampaignService {
         campaign.setCampaignStatus(1);
         campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
     }
-
 
     // ✅ 여러 개의 캠페인 승인 (일괄 처리 추가)
     @Transactional
@@ -222,7 +222,7 @@ public class CampaignService {
     @Transactional(readOnly = true)
     public List<CampaignGoalDTO> getAllCampaignGoals() {
         return campaignGoalRepository.findAll().stream()
-                .map(CampaignGoalDTO::toDTO)  // Entity → DTO 변환
+                .map(CampaignGoalDTO::toDTO) // Entity → DTO 변환
                 .collect(Collectors.toList());
     }
 
@@ -230,7 +230,13 @@ public class CampaignService {
     @Transactional(readOnly = true)
     public List<MaterialDonationDTO> getAllMaterialDonations() {
         return materialDonationRepository.findAll().stream()
-                .map(MaterialDonationDTO::toDTO)  // Entity → DTO 변환
+                .map(MaterialDonationDTO::toDTO) // Entity → DTO 변환
+                .collect(Collectors.toList());
+    }
+
+    public List<CampaignDTO> getCampaignsByCreator(Long creatorId) {
+        return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
+                .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
 }

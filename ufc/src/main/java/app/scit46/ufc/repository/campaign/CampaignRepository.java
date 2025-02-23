@@ -25,6 +25,10 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
 
     List<CampaignEntity> findByTitleContaining(String title);
 
-    //List<CampaignEntity> findByTitleContainingOrTagsContaining(String searchKeyword, String searchKeyword2);
-    
+    // List<CampaignEntity> findByTitleContainingOrTagsContaining(String
+    // searchKeyword, String searchKeyword2);
+
+    // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
+    List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
+
 }

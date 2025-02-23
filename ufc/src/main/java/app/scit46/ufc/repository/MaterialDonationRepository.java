@@ -11,11 +11,13 @@ import app.scit46.ufc.entity.UserEntity;
 
 @Repository
 public interface MaterialDonationRepository extends JpaRepository<MaterialDonationEntity, Long> {
-    
+
     List<MaterialDonationEntity> findByUser(UserEntity user);
-    
+
     // CampaignEntity의 ID로 MaterialDonationEntity를 찾는 메서드 추가
     List<MaterialDonationEntity> findByCampaign_CampaignId(Long campaignId);
+
+    List<MaterialDonationEntity> findByCampaign_CampaignIdIn(List<Long> campaignIds);
 
     @Query("SELECT d FROM MaterialDonationEntity d JOIN FETCH d.campaign")
     List<MaterialDonationEntity> findAllWithCampaign();
