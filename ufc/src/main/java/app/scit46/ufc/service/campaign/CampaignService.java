@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.CampaignGoalDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
-import app.scit46.ufc.entity.CampaignEntity;
-import app.scit46.ufc.entity.CampaignTagEntity;
 import app.scit46.ufc.entity.TagEntity;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
+import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
 import app.scit46.ufc.repository.CreatorRepository;
 import app.scit46.ufc.repository.MaterialDonationRepository;

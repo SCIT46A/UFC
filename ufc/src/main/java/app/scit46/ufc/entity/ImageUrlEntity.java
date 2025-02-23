@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 
 import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

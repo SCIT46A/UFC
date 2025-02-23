@@ -6,7 +6,9 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.product.ProductPaymentEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -112,7 +114,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 
-    public static UserEntity toEntity(UserDTO userDTO, ImageUrlEntity photoId) {
+    public static UserEntity toEntity(UserDTO userDTO, ImageUrlDTO photoId) {
         return UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .oauthId(userDTO.getOauthId())
@@ -124,7 +126,7 @@ public class UserEntity {
                 .roles(userDTO.getRoles())
                 .createdAt(userDTO.getCreatedAt())
                 .updatedAt(userDTO.getUpdatedAt())
-                .photoId(photoId)
+                .photoId(ImageUrlEntity.toEntity(photoId))
                 .intro(userDTO.getIntro())
                 .isMarketed(userDTO.getIsMarketed())
                 .userStatus(userDTO.getUserStatus())

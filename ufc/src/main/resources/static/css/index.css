@@ -956,3 +956,21 @@ main {
     transition: transform 0.5s ease-in-out;
     width: 300%; /* 3개의 이미지니까 300% */
 }
+
+.main-funding-bo{
+    overflow: hidden;
+    background: rgb(158, 158, 158);
+    height: 3px;
+    position: relative;
+    margin: 4px 0px 0px;
+}
+
+.main-funding-bo .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%; /* 초기 상태 */
+    background-color: #16a34a; /* 초록색 진행 바 */
+    transition: width 0.5s ease-in-out; /* 애니메이션 */
+}
