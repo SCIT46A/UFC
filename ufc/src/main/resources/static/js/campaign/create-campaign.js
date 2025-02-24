@@ -438,9 +438,9 @@ $(document).ready(function () {
 // 3. 리워드 구성
     // 펀딩 계획 페이지 기부품 추가 버튼 클릭 시 기부품 추가 필드 제공
 
-    let fundingItems = []; //[{"name": '', "amount": ''}] rewardList.funding의 name별 amount를 더하여 표현(1.1배 증가 예정)
-    let rewardItems = []; //[{"name": '', "amount": ''}] rewardList.reward의 name별 amount를 더하여 표현(1.1배 증가 예정)
-    let rewardList = {"name":"", "amount":0, "funding": [], "reward": []}; //{"reward": [{"name": "", "amount": 0}], "funding": [{"name": "", "amount": 0}]}
+    let fundingItems = []; // [{name: "", amount: 0}] rewardList.funding의 name별 amount를 더하여 표현
+    let rewardItems = []; //[{"name": '', "amount": ''}] rewardList.reward의 name별 amount를 더하여 표현
+    let rewardList = {"name":"", "amount":0, "funding": [], "reward": []};
 
 
     // 리워드 입력 필드 포커스 이벤트
@@ -766,7 +766,7 @@ $(document).ready(function () {
             });
             
             // 성공 시 처리
-            if (response.success) {
+            if (!response.success) {
                 alert('캠페인이 성공적으로 등록되었습니다.');
                 window.location.href = '/campaign/' + response.campaignId;
             } else {
@@ -987,7 +987,7 @@ $(document).ready(function () {
             const totalFunding = {};
             
             rewardItems.forEach(rewardItem => {
-                const multiplier = rewardItem.amount; // 해당 리워드의 생산 수량
+                const multiplier = parseInt(rewardItem.amount); // 해당 리워드의 생산 수량
                 
                 rewardItem.funding.forEach(fundingItem => {
                     const itemName = fundingItem.name;
@@ -1001,6 +1001,12 @@ $(document).ready(function () {
                 });
             });
             
+            // Object를 배열로 변환
+            fundingItems = Object.entries(totalFunding).map(([name, amount]) => ({
+                name: name,
+                amount: amount
+            }));
+            
             return totalFunding;
         }
         
@@ -1009,19 +1015,14 @@ $(document).ready(function () {
         const totalFundingList = $('#totalFundingList');
         totalFundingList.empty();
         
-        Object.entries(totalFunding).forEach(([itemName, amount]) => {
+        fundingItems.forEach(item => {
             totalFundingList.append(`
                 <tr>
-                    <td>${itemName}</td>
-                    <td>${amount}개</td>
+                    <td>${item.name}</td>
+                    <td>${item.amount} 개</td>
                 </tr>
             `);
         });
-        
-        // fundingItems 업데이트
-        fundingItems = Object.entries(totalFunding).map(([name, amount]) => ({
-            [name]: amount
-        }));
         
         console.log('Updated fundingItems:', fundingItems);
         

@@ -20,24 +20,15 @@ public class ApiCampaignController {
 
     @PostMapping("/create")    
     public ResponseEntity<?> createCampaign(@RequestBody GenerateCampaignDTO campaign) {
-        Long campaignId = null;
-        try{
-            campaignId = campaignService.createCampaign(campaign);
-        }catch(Exception e){
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("캠페인 생성 중 오류가 발생했습니다.");
-        }
+        Long campaignId = campaignService.createCampaign(campaign);
         
         return ResponseEntity.ok(campaignId);
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<Long> updateCampaign(@PathVariable Long id, @RequestBody GenerateCampaignDTO campaign){
-        try{
-            campaignService.editCampaign(id, campaign);
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(null);
-        }
+        
+        campaignService.editCampaign(id, campaign);
         
         return ResponseEntity.badRequest().body(null);
     }

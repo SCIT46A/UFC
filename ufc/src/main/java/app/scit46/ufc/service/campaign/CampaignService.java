@@ -170,7 +170,7 @@ public class CampaignService {
                     .campaign(CampaignEntity.builder().campaignId(campaignId).build())
                     .tag(TagEntity.builder().tagId(tagId).build())
                     .build();
-
+            
             campaignTagRepository.save(campaignTag);
         }
 
@@ -210,9 +210,7 @@ public class CampaignService {
                     .build());
 
             for(FundingDTO funding : rewardList.getFunding()) {
-                MaterialEntity material = materialService.addMaterial(MaterialDTO.builder()
-                        .name(funding.getName())
-                        .build());
+                MaterialEntity material = materialService.addMaterial(funding.getName());
 
                 RewardMaterialEntity rewardMaterial = rewardMaterialService.addRewardMaterial(RewardMaterialEntity.builder()
                         .reward(reward)
@@ -220,15 +218,6 @@ public class CampaignService {
                         .quantityRequired(funding.getAmount())
                         .build());
             }
-        }
-
-        for (Integer tagId : tagIds) {
-            CampaignTagEntity campaignTag = CampaignTagEntity.builder()
-                    .campaign(CampaignEntity.builder().campaignId(campaignId).build())
-                    .tag(TagEntity.builder().tagId(tagId).build())
-                    .build();
-
-            campaignTagRepository.save(campaignTag);
         }
 
         return campaignId;

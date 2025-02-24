@@ -24,7 +24,9 @@ public class TagService {
                 .collect(Collectors.toList());
         List<Integer> idList = new ArrayList<>();
 
-        tags.forEach(tag -> idList.add(tagRepository.save(tag).getTagId()));
+        tags.forEach(tag -> idList.add(tagRepository.findByContent(tag.getContent()).isPresent()
+        ?tagRepository.findByContent(tag.getContent()).get().getTagId()
+        :tagRepository.save(tag).getTagId()));
         return idList;
     }
 

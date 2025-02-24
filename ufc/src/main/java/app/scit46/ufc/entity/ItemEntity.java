@@ -56,9 +56,9 @@ public class ItemEntity {
     public static ItemEntity toEntity(ItemDTO dto) {
         return ItemEntity.builder()
                 //.itemId(dto.getItemId())  // 기본값 자동 생성이므로 주석처리
-                .name(dto.getName())
-                .description(dto.getDescription())
-                .price(dto.getPrice())
+                .name(dto.getName() != null ? dto.getName() : "")
+                .description(dto.getDescription() != null ? dto.getDescription() : "")
+                .price(dto.getPrice() != null ? dto.getPrice() : 0)
                 .photo(dto.getPhoto() != null ? ImageUrlEntity.toEntity(dto.getPhoto()) : null)
                 .build();
     }

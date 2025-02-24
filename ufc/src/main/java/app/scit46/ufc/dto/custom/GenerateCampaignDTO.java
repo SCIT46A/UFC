@@ -28,7 +28,7 @@ public class GenerateCampaignDTO {
     private LocalDateTime endDate;
     private LocalDateTime sendDate;
     // Reward / Material
-    private List<Map<String, Integer>> fundingItems;
+    private List<FundingDTO> fundingItems;
     private List<RewardListDTO> rewardList;
     // Image 선행 로직으로 이미지가 먼저 업로드 된 후 반환된 이미지 ID를 받아옴옴
     private String imageId;
