@@ -42,14 +42,14 @@ public class ApiImageController {
         // 파일과 업로드한 유저의 ID를 파라미터로 전달하여 이미지 업로드/DB 저장 후 이미지ID 반환
         String result = imageService.uploadImage(file, userId);   //Image Id
         // 이미지 ID를 통해 이미지 URL 반환
-        String imageUrl = ImageService.getImageUrl(result);
+        String imageUrl = imageService.getImageUrl(result);
         return ResponseEntity.ok(imageUrl);
     }
 
     // 이미지 ID를 통해 이미지 URL 반환
     @GetMapping("/{imageId}")
     public ResponseEntity<String> getImageUrl(@PathVariable String imageId) {
-        String result = ImageService.getImageUrl(imageId);
+        String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
     }
 

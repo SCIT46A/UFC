@@ -3,6 +3,8 @@ package app.scit46.ufc.controller.api;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,48 +29,56 @@ public class ApiSearchController {
           @PathVariable("query") String query,
           @RequestParam(value = "sort", required = false) String sortType,
           @RequestParam(value = "donation", required = false) String donationFilter,
-          @RequestParam(value = "tags", required = false) List<String> tagFilters) {
-
-      // ✅ type이 "tag"인 경우
+          @RequestParam(value = "tags", required = false) List<String> tagFilters,
+          HttpServletRequest request) {
+      HttpSession session = request.getSession(false);
+      Long loginUserId = null;
+      if (session != null) {
+          loginUserId = (Long) session.getAttribute("loginUserId");
+      }
       if ("tag".equals(type)) {
           tagFilters = tagFilters != null ? new ArrayList<>(tagFilters) : new ArrayList<>();
           if (!query.equals("all")) {
-              tagFilters.add(query); // query를 태그 필터에 추가
+              tagFilters.add(query);
           }
-          query = ""; // 전체 데이터를 가져오도록 query를 빈 문자열로 설정
+          query = "";
       }
-
-
-      List<SearchResultDTO> results = searchService.searchAll(query, sortType, donationFilter, tagFilters);
+      List<SearchResultDTO> results = searchService.searchAll(query, sortType, donationFilter, tagFilters, loginUserId);
       return ResponseEntity.ok(results);
   }
 
-  @GetMapping("/search/active")
-  public ResponseEntity<List<SearchResultDTO>> searchActive(
-          @RequestParam(value = "sort", required = false) String sortType,
-          @RequestParam(value = "donation", required = false) String donationFilter,
-          @RequestParam(value = "tags", required = false) List<String> tagFilters
-  ) {
-      List<SearchResultDTO> results = searchService.getOngoingCampaigns( sortType, donationFilter, tagFilters);
-      return ResponseEntity.ok(results);
-  }
+    @GetMapping("/search/active")
+    public ResponseEntity<List<SearchResultDTO>> searchActive(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "donation", required = false) String donationFilter,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        List<SearchResultDTO> results = searchService.getOngoingCampaigns(sortType, donationFilter, tagFilters, loginUserId);
+        return ResponseEntity.ok(results);
+    }
 
-  @GetMapping("/search/upcoming")
-  public ResponseEntity<List<SearchResultDTO>> searchUpcoming(
-          @RequestParam(value = "sort", required = false) String sortType,
-          @RequestParam(value = "donation", required = false) String donationFilter,
-          @RequestParam(value = "tags", required = false) List<String> tagFilters
-  ) {
-      List<SearchResultDTO> results = searchService.getUpcomingCampaigns(sortType, donationFilter, tagFilters);
-      return ResponseEntity.ok(results);
-  }
+    @GetMapping("/search/upcoming")
+    public ResponseEntity<List<SearchResultDTO>> searchUpcoming(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "donation", required = false) String donationFilter,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        List<SearchResultDTO> results = searchService.getUpcomingCampaigns(sortType, donationFilter, tagFilters, loginUserId);
+        return ResponseEntity.ok(results);
+    }
 
-  @GetMapping("/search/product")
-  public ResponseEntity<List<SearchResultDTO>> searchproduct(
-          @RequestParam(value = "sort", required = false) String sortType,
-          @RequestParam(value = "tags", required = false) List<String> tagFilters
-  ) {
-      List<SearchResultDTO> results = searchService.getSales(sortType, tagFilters);
-      return ResponseEntity.ok(results);
-  }
+    @GetMapping("/search/product")
+    public ResponseEntity<List<SearchResultDTO>> searchProduct(
+            @RequestParam(value = "sort", required = false) String sortType,
+            @RequestParam(value = "tags", required = false) List<String> tagFilters,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        List<SearchResultDTO> results = searchService.getSales(sortType, tagFilters, loginUserId);
+        return ResponseEntity.ok(results);
+    }
 }

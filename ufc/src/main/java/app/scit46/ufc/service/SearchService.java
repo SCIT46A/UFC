@@ -1,12 +1,10 @@
 package app.scit46.ufc.service;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
+import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -115,69 +113,87 @@ public class SearchService {
     public List<SearchResultDTO> searchAll(String keyword,
                                            String sortType,
                                            String donationFilter,
-                                           List<String> tagFilters) {
-        List<SearchResultDTO> results = searchRepository.findSearchResults(keyword);
-
-        // 🔹 유사도 기반 정렬 추가 (Levenshtein Distance 사용)
+                                           List<String> tagFilters,
+                                           Long userLoginId) {
+        List<SearchResultDTO> results = searchRepository.findSearchResults(keyword, userLoginId);
         results.sort(Comparator.comparingInt(dto -> SimilarityUtil.computeDistance(dto.getTitle(), keyword)));
-
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
 
-
-    /**
-     * ② 진행 중인 캠페인 조회
-     * → 전체 진행 중인 데이터를 불러온 후 태그, 기부 퍼센트, 정렬 필터를 적용
-     */
     @Transactional(readOnly = true)
     public List<SearchResultDTO> getOngoingCampaigns(String sortType,
                                                      String donationFilter,
-                                                     List<String> tagFilters) {
-        List<SearchResultDTO> results = searchRepository.findOngoingCampaigns();
+                                                     List<String> tagFilters,
+                                                     Long userLoginId) {
+        List<SearchResultDTO> results = searchRepository.findOngoingCampaigns(userLoginId);
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
 
-    /**
-     * ③ 진행 예정인 캠페인 조회
-     * → 전체 진행 예정 데이터를 불러온 후 태그, 기부 퍼센트, 정렬 필터를 적용
-     */
     @Transactional(readOnly = true)
     public List<SearchResultDTO> getUpcomingCampaigns(String sortType,
                                                       String donationFilter,
-                                                      List<String> tagFilters) {
-        List<SearchResultDTO> results = searchRepository.findUpcomingCampaigns();
+                                                      List<String> tagFilters,
+                                                      Long userLoginId) {
+        List<SearchResultDTO> results = searchRepository.findUpcomingCampaigns(userLoginId);
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
 
-    /**
-     * ④ 판매 (제품) 조회
-     * → 전체 판매 데이터를 불러온 후 태그와 정렬 필터를 적용
-     * (제품은 기부 퍼센트 필터 대상이 아님)
-     */
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> getSales(String sortType,
-                                          List<String> tagFilters) {
-        List<SearchResultDTO> results = searchRepository.findSales();
+    public List<SearchResultDTO> getSales(String sortType, List<String> tagFilters, Long userLoginId) {
+        List<SearchResultDTO> results = searchRepository.findSales(userLoginId);
         return applyFiltersAndSorting(results, sortType, null, tagFilters);
     }
 
-//  5. 주목할 만한 캠페인 3개
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> findLowestDonationRateCampaigns(){
-        return searchRepository.findLowestDonationRateCampaigns();
+    public List<SearchResultDTO> findTop10CampaignsByLikes(Long userLoginId){
+        return searchRepository.findTop10CampaignsByLikes(userLoginId);
     }
 
-    //  6. 인기있는 캠페인 10개
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> findTop10CampaignsByLikes(){
-        return searchRepository.findTop10CampaignsByLikes();
+    public List<SearchResultDTO> findTop10ProductsByLikes(Long userLoginId){
+        return searchRepository.findTop10ProductsByLikes(userLoginId);
     }
 
-    //  7. 인기있는 상품 10개
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> findTop10ProductsByLikes(){
-        return searchRepository.findTop10ProductsByLikes();
+    public List<CampaignWithGoalsDTO> getOngoingCampaignsWithGoals() {
+        // 평탄한 결과(캠페인×목표 행)를 조회
+        List<IntroPageCampaignDTO> rows = campaignRepository.findCampaignGoalRows();
+
+        // 캠페인 ID 기준으로 그룹화
+        Map<Long, List<IntroPageCampaignDTO>> grouped =
+                rows.stream().collect(Collectors.groupingBy(IntroPageCampaignDTO::getCampaignId));
+
+        List<CampaignWithGoalsDTO> result = new ArrayList<>();
+        for (Map.Entry<Long, List<IntroPageCampaignDTO>> entry : grouped.entrySet()) {
+            List<IntroPageCampaignDTO> dtoList = entry.getValue();
+            IntroPageCampaignDTO first = dtoList.get(0);
+
+            List<CampaignWithGoalsDTO.GoalInfo> goals = dtoList.stream()
+                    .map(row -> new CampaignWithGoalsDTO.GoalInfo(
+                            row.getGoalId() == null ? 0L : row.getGoalId(),
+                            row.getGoalTitle() == null ? "" : row.getGoalTitle(),
+                            row.getRequiredQuantity() == null ? 0 : row.getRequiredQuantity(),
+                            row.getDonatedQuantity() == null ? 0 : row.getDonatedQuantity(),
+                            row.getDonationPercentage() == null ? 0.0 : row.getDonationPercentage(),
+                            row.getTotalDonors() == null ? 0 : row.getTotalDonors()
+                    ))
+                    .collect(Collectors.toList());
+
+            CampaignWithGoalsDTO campaignDto = new CampaignWithGoalsDTO();
+            campaignDto.setCampaignId(first.getCampaignId());
+            campaignDto.setType(first.getType());
+            campaignDto.setImageId(first.getImageId());
+            campaignDto.setSellerName(first.getSellerName());
+            campaignDto.setCampaignTitle(first.getCampaignTitle());
+            campaignDto.setCampaignDescription(first.getCampaignDescription());
+            campaignDto.setGoals(goals);
+            campaignDto.setCampaignDonors(first.getCampaignDonors() == null ? 0 : first.getCampaignDonors());
+
+            result.add(campaignDto);
+        }
+        return result;
     }
+
 
 
 

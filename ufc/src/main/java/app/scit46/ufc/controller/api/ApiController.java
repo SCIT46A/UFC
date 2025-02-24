@@ -2,12 +2,15 @@ package app.scit46.ufc.controller.api;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
+import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
+import app.scit46.ufc.service.LikeService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import app.scit46.ufc.dto.SearchDTO;
 import app.scit46.ufc.dto.SearchResultDTO;
@@ -38,8 +41,9 @@ public class ApiController {
     
     private final UserAlertService userAlertService;
 
+    private final LikeService likeService;
+    private final CampaignService campaignService;
 
-    
 
     //  카테고리 입력
     @GetMapping("/checkTag")
@@ -49,13 +53,11 @@ public class ApiController {
 
     @GetMapping("/searchBox")
     public List<SearchDTO> search(@RequestParam("keyword") String keyword) {
-        log.info(searchService.search_target(keyword).toString());
         return searchService.search_target(keyword);
     }
 
     @GetMapping("/searchTagBox")
     public List<TagDTO> searchTag(@RequestParam("keyword") String keyword) {
-        log.info(searchService.search_target(keyword).toString());
         return searchService.searchTagTarget(keyword);
     }
 
@@ -91,21 +93,46 @@ public class ApiController {
     
 
     @GetMapping("/lowertDonation")
-    public ResponseEntity<List<SearchResultDTO>> lowertDonation() {
-        List<SearchResultDTO> results = searchService.findLowestDonationRateCampaigns();
-        return ResponseEntity.ok(results);
+    public ResponseEntity<List<CampaignWithGoalsDTO>> getCampaignsWithGoals() {
+        List<CampaignWithGoalsDTO> list = searchService.getOngoingCampaignsWithGoals();
+        return ResponseEntity.ok(list);
     }
 
     @GetMapping("/likeTopCampaign")
-    public ResponseEntity<List<SearchResultDTO>> findTop10CampaignsByLikes() {
-        List<SearchResultDTO> results = searchService.findTop10CampaignsByLikes();
+    public ResponseEntity<List<SearchResultDTO>> findTop10CampaignsByLikes(
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        List<SearchResultDTO> results = searchService.findTop10CampaignsByLikes(loginUserId);
         return ResponseEntity.ok(results);
     }
 
     @GetMapping("/likeTopProduct")
-    public ResponseEntity<List<SearchResultDTO>> findTop10ProductsByLikes() {
-        List<SearchResultDTO> results = searchService.findTop10ProductsByLikes();
+    public ResponseEntity<List<SearchResultDTO>> findTop10ProductsByLikes(
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        List<SearchResultDTO> results = searchService.findTop10ProductsByLikes(loginUserId);
         return ResponseEntity.ok(results);
+    }
+
+    @PostMapping("/like/toggle")
+    public ResponseEntity<Map<String, Object>> toggleLike(
+            @RequestParam("itemId") Long itemId,
+            @RequestParam("type") String type,
+            @RequestParam("currentState") boolean currentState,
+            HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        if (loginUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+        }
+
+        boolean newState = likeService.toggleLike(itemId, type, currentState, loginUserId);
+        String message = newState ? "좋아요가 추가되었습니다." : "좋아요가 취소되었습니다.";
+        return ResponseEntity.ok(Map.of("success", true, "isLiked", newState, "message", message));
     }
 
 }

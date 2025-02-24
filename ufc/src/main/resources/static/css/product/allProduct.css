@@ -679,3 +679,14 @@ em{
     box-sizing: content-box;
     text-decoration: none;
 }
+
+
+.main-like-btn path {
+    transition: fill 0.3s ease, fill-opacity 0.3s ease;
+}
+
+/* 좋아요 상태일 때 (분홍색으로 채워짐) */
+.main-like-btn.liked path {
+    fill: hotpink; /* 원하는 분홍색 값 */
+    fill-opacity: 1;
+}

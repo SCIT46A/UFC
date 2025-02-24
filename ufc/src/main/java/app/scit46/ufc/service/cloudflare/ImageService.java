@@ -36,7 +36,7 @@ public class ImageService {
     private String apiToken;
 
     @Value("${cloudflare.account-hash}")
-    private static String accountHash;
+    private String accountHash;
 
     // ------------------------------------------------------------------------------------------------
 
@@ -121,11 +121,8 @@ public class ImageService {
     }
 
     // 이미지 URL 변환
-    public static String getImageUrl(String imageId) {
-        // 유효성 검사
-        // imageId가 null 경우 null 반환
+    public String getImageUrl(String imageId) {
         if(imageId == null) return null;
-        // imageID가 UUID 형식인지 검사
         if(!UUID.fromString(imageId).toString().equals(imageId)){
             log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
             return null;
