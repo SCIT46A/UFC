@@ -95,7 +95,9 @@
                             <th>기부자</th>
                             <th>기부품목</th>
                             <th>기부수량</th>
+                            <th>택배사</th>
                             <th>송장번호</th>
+                            <th>배송 조회</th>
                             <th>배송 상태</th>
                             <th>검수 상태</th>
                             <th>검수 처리</th>
@@ -106,18 +108,25 @@
                             <td><input type="checkbox" class="donation-checkbox" th:value="${donation.donationId}"></td>
                             <td th:text="${donation.campaign.campaignId}">캠페인 ID</td>
                             <td th:text="${donation.campaign.title}">캠페인 제목</td>
-                            <td th:text="${#temporals.format(donation.donatedDate, 'yyyy-MM-dd HH:mm')}">2024-02-16
-                                15:30</td>
+                            <td th:text="${#temporals.format(donation.donatedDate, 'yy/MM/dd')}">기부일자</td>
                             <td th:text="${donation.donationId}">기부번호</td>
                             <td th:text="${donation.user.userName}">기부자</td>
                             <td th:text="${donation.material.name}">기부품목</td>
-                            <td th:text="${donation.quantity}">기부수량</td>
-                            <!-- 수정예정 ${donation.invoice}-->
-                            <!-- <input type="text" class="search-input" th:value="${donation.invoice}"
-                                placeholder="송장번호 입력"> -->
-                            <td th:text="'택배사#송장번호'">송장번호</td>
-                            <!-- 수정예정 ${donation.status}-->
-                            <td th:text="'배송 중(수정예정)'">배송 중</td>
+                            <td th:text="${donation.quantity}">수량</td>
+                            <td th:text="${donation.courierName}">택배사</td>
+                            <td th:text="${donation.trackingNumber}">송장번호</td>
+                            <td>
+                                <button th:data-invoice="${donation.invoice}"
+                                    onclick="trackDelivery(this.getAttribute('data-invoice'))">
+                                    배송조회
+                                </button>
+                            </td>
+                            <td>
+                                <span th:id="'tracking-status-' + ${donation.invoice.split('#')[1]}"
+                                    class="tracking-status">
+                                    조회 대기 중...
+                                </span>
+                            </td>
                             <td>
                                 <span class="status-badge" th:classappend="${donation.status == 'PENDING' ? 'pending' : 
                                                       donation.status == 'APPROVED' ? 'approved' : 'rejected'}"

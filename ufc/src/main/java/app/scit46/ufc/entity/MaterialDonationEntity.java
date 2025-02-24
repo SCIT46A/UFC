@@ -44,7 +44,7 @@ public class MaterialDonationEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", nullable = false)
     private CampaignEntity campaign;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
@@ -62,11 +62,15 @@ public class MaterialDonationEntity {
     @Column(name = "donated_date", nullable = false)
     private LocalDateTime donatedDate;
 
+    @Column(name = "invoice", length = 100, nullable = false)
+    private String invoice;
+
     // OneToMany: RewardDeliveries.donation 참조
     @OneToMany(mappedBy = "donation", fetch = FetchType.LAZY)
     private List<RewardDeliveryEntity> rewardDeliveries;
 
-    public static MaterialDonationEntity toEntity(MaterialDonationDTO dto, CampaignDTO campaign, UserDTO user, MaterialDTO material) {
+    public static MaterialDonationEntity toEntity(MaterialDonationDTO dto, CampaignDTO campaign, UserDTO user,
+            MaterialDTO material) {
         return MaterialDonationEntity.builder()
                 .donationId(dto.getDonationId())
                 .campaign(CampaignEntity.builder().campaignId(campaign.getCampaignId()).build())
@@ -75,6 +79,7 @@ public class MaterialDonationEntity {
                 .quantity(dto.getQuantity())
                 .status(dto.getStatus())
                 .donatedDate(dto.getDonatedDate())
+                .invoice(dto.getInvoice())
                 .build();
     }
 }

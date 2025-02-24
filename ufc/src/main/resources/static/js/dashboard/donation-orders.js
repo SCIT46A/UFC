@@ -133,5 +133,54 @@ function applyFilters() {
     console.log('📊 필터 적용:', { status, startDate, endDate });
 }
 
+async function trackDelivery(invoice) {
+    try {
+        let encodedInvoice = encodeURIComponent(invoice); // 한글 인코딩 처리
+        let response = await fetch(`/api/delivery/${encodedInvoice}`);
+
+        if (!response.ok) {
+            throw new Error(`HTTP 오류 발생: ${response.status}`);
+        }
+
+        let data = await response.json();
+        console.log("🚚 배송 조회 응답:", data);
+
+        if (!data || !data.trackingData) {
+            console.error("❌ 배송 데이터 없음:", data);
+            return;
+        }
+
+        let trackingData;
+        try {
+            trackingData = JSON.parse(data.trackingData);
+        } catch (parseError) {
+            console.error("❌ JSON 파싱 오류:", parseError);
+            return;
+        }
+
+        console.log("📦 변환된 배송 데이터:", trackingData);
+
+        if (trackingData.data?.track?.lastEvent) {
+            let lastEvent = trackingData.data.track.lastEvent;
+            let trackingNumber = invoice.split("#")[1];
+
+            let statusElement = document.getElementById(`tracking-status-${trackingNumber}`);
+            if (!statusElement) {
+                console.error(`❌ ID 'tracking-status-${trackingNumber}' 를 가진 요소가 없습니다.`);
+                return;
+            }
+
+            statusElement.innerText = `${lastEvent.status.name} - ${lastEvent.description}`;
+        } else {
+            console.error("❌ lastEvent 데이터가 없습니다.");
+        }
+    } catch (error) {
+        console.error("❌ 배송 조회 중 오류 발생:", error);
+    }
+}
+
+
+
+
 // 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정
 document.addEventListener("reapplyEventListeners", initDonationOrders);
