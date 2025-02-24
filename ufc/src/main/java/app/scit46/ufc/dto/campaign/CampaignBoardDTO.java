@@ -21,7 +21,7 @@ public class CampaignBoardDTO {
     private String title;
     private String content;
     private LocalDateTime createdDate;
-    private Long campaignId;
+    private CampaignDTO campaign; // ✅ CampaignDTO 포함
 
     public static CampaignBoardDTO toDTO(CampaignBoardEntity entity) {
         return CampaignBoardDTO.builder()
@@ -29,7 +29,7 @@ public class CampaignBoardDTO {
                 .title(entity.getTitle())
                 .content(entity.getContent())
                 .createdDate(entity.getCreatedDate())
-                .campaignId(entity.getCampaign() != null ? entity.getCampaign().getCampaignId() : null)
+                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
                 .build();
     }
 }
