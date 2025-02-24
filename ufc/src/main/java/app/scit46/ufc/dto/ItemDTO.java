@@ -14,7 +14,7 @@ public class ItemDTO {
     private String name;
     private String description;
     private Integer price;
-    private Long photo;
+    private ImageUrlDTO photo; // ✅ PhotoDTO 포함
 
     public static ItemDTO toDTO(ItemEntity entity) {
         return ItemDTO.builder()
@@ -22,7 +22,7 @@ public class ItemDTO {
                 .name(entity.getName())
                 .description(entity.getDescription())
                 .price(entity.getPrice())
-                .photo(entity.getPhoto().getId())
+                .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
                 .build();
     }
 }
