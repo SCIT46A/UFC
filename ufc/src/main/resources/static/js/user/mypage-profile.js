@@ -98,5 +98,5 @@ document.querySelector('.pro-edit-btn-save').addEventListener('click', () => {
   const totalAddress = document.querySelector('.total-add');
 
   totalAddress.value =
-    (addressInput.value || '') + (addressDetailInput.value || '');
+    (addressInput.value || '') + '#' + (addressDetailInput.value || '');
 });

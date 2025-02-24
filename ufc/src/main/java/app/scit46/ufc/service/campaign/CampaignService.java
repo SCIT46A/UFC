@@ -253,4 +253,19 @@ public class CampaignService {
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+    // 리뷰-캠페인 조회
+    public CampaignDTO getCampaignById(Long campaigned_by) {
+        List<CampaignEntity> campaigns = campaignRepository.findByCampaignId(campaigned_by);
+        return campaigns.stream()
+                .findFirst() // 첫 번째 캠페인 엔티티를 선택
+                .map(CampaignDTO::toDTO)
+                .orElse(null);
+    }
+    // public CampaignDTO getCampaignById(List<Long> campaignId) {
+    //     List<CampaignEntity> campaign = campaignRepository.findByCampaignId(campaignId);
+    //     return campaign.stream()
+    //             .map(CampaignDTO::toDTO)
+    //             .collect(Collectors.toList());
+    // }
 }

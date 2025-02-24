@@ -1,680 +1,413 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>UP-DA :: 작성한 후기</title>
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-        />
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <link
-            rel="icon"
-            th:href="@{/images/fix/favicon.png}"
-            type="image/png"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/user/mypage-review.css}"
-            href="../../static/css/user/mypage-review.css"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/fix/header.css}"
-            href="../../static/css/fix/header.css"
-        />
-        <link
-            rel="stylesheet"
-            th:href="@{/css/fix/footer.css}"
-            href="../../static/css/fix/footer.css"
-        />
-        <script src="../../static/js/user/mypage-review.js" defer></script>
-        <script th:src="@{/js/user/mypage-review.js}" defer></script>
-        <script th:src="@{/js/fix/header.js}" defer></script>
-    </head>
-    <body>
-        <div th:replace="~{fix/header :: header}"></div>
-        <main>
-            <section id="projects" style="background-color: #ffffff">
-                <ul class="ul-add hiddenen">
-                    <li>
-                        <button type="button" class="ul-add-li">신고</button>
-                    </li>
-                </ul>
-                <div class="report hiddenen">
-                    <div class="report-in">
-                        <div class="report-in-box">
-                            <div class="report-in-box-warp">
-                                <div class="report-in-box-warp-in">
-                                    <!-- 상단 -->
-                                    <div class="report-in-box-warp-in-title">
-                                        커뮤니티 글/댓글 신고
-                                        <button class="report-close">
-                                            <span class="report-close-span">
-                                                <div
-                                                    class="report-close-span-div"
-                                                >
-                                                    <svg
-                                                        width="20"
-                                                        height="20"
-                                                        viewBox="0 0 20 20"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
-                                                            fill="#3D3D3D"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                            </span>
-                                        </button>
-                                    </div>
-                                    <!-- 내용 -->
-                                    <div class="report-in-box-warp-in-content">
-                                        <div
-                                            class="report-in-box-warp-in-content-box"
-                                        >
-                                            <!-- 내용 -->
-                                            <div
-                                                class="report-in-box-warp-in-content-box-in"
-                                            >
-                                                <!-- 큰글 -->
-                                                <div
-                                                    class="report-in-box-warp-in-content-box-in-title"
-                                                >
-                                                    이 게시물을 신고하는 사유를
-                                                    선택해 주세요.
-                                                </div>
-                                                <!-- 선택지 -->
-                                                <div
-                                                    class="report-in-box-warp-in-content-box-in-content"
-                                                >
-                                                    <!-- 각각의 이유 -->
-                                                    <div
-                                                        class="report-in-box-warp-in-content-box-in-content-pe"
-                                                    >
-                                                        프로젝트와 관련 없는
-                                                        홍보/스팸 콘텐츠
-                                                    </div>
-                                                    <div
-                                                        class="report-in-box-warp-in-content-box-in-content-pe add"
-                                                    >
-                                                        도용/사칭을 포함한
-                                                        타인의 권리를 침해함
-                                                    </div>
-                                                    <div
-                                                        class="report-in-box-warp-in-content-box-in-content-pe"
-                                                    >
-                                                        특정인에 대한
-                                                        욕설/인신공격/비방이
-                                                        포함됨
-                                                    </div>
-                                                    <div
-                                                        class="report-in-box-warp-in-content-box-in-content-pe"
-                                                    >
-                                                        본인 또는 타인의
-                                                        개인정보가 노출됨
-                                                    </div>
-                                                    <div
-                                                        class="report-in-box-warp-in-content-box-in-content-pe"
-                                                    >
-                                                        성적 수치심이나 불쾌감을
-                                                        유발하는 내용이 포함됨
-                                                    </div>
-                                                </div>
-                                                <!-- 설명 -->
-                                                <div
-                                                    class="report-in-box-warp-in-content-add"
-                                                >
-                                                    <div
-                                                        class="report-in-box-warp-in-content-add-more"
-                                                    >
-                                                        텀블벅 운영팀에서는
-                                                        <a
-                                                            href="/"
-                                                            class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
-                                                            >이용약관</a
-                                                        >
-                                                        및
-                                                        <a
-                                                            href="/"
-                                                            class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
-                                                            >커뮤니티
-                                                            운영정책</a
-                                                        >에 따라 신고를 검토하고
-                                                        조치하고 있습니다.
-                                                        텀블벅 규정과 맞지 않는
-                                                        게시물을 발견하시면
-                                                        이곳에서 신고해
-                                                        주세요.<br /><br />허위로
-                                                        특정 이용자 또는 글을
-                                                        반복적으로 신고할 경우
-                                                        신고자 본인 계정의
-                                                        이용이 정지될 수 있으니
-                                                        유의해 주세요.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- 버튼쪽 -->
-                                            <div class="report-btn">
-                                                <button class="report-btn-in">
-                                                    신고 제출하기
-                                                </button>
-                                                <!-- 눌렀을때 -->
-                                                <!-- <button
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UP-DA :: 작성한 후기</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/user/mypage-review.css}"
+      href="../../static/css/user/mypage-review.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/header.css}"
+      href="../../static/css/fix/header.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/footer.css}"
+      href="../../static/css/fix/footer.css"
+    />
+    <script src="../../static/js/user/mypage-review.js" defer></script>
+    <script th:src="@{/js/user/mypage-review.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+  </head>
+  <body>
+    <div th:replace="~{fix/header :: header}"></div>
+    <main>
+      <section id="projects" style="background-color: #ffffff">
+        <ul class="ul-add hiddenen">
+          <li>
+            <button type="button" class="ul-add-li">신고</button>
+          </li>
+        </ul>
+        <div class="report hiddenen">
+          <div class="report-in">
+            <div class="report-in-box">
+              <div class="report-in-box-warp">
+                <div class="report-in-box-warp-in">
+                  <!-- 상단 -->
+                  <div class="report-in-box-warp-in-title">
+                    커뮤니티 글/댓글 신고
+                    <button class="report-close">
+                      <span class="report-close-span">
+                        <div class="report-close-span-div">
+                          <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 20 20"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                              fill="#3D3D3D"
+                            ></path>
+                          </svg>
+                        </div>
+                      </span>
+                    </button>
+                  </div>
+                  <!-- 내용 -->
+                  <div class="report-in-box-warp-in-content">
+                    <div class="report-in-box-warp-in-content-box">
+                      <!-- 내용 -->
+                      <div class="report-in-box-warp-in-content-box-in">
+                        <!-- 큰글 -->
+                        <div class="report-in-box-warp-in-content-box-in-title">
+                          이 게시물을 신고하는 사유를 선택해 주세요.
+                        </div>
+                        <!-- 선택지 -->
+                        <div
+                          class="report-in-box-warp-in-content-box-in-content"
+                        >
+                          <!-- 각각의 이유 -->
+                          <div
+                            class="report-in-box-warp-in-content-box-in-content-pe"
+                          >
+                            프로젝트와 관련 없는 홍보/스팸 콘텐츠
+                          </div>
+                          <div
+                            class="report-in-box-warp-in-content-box-in-content-pe add"
+                          >
+                            도용/사칭을 포함한 타인의 권리를 침해함
+                          </div>
+                          <div
+                            class="report-in-box-warp-in-content-box-in-content-pe"
+                          >
+                            특정인에 대한 욕설/인신공격/비방이 포함됨
+                          </div>
+                          <div
+                            class="report-in-box-warp-in-content-box-in-content-pe"
+                          >
+                            본인 또는 타인의 개인정보가 노출됨
+                          </div>
+                          <div
+                            class="report-in-box-warp-in-content-box-in-content-pe"
+                          >
+                            성적 수치심이나 불쾌감을 유발하는 내용이 포함됨
+                          </div>
+                        </div>
+                        <!-- 설명 -->
+                        <div class="report-in-box-warp-in-content-add">
+                          <div class="report-in-box-warp-in-content-add-more">
+                            텀블벅 운영팀에서는
+                            <a
+                              href="/"
+                              class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
+                              >이용약관</a
+                            >
+                            및
+                            <a
+                              href="/"
+                              class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
+                              >커뮤니티 운영정책</a
+                            >에 따라 신고를 검토하고 조치하고 있습니다. 텀블벅
+                            규정과 맞지 않는 게시물을 발견하시면 이곳에서 신고해
+                            주세요.<br /><br />허위로 특정 이용자 또는 글을
+                            반복적으로 신고할 경우 신고자 본인 계정의 이용이
+                            정지될 수 있으니 유의해 주세요.
+                          </div>
+                        </div>
+                      </div>
+                      <!-- 버튼쪽 -->
+                      <div class="report-btn">
+                        <button class="report-btn-in">신고 제출하기</button>
+                        <!-- 눌렀을때 -->
+                        <!-- <button
                                                     class="report-btn-in add-add"
                                                 >
                                                     신고 제출하기
                                                 </button> -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                      </div>
                     </div>
+                  </div>
                 </div>
-                <!-- 주목할 만한 프로젝트 -->
-                <div class="container mx-auto px-4 target-project">
-                    <div class="main">
-                        <div class="main-in">
-                            <!-- 공용으로 들어가는 상단 -->
-                            <div class="main-in-box">
-                                <!-- 프로필쪽 -->
-                                <div class="main-in-box-pro">
-                                    <div class="main-in-box-pro-le">
-                                        <div class="main-in-box-pro-le-in">
-                                            <img
-                                                src="https://assets.tumblbug.com/profile/default_avatar.png"
-                                                alt=""
-                                                class="main-in-box-pro-le-in-img"
-                                            />
-                                            <div
-                                                class="main-in-box-pro-le-in-box"
-                                            >
-                                                <div
-                                                    class="main-in-box-pro-le-in-box-title"
-                                                >
-                                                    <div
-                                                        class="main-in-box-pro-le-in-box-title-in"
-                                                    >
-                                                       <span>Up-Da</span>
-                                                    </div>
-                                                </div>
-                                                <div
-                                                    class="main-in-box-pro-le-in-box-content"
-                                                >
-                                                    <div
-                                                        class="main-in-box-pro-le-in-box-content-box"
-                                                    >
-                                                        <div
-                                                            class="main-in-box-pro-le-in-box-content-box-in"
-                                                        >
-                                                            <div
-                                                                class="main-in-box-pro-le-in-box-content-box-in-top"
-                                                            >
-                                                                팔로잉
-                                                                <svg
-                                                                    class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 18 18"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                >
-                                                                    <path
-                                                                        fill-rule="evenodd"
-                                                                        clip-rule="evenodd"
-                                                                        d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
-                                                                        fill="#545454"
-                                                                    ></path>
-                                                                </svg>
-                                                            </div>
-                                                            <div
-                                                                class="main-in-box-pro-le-in-box-content-box-in-bo"
-                                                            >
-                                                                -
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            class="main-in-box-pro-le-in-box-content-box-in"
-                                                        >
-                                                            <div
-                                                                class="main-in-box-pro-le-in-box-content-box-in-top"
-                                                            >
-                                                                후원수
-                                                                <svg
-                                                                    class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
-                                                                    width="18"
-                                                                    height="18"
-                                                                    viewBox="0 0 18 18"
-                                                                    fill="none"
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                >
-                                                                    <path
-                                                                        fill-rule="evenodd"
-                                                                        clip-rule="evenodd"
-                                                                        d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
-                                                                        fill="#545454"
-                                                                    ></path>
-                                                                </svg>
-                                                            </div>
-                                                            <div
-                                                                class="main-in-box-pro-le-in-box-content-box-in-bo"
-                                                            >
-                                                                -
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 내비게이션바 -->
-                                <div class="main-in-box-na">
-                                    <div class="main-in-box-na-box">
-                                        <div class="main-in-box-na-box-pe">
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
-                                            <a 
-                                            href="/src/main/resources/templates/user/mypage-profile.html"
-                                            th:href="@{/user}"
-                                            >프로필</a>
-                                            </div>
-                                        </span>
-                                        <span class="main-in-box-na-box-pe-span current">
-                                            <div class="main-in-box-na-box-pe-span-in ">
-                                            <a 
-                                            href="/src/main/resources/templates/user/mypage-review.html"
-                                            th:href="@{/user/reply}"
-                                            >작성한 후기</a>
-                                            </div>
-                                        </span>
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
-                                            <a 
-                                            href="/src/main/resources/templates/user/mypage-donation.html"
-                                            th:href="@{/user/donation}"
-                                            >내가 후원한 캠페인</a>
-                                            </div>
-                                        </span>
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
-                                            <a 
-                                            href="/src/main/resources/templates/user/mypage-like.html"
-                                            th:href="@{/user/like}"
-                                            >좋아요 누른 캠페인</a>
-                                            </div>
-                                        </span>
-                                        <span class="main-in-box-na-box-pe-span">
-                                            <div class="main-in-box-na-box-pe-span-in">
-                                            <a
-                                            href="/src/main/resources/templates/user/mypage-badge.html"
-                                            th:href="@{/user/badge}"
-                                            >뱃지</a>
-                                            </div>
-                                        </span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- 주목할 만한 프로젝트 -->
+        <div class="container mx-auto px-4 target-project">
+          <div class="main">
+            <div class="main-in">
+              <!-- 공용으로 들어가는 상단 -->
+              <div class="main-in-box">
+                <!-- 프로필쪽 -->
+                <div class="main-in-box-pro">
+                  <div class="main-in-box-pro-le">
+                    <div class="main-in-box-pro-le-in">
+                      <img
+                        src="https://assets.tumblbug.com/profile/default_avatar.png"
+                        alt=""
+                        class="main-in-box-pro-le-in-img"
+                      />
+                      <div class="main-in-box-pro-le-in-box">
+                        <div class="main-in-box-pro-le-in-box-title">
+                          <div class="main-in-box-pro-le-in-box-title-in">
+                            <span>Up-Da</span>
+                          </div>
+                        </div>
+                        <div class="main-in-box-pro-le-in-box-content">
+                          <div class="main-in-box-pro-le-in-box-content-box">
+                            <div
+                              class="main-in-box-pro-le-in-box-content-box-in"
+                            >
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                              >
+                                팔로잉
+                                <svg
+                                  class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 18 18"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                    fill="#545454"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                              >
+                                -
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-box-pro-le-in-box-content-box-in"
+                            >
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                              >
+                                후원수
+                                <svg
+                                  class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                  width="18"
+                                  height="18"
+                                  viewBox="0 0 18 18"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    fill-rule="evenodd"
+                                    clip-rule="evenodd"
+                                    d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                    fill="#545454"
+                                  ></path>
+                                </svg>
+                              </div>
+                              <div
+                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                              >
+                                -
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- 내비게이션바 -->
+                <div class="main-in-box-na">
+                  <div class="main-in-box-na-box">
+                    <div class="main-in-box-na-box-pe">
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-profile.html"
+                            th:href="@{/user}"
+                            >프로필</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span current">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-review.html"
+                            th:href="@{/user/review}"
+                            >작성한 후기</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-donation.html"
+                            th:href="@{/user/donation}"
+                            >내가 후원한 캠페인</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-like.html"
+                            th:href="@{/user/like}"
+                            >좋아요 누른 캠페인</a
+                          >
+                        </div>
+                      </span>
+                      <span class="main-in-box-na-box-pe-span">
+                        <div class="main-in-box-na-box-pe-span-in">
+                          <a
+                            href="/src/main/resources/templates/user/mypage-badge.html"
+                            th:href="@{/user/badge}"
+                            >뱃지</a
+                          >
+                        </div>
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 각각의 나올것들 -->
+            <div class="content-box">
+              <!-- 헤더? -->
+              <div class="content-box-top">
+                <div class="content-box-top-title">작성한 후기</div>
+                <div class="content-box-top-count">
+                  <span th:text="${reviewCount}"></span>
+                </div>
+              </div>
+              <!-- 내용들 -->
+              <div>
+                <!-- 각각의 내용들 들어감 -->
+                <div
+                  class="content-box-in"
+                  th:each="campaignReviews : ${campaignReviews}"
+                >
+                  <!-- 유저 -->
+                  <div class="content-box-in-user">
+                    <div class="content-box-in-user-box">
+                      <!-- 캠페인 -->
+                      <div class="content-box-in-cam">
+                        <!-- 나중에 작업할 내용 -->
+                        <a
+                          th:href="@{/campaign/detail/{campaignId}}"
+                          class="content-box-in-cam-in"
+                        >
+                          <img
+                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1wcm9qZWN0LWNvdmVyLWltYWdlcyIsImtleSI6ImU2ZmVmZWMwNmZhMmUzZjkyZDIxYTQwODg1ZjczMjZiODYyOTFhZTAvNzU1NjFhNjY5NmYxNWYxZTQxZWQxMjAzMzNlYjg0OWNlYmQ5ZTIwMC8zNDEwZDg3NmU3YjNmZmZjZThkYmI3M2NlMzJmZjJlZjIxY2ExNWRjLzFjMzllY2FlLTM2YmYtNGJmNi1iMjUwLTY4ZmVkOGVjOGE3OS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MjAsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                            alt=""
+                          />
+                          <div th:text="${campaignReviews.campaignedBy.title}">
+                            아름다움과 사랑의 욕망을 관장하는 [아프로디테
+                            원피스]
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                    <div class="content-box-in-user-btn report-menu">
+                      <div class="content-box-in-user-btn-in">
+                        <div class="content-box-in-user-btn-in-warp">
+                          <svg viewBox="0 0 48 48">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- 내용 -->
+                  <div
+                    class="content-box-in-content"
+                    th:text="${campaignReviews.content}"
+                  >
+                    아동복이라고 써있어서 잉? 하고열였는데 이 옷이네요. 색깔의
+                    퀄리티가 특히 좋았어요.상체 똑딱이가 조금 더 위였으면 하는
+                    아쉬움이 살짝 있네요🐸
+                  </div>
 
-                            </div>
-                            <!-- 각각의 나올것들 -->
-                            <div class="content-box">
-                                <!-- 헤더? -->
-                                <div class="content-box-top">
-                                    <div class="content-box-top-title">
-                                        작성한 후기
-                                    </div>
-                                    <div class="content-box-top-count">112</div>
-                                </div>
-                                <!-- 내용들 -->
-                                <div>
-                                    <!-- 각각의 내용들 들어감 -->
-                                    <div class="content-box-in" th:each="campaignReviews : ${campaignReviews}">
-                                        <!-- 유저 -->
-                                        <div class="content-box-in-user">
-                                            <div
-                                                class="content-box-in-user-box"
-                                            >
-                                                <img
-                                                    src="https://tumblbug-upi.imgix.net/045e7d7b-558f-4991-9a29-2a56af73a065.jpg?auto=format%2Ccompress&ch=Save-Data&facepad=2.0&fit=facearea&h=200&mask=ellipse&w=200&s=59c42fd9237178b801e3e570a49486ec"
-                                                    alt="reviewcampaignimage"
-                                                />
-                                                <div
-                                                    class="content-box-in-user-box-title"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-box-title-top"
-                                                    >
-                                                        <a thref="/">개굴개굴</a>
-                                                    </div>
-                                                    <div
-                                                        class="content-box-in-user-box-title-bo"
-                                                    >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-le"
-                                                            >후원한 캠페인
-                                                            78</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-mi"
-                                                            >·</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-ri"
-                                                        >후기 </span>
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-ri"
-                                                            th:text="${reviewCount}"
-                                                            ></span
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="content-box-in-user-btn report-menu"
-                                            >
-                                                <div
-                                                    class="content-box-in-user-btn-in"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-btn-in-warp"
-                                                    >
-                                                        <svg
-                                                            viewBox="0 0 48 48"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                                                            ></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="content-box-in-content" th:text="${campaignReviews.content}">
-                                            아동복이라고 써있어서 잉?
-                                            하고열였는데 이 옷이네요. 색깔의
-                                            퀄리티가 특히 좋았어요.상체 똑딱이가
-                                            조금 더 위였으면 하는 아쉬움이 살짝
-                                            있네요🐸
-                                        </div>
-                                        <!-- 캠페인 -->
-                                        <div class="content-box-in-cam">
-                                            <a
-                                                href="/"
-                                                class="content-box-in-cam-in"
-                                            >
-                                                <img
-                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1wcm9qZWN0LWNvdmVyLWltYWdlcyIsImtleSI6ImU2ZmVmZWMwNmZhMmUzZjkyZDIxYTQwODg1ZjczMjZiODYyOTFhZTAvNzU1NjFhNjY5NmYxNWYxZTQxZWQxMjAzMzNlYjg0OWNlYmQ5ZTIwMC8zNDEwZDg3NmU3YjNmZmZjZThkYmI3M2NlMzJmZjJlZjIxY2ExNWRjLzFjMzllY2FlLTM2YmYtNGJmNi1iMjUwLTY4ZmVkOGVjOGE3OS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MjAsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    아름다움과 사랑의 욕망을
-                                                    관장하는 [아프로디테 원피스]
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!-- 날짜 -->
-                                        <div class="content-box-in-date">
-                                            <div class="content-box-in-date-in">
-                                                <div
-                                                    class="content-box-in-date-in-time"
-                                                >
-                                                    <span th:text="${campaignReviews.createdDate}"></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- 2번째 -->
-                                    <div class="content-box-in">
-                                        <!-- 유저 -->
-                                        <div class="content-box-in-user">
-                                            <div
-                                                class="content-box-in-user-box"
-                                            >
-                                                <img
-                                                    src="https://tumblbug-upi.imgix.net/045e7d7b-558f-4991-9a29-2a56af73a065.jpg?auto=format%2Ccompress&ch=Save-Data&facepad=2.0&fit=facearea&h=200&mask=ellipse&w=200&s=59c42fd9237178b801e3e570a49486ec"
-                                                    alt=""
-                                                />
-                                                <div
-                                                    class="content-box-in-user-box-title"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-box-title-top"
-                                                    >
-                                                        <a href="/">개굴개굴</a>
-                                                    </div>
-                                                    <div
-                                                        class="content-box-in-user-box-title-bo"
-                                                    >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-le"
-                                                            >후원한 캠페인
-                                                            78</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-mi"
-                                                            >·</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-ri"
-                                                            >후기 36</span
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="content-box-in-user-btn report-menu"
-                                            >
-                                                <div
-                                                    class="content-box-in-user-btn-in"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-btn-in-warp"
-                                                    >
-                                                        <svg
-                                                            viewBox="0 0 48 48"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                                                            ></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="content-box-in-content">
-                                            아동복이라고 써있어서 잉?
-                                            하고열였는데 이 옷이네요. 색깔의
-                                            퀄리티가 특히 좋았어요.상체 똑딱이가
-                                            조금 더 위였으면 하는 아쉬움이 살짝
-                                            있네요🐸
-                                        </div>
-                                        <!-- 캠페인 -->
-                                        <div class="content-box-in-cam">
-                                            <a
-                                                href="/"
-                                                class="content-box-in-cam-in"
-                                            >
-                                                <img
-                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1wcm9qZWN0LWNvdmVyLWltYWdlcyIsImtleSI6ImU2ZmVmZWMwNmZhMmUzZjkyZDIxYTQwODg1ZjczMjZiODYyOTFhZTAvNzU1NjFhNjY5NmYxNWYxZTQxZWQxMjAzMzNlYjg0OWNlYmQ5ZTIwMC8zNDEwZDg3NmU3YjNmZmZjZThkYmI3M2NlMzJmZjJlZjIxY2ExNWRjLzFjMzllY2FlLTM2YmYtNGJmNi1iMjUwLTY4ZmVkOGVjOGE3OS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MjAsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    아름다움과 사랑의 욕망을
-                                                    관장하는 [아프로디테 원피스]
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!-- 날짜 -->
-                                        <div class="content-box-in-date">
-                                            <div class="content-box-in-date-in">
-                                                <div
-                                                    class="content-box-in-date-in-time"
-                                                >
-                                                    <span>2022.12.02</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="content-box-in">
-                                        <!-- 유저 -->
-                                        <div class="content-box-in-user">
-                                            <div
-                                                class="content-box-in-user-box"
-                                            >
-                                                <img
-                                                    src="https://tumblbug-upi.imgix.net/045e7d7b-558f-4991-9a29-2a56af73a065.jpg?auto=format%2Ccompress&ch=Save-Data&facepad=2.0&fit=facearea&h=200&mask=ellipse&w=200&s=59c42fd9237178b801e3e570a49486ec"
-                                                    alt=""
-                                                />
-                                                <div
-                                                    class="content-box-in-user-box-title"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-box-title-top"
-                                                    >
-                                                        <a href="/">개굴개굴</a>
-                                                    </div>
-                                                    <div
-                                                        class="content-box-in-user-box-title-bo"
-                                                    >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-le"
-                                                            >후원한 캠페인
-                                                            78</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-mi"
-                                                            >·</span
-                                                        >
-                                                        <span
-                                                            class="content-box-in-user-box-title-bo-ri"
-                                                            >후기 36</span
-                                                        >
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div
-                                                class="content-box-in-user-btn report-menu"
-                                            >
-                                                <div
-                                                    class="content-box-in-user-btn-in"
-                                                >
-                                                    <div
-                                                        class="content-box-in-user-btn-in-warp"
-                                                    >
-                                                        <svg
-                                                            viewBox="0 0 48 48"
-                                                        >
-                                                            <path
-                                                                fill-rule="evenodd"
-                                                                clip-rule="evenodd"
-                                                                d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                                                            ></path>
-                                                        </svg>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="content-box-in-content">
-                                            아동복이라고 써있어서 잉?
-                                            하고열였는데 이 옷이네요. 색깔의
-                                            퀄리티가 특히 좋았어요.상체 똑딱이가
-                                            조금 더 위였으면 하는 아쉬움이 살짝
-                                            있네요🐸
-                                        </div>
-                                        <!-- 캠페인 -->
-                                        <div class="content-box-in-cam">
-                                            <a
-                                                href="/"
-                                                class="content-box-in-cam-in"
-                                            >
-                                                <img
-                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1wcm9qZWN0LWNvdmVyLWltYWdlcyIsImtleSI6ImU2ZmVmZWMwNmZhMmUzZjkyZDIxYTQwODg1ZjczMjZiODYyOTFhZTAvNzU1NjFhNjY5NmYxNWYxZTQxZWQxMjAzMzNlYjg0OWNlYmQ5ZTIwMC8zNDEwZDg3NmU3YjNmZmZjZThkYmI3M2NlMzJmZjJlZjIxY2ExNWRjLzFjMzllY2FlLTM2YmYtNGJmNi1iMjUwLTY4ZmVkOGVjOGE3OS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo2MjAsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                    alt=""
-                                                />
-                                                <div>
-                                                    아름다움과 사랑의 욕망을
-                                                    관장하는 [아프로디테 원피스]
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <!-- 날짜 -->
-                                        <div class="content-box-in-date">
-                                            <div class="content-box-in-date-in">
-                                                <div
-                                                    class="content-box-in-date-in-time"
-                                                >
-                                                    <span>2022.12.02</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- 페이지네이션 -->
-                                <div class="content-box-bo">
-                                    <div class="content-box-bo-box">
-                                        <ul>
-                                            <li class="btn-choice">
-                                                <div class="btn-choice-in">
-                                                    <svg viewBox="0 0 48 48">
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                            </li>
-                                            <li class="btn-count choice">
-                                                <a href="/">1</a>
-                                            </li>
-                                            <li class="btn-count">
-                                                <a href="/">2</a>
-                                            </li>
-                                            <li class="btn-count">
-                                                <a href="/">3</a>
-                                            </li>
-                                            <li class="btn-count">
-                                                <a href="/">4</a>
-                                            </li>
-                                            <li class="btn-count">
-                                                <a href="/">5</a>
-                                            </li>
-                                            <li class="btn-choice">
-                                                <div class="btn-choice-in">
-                                                    <svg viewBox="0 0 48 48">
-                                                        <path
-                                                            fill-rule="evenodd"
-                                                            clip-rule="evenodd"
-                                                            d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
-                                                        ></path>
-                                                    </svg>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                  <!-- 날짜 -->
+                  <div class="content-box-in-date">
+                    <div class="content-box-in-date-in">
+                      <div class="content-box-in-date-in-time">
+                        <span th:text="${campaignReviews.createdDate}"></span>
+                      </div>
                     </div>
+                  </div>
                 </div>
-            </section>
-        </main>
-        <div th:replace="~{fix/footer :: footer}"></div>
-    </body>
+
+                <!-- 페이지네이션 -->
+                <div class="content-box-bo">
+                  <div class="content-box-bo-box">
+                    <ul>
+                      <li class="btn-choice">
+                        <div class="btn-choice-in">
+                          <svg viewBox="0 0 48 48">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </li>
+                      <li class="btn-count choice">
+                        <a href="/">1</a>
+                      </li>
+                      <li class="btn-count">
+                        <a href="/">2</a>
+                      </li>
+                      <li class="btn-count">
+                        <a href="/">3</a>
+                      </li>
+                      <li class="btn-count">
+                        <a href="/">4</a>
+                      </li>
+                      <li class="btn-count">
+                        <a href="/">5</a>
+                      </li>
+                      <li class="btn-choice">
+                        <div class="btn-choice-in">
+                          <svg viewBox="0 0 48 48">
+                            <path
+                              fill-rule="evenodd"
+                              clip-rule="evenodd"
+                              d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                            ></path>
+                          </svg>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div th:replace="~{fix/footer :: footer}"></div>
+  </body>
 </html>

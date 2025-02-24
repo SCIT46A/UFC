@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import app.scit46.ufc.dto.CampaignReviewDTO;
-import app.scit46.ufc.entity.CampaignReviewEntity;
+import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
+import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.repository.CampaignReviewRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -17,9 +17,7 @@ public class CampaignReviewService {
 
     public List<CampaignReviewDTO> getCampaignReviewsByUserId(Long userId) {
         List<CampaignReviewEntity> temp = campaignReviewRepository.findByReviewedBy_UserId(userId);
-        // List<CampaignReviewDTO> list = new ArrayList<>();
-        // temp.forEach((entity) -> list.add(CampaignReviewDTO.toDTO(entity)));
-        // return list;
+        
         return temp.stream()
             .map(CampaignReviewDTO::toDTO)
             .collect(Collectors.toList());

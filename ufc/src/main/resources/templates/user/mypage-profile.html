@@ -182,8 +182,7 @@
                 </div>
               </div>
               <!-- 각각의 나올것들 -->
-               <form th:action="@{/user/userUpdate}" method="post" >
-
+               <form th:action="@{/user/userUpdate}" method="post" enctype="multipart/form-data">
                   <div class="main-in-content">
                     <div class="main-in-content-in">
                       <!-- 각각의 div  -->
@@ -192,7 +191,7 @@
                         <div class="main-in-content-in-pe-title">
                           <p>프로필 사진</p>
                           <button type="button" class="pro-edit-btn">프로필 변경하기</button>
-                            <input type="submit" class="pro-edit-btn-save hidden" value="저장">
+                          <input type="submit" class="pro-edit-btn-save hidden" value="저장">
                         </div>
                         <!-- 아래 내용 -->
                         <div class="main-in-content-in-pe-content pro-img">
@@ -215,7 +214,7 @@
                               <div>
                                 <div class="ch-img-text-in">
                                   <span>
-                                    <input  type="file" name="ch-img-btn" />
+                                    <input  type="file" name="profileImage" id="ch-img-btn" />
                                     <label class="ch-img-btn-label" for="ch-img-btn" style="margin-top: 10px;">파일 업로드</label>
                                   </span>
                                 </div>
@@ -332,6 +331,7 @@
                                     name="nickname"
                                     class="input name-input address"
                                     style="width: 400px"
+                                    th:value="${#strings.arraySplit(user.userAddress, '#')[0]}"
                                     readonly
                                   />
                                   <button
@@ -357,7 +357,7 @@
                                   type="text"
                                   class="input address-detail"
                                   placeholder="상세주소를 입력해주세요."
-                                  th:value="${user.userAddress}"
+                                  th:value="${#strings.arraySplit(user.userAddress, '#')[1]}"
                                 />
                               </div>
                             </div>

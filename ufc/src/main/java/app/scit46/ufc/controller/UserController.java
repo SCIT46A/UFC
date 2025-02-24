@@ -2,27 +2,24 @@ package app.scit46.ufc.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.fasterxml.jackson.annotation.JsonCreator.Mode;
-
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.CampaignReviewDTO;
-import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.CampaignReviewService;
+import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
@@ -42,6 +39,7 @@ public class UserController {
     private final MaterialDonationService materialDonationService;
     private final CampaignService campaignService;
     private final CampaignReviewService campaignReviewService;
+    private final LikeService likeService;
 
     // 유저 기본페이지 조회
     @GetMapping({"/",""})
@@ -65,6 +63,19 @@ public class UserController {
         return "user/mypage-profile";
     }
 
+    @GetMapping("/like")
+    public String like(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        Long userId = null;
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId");
+            List<LikeDTO> like = likeService.getLikesByUserId(userId);
+            model.addAttribute("like", like);
+        }
+        return "user/mypage-like";
+    }
+
+
     @GetMapping("/review")
     public String review(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
@@ -72,31 +83,22 @@ public class UserController {
         if (session != null) {
             userId = (Long) session.getAttribute("loginUserId");
             List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
+            
+            // 캠페인 정보를 가져오기 위한 코드 추가
+            List<CampaignDTO> campaigns = new ArrayList<>();
+            for (CampaignReviewDTO review : list) {
+                CampaignDTO campaign = campaignService.getCampaignById(review.getCampaignedBy().getCampaignId());
+                campaigns.add(campaign);
+            }
+            
             model.addAttribute("campaignReviews", list);
+            model.addAttribute("campaigns", campaigns); // 캠페인 정보 추가
             model.addAttribute("userId", userId);
             model.addAttribute("reviewCount", list.size());
         }
         return "user/mypage-review";
     }
 
-    // public String review(HttpServletRequest request, Model model) {
-    //     HttpSession session =  request.getSession(false);
-    //     Long userId = null;
-        
-    //     if (session != null) {
-    //         userId = (Long) session.getAttribute("loginUserId");
-    //         if (userId != null) {
-    //             try {
-    //                 List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
-    //                 model.addAttribute("campaignReviews", list);
-    //             } catch (DBNotFoundException e) {
-    //                 model.addAttribute("error", "리뷰 정보를 찾을 수 없습니다.");
-    //             }
-    //         }
-    //     }
-    //     return "user/mypage-review";
-    // }
-    
 
 
 
@@ -129,29 +131,7 @@ public class UserController {
     if (session != null) {
         loginUserId = (Long) session.getAttribute("loginUserId");
         if (loginUserId != null) {
-            try {
-                UserDTO user = userService.readUserById(loginUserId);
-                List<MaterialDonationDTO> donations = materialDonationService.donathionFindByUserId(loginUserId);
-                
-                // donations이 비어있지 않을 경우만 캠페인 조회
-                List<CampaignDTO> campaigns = new ArrayList<>();
-                if (!donations.isEmpty()) {
-                    List<Long> campaignIds = donations.stream()
-                        .map(MaterialDonationDTO::getCampaignId)
-                        .distinct() // 중복된 캠페인 ID 제거
-                        .collect(Collectors.toList());
-
-                    campaigns = campaignService.getCampaignsByUserId(campaignIds);
-                }
-
-                int donationCount = donations.size();
-                model.addAttribute("user", user);
-                model.addAttribute("donations", donations);
-                model.addAttribute("campaigns", campaigns);
-                model.addAttribute("donationCount", donationCount);
-            } catch (DBNotFoundException e) {
-                model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-            }
+          
         }
     }
     return "user/mypage-donation";
@@ -192,10 +172,7 @@ public class UserController {
         return "user/mypage-badge";
     }
 
-    @GetMapping("/like")
-    public String like() {
-        return "user/mypage-like";
-    }
+
 
 
 

@@ -2,6 +2,8 @@ package app.scit46.ufc.service;
 
 import java.util.Optional;
 
+import org.hibernate.query.Page;
+import org.springdoc.core.converters.models.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
