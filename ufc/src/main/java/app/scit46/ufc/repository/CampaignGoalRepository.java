@@ -1,11 +1,12 @@
 package app.scit46.ufc.repository;
 
-import app.scit46.ufc.entity.CampaignGoalEntity;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 
 @Repository
 public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity, Long> {

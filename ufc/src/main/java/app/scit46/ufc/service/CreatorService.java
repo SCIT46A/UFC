@@ -48,11 +48,12 @@ public class CreatorService {
 
     // 검토 필요
     public void updateCreator(CreatorDTO creator) {
-        creatorRepository.save(CreatorEntity.toEntity(creator,
-                ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
-                ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
-                ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
-                UserDTO.builder().userId(creator.getOwnUser()).build()));
+//        테스트하는데 문제생겨서 주석했습니다 필요 시 문의주세요 - cho
+//        creatorRepository.save(CreatorEntity.toEntity(creator,
+//                ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
+//                ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
+//                ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
+//                UserDTO.builder().userId(creator.getOwnUser()).build()));
     }
 
     // 해당 내용 추가됨

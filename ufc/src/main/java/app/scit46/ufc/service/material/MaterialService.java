@@ -6,9 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO.RewardListDTO;
-import app.scit46.ufc.entity.CampaignEntity;
 import app.scit46.ufc.entity.MaterialEntity;
-import app.scit46.ufc.entity.RewardMaterialEntity;
 import app.scit46.ufc.repository.material.MaterialRepository;
 import lombok.RequiredArgsConstructor;
 

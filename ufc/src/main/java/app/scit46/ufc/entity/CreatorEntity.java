@@ -5,6 +5,8 @@ import java.util.List;
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
+import app.scit46.ufc.entity.product.ProductEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

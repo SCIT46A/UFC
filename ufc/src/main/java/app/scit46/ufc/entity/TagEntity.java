@@ -3,6 +3,8 @@ package app.scit46.ufc.entity;
 import java.util.List;
 
 import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.entity.campaign.CampaignTagEntity;
+import app.scit46.ufc.entity.product.ProductTagEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

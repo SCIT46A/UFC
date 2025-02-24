@@ -11,13 +11,13 @@ import lombok.*;
 @Builder
 public class UserAlertDTO {
     private Long userAlertId;
-    private Long userId;
+    private UserDTO user; // ✅ UserDTO 포함
     private Boolean isRead;
 
     public static UserAlertDTO toDTO(UserAlertEntity entity) {
         return UserAlertDTO.builder()
                 .userAlertId(entity.getUserAlertId())
-                .userId(entity.getUser() != null ? entity.getUser().getUserId() : null)
+                .user(entity.getUser() != null ? UserDTO.toDTO(entity.getUser()) : null) // ✅ UserDTO 변환
                 .isRead(entity.getIsRead())
                 .build();
     }

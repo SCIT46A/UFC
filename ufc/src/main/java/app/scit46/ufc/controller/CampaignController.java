@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import app.scit46.ufc.dto.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.service.campaign.CampaignService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
