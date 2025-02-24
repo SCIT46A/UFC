@@ -30,7 +30,7 @@ public class CampaignDTO {
     private CreatorDTO createdBy; // ✅ CreatorDTO 포함
     private Boolean isSuccess;
     private ImageUrlDTO photo; // ✅ PhotoDTO 포함
-    private Integer campaignStatus;
+    private Boolean campaignStatus;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
         return CampaignDTO.builder()

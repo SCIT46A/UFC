@@ -53,13 +53,13 @@ public class ItemEntity {
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
     private List<ProductEntity> products;
 
-    public static ItemEntity toEntity(ItemDTO dto, ImageUrlEntity photo) {
+    public static ItemEntity toEntity(ItemDTO dto) {
         return ItemEntity.builder()
-                .itemId(dto.getItemId())
+                //.itemId(dto.getItemId())  // 기본값 자동 생성이므로 주석처리
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .price(dto.getPrice())
-                .photo(photo)
+                .photo(dto.getPhoto() != null ? ImageUrlEntity.toEntity(dto.getPhoto()) : null)
                 .build();
     }
 }

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -51,6 +52,9 @@ public class ImageService {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환
         //if(file == null || userId == null) return null;
+
+        // 원본 파일 이름 가져오기
+        String originalFilename = file.getOriginalFilename(); // 원본 파일 이름
         
         // Cloudflare IMAGE Upload API URL
         String url = "https://api.cloudflare.com/client/v4/accounts/" + accountId + "/images/v1";
@@ -67,7 +71,12 @@ public class ImageService {
         // LinkedMultiValueMap : 여러 값을 가질 수 있는 맵, 파일 업로드(multipart/form-data) 형식 지원
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         // 요청할 내용에 파일 첨부(구성)
-        body.add("file", file.getBytes());
+        body.add("file", new ByteArrayResource(file.getBytes()){
+            @Override
+            public String getFilename() {
+                return originalFilename;
+            }
+        });
 
         // 요청 엔티티 생성(헤더, 바디 설정)
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);

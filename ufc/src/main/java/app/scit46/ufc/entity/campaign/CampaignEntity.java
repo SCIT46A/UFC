@@ -66,7 +66,7 @@ public class CampaignEntity {
     private LocalDateTime createdDate;
 
     @Column(name = "campaign_status", nullable = false)
-    private Integer campaignStatus;
+    private Boolean campaignStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
@@ -106,7 +106,7 @@ public class CampaignEntity {
     private List<AlertTargetEntity> alertTargets;
 
 
-    public static CampaignEntity toEntity(CampaignDTO dto, Long createdBy, String photo) {
+    public static CampaignEntity toEntity(CampaignDTO dto) {
       return CampaignEntity.builder()
               //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
               .title(dto.getTitle())
@@ -115,26 +115,26 @@ public class CampaignEntity {
               .endDate(dto.getEndDate())
               .sendDate(dto.getSendDate())
               //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
-              .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
-              .isSuccess(dto.getIsSuccess())
-              .photo(ImageUrlEntity.builder().imageId(photo).build())
-              .campaignStatus(dto.getCampaignStatus())
+              //.createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build()) // 영속성 문제로 인한 창작자 아이디 자체 설정
+              .isSuccess(dto.getIsSuccess() == null ? false : dto.getIsSuccess())
+              //.photo(ImageUrlEntity.builder().imageId(photo).build()) // 영속성 문제로 인한 이미지 아이디 자체 설정
+              .campaignStatus(dto.getCampaignStatus() == null ? false : dto.getCampaignStatus())
               .build();
   }
 
-    public static CampaignEntity toEntity(CampaignDTO dto, Long createdBy, ImageUrlDTO photo) {
-        return CampaignEntity.builder()
-                //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
-                .title(dto.getTitle())
-                .description(dto.getDescription())
-                .startDate(dto.getStartDate())
-                .endDate(dto.getEndDate())
-                .sendDate(dto.getSendDate())
-                //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
-                .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
-                .isSuccess(dto.getIsSuccess())
-                .photo(ImageUrlEntity.builder().imageId(photo.getImageId()).build())
-                .campaignStatus(dto.getCampaignStatus())
-                .build();
-    }
+    // public static CampaignEntity toEntity(CampaignDTO dto, ImageUrlDTO photo) {
+    //     return CampaignEntity.builder()
+    //             //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
+    //             .title(dto.getTitle())
+    //             .description(dto.getDescription())
+    //             .startDate(dto.getStartDate())
+    //             .endDate(dto.getEndDate())
+    //             .sendDate(dto.getSendDate())
+    //             //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
+    //             //.createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build()) // 영속성 문제로 인한 창작자 아이디 자체 설정
+    //             .isSuccess(dto.getIsSuccess() == null ? false : dto.getIsSuccess())
+    //             //.photo(ImageUrlEntity.builder().imageId(photo.getImageId()).build()) // 영속성 문제로 인한 이미지 아이디 자체 설정
+    //             .campaignStatus(dto.getCampaignStatus() == null ? false : dto.getCampaignStatus())
+    //             .build();
+    // }
 }

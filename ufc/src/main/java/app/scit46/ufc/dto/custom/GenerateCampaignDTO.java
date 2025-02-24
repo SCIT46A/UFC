@@ -2,6 +2,7 @@ package app.scit46.ufc.dto.custom;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,18 +28,11 @@ public class GenerateCampaignDTO {
     private LocalDateTime endDate;
     private LocalDateTime sendDate;
     // Reward / Material
-    private List<RewardListDTO> fundingItems;
+    private List<Map<String, Integer>> fundingItems;
     private List<RewardListDTO> rewardList;
     // Image 선행 로직으로 이미지가 먼저 업로드 된 후 반환된 이미지 ID를 받아옴옴
     private String imageId;
     //private MultipartFile image;
-
-    @Getter
-    @Setter
-    public class RewardListDTO {
-        private String name; // -> ItemDTO
-        private Integer amount; // -> Reward
-    }
 
     //private String imageUrl; // 이미지 자체를 받아오는 것으로 변경
     //private Long imageId; // 이미지 자체를 받아오는 것으로 변경

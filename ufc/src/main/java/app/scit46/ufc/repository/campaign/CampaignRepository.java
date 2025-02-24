@@ -14,11 +14,11 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findByCampaignId(Long campaignId);
 
     // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
-    @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = 0")
+    @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = false")
     List<CampaignEntity> findByPendingApproval();
 
     // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
-    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(int campaignStatus, LocalDateTime startDate);
+    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Boolean campaignStatus, LocalDateTime startDate);
 
     @Query("SELECT c FROM CampaignEntity c WHERE REPLACE(c.title, ' ', '') LIKE %:normalizedKeyword%")
     List<CampaignEntity> searchCampaignByTitleIgnoreSpace(@Param("normalizedKeyword") String normalizedKeyword);

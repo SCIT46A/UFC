@@ -37,6 +37,9 @@ public class RewardEntity {
     @Column(name = "reward_id")
     private Long rewardId;
 
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id", nullable = false)
     private CampaignEntity campaign;
@@ -49,11 +52,12 @@ public class RewardEntity {
     @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
     private List<RewardMaterialEntity> rewardMaterials;
 
-    public static RewardEntity toEntity(RewardDTO dto, CampaignEntity campaign, ItemEntity item) {
+    public static RewardEntity toEntity(RewardDTO dto) {
         return RewardEntity.builder()
                 .rewardId(dto.getRewardId())
-                .campaign(campaign)
-                .item(item)
+                .amount(dto.getAmount())
+                .campaign(CampaignEntity.toEntity(dto.getCampaign()))
+                .item(ItemEntity.toEntity(dto.getItem()))
                 .build();
     }
 }
