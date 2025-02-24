@@ -57,7 +57,7 @@ public class CreatorEntity {
     private String address;
 
     @Column(name = "creator_status", nullable = false)
-    private Boolean creatorStatus;
+    private Boolean creatorStatus = false; // 기본값: 미승인
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "back_img_url")
@@ -83,15 +83,13 @@ public class CreatorEntity {
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<LikeEntity> likes;
 
-
-
     public static CreatorEntity toEntity(CreatorDTO dto,
-                                         ImageUrlDTO businessCert,
-                                         ImageUrlDTO backImgUrl,
-                                         ImageUrlDTO proImgUrl,
-                                         UserDTO ownUser) {
+            ImageUrlDTO businessCert,
+            ImageUrlDTO backImgUrl,
+            ImageUrlDTO proImgUrl,
+            UserDTO ownUser) {
         return CreatorEntity.builder()
-                //.creatorId(dto.getCreatorId())  // 기본값 자동 생성이므로 주석처리
+                // .creatorId(dto.getCreatorId()) // 기본값 자동 생성이므로 주석처리
                 .intro(dto.getIntro())
                 .businessCert(ImageUrlEntity.toEntity(businessCert))
                 .bRegistNumber(dto.getBRegistNumber())

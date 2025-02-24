@@ -1,5 +1,5 @@
 // 1단계 - 모임 이름 입력 검사 (버튼 활성화)
-
+/*
 const nameInput = document.querySelector("input.name-form-input");
 const nameButton = document.querySelector("button.name-form-button");
 nameInput.addEventListener("keyup", (e) => {
@@ -64,7 +64,7 @@ descInput.addEventListener("keyup", () => {
 */
 
 // 다음 버튼 클릭 시 내용 변경(3단계로 이동)
-
+/*
 const thirdContent = document.querySelector(".img-form-wrap");
 descButton.addEventListener("click", () => {
     secondContent.style.display = "none";
@@ -79,6 +79,11 @@ lastPrevButton.addEventListener("click", () => {
     secondContent.style.display = "block";
     thirdContent.style.display = "none";
 });
+*/
+
+
+
+
 
 // 개설 완료 및 건너뛰기 버튼은 서버 작업 시 연결.
 
@@ -267,15 +272,50 @@ dragDropBox.addEventListener("drop", (e) => {
 
 
 // 창작가 프로필 수정 버튼 클릭 시 수정 -> 실제로 수정하면 그 값이 적용되는 것은 아직 구현 x
-document.addEventListener("DOMContentLoaded", function() {
+/*document.addEventListener("DOMContentLoaded", function() {
 const seller_edit = document.querySelector(".img-form-button");
 seller_edit.addEventListener("click", function() {
     alert("프로필이 수정되었습니다.")
     window.location.href = "../../templates/creator/creator-campaign.html";
 });
+});*/
+
+document.querySelector(".img-form-button").addEventListener("click", function() {
+    Swal.fire({
+        title: '프로필 수정을 진행하겠습니다.',
+        text: '정말로 진행 하시겠습니까?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '확인',
+        cancelButtonText: '취소',
+        reverseButtons: true,
+    }).then(result => {
+        if (result.isConfirmed) { // 만약 확인 버튼을 누르면
+            fetch("/creator/create", { // ✅ 서버로 데이터 전송
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: "프로필 수정 완료" })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("서버 오류 발생");
+                return response.text();
+            })
+            .then(data => {
+                Swal.fire('프로필 수정이 완료되었습니다.', '더욱 완성도가 올라갔어요~!', 'success').then(() => {
+                    window.location.href = "../../templates/creator/creator-campaign.html"; // ✅ 성공 후 페이지 이동
+                });
+            })
+            .catch(error => {
+                Swal.fire('오류 발생!', '서버에 문제가 있습니다.', 'error');
+                console.error("❌ 오류 발생:", error);
+            });
+        }
+    });
 });
 
-
+/*
 // 창작가 프로필 수정 취소 클릭 시 창작가 캠페인 사이트로 이동
 document.addEventListener("DOMContentLoaded", function() {
     const seller_edit_cancel = document.querySelector(".img-form-prev-button");
@@ -286,7 +326,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 window.location.href = "../../templates/creator/creator-campaign.html";
             });
-    });
+    });*/
 
 //
 document.addEventListener("DOMContentLoaded", function() {
@@ -337,5 +377,34 @@ document.addEventListener("DOMContentLoaded", function() {
 
         alert("프로필이 저장되었습니다.");
         window.location.href = "creator-campaign.html"; // 페이지 이동
+    });
+});
+
+document.querySelector(".img-form-prev-button").addEventListener("click", function() {
+    Swal.fire({
+        title: '정말 취소하시겠습니까?',
+        text: '지금까지 작성한 내용이 사라질 수 있습니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',  // 취소 버튼은 빨간색 느낌으로
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네, 취소할게요',
+        cancelButtonText: '아니요, 계속 작성할래요',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ✅ 취소 확정 시 실행할 코드
+            Swal.fire({
+                title: '취소되었습니다.',
+                text: '작성이 취소되었습니다.',
+                icon: 'info',
+                timer: 2000,  // 2초 후 자동 닫힘
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "/ufc/src/main/resources/templates/creator/creator-campaign.html"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+            });
+        } else {
+            Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
+        }
     });
 });

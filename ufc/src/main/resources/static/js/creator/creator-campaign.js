@@ -69,6 +69,30 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+// 데이터를 받아와서 프로필에 구현하기
+/*
+document.addEventListener("DOMContentLoaded", async function () {
+    const creatorList = document.getElementById("creatorList");
+
+    try {
+        // 승인된 창작가 (creatorStatus = 1) 데이터 가져오기
+        const response = await fetch("");
+        const creators = await response.json();
+
+        if (creators.length === 0) {
+            creatorList.innerHTML = "<p>현재 승인된 창작가가 없습니다.</p>";
+        } else {
+            creators.forEach(creator => {
+                const div = document.createElement("div");
+                div.innerHTML =
+                    
+            })
+        }
+    }
+})*/
+
+
+
 // 캠페인 데이터 받아서 더보기 버튼으로 구현
 /*
 document.addEventListener("DOMContentLoaded", function () {

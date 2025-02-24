@@ -13,6 +13,7 @@ import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 
 @Service
+@Transactional // 추가됨 아마
 public class CreatorService {
 
     private final CreatorRepository creatorRepository;
@@ -54,6 +55,21 @@ public class CreatorService {
                 UserDTO.builder().userId(creator.getOwnUser()).build()));
     }
 
-    
+    // 해당 내용 추가됨
+    @Transactional
+    public void createCreator(CreatorDTO creatorDTO) {
+        System.out.println("🔹 DB 저장 시작...");
+
+        CreatorEntity creator = CreatorEntity.toEntity(creatorDTO,
+                ImageUrlDTO.builder().id(creatorDTO.getBusinessCert()).build(),
+                ImageUrlDTO.builder().id(creatorDTO.getBackImgUrl()).build(),
+                ImageUrlDTO.builder().id(creatorDTO.getProImgUrl()).build(),
+                UserDTO.builder().userId(creatorDTO.getOwnUser()).build());
+
+        creator.setCreatorStatus(false); // 기본값 false (미승인 상태)
+        creatorRepository.save(creator);
+
+        System.out.println("✅ DB 저장 완료!");
+    }
 
 }

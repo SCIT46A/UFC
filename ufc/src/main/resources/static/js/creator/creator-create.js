@@ -266,14 +266,84 @@ dragDropBox.addEventListener("drop", (e) => {
 });
 
 // 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
+document.querySelector(".img-form-button").addEventListener("click", function() {
+    Swal.fire({
+        title: '창작가 개설을 진행하시겠습니까?',
+        text: '새로운 창작의 세계로 나아갈 준비가 되셨나요?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 개설합니다!',
+        cancelButtonText: '아니요, 다시 생각해볼게요',
+        reverseButtons: true,
+    }).then(result => {
+        if (result.isConfirmed) { // 만약 확인 버튼을 누르면
+            fetch("/creator/create", { // ✅ 서버로 데이터 전송
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: "창작가 개설 완료!" })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("서버 오류 발생");
+                return response.text();
+            })
+            .then(data => {
+                Swal.fire('개설 요청이 완료되었습니다.', '승인처리 될 때까지 잠시 기다려주세요~!', 'success').then(() => {
+                    window.location.href = "/ufc/src/main/resources/templates/index.html"; // ✅ 성공 후 페이지 이동
+                });
+            })
+            .catch(error => {
+                Swal.fire('오류 발생!', '서버에 문제가 있습니다.', 'error');
+                console.error("❌ 오류 발생:", error);
+            });
+        } else {
+            Swal.fire('취소되었습니다.', '언제든 다시 돌아와 주세요!', 'info');
+        }
+    });
+});
+
+// 취소하기 버튼 클릭 시 메인 홈페이지로 이동
+document.querySelector(".img-form-skip").addEventListener("click", function() {
+    Swal.fire({
+        title: '정말 취소하시겠습니까?',
+        text: '지금까지 작성한 내용이 사라질 수 있습니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',  // 취소 버튼은 빨간색 느낌으로
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네, 취소할게요',
+        cancelButtonText: '아니요, 계속 작성할래요',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ✅ 취소 확정 시 실행할 코드
+            Swal.fire({
+                title: '취소되었습니다.',
+                text: '작성이 취소되었습니다.',
+                icon: 'info',
+                timer: 2000,  // 2초 후 자동 닫힘
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "/ufc/src/main/resources/templates/index.html"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+            });
+        } else {
+            Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
+        }
+    });
+});
+
+/*
 document.addEventListener("DOMContentLoaded", function() {
     let btn1 = document.querySelector(".img-form-button");
             btn1.addEventListener("click", function() {
             window.location.href="/ufc/src/main/resources/templates/index.html";
         });
 });
+*/
 
 // 창작가 프로필 설정하지 않고 취소하기 할 시 창작가 개설하기 패이지로 리다이렉트
+/*
 document.addEventListener("DOMContentLoaded", function() {
     let skip = document.querySelector(".img-form-skip");
         skip.addEventListener("click", function() {
@@ -284,6 +354,7 @@ document.addEventListener("DOMContentLoaded", function() {
             window.location.href="/ufc/src/main/resources/templates/index.html";
         });
 });
+*/
 
 function creator_nickname() {
     document.querySelector('.display_name').textContent = document.querySelector('.name-form-input').value;
@@ -316,3 +387,143 @@ document.getElementById("seller_regist_number").addEventListener("keydown", func
         e.preventDefault();
     }
 });
+
+/*
+// sweetAlert2
+Swal.fire({
+    title: '정말로 그렇게 하시겠습니까?',
+    text: '다시 되돌릴 수 없습니다. 신중하세요.',
+    icon: 'warning',
+    
+    showCancelButton: true, // cancel버튼 보이기. 기본은 원래 없음
+    confirmButtonColor: '#3085d6', // confrim 버튼 색깔 지정
+    cancelButtonColor: '#d33', // cancel 버튼 색깔 지정
+    confirmButtonText: '승인', // confirm 버튼 텍스트 지정
+    cancelButtonText: '취소', // cancel 버튼 텍스트 지정
+    
+    reverseButtons: true, // 버튼 순서 거꾸로
+    
+ }).then(result => {
+    // 만약 Promise리턴을 받으면,
+    if (result.isConfirmed) { // 만약 모달창에서 confirm 버튼을 눌렀다면
+    
+       Swal.fire('승인이 완료되었습니다.', '화끈하시네요~!', 'success');
+    }
+ });
+ */
+
+// 데이터베이스 값 저장 -> button으로 진행 (추가)
+document.querySelector(".img-form-button").addEventListener("click", async function() {
+    // 📌 입력 값 가져오기
+    const intro = document.getElementById("seller_intro").value;
+    const bRegistNumber = document.getElementById("seller_regist_number").value;
+    const bName = document.getElementById("seller_regist_name").value;
+    const companyName = document.getElementById("seller_regist_company").value;
+    const address = document.getElementById("seller_regist_location").value;
+    const coverImageFile = document.getElementById("background-image").files[0];
+    const profileImageFile = document.getElementById("profile-image").files[0];
+
+    // 📌 이미지 파일을 Base64로 변환
+    async function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+            if (!file) resolve(null);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    }
+
+    const coverImage = await convertToBase64(coverImageFile);
+    const profileImage = await convertToBase64(profileImageFile);
+
+    // 📌 DTO에 맞는 필드명으로 JSON 객체 생성
+    const creatorData = {
+        intro,
+        bRegistNumber,
+        bName,
+        companyName,
+        address,
+        backImgUrl: coverImage, // DTO 필드명
+        proImgUrl: profileImage, // DTO 필드명
+        creatorStatus: false, // 기본값 미승인
+        ownUser: 1 // 🔥 실제 사용자 ID로 변경 필요
+    };
+
+    // 📌 서버로 JSON 데이터 전송
+    fetch("/creator/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(creatorData)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error("서버 응답 오류");
+        }
+        return response.text();
+    })
+    .then(data => {
+        alert("창작가 개설이 완료되었습니다!");
+        window.location.href = "/ufc/src/main/resources/templates/index.html"; // 성공 후 이동할 페이지
+    })
+    .catch(error => {
+        console.error("에러 발생:", error);
+        alert("창작가 개설 중 오류가 발생했습니다.");
+    });
+});
+
+
+
+
+// 데이터베이스에 값 저장
+/* document.querySelector(".create-container").addEventListener("submit", async function(event) {
+    event.preventDefault();
+    
+    const creatorName = document.querySelector(".name-form-input").value;
+    const creatorIntro = document.getElementById("seller_intro").value;
+    const creatorNumber = document.getElementById("seller_regist_number").value;
+    const creatorCompany = document.getElementById("seller_regist_name").value;
+    const creatorRepresent = document.getElementById("seller_regist_person").value;
+    const creatorLocation = document.getElementById("seller_regist_location").value;
+    const coverImageFile = document.getElementById("background-image").files[0];
+    const profileImageFile = document.getElementById("profile-image").files[0];
+
+    async function convertToBase64(file) {
+        return new Promise((resolve, reject) => {
+            if (!file) resolve(null);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        });
+    }
+
+    const coverImage = await convertToBase64(coverImageFile);
+    const profileImage = await convertToBase64(profileImageFile);
+
+    const creatorData = {
+        creatorName,
+        creatorIntro,
+        creatorNumber,
+        creatorCompany,
+        creatorRepresent,
+        creatorLocation,
+        coverImage,
+        profileImage
+    };
+
+    fetch("/ufc/src/main/resources/templates/creator/creator-create.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(creatorData)
+    })
+    .then(response => response.text())
+    .then(data => {
+        alert(data);
+        window.location.href = "creator-campaign.html";
+    })
+    .catch(error => {
+        console.error("에러 발생:", error);
+        alert("창작가 개설 중 오류가 발생했습니다.");
+    });
+});*/
