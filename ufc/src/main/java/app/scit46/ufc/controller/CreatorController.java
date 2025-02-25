@@ -61,8 +61,9 @@ public class CreatorController {
     @PostMapping("/create")
     @ResponseBody
     public ResponseEntity<String> createCreator(@RequestBody CreatorCreateDTO creatorCreateDTO) {
-        System.out.println("📥 입력 데이터: " + creatorCreateDTO);
-
+        // System.out.println("📥 입력 데이터: " + creatorCreateDTO);
+        // TODO: DB에 창작자 등록하는 로직 Service에 작성
+        // creatorService.registCreator();
         // creatorService.createCreator(creatorDTO);
         return ResponseEntity.ok("창작가가 성공적으로 저장되었습니다!");
     }

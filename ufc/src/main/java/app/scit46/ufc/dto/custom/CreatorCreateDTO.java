@@ -16,10 +16,10 @@ import lombok.ToString;
 public class CreatorCreateDTO {
     private String intro;
     // private String businessCert; // ✅ PhotoDTO 포함
-    private String bRegistNumber;
-    private String bName;
+    private String registNumber;
+    private String bizName;
     private String companyName;
     private String address;
-    private String backImgUrl; // ✅ PhotoDTO 포함
-    private String proImgUrl;
+    private String backImg; // ✅ PhotoDTO 포함
+    private String profileImg;
 }

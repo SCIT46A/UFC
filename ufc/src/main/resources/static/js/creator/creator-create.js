@@ -266,16 +266,6 @@ dragDropBox.addEventListener("drop", (e) => {
 });
 
 
-
-// 값 초기화
-const creatorData = {
-    intro: document.getElementById("seller_intro").value || "소개 없음",
-    bRegistNumber: document.getElementById("seller_regist_number").value || "000-00-00000",
-    bName: document.getElementById("bName").value || "대표자 없음",
-    companyName: document.getElementById("seller_regist_name").value || "회사 없음",
-    address: document.getElementById("seller_regist_location").value || "주소 없음"  // ✅ 기본값 추가
-};
-
 // 입력값들이 DB로
 /* async function submitCreator(params) {
     const creatorData = {
@@ -302,23 +292,6 @@ const creatorData = {
 
 
 document.querySelector(".img-form-button").addEventListener("click", function () {
-    const intro = document.getElementById("seller_intro");
-    const bRegistNumber = document.getElementById("seller_regist_number");
-    const bName = document.getElementById("bName");
-    const companyName = document.getElementById("seller_regist_name");
-    const address = document.getElementById("seller_regist_location");
-
-    // ✅ 입력값이 없으면 기본값 설정
-    const creatorData = {
-        intro: intro ? intro.value : "소개 없음",
-        bRegistNumber: bRegistNumber ? bRegistNumber.value : "000-00-00000",
-        bName: bName ? bName.value : "대표자 없음",
-        companyName: companyName ? companyName.value : "회사 없음",
-        address: address ? address.value : "주소 없음" // ✅ 주소가 null이면 기본값 설정
-    };
-
-    console.log("🔹 전송할 데이터:", creatorData);  // ✅ 데이터 확인
-
     Swal.fire({
         title: "창작가 개설을 진행하시겠습니까?",
         text: "새로운 창작의 세계로 나아갈 준비가 되셨나요?",
@@ -332,37 +305,65 @@ document.querySelector(".img-form-button").addEventListener("click", function ()
     }).then(result => {
         let profileImageInput = document.getElementById('profile-image');    // 이미지 입력
         let backImageInput = document.getElementById('background-image');    // 이미지 입력
-        // 이미지 파일 가져오기
-        creatorData.profileImg = uploadImage(profileImageInput.files[0]);
-        creatorData.backImg = uploadImage(backImageInput.files[0]);
-        
-        console.log("🔹이미지 업로드 후 전송할 데이터:", creatorData);  // ✅ 데이터 확인
 
-        if (result.isConfirmed) {
-            fetch("/creator/create", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(creatorData)
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(err => { throw new Error(err); });
-                }
-                return response.text();
-            })
-            .then(data => {
-                console.log("✅ 서버 응답:", data);
-                Swal.fire("개설 완료!", "창작가 개설이 성공적으로 완료되었습니다.", "success").then(() => {
-                    window.location.href = "/";
+        const intro = document.getElementById("seller_intro");
+        const bRegistNumber = document.getElementById("seller_regist_number");
+        const bName = document.getElementById("seller_regist_person");
+        const companyName = document.getElementById("seller_regist_name");
+        const address = document.getElementById("seller_regist_location");
+
+        // 값 초기화
+        // ✅ 입력값이 없으면 기본값 설정
+        const creatorData = {
+            intro: intro ? intro.value : "소개 없음",
+            registNumber: bRegistNumber ? bRegistNumber.value : "000-00-00000",
+            bizName: bName ? bName.value : "대표자 없음",
+            companyName: companyName ? companyName.value : "회사 없음",
+            address: address ? address.value : "주소 없음" // ✅ 주소가 null이면 기본값 설정
+        };
+        
+        // 이미지 파일 가져오기
+        Promise.all([
+            uploadImage(profileImageInput.files[0]), // 프로필 이미지 업로드
+            uploadImage(backImageInput.files[0])      // 배경 이미지 업로드
+        ]).then(images => {
+            creatorData.profileImg = images[0]; // 프로필 이미지 URL
+            creatorData.backImg = images[1];    // 배경 이미지 URL
+        
+            console.log("🔹이미지 업로드 후 전송할 데이터:", creatorData);  // ✅ 데이터 확인
+        
+            if (result.isConfirmed) {
+                fetch("/creator/create", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json" // JSON 형식으로 설정
+                    },
+                    body: JSON.stringify(creatorData) // JSON 데이터 전송
+                })
+                .then(response => {
+                    console.log("✅ 서버 응답:", response);
+                    Swal.fire("개설 완료!", "창작가 개설 신청이 성공적으로 완료되었습니다.", "success").then(() => {
+                        window.location.href = "/";
+                    });
+                    return response.text();
+                })
+                // .then(data => {
+                //     console.log("✅ 서버 응답:", data);
+                //     Swal.fire("개설 완료!", "창작가 개설 신청이 성공적으로 완료되었습니다.", "success").then(() => {
+                //         window.location.href = "/";
+                //     });
+                // })
+                .catch(error => {
+                    console.error("❌ 오류 발생:", error);
+                    Swal.fire("오류 발생!", `서버에서 오류가 발생했습니다: ${error.message}`, "error");
                 });
-            })
-            .catch(error => {
-                console.error("❌ 오류 발생:", error);
-                Swal.fire("오류 발생!", `서버에서 오류가 발생했습니다: ${error.message}`, "error");
-            });
-        } else {
-            Swal.fire("취소되었습니다.", "언제든 다시 돌아와 주세요!", "info");
-        }
+            } else {
+                Swal.fire("취소되었습니다.", "언제든 다시 돌아와 주세요!", "info");
+            }
+        }).catch(error => {
+            console.error("❌ 이미지 업로드 오류:", error);
+            Swal.fire("오류 발생!", `이미지 업로드 중 오류가 발생했습니다: ${error.message}`, "error");
+        });
     });
 });
 
@@ -372,7 +373,7 @@ async function uploadImage(imageFile){
         return;
     }else{
         try {
-            const formData = new FormData();
+            let formData = new FormData();
             formData.append('file', imageFile);
 
             const response = await fetch('/api/image/upload', {
@@ -384,13 +385,15 @@ async function uploadImage(imageFile){
                 throw new Error('이미지 업로드에 실패했습니다.');
             }
 
-            const imageUrl = await response.text();
-            return imageUrl;
+            return response.text();
+            
         } catch (error) {
             console.error('Error:', error);
             throw error;
         }
+        
     }
+    
 }
 
 // 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
