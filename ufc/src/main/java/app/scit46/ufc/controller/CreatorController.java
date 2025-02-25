@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -43,14 +44,14 @@ public class CreatorController {
     }
 
     /** 🔹 [GET] 창작가 캠페인 페이지 출력 */
-    @GetMapping("/creator-campaign")
+    @GetMapping("/campaign")
     public String getCreatorCampaignPage(Model model) {
         model.addAttribute("message", "창작가 캠페인 페이지입니다!");
         return "creator/creator-campaign"; // ✅ ".html" 붙이지 않음!
     }
 
     /** 🔹 [GET] 창작가 프로필 수정 페이지 출력 */
-    @GetMapping("/creator-edit")
+    @GetMapping("/edit")
     public String getCreatorEditPage(Model model) {
         model.addAttribute("message", "창작가 프로필 수정 페이지입니다!");
         return "creator/creator-edit"; // ✅ ".html" 붙이지 않음!
@@ -59,10 +60,10 @@ public class CreatorController {
     /** 🔹 [POST] 입력값을 DB에 저장 */
     @PostMapping("/create")
     @ResponseBody
-    public ResponseEntity<String> createCreator(@RequestBody CreatorDTO creatorDTO) {
-        System.out.println("📥 입력 데이터: " + creatorDTO.toString());
+    public ResponseEntity<String> createCreator(@RequestBody CreatorCreateDTO creatorCreateDTO) {
+        System.out.println("📥 입력 데이터: " + creatorCreateDTO);
 
-        creatorService.createCreator(creatorDTO);
+        // creatorService.createCreator(creatorDTO);
         return ResponseEntity.ok("창작가가 성공적으로 저장되었습니다!");
     }
 

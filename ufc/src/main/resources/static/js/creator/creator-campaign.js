@@ -53,6 +53,8 @@ document.addEventListener("DOMContentLoaded", function() {
     displayIntro.textContent = storedIntro ? storedIntro : "소개글 없음";
     displayCover.src = storedCover ? storedCover : "";
     displayProfile.src = storedProfile ? storedProfile : "";
+
+
     
     // 커버 이미지가 있으면 표시, 없으면 기본 이미지 설정정
     if (!storedCover) {

@@ -330,6 +330,14 @@ document.querySelector(".img-form-button").addEventListener("click", function ()
         cancelButtonText: "아니요, 다시 생각해볼게요",
         reverseButtons: true
     }).then(result => {
+        let profileImageInput = document.getElementById('profile-image');    // 이미지 입력
+        let backImageInput = document.getElementById('background-image');    // 이미지 입력
+        // 이미지 파일 가져오기
+        creatorData.profileImg = uploadImage(profileImageInput.files[0]);
+        creatorData.backImg = uploadImage(backImageInput.files[0]);
+        
+        console.log("🔹이미지 업로드 후 전송할 데이터:", creatorData);  // ✅ 데이터 확인
+
         if (result.isConfirmed) {
             fetch("/creator/create", {
                 method: "POST",
@@ -357,6 +365,33 @@ document.querySelector(".img-form-button").addEventListener("click", function ()
         }
     });
 });
+
+async function uploadImage(imageFile){
+    if (!imageFile) {
+        alert('이미지가 등록되지 않았습니다.');
+        return;
+    }else{
+        try {
+            const formData = new FormData();
+            formData.append('file', imageFile);
+
+            const response = await fetch('/api/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+
+            const imageUrl = await response.text();
+            return imageUrl;
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    }
+}
 
 // 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
 /*
