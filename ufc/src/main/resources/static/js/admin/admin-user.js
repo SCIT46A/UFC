@@ -482,7 +482,8 @@ function fetchCampaignReport() {
                 throw new Error("서버에서 예상치 못한 응답을 받았습니다. (데이터 형식 오류)");
             }
             console.log("🚀 캠페인 신고 API 응답 데이터:", data); // ✅ API 데이터 확인
-            document.getElementById("content").innerHTML = generateCampaignReportTable(data);
+            allCampaignReports = data; // ✅ 데이터를 저장하여 탭 전환 가능하도록 설정
+            renderCampaignTab('pending'); // ✅ 기본적으로 미처리 신고 탭 표시
         })
         .catch(error => {
             console.error("❌ 캠페인 신고 관리 목록 로드 오류:", error);
@@ -494,16 +495,32 @@ function fetchCampaignReport() {
         });
 }
 
+function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
+    // ✅ 탭 버튼 추가
+    let tabHTML = `
+    <h2>신고된 캠페인 목록</h2>
+        <p>신고된 캠페인 정보를 확인하세요.</p>
+        <div class="tab-container">
+            <button class="tab-button ${selectedTab === 'pending' ? 'active' : ''}" onclick="renderCampaignTab('pending')">미처리 신고</button>
+            <button class="tab-button ${selectedTab === 'resolved' ? 'active' : ''}" onclick="renderCampaignTab('resolved')">처리 완료 신고</button>
+        </div>
+    `;
 
-// 캠페인 신고 관리 동적 생성
-function generateCampaignReportTable(campaignReport) {
-    if (!campaignReport || campaignReport.length === 0) {
-        return `<h2>신고된 캠페인 목록</h2><p>등록된 신고가 없습니다.</p>`;
+    // ✅ 선택된 탭에 따라 필터링
+    let filteredReports = campaignReport.filter(report =>
+        (selectedTab === 'pending' && report.status === "registed") ||
+        (selectedTab === 'resolved' && (report.status !== "registed"))
+    );
+
+    // ✅ 신고가 없는 경우 안내 메시지 표시
+    if (filteredReports.length === 0) {
+        let noReportMessage = selectedTab === 'pending'
+            ? "<p class='no-report'>✅ 현재 미처리된 신고가 없습니다.</p>"
+            : "<p class='no-report'>✔ 처리 완료된 신고가 없습니다.</p>";
+        return tabHTML + noReportMessage; // 안내 메시지만 반환
     }
 
     let tableHTML = `
-        <h2>신고된 캠페인 목록</h2>
-        <p>신고된 캠페인 정보를 확인하세요.</p>
         <div class="table-container">
             <table>
                 <thead>
@@ -520,33 +537,82 @@ function generateCampaignReportTable(campaignReport) {
                 <tbody>
     `;
 
-    campaignReport.forEach(report => {
+    filteredReports.forEach(report => {
+        let actionColumn = "";
+        let saveButtonColumn = "";
+
+        if (report.status === "registed") {
+            actionColumn = `
+                <select id="action-${report.reportId}">
+                    <option value="ok">게시 정지</option>
+                    <option value="rejected">보류</option>
+                </select>
+            `;
+            saveButtonColumn = `<button onclick="processCampaignReport(${report.reportId})">저장</button>`;
+        } else {
+            actionColumn = `<span>${report.status === "ok" ? "게시 정지됨" : report.status === "rejected" ? "보류됨" : "처리 완료"}</span>`;
+            saveButtonColumn = "-";
+        }
+
         tableHTML += `
-            <tr>
-                <td>${report.campaignId}</td>
-                <td>${campaign.title}</td>
-                <td>${report.reason}</td>
-                <td>${report.reportedBy}</td>
-                <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
-                <td>
-                    ${report.status === 'registed' ? `
-                        <select id="action-${report.reportId}">
-                            <option value="3">3일 정지</option>
-                            <option value="5">5일 정지</option>
-                            <option value="100">영구 정지</option>
-                            <option value="rejected">반려</option>
-                        </select>
-                    ` : report.status === 'ok' ? "처리 완료" : "반려됨"}
-                </td>
-                <td>
-                    ${report.status === 'registed' ? `<button onclick="processUserReport(${report.reportId})">저장</button>` : "-"}
-                </td>
-            </tr>
+        <tr>
+            <td>${report.campaignId}</td>
+            <td>${report.title ? report.title : '데이터 없음'}</td>
+            <td>${report.reason}</td>
+            <td>${report.reportedBy ? report.reportedBy : '데이터 없음'}</td>
+            <td>${report.reportedDate ? new Date(report.reportedDate).toLocaleDateString() : '날짜 없음'}</td>
+            <td>${actionColumn}</td>
+            <td>${saveButtonColumn}</td>
+        </tr>
         `;
     });
 
     tableHTML += `</tbody></table></div>`;
-    return tableHTML;
+
+    return tabHTML + tableHTML;
+}
+
+// ✅ 캠페인 신고 처리 (저장 버튼 클릭 시 실행)
+function processCampaignReport(reportId) {
+    const action = document.getElementById(`action-${reportId}`).value;
+
+    if (!action) {
+        alert("조치를 선택해주세요.");
+        return;
+    }
+
+    // ✅ 디버깅을 위한 콘솔 출력
+    console.log("🚀 캠페인 신고 처리 요청:", { reportId, action });
+
+    fetch("/api/admin/campaign-reports/action", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ reportId, action }) // ✅ 선택한 조치 전송
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log("✅ API 응답:", data);
+            if (!data.success) throw new Error(data.message);
+            alert(data.message);
+            fetchCampaignReport(); // ✅ 신고 목록 갱신
+        })
+        .catch(error => {
+            console.error("❌ 캠페인 신고 처리 오류:", error);
+            alert("신고 처리 중 오류가 발생했습니다.");
+        });
+}
+
+
+
+function renderCampaignTab(tabType) {
+    const container = document.getElementById("content"); // ✅ ID 확인
+
+    if (!container) {
+        console.error("❌ 오류: 'content' 요소를 찾을 수 없습니다.");
+        return;
+    }
+
+    container.innerHTML = generateCampaignReportTable(allCampaignReports, tabType);
 }
 
 
@@ -639,28 +705,47 @@ function generateCreatorApprovalTable(creators) {
 
 
 // 유저 신고 관리
+let allUserReports = []; // 🚀 전역 변수로 선언 (모든 함수에서 접근 가능)
+
 function fetchUserReport() {
     fetch("/api/admin/user-reports")
         .then(response => response.json())
         .then(data => {
-            console.log("🚀 API 응답 데이터:", data); // ✅ userUpdatedAt 값 확인
-            document.getElementById("content").innerHTML = generateUserReportTable(data);
+            console.log("🚀 API 응답 데이터:", data);
+            allUserReports = data; // ✅ 전체 데이터를 저장
+            renderTab('pending'); // ✅ 기본값: 미처리 신고 탭
         })
         .catch(error => {
             console.error("❌ 유저 신고 목록 로드 오류:", error);
         });
-
 }
 
 // 유저 신고 관리 페이지 테이블 동적 생성
-function generateUserReportTable(userReports) {
-    if (!userReports || userReports.length === 0) {
-        return `<h2>유저 신고 목록</h2><p>등록된 신고가 없습니다.</p>`;
+function generateUserReportTable(userReports, selectedTab = 'pending') {
+    let tabHTML = `
+    <h2>유저 신고 목록</h2>
+        <p>신고된 유저 정보를 확인하고 처리할 수 있습니다.</p>
+        <div class="tab-container">
+            <button class="tab-button ${selectedTab === 'pending' ? 'active' : ''}" onclick="renderTab('pending')">미처리 신고</button>
+            <button class="tab-button ${selectedTab === 'resolved' ? 'active' : ''}" onclick="renderTab('resolved')">처리 완료된 신고</button>
+        </div>
+    `;
+
+    // ✅ 선택된 탭에 따라 필터링
+    let filteredReports = userReports.filter(report =>
+        (selectedTab === 'pending' && report.status === "registed") ||
+        (selectedTab === 'resolved' && (report.status === "ok" || report.status === "rejected"))
+    );
+
+    // ✅ 신고가 없는 경우 안내 메시지 표시
+    if (filteredReports.length === 0) {
+        let noReportMessage = selectedTab === 'pending'
+            ? "<p class='no-report'>✅ 현재 미처리된 신고가 없습니다.</p>"
+            : "<p class='no-report'>✔ 처리 완료된 신고가 없습니다.</p>";
+        return tabHTML + noReportMessage;
     }
 
     let tableHTML = `
-        <h2>유저 신고 목록</h2>
-        <p>신고된 유저 정보를 확인하고 처리할 수 있습니다.</p>
         <div class="table-container">
             <table>
                 <thead>
@@ -672,37 +757,26 @@ function generateUserReportTable(userReports) {
                         <th>신고자 ID</th>
                         <th>계정 상태</th>
                         <th>조치</th>
-                        <th>사유</th>
                         <th>저장</th>
                     </tr>
                 </thead>
                 <tbody>
     `;
 
-    userReports.forEach(report => {
+    filteredReports.forEach(report => {
+        // ✅ 전체 신고 목록에서 해당 유저가 정지된 횟수(`ok` 상태)를 세기
+        let banCount = allUserReports.filter(r => r.userId === report.userId && r.status === "ok").length;
+
         let accountStatus = "";
         let actionColumn = "";
-        let reasonColumn = "";
         let saveButtonColumn = "";
 
+        // ✅ 정지 남은 기간 계산
         let banEndDate = report.userUpdatedAt ? new Date(report.userUpdatedAt) : null;
         let today = new Date();
-
-        // ✅ 날짜 비교를 위한 "연-월-일" 포맷으로 변환
         today.setHours(0, 0, 0, 0);
-        if (banEndDate) {
-            banEndDate.setHours(0, 0, 0, 0);
-        }
-
+        if (banEndDate) banEndDate.setHours(0, 0, 0, 0);
         let daysRemaining = banEndDate ? Math.ceil((banEndDate - today) / (1000 * 60 * 60 * 24)) : null;
-
-        console.log("🚀 Debug:", {
-            reportId: report.reportId,
-            updatedAt: report.updatedAt,
-            banEndDate: banEndDate,
-            today: today,
-            daysRemaining: daysRemaining
-        });
 
         if (report.status === "registed") {
             accountStatus = `<span style="color: #CE201B;">🚨 신고</span>`;
@@ -714,47 +788,65 @@ function generateUserReportTable(userReports) {
                 <option value="rejected">보류</option>
             </select>
         `;
-            reasonColumn = `<input type="text" id="reason-${report.reportId}" placeholder="사유 입력">`;
             saveButtonColumn = `<button onclick="processUserReport(${report.reportId})">저장</button>`;
 
         } else if (report.status === "ok") {
             accountStatus = `<span style="color: green;">✅ 조치 완료</span>`;
 
+            // ✅ 정지 남은 기간 표시
             if (daysRemaining !== null && daysRemaining > 0) {
                 actionColumn = `<span style="color: red;">정지 ${daysRemaining}일 남음</span>`;
             } else {
                 actionColumn = `<span style="color: gray;">정지 기간 만료</span>`;
             }
 
-            reasonColumn = `<span>${report.statusReason ? report.statusReason : "-"}</span>`;
-
             saveButtonColumn = "-";
 
         } else if (report.status === "rejected") {
             accountStatus = `<span style="color: blue;">✔ 활동 중</span>`;
             actionColumn = "보류";
-            reasonColumn = "-";
             saveButtonColumn = "-";
         }
 
         tableHTML += `
         <tr>
             <td>${report.reportId}</td>
-            <td>${report.userId}</td>
+            <td>${report.userId} (${banCount}회 정지됨)</td>  
             <td>${report.reason}</td>
             <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
             <td>${report.reportedById}</td>
             <td>${accountStatus}</td>
             <td>${actionColumn}</td>
-            <td>${reasonColumn}</td>
             <td>${saveButtonColumn}</td>
         </tr>
     `;
     });
 
     tableHTML += `</tbody></table></div>`;
-    return tableHTML;
+
+    return tabHTML + tableHTML;
 }
+
+
+
+function renderTab(tabType) {
+    if (!allUserReports.length) {
+        console.error("❌ 신고 데이터가 아직 로드되지 않았습니다.");
+        return;
+    }
+
+
+    let filteredReports = [];
+
+    if (tabType === 'pending') {
+        filteredReports = allUserReports.filter(report => report.status === "registed");
+    } else if (tabType === 'resolved') {
+        filteredReports = allUserReports.filter(report => report.status === "ok" || report.status === "rejected");
+    }
+
+    document.getElementById("content").innerHTML = generateUserReportTable(filteredReports, tabType);
+}
+
 
 
 // ✅ 신고 처리 요청 (저장 버튼 클릭 시 실행)
@@ -772,13 +864,13 @@ function processUserReport(reportId) {
         return;
     }
 
-    // ✅ 디버깅을 위한 콘솔 출력
-    console.log("🚀 신고 처리 요청: ", { reportId, action, reason });
+    // ✅ 디버깅: reason 값 확인
+    console.log("🚀 신고 처리 요청:", { reportId, action, reason });
 
     fetch("/api/admin/user-reports/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportId, action, reason }) // ✅ 사유 포함
+        body: JSON.stringify({ reportId, action, reason }) // ✅ reason 포함
     })
         .then(response => response.json())
         .then(data => {
@@ -792,7 +884,6 @@ function processUserReport(reportId) {
             alert("신고 처리 중 오류가 발생했습니다.");
         });
 }
-
 
 // ✅ 버튼 클릭 시 실행될 함수들
 function updateReportStatus(userId, action) {
@@ -933,20 +1024,3 @@ function submitNotice() {
 }
 
 
-// ✅ 다른 페이지 컨텐츠를 동적으로 생성하는 함수
-function generatePageContent(page) {
-    switch (page) {
-        case "campaign-status":
-            return `<h2>캠페인 운영 현황</h2><p>현재 진행 중인 캠페인을 확인하세요.</p>`;
-        case "campaign-approval":
-            return `<h2>캠페인 승인 관리</h2><p>승인 대기 중인 캠페인을 검토하세요.</p>`;
-        case "campaign-report":
-            return `<h2>캠페인 신고 관리</h2><p>신고된 캠페인을 검토하고 조치하세요.</p>`;
-        case "creator-approval":
-            return `<h2>창작자 승인 대기</h2><p>새로운 창작자 요청을 승인하세요.</p>`;
-        case "notice":
-            return `<h2>공지사항 관리</h2><p>새로운 공지사항을 등록하거나 수정할 수 있습니다.</p>`;
-        default:
-            return `<h2>관리 시스템</h2><p>좌측 메뉴에서 항목을 선택하세요.</p>`;
-    }
-}

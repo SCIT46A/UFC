@@ -36,12 +36,14 @@ public class ApiAdminController {
     private final ReportService reportService;
     private final CampaignService campaignService;
     private final CreatorService creatorService;
+    private final ReportService.UserUnbanScheduler userUnbanScheduler;
 
-    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService) {
+    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService, ReportService.UserUnbanScheduler userUnbanScheduler) {
         this.noticeService = noticeService;
         this.reportService = reportService;
         this.campaignService = campaignService;
         this.creatorService = creatorService;
+        this.userUnbanScheduler = userUnbanScheduler;
     }
 
     // ✅ 캠페인 전체 조회
@@ -111,10 +113,32 @@ public class ApiAdminController {
     }
 
 
-    // ✅ 캠페인 신고 현황 API (조회만 가능)
+    // ✅ 캠페인 신고 현황
     @GetMapping("/campaign-report")
     public ResponseEntity<List<Map<String, Object>>> getReportedCampaigns() {
         return ResponseEntity.ok(reportService.getReportedCampaigns());
+    }
+
+    // 캠페인 신고 처리
+    @PostMapping("/campaign-reports/action")
+    public ResponseEntity<Map<String, Object>> processCampaignReport(@RequestBody Map<String, String> request) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            Long reportId = Long.parseLong(request.get("reportId"));
+            String action = request.get("action");
+
+            reportService.processReport(reportId, action);
+
+            response.put("success", true);
+            response.put("message", "신고 처리가 완료되었습니다.");
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "서버 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     // ✅ 유저 신고 목록 API
@@ -131,8 +155,11 @@ public class ApiAdminController {
         try {
             Long reportId = Long.parseLong(request.get("reportId"));
             String action = request.get("action");
+            String reason = request.get("reason");  // ✅ reason 추가
 
-            reportService.processUserReport(reportId, action, null); // ✅ `banEndDate` 삭제
+            System.out.println("🚀 신고 처리 요청: reportId=" + reportId + ", action=" + action + ", reason=" + reason);
+
+            reportService.processUserReport(reportId, action, reason); // ✅ reason 전달!
 
             response.put("success", true);
             response.put("message", "신고 처리가 완료되었습니다.");
@@ -145,6 +172,12 @@ public class ApiAdminController {
         }
     }
 
+    // ✅ 정지 해제 즉시 실행 API
+    @PostMapping("/unban-check")
+    public ResponseEntity<String> unbanCheck() {
+        userUnbanScheduler.unbanExpiredUsers(); // ✅ 즉시 실행
+        return ResponseEntity.ok("정지 해제 체크 실행 완료");
+    }
 
 
     // ✅ 공지사항 목록 조회 API
