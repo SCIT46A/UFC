@@ -1,9 +1,13 @@
 package app.scit46.ufc.entity;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.ItemDTO;
 import app.scit46.ufc.entity.product.ProductEntity;
+import app.scit46.ufc.entity.product.ProductItemEntity;
+import app.scit46.ufc.entity.reward.RewardEntity;
+import app.scit46.ufc.entity.reward.RewardItemEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -42,24 +46,30 @@ public class ItemEntity {
     @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @Column(name = "price", nullable = false)
-    private Integer price;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
     private ImageUrlEntity photo;
 
     // OneToMany: Products.item 참조
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
-    private List<ProductEntity> products;
+    private List<ProductItemEntity> productItems;
+
+    // OneToMany: Reward.items 참조
+    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+    private List<RewardItemEntity> rewardItems;
 
     public static ItemEntity toEntity(ItemDTO dto) {
         return ItemEntity.builder()
                 //.itemId(dto.getItemId())  // 기본값 자동 생성이므로 주석처리
                 .name(dto.getName() != null ? dto.getName() : "")
                 .description(dto.getDescription() != null ? dto.getDescription() : "")
-                .price(dto.getPrice() != null ? dto.getPrice() : 0)
                 .photo(dto.getPhoto() != null ? ImageUrlEntity.toEntity(dto.getPhoto()) : null)
+                .rewardItems(dto.getRewardItems().stream()
+                        .map(RewardItemEntity::toEntity)
+                        .collect(Collectors.toList()))
+                .productItems(dto.getProductItems().stream()
+                        .map(ProductItemEntity::toEntity)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

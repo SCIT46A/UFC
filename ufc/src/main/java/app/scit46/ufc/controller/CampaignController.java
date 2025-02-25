@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignTagDTO;
+import app.scit46.ufc.dto.custom.RewardListDTO;
+import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class CampaignController {
 
     private final CampaignService campaignService;
+    private final ImageService imageService;
 
     @GetMapping("/all")
     public String allCampaign(Model model, @RequestParam(defaultValue = "") String searchKeyword) {
@@ -51,7 +56,7 @@ public class CampaignController {
         if (session != null) {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
         }
-        String username = request.getUserPrincipal().getName(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
+        String username = request.getUserPrincipal().getName();
         model.addAttribute("username", username);
         return "campaign/pay-campaign";
     }
@@ -63,15 +68,26 @@ public class CampaignController {
 
     @GetMapping("/create") // 헤더에 존재하는 사용자 정보를 가져옴?
     public String create(HttpServletRequest request, Model model) {
-        String username = request.getUserPrincipal().getName(); // getUserName() 을 따로 만들지 고민 필요(사용자 이름)
+        String username = request.getUserPrincipal().getName();
+        //model.addAttribute("tags", tagService.readTagList()); // 추천태그 5개 추천 데이터
         model.addAttribute("username", username);
         return "campaign/create-campaign";
     }
 
+    // 캠페인 수정 페이지
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model) {
+    public String update(@PathVariable Long id, Model model, HttpServletRequest request) {
+        String username = request.getUserPrincipal().getName();
+        model.addAttribute("username", username);
         CampaignDTO campaign = campaignService.readCampaign(id);
+        //ImageID 대신 ImageUrl 전달
+        campaign.getPhoto().setImageId(imageService.getImageUrl(campaign.getPhoto().getImageId()));
         model.addAttribute("campaign", campaign);
+        List<String> campaignTags = campaignService.getCampaignTags(id);
+        model.addAttribute("campaignTags", campaignTags);
+        List<RewardListDTO> rewards = campaignService.convertCampaignFundingAndRewards(id);
+        model.addAttribute("rewards", rewards);
+        String rewardTitle = campaign.getTitle();
         return "campaign/update-campaign";
     }
 

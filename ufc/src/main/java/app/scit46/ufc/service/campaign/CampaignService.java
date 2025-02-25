@@ -16,7 +16,8 @@ import app.scit46.ufc.dto.MaterialDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
-import app.scit46.ufc.dto.custom.FundingDTO;
+import app.scit46.ufc.dto.campaign.CampaignTagDTO;
+import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
@@ -30,6 +31,7 @@ import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
+import app.scit46.ufc.entity.reward.RewardItemEntity;
 import app.scit46.ufc.entity.reward.RewardMaterialEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
 import app.scit46.ufc.repository.CreatorRepository;
@@ -79,7 +81,12 @@ public class CampaignService {
     public CampaignDTO readCampaign(Long campaignId) {   
         CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
         return CampaignDTO.toDTO(campaign);
-    }   
+    } 
+
+    public CampaignEntity getCampaign(Long campaignId) {
+        CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
+        return campaign;
+    }
 
     // 캠페인 수정 / 캠페인 아이디와 캠페인 요소 받아서 수정
     public CampaignEntity updateCampaign(Long campaignId, CampaignDTO campaignDTO) {
@@ -109,25 +116,10 @@ public class CampaignService {
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
 
-    // GenerateCampaign -> 
+    // GenerateCampaign = 프론트에서 보낸 데이터를 받아줄 커스텀 DTO -> 파싱하여 적절히 처리하는 로직
+    // Entity를 그대로 사용한 것은 영속성 문제로 인해 캠페인 생성에 필요한 세부 요소들의 연계에 오류가 발생하기 때문
     @Transactional
     public Long createCampaign(GenerateCampaignDTO ccDTO){
-        /*
-         * CreateCampaignDTO의 필드드
-         * private List<String> tagList; -> List<TagDTO>
-         * private String title; -> CampaignDTO
-         * private LocalDateTime startDate; -> CampaignDTO
-         * private LocalDateTime endDate; -> CampaignDTO
-         * private LocalDateTime sendDate; -> CampaignDTO
-         * private String description; -> CampaignDTO
-         * private List<Map<String, Number>> fundingItems; -> RewardMaterialDTO ??
-         * private List<Map<String, ?>> rewardList; -> RewardMaterialDTO
-         * private String imageUrl; -> ImageDTO xx
-         * private Long imageId; -> ImageDTO xx
-         */
-
-        // log.info("ccDTO.getUserName() : {}", ccDTO.getUserName().trim());
-        // log.info("DB 사용자 조회 결과 : {}", userRepository.findByUserName(ccDTO.getUserName().trim()));
 
         // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
         // UserEntity.userId -> CreatorEntity.creatorId)
@@ -154,14 +146,7 @@ public class CampaignService {
         // 캠페인 생성 및 캠페인 아이디 반환
         Long campaignId = createCampaign(campaign, creator, image);
 
-        // 태그 리스트 생성
-        // List<TagDTO> tagList = ccDTO.getTagList().stream()
-        //         .map(tag -> TagDTO.builder()
-        //                 .content(tag)
-        //                 .build())
-        //         .collect(Collectors.toList());
-
-        // 지정된 태그를 저장/조회 후 태그 아이디 리스트 반환
+        // 지정된 태그를 먼저 저장/조회 후 태그 아이디 리스트 반환
         List<Integer> tagIds = tagService.saveAndFindTagIds(ccDTO.getTagList());
 
         // 태그 아이디와 캠페인 아이디를 CampaignTagEntity(태그 아이디와 캠페인 아이디를 연결하는 엔티티)에 저장
@@ -174,42 +159,23 @@ public class CampaignService {
             campaignTagRepository.save(campaignTag);
         }
 
-        // List<String> materialNames = new ArrayList<>(ccDTO.getFundingItems().keySet());
-        // List<Long> materialIds = materialService.addMaterial(materialNames);
 
-        // List<FundingDTO> fundingItems = ccDTO.getFundingItems().entrySet().stream()
-        //         .map(entry -> new FundingDTO(entry.getKey(), entry.getValue()))
-        //         .collect(Collectors.toList());
+        List<RewardDTO> rewardList = new ArrayList<>();
+        // 리워드 생성   [{"name": "리워드 제목", "amount": 0 , "funding" : [{"name" : "", "amount" : 0 },...],"reward" : [{"name" : "", "amount" : 0 },...]},...]
+        for (RewardListDTO receivedRewardList : ccDTO.getRewardList()) {
 
-        // log.info("fundingItems : {}", fundingItems);
+            // 리워드 제목, 리워드 가격
+            String rewardName = receivedRewardList.getName();
+            Integer rewardAmount = receivedRewardList.getAmount();
 
-        // // 펀딩 아이템 생성 [{"name": amount},...]
-        // for (RewardListDTO fundingItem : fundingItems) {
-            // String fundingName = fundingItem.getName();
-            // int fundingAmount = fundingItem.getAmount();
+            // 제공할 리워드 아이템 등록 reward
+            for(RewardFundingDTO rewardDTO : receivedRewardList.getReward()) {
 
-            // // 펀딩 아이템 생성
-            // Map<String, Integer> materialDonation = MaterialDonationDTO.builder()
-            //         .campaign(CampaignEntity.builder().campaignId(campaignId).build())
-            //         .material(MaterialEntity.builder().materialId(materialIds.get(0)).build())
-            //         .build();
+                RewardItemEntity rewardItemEntity = rewardService.addRewardItem(rewardDTO, campaignId);
+            }
 
-            // rewardMaterialService.addRewardMaterial(rewardMaterial);
-        // }
-
-        // // 리워드 생성   [{"name": "", "amount": 0 , "funding" : [{"name" : "", "amount" : 0 },...]},...]
-        for (RewardListDTO rewardList : ccDTO.getRewardList()) {
-            ItemEntity item = itemService.addItem(ItemDTO.builder()
-                    .name(rewardList.getName())
-                    .build());
-
-            RewardEntity reward = rewardService.addReward(RewardEntity.builder()
-                    .campaign(CampaignEntity.builder().campaignId(campaignId).build())
-                    .item(item)
-                    .amount(rewardList.getAmount())
-                    .build());
-
-            for(FundingDTO funding : rewardList.getFunding()) {
+            // 리워드 아이템에 필요한 재료 등록 funding
+            for(RewardFundingDTO funding : receivedRewardList.getFunding()) {
                 MaterialEntity material = materialService.addMaterial(funding.getName());
 
                 RewardMaterialEntity rewardMaterial = rewardMaterialService.addRewardMaterial(RewardMaterialEntity.builder()
@@ -218,12 +184,19 @@ public class CampaignService {
                         .quantityRequired(funding.getAmount())
                         .build());
             }
+
+            RewardDTO rewardDTO = RewardDTO.builder()
+                    .name(rewardName)
+                    .amount(rewardAmount)
+                    .build();
+            rewardList.add(rewardDTO);
         }
 
         return campaignId;
     }
 
-    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO){
+    // 캠페인 수정(캠페인 생성 로직 + 대상 캠페인 아이디로 다시저장하는 로직)
+    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO) {
         CampaignDTO campaign = CampaignDTO.builder()
                 .title(ccDTO.getTitle())
                 .description(ccDTO.getDescription())
@@ -235,12 +208,22 @@ public class CampaignService {
         updateCampaign(campaignId, campaign);
     }
 
+    // 캠페인에 할당되어 있는 태그 조회
+    public List<String> getCampaignTags(Long campaignId){
+        List<CampaignTagEntity> campaignTag = campaignTagRepository.findByCampaignId(campaignId);
+        List<String> tagNames = campaignTag.stream()
+                .map(CampaignTagEntity::getTag)
+                .map(TagEntity::getContent)
+                .collect(Collectors.toList());
+        return tagNames;
+    }
 
+    // 캠페인 아이디로 캠페인 조회
     public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
       return campaignRepository.findByCampaignId(campaignId);
     }
 
-    //펀딩 대기 중인
+    //펀딩 대기 중인 캠페인 조회
     public List<CampaignDTO> getFundingWaitingCampaigns() {
         LocalDateTime now = LocalDateTime.now();
         return campaignRepository.findByCampaignStatusAndStartDateAfter(true, now)
@@ -307,5 +290,37 @@ public class CampaignService {
         return materialDonationRepository.findAll().stream()
                 .map(MaterialDonationDTO::toDTO)  // Entity → DTO 변환
                 .collect(Collectors.toList());
+    }
+
+    // 프론트 캠페인 수정용 리워드, 펀딩재료 데이터형식으로 변환
+    public List<RewardListDTO> convertCampaignFundingAndRewards(Long id) {
+        CampaignEntity campaign = campaignRepository.findById(id).orElse(null);
+        if (campaign == null) {
+            throw new RuntimeException("캠페인을 찾을 수 없습니다.");
+        }
+
+        List<RewardListDTO> rewardList = new ArrayList<>();
+        List<RewardEntity> rewards = campaign.getRewards();
+        for (RewardEntity reward : rewards) {
+            String name = reward.getItem().getName();
+            Integer amount = reward.getAmount();
+            List<RewardFundingDTO> fundingList = new ArrayList<>();
+            for (RewardMaterialEntity rewardMaterial : reward.getRewardMaterials()) {
+                String materialName = rewardMaterial.getMaterial().getName();
+                Integer quantityRequired = rewardMaterial.getQuantityRequired();
+                RewardFundingDTO funding = RewardFundingDTO.builder()
+                        .name(materialName)
+                        .amount(quantityRequired)
+                        .build();
+                fundingList.add(funding);
+            }
+            RewardListDTO rewardListDTO = RewardListDTO.builder()
+                    .name(name)
+                    .amount(amount)
+                    .funding(fundingList)
+                    .build();
+            rewardList.add(rewardListDTO);
+        }
+        return rewardList;
     }
 }

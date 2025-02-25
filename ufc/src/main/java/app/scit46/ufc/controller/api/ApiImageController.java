@@ -66,7 +66,7 @@ public class ApiImageController {
     // 이미지 ID를 통해 이미지 URL 반환
     @GetMapping("/{imageId}")
     public ResponseEntity<String> getImageUrl(@PathVariable String imageId) {
-        String result = ImageService.getImageUrl(imageId);
+        String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
     }
 

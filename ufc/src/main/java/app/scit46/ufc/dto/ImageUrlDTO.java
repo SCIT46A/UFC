@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder
 public class ImageUrlDTO {
+    
     private Long id;
     private String imageId;
     private String filename;

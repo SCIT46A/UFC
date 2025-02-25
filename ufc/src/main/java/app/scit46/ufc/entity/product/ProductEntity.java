@@ -46,12 +46,12 @@ public class ProductEntity {
     private List<ProductTagEntity> productTags;
 
 
-    public static ProductEntity toEntity(ProductDTO dto, ItemEntity item, CreatorEntity createdBy) {
+    public static ProductEntity toEntity(ProductDTO dto) {
         return ProductEntity.builder()
                 .productId(dto.getProductId())
-                .item(item)
+                .item(ItemEntity.toEntity(dto.getItem()))
                 .stockQuantity(dto.getStockQuantity())
-                .createdBy(createdBy)
+                .createdBy(CreatorEntity.toEntity(dto.getCreatedBy()))
                 .build();
     }
 }

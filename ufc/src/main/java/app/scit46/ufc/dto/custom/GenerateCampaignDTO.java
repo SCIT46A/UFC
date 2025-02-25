@@ -28,9 +28,9 @@ public class GenerateCampaignDTO {
     private LocalDateTime endDate;
     private LocalDateTime sendDate;
     // Reward / Material
-    private List<FundingDTO> fundingItems;
-    private List<RewardListDTO> rewardList;
-    // Image 선행 로직으로 이미지가 먼저 업로드 된 후 반환된 이미지 ID를 받아옴옴
+    private List<RewardFundingDTO> fundingItems;    // 캠페인에 필요한 총 재료 리스트
+    private List<RewardListDTO> rewardList;         // 캠페인에서 제공할 리워드와 각각의 필요한 재료 리스트
+    // Image 선행 로직으로 이미지가 먼저 업로드 된 후 반환된 이미지 ID를 받아옴
     private String imageId;
     //private MultipartFile image;
 

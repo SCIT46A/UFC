@@ -114,7 +114,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 
-    public static UserEntity toEntity(UserDTO userDTO, ImageUrlDTO photoId) {
+    public static UserEntity toEntity(UserDTO userDTO) {
         return UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .oauthId(userDTO.getOauthId())
@@ -126,7 +126,7 @@ public class UserEntity {
                 .roles(userDTO.getRoles())
                 .createdAt(userDTO.getCreatedAt())
                 .updatedAt(userDTO.getUpdatedAt())
-                .photoId(ImageUrlEntity.toEntity(photoId))
+                .photoId(ImageUrlEntity.toEntity(userDTO.getPhoto()))
                 .intro(userDTO.getIntro())
                 .isMarketed(userDTO.getIsMarketed())
                 .userStatus(userDTO.getUserStatus())
