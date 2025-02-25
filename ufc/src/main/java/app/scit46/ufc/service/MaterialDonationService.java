@@ -11,6 +11,7 @@ import app.scit46.ufc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import java.util.stream.Collectors;
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import org.springframework.data.domain.PageRequest;
 
 @Service
 @RequiredArgsConstructor
@@ -39,5 +40,15 @@ public class MaterialDonationService {
                 .stream()
                 .map(MaterialDonationDTO::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 🔹 특정 창작자의 캠페인에 대한 기부 내역 조회 (최대 limit 개)
+     */
+    public List<MaterialDonationDTO> getDonationsByCampaignIds(List<Long> campaignIds, int limit) {
+        return materialDonationRepository.findByCampaign_CampaignIdIn(campaignIds, PageRequest.of(0, limit))
+                .stream()
+                .map(MaterialDonationDTO::toDTO)
+                .toList();
     }
 }

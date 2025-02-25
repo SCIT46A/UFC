@@ -120,33 +120,7 @@ public class CreatorDashboardController {
      */
     @GetMapping("/campaigns/donation/orders")
     public String getDonationOrdersPage(Model model, Authentication authentication, HttpSession session) {
-
-        // 🔹 세션에서 creatorId 가져오기
-        Long creatorId = (Long) session.getAttribute("creatorId");
-
-        if (creatorId == null) {
-            return "redirect:/error/403"; // ❌ 창작자가 아니면 접근 금지
-        }
-
-        // 🔹 해당 창작자의 캠페인 목록 가져오기
-        List<CampaignDTO> campaigns = campaignService.getCampaignsByCreator(creatorId);
-        model.addAttribute("campaigns", campaigns);
-
-        // 🔹 캠페인 ID → 캠페인 제목 매핑
-        Map<Long, String> campaignIdTitleMap = campaigns.stream()
-                .collect(Collectors.toMap(CampaignDTO::getCampaignId, CampaignDTO::getTitle));
-        model.addAttribute("campaignIdTitleMap", campaignIdTitleMap);
-
-        // 🔹 해당 창작자의 캠페인 ID 목록 추출
-        List<Long> campaignIds = campaigns.stream()
-                .map(CampaignDTO::getCampaignId)
-                .toList();
-
-        // 🔹 해당 창작자의 캠페인 ID들에 해당하는 기부 내역 가져오기
-        List<MaterialDonationDTO> donations = materialDonationService.getDonationsByCampaignIds(campaignIds);
-        model.addAttribute("donations", donations);
-
-        return "dashboard/donation-orders :: donation-orders";
+        return addCreatorIdToModel(model, authentication, session, "dashboard/donation-orders :: donation-orders");
     }
 
     /**

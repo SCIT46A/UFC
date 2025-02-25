@@ -9,20 +9,20 @@
             <section class="card-container">
                 <div class="status-grid">
                     <div class="status-card">
-                        <span>기부 예정</span>
-                        <span class="count" th:text="${scheduledDonationCount}">5</span>
+                        <span>기부 승인 대기</span>
+                        <span class="count" id="pendingDonationCount">0</span>
                     </div>
                     <div class="status-card">
                         <span>기부 진행 중</span>
-                        <span class="count" th:text="${ongoingDonationCount}">10</span>
+                        <span class="count" id="ongoingDonationCount">10</span>
                     </div>
                     <div class="status-card">
-                        <span>기부 완료</span>
-                        <span class="count" th:text="${completedDonationCount}">30</span>
+                        <span>기부 반려</span>
+                        <span class="count" id="rejectedDonationCount">30</span>
                     </div>
                     <div class="status-card warning">
-                        <span>기부 취소</span>
-                        <span class="count" th:text="${cancelledDonationCount}">2</span>
+                        <span>기부 승인</span>
+                        <span class="count" id="approvedDonationCount">2</span>
                     </div>
                 </div>
             </section>
@@ -88,10 +88,9 @@
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
-                            <th>캠페인 ID</th>
+
                             <th>캠페인 제목</th>
                             <th>기부일자</th>
-                            <th>기부번호</th>
                             <th>기부자</th>
                             <th>기부품목</th>
                             <th>기부수량</th>
@@ -104,12 +103,10 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="donation : ${donations}" th:if="${not #lists.isEmpty(donations)}">
+                        <!-- <tr th:each="donation : ${donations}" th:if="${not #lists.isEmpty(donations)}">
                             <td><input type="checkbox" class="donation-checkbox" th:value="${donation.donationId}"></td>
-                            <td th:text="${donation.campaign.campaignId}">캠페인 ID</td>
                             <td th:text="${donation.campaign.title}">캠페인 제목</td>
                             <td th:text="${#temporals.format(donation.donatedDate, 'yy/MM/dd')}">기부일자</td>
-                            <td th:text="${donation.donationId}">기부번호</td>
                             <td th:text="${donation.user.userName}">기부자</td>
                             <td th:text="${donation.material.name}">기부품목</td>
                             <td th:text="${donation.quantity}">수량</td>
@@ -139,7 +136,7 @@
                                 <button class="btn btn-primary" onclick="saveTrackingNumber(this)">승인</button>
                                 <button class="btn btn-danger" onclick="inspectDonation(this)">반려</button>
                             </td>
-                        </tr>
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
