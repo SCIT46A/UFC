@@ -280,6 +280,14 @@ seller_edit.addEventListener("click", function() {
 });
 });*/
 
+// 이벤트 자동 초기화 (새로고침)
+window.onload = function () {
+    document.querySelector(".club-detail-name").value = "";
+    document.querySelector(".company_name").value = "";
+    document.querySelector(".club-detail-introduction").value = "";
+};
+
+
 document.querySelector(".img-form-button").addEventListener("click", function() {
     Swal.fire({
         title: '프로필 수정을 진행하겠습니다.',
@@ -328,7 +336,28 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     });*/
 
-//
+// 프로필 수정 값이 DB로 전송되고 creator-campaign페이지에도 출력되게 함
+/*
+async function updateProfile() {
+    const ProfileData = {
+        creatorId: document.querySelector(".club-detail-name").value,
+        companyName: document.querySelector(".company_name").value,
+        intro: document.querySelector(".club-detail-introduction").value
+    };
+
+    const response = await fetch("/creator/update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(profileData)
+    });
+
+    if (response.ok) {
+
+    }
+}
+*/
+
+// 브라우저에서만 값 저장장
 document.addEventListener("DOMContentLoaded", function() {
     const newName = document.querySelector(".club-detail-name");
     const newCompany = document.querySelector(".company_name");
@@ -408,3 +437,9 @@ document.querySelector(".img-form-prev-button").addEventListener("click", functi
         }
     });
 });
+
+// 새로고침할 때 입력값 초기화
+window.onload = function () {
+    sessionStorage.clear(); // 세션 스토리지 데이터 삭제 (브라우저 탭 닫으면 자동 삭제됨)
+    localStorage.clear();
+};

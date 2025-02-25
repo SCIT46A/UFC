@@ -18,6 +18,19 @@
             href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css"
             rel="stylesheet"
         />
+
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+
         <!-- ✅ SweetAlert2 CDN 추가 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
@@ -62,6 +75,7 @@
                                             <input
                                                 type="text"
                                                 class="name-form-input"
+                                                id="bName"
                                                 name="creatorId"
                                                 placeholder="ex) UPDA"
                                                 maxlength="10"
@@ -97,7 +111,7 @@
                                 <div class="name-form-button-wrap">
                                     <button class="name-form-button disabled">
                                         다음
-                                    </button>
+                                    </button><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +218,7 @@
                                         class="desc-form-button disabled"
                                     >
                                         다음
-                                    </button>
+                                    </button><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>
@@ -375,10 +389,10 @@
                                         </button>
                                     </div>
                                     <div class="img-form-skip-wrap">
-                                        <span class="img-form-skip"
-                                            >취소하기</span
-                                        >
-                                    </div>
+                                        <span class="img-form-skip">
+                                            취소하기
+                                        </span>
+                                    </div><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>

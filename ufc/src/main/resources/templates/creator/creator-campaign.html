@@ -31,8 +31,8 @@
         />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="../../static/js/creator/creator-campaign.js" defer></script>
-        <script src="../../static//js/creator/creator-campaign.js" defer></script>
-        <script src="../../static//js/fix/header.js" defer></script>
+        <script src="../../static/js/creator/creator-campaign.js" defer></script>
+        <script src="../../static/js/fix/header.js" defer></script>
 
     </head>
     <body>
@@ -78,8 +78,8 @@
                         </div>
                         <div class="club-detail-title-wrap">
                             <div class="club-detail-name-wrap">
-                                <div class="club-detail-name">UPDA</div>
-                                    <div class="company_name">상호명</div>
+                                <div class="club-detail-name"><span th:text="${creator.creatorId}">UPDA</span></div>
+                                    <div class="company_name"><span th:text = "${creator.companyName}">상호명</span></div>
                             </div>
                             <div class="club-detail-stats-wrap">
                                 <span>
@@ -92,8 +92,10 @@
                                 </span>
                             </div>
                             <div class="club-detail-introduction">
-                                안녕하세요! UPDA 입니다. 세상에 필요한건~
-                                UPDA~!
+                                <span th:text = "${creator.intro}">
+                                    안녕하세요! UPDA 입니다. 세상에 필요한건~
+                                    UPDA~!
+                                </span>
                             </div>
                         </div>
                     

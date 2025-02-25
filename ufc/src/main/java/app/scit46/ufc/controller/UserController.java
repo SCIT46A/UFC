@@ -1,12 +1,17 @@
 package app.scit46.ufc.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -23,7 +28,6 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -35,7 +39,7 @@ public class UserController {
     private final CampaignService campaignService;
 
     // 유저 기본페이지 조회
-    @GetMapping({"/",""})
+    @GetMapping({ "/", "" })
     public String index(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false); // 세션 가져오기
         Long userId = null; // 기본값 설정
@@ -55,13 +59,13 @@ public class UserController {
         }
         return "user/mypage-profile";
     }
-    
+
     // 유저 도네이션 조회
     // @GetMapping("/donation")
     // public String donation(Model model) {
-    //     LocalDateTime donatedDate = LocalDateTime.now();
-    //     model.addAttribute("donatedDate", donatedDate);
-    //     return "user/mypage-donation";
+    // LocalDateTime donatedDate = LocalDateTime.now();
+    // model.addAttribute("donatedDate", donatedDate);
+    // return "user/mypage-donation";
     // }
     @GetMapping("/donation")
     public String donation(HttpServletRequest request, Model model) {
@@ -77,9 +81,10 @@ public class UserController {
                 List<MaterialDonationEntity> donations = materialDonationService.donationFindByUserId(loginUserId);
 
                 // List<CampaignEntity> campaign = donations.stream()
-                //         .map(donation -> campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
-                //         .flatMap(List::stream)
-                //         .collect(Collectors.toList());
+                // .map(donation ->
+                // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+                // .flatMap(List::stream)
+                // .collect(Collectors.toList());
 
                 // 총 개수 계산
                 int donationCount = donations.size();
@@ -91,35 +96,26 @@ public class UserController {
         }
         return "user/mypage-donation";
     }
-    
 
     // 세션 날리는거 다시한번 체크하기
     @GetMapping("/delete")
     public String delete(
-        HttpSession session,
+            HttpSession session,
             @RequestParam(name = "userId") Long userId) {
         userService.delete(userId);
         session.removeAttribute("loginUserId");
         return "logout";
     }
-    
 
     @PostMapping("/userUpdate")
     public String postMethodName(
-            HttpServletRequest request
-            , @ModelAttribute UserDTO userDTO
-            , RedirectAttributes rttr
-    ) {
+            HttpServletRequest request, @ModelAttribute UserDTO userDTO, RedirectAttributes rttr) {
         HttpSession session = request.getSession(false);
         userDTO.setUserId((Long) session.getAttribute("loginUserId"));
         userService.userUpdate(userDTO);
-        
 
         return "redirect:/user";
     }
-    
-    
-
 
     @GetMapping("/badge")
     public String badge() {
@@ -136,8 +132,6 @@ public class UserController {
         return "user/mypage-reply";
     }
 
-
-
     @GetMapping("/donation/detail")
     public String alarmDetail() {
         return "user/mypage-donation-detail";
@@ -146,9 +140,9 @@ public class UserController {
     // 유저 정보 수정 창 조회
     @GetMapping("/edit")
     public String edit(HttpServletRequest request, Model model) {
-    HttpSession session = request.getSession(false); // 세션 가져오기
-    Long userId = null; // 기본값 설정
-     if (session != null) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long userId = null; // 기본값 설정
+        if (session != null) {
             userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
             if (userId != null) {
                 try {
@@ -164,20 +158,18 @@ public class UserController {
         return "user/mypage-profile-edit";
     }
 
-    
-//    로그인 관련
-    
+    // 로그인 관련
+
     @GetMapping("/login")
     public String login() {
         return "login/login";
     }
 
     @GetMapping("/join")
-    public String joinDetailPage(HttpServletRequest request, Model model
-    ) {
+    public String joinDetailPage(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            
+
             // 세션에서 카카오 정보 꺼내기
             String identity = (String) session.getAttribute("identity");
             String nickname = (String) session.getAttribute("nickname");
@@ -194,12 +186,10 @@ public class UserController {
     }
 
     @PostMapping("/joinProc")
-    public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check ,
-                                   @RequestParam("address") String address,
-                                   @RequestParam("phone") String phone,
-                                   @RequestParam("intro") String intro
-                                   )
-    {
+    public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check,
+            @RequestParam("address") String address,
+            @RequestParam("phone") String phone,
+            @RequestParam("intro") String intro) {
         HttpSession session = request.getSession(false);
         if (session == null) {
             // 세션이 없으면 에러 처리
@@ -209,7 +199,6 @@ public class UserController {
         String nickname = (String) session.getAttribute("nickname");
         String email = (String) session.getAttribute("email");
         String find = (String) session.getAttribute("find");
-
 
         // DB 저장 (UserDTO 만들거나 직접)
         UserDTO userDTO = new UserDTO();
@@ -232,6 +221,4 @@ public class UserController {
         return "redirect:/";
     }
 
-
 }
-
