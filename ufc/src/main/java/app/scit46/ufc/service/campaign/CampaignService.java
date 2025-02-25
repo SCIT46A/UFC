@@ -62,12 +62,8 @@ public class CampaignService {
             campaignRepository.save(campaign);
         }
         return campaign;
-    }   
-
-    public void deleteCampaign(Long campaignId) {
-        campaignRepository.deleteById(campaignId);
     }
-    
+
     // 캠페인 생성
     public Long createCampaign(CampaignDTO campaignDTO, Long creatorId, String imageId) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
@@ -190,7 +186,8 @@ public class CampaignService {
         CampaignEntity campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new RuntimeException("캠페인을 찾을 수 없습니다."));
         campaign.setCampaignStatus(1);
-        campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
+
+        campaignRepository.save(campaign);
     }
 
 
@@ -206,17 +203,43 @@ public class CampaignService {
         for (CampaignEntity campaign : campaigns) {
             campaign.setCampaignStatus(1);
         }
-
         campaignRepository.saveAll(campaigns);
     }
 
-    // ✅ 전체 캠페인 조회 (N+1 문제 해결)
+    // ✅ 전체 캠페인 조회
     @Transactional(readOnly = true)
     public List<CampaignDTO> getAllCampaigns() {
         return campaignRepository.findAll().stream()
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+    // 사진 빼고 캠페인 조회
+    @Transactional(readOnly = true)
+    public List<CampaignDTO> getAllCampaignsWithoutPhoto() {
+        List<CampaignEntity> campaigns = campaignRepository.findAllWithCreator(); // ✅ createdBy 강제 로딩
+
+        if (campaigns == null || campaigns.isEmpty()) {
+            return List.of();
+        }
+
+        return campaigns.stream()
+                .map(campaign -> CampaignDTO.builder()
+                        .campaignId(campaign.getCampaignId())
+                        .title(campaign.getTitle())
+                        .description(campaign.getDescription() != null ? campaign.getDescription() : "설명이 없습니다.")
+                        .startDate(campaign.getStartDate())
+                        .endDate(campaign.getEndDate())
+                        .campaignStatus(campaign.getCampaignStatus())
+                        .createdById(campaign.getCreatedBy() != null ? campaign.getCreatedBy().getCreatorId() : null) // ✅ 수정된 부분!
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
 
     // ✅ 캠페인 목표 조회 (CampaignGoalEntity → CampaignGoalDTO 변환)
     @Transactional(readOnly = true)

@@ -1,10 +1,12 @@
-package app.scit46.ufc.controller;
+package app.scit46.ufc.controller.api;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.scit46.ufc.dto.CampaignDTO;
-import app.scit46.ufc.dto.CampaignGoalDTO;
+
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.NoticeDTO;
@@ -28,19 +29,53 @@ import app.scit46.ufc.service.ReportService;
 import app.scit46.ufc.service.campaign.CampaignService;
 
 @RestController
-@RequestMapping("/api")
-public class AdminApiController {
+@RequestMapping("/api/admin")
+public class ApiAdminController {
 
     private final NoticeService noticeService;
     private final ReportService reportService;
     private final CampaignService campaignService;
     private final CreatorService creatorService;
 
-    public AdminApiController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService) {
+    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService) {
         this.noticeService = noticeService;
         this.reportService = reportService;
         this.campaignService = campaignService;
         this.creatorService = creatorService;
+    }
+
+    // ✅ 캠페인 전체 조회
+    @GetMapping("/campaign-status")
+    public ResponseEntity<List<CampaignDTO>> getCampaignStatus() {
+        return ResponseEntity.ok(campaignService.getAllCampaigns());
+    }
+
+    // 사진 빼고 캠페인 조회
+    @GetMapping("/campaigns/no-photo")
+    public ResponseEntity<List<CampaignDTO>> getCampaignsWithoutPhoto() {
+        return ResponseEntity.ok(campaignService.getAllCampaignsWithoutPhoto());
+    }
+
+    // ✅ 캠페인 목표 조회 API (수량 목표 포함)
+    @GetMapping("/campaign-goals")
+    public ResponseEntity<List<CampaignGoalDTO>> getAllCampaignGoals() {
+        try {
+            return ResponseEntity.ok(campaignService.getAllCampaignGoals());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+    // ✅ 캠페인 기부 내역 조회 API
+    @GetMapping("/material-donations")
+    public ResponseEntity<List<MaterialDonationDTO>> getAllMaterialDonations() {
+        try {
+            return ResponseEntity.ok(campaignService.getAllMaterialDonations());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
     }
 
     // ✅ 펀딩 대기 캠페인 목록 조회 API 추가
@@ -49,44 +84,37 @@ public class AdminApiController {
         return ResponseEntity.ok(campaignService.getFundingWaitingCampaigns());
     }
 
-    // 승인 일괄처리
-    @PatchMapping("/campaigns/approve")
-    public ResponseEntity<Map<String, Object>> approveMultipleCampaigns(@RequestBody Map<String, List<Long>> request) {
-        Map<String, Object> response = new HashMap<>();
 
-        try {
-            List<Long> campaignIds = request.get("campaignIds");
+    // ✅ 승인 대기 중인 캠페인 목록 조회 API
+    @GetMapping("/campaigns-pending")
+    public ResponseEntity<List<CampaignDTO>> getPendingCampaigns() {
+        return ResponseEntity.ok(campaignService.getPendingCampaigns());
+    }
 
-            if (campaignIds == null || campaignIds.isEmpty()) {
-                response.put("success", false);
-                response.put("message", "승인할 캠페인을 선택하세요.");
-                return ResponseEntity.badRequest().body(response);
-            }
+    //하나만 승인
+    @PutMapping("/campaigns/{campaignId}/approve")
+    public ResponseEntity<Map<String, String>> approveCampaign(@PathVariable Long campaignId) {
+        campaignService.approveCampaign(campaignId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "캠페인이 승인되었습니다.");
+        return ResponseEntity.ok(response);
+    }
 
-            campaignService.approveMultipleCampaigns(campaignIds);  // ✅ 서비스에서 일괄 승인 처리
-
-            response.put("success", true);
-            response.put("message", campaignIds.size() + "개 캠페인이 승인되었습니다.");
-            return ResponseEntity.ok(response);
-
-        } catch (Exception e) {
-            response.put("success", false);
-            response.put("message", "캠페인 승인 중 오류 발생: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
+    // 여러개 승인
+    @PatchMapping("/campaigns-approve")
+    public ResponseEntity<Map<String, String>> approveMultipleCampaigns(@RequestBody Map<String, List<Long>> request) {
+        List<Long> campaignIds = request.get("campaignIds");
+        campaignService.approveMultipleCampaigns(campaignIds);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "승인처리 되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
 
-    // ✅ 공지사항 목록 조회 API
-    @GetMapping("/notices")
-    public ResponseEntity<List<NoticeDTO>> getAllNotices() {
-        return ResponseEntity.ok(noticeService.getAllNotices());
-    }
-
-    // ✅ 공지사항 등록 API
-    @PostMapping("/notices/create")
-    public ResponseEntity<NoticeDTO> createNotice(@RequestBody NoticeDTO noticeDTO) {
-        return ResponseEntity.ok(noticeService.createNotice(noticeDTO));
+    // ✅ 캠페인 신고 현황 API (조회만 가능)
+    @GetMapping("/campaign-report")
+    public ResponseEntity<List<Map<String, Object>>> getReportedCampaigns() {
+        return ResponseEntity.ok(reportService.getReportedCampaigns());
     }
 
     // ✅ 유저 신고 목록 API
@@ -118,60 +146,18 @@ public class AdminApiController {
     }
 
 
-    // ✅ 캠페인 운영 현황 API (올바른 엔드포인트 유지)
-    @GetMapping("/campaign-status")
-    public ResponseEntity<List<CampaignDTO>> getCampaignStatus() {
-        return ResponseEntity.ok(campaignService.getAllCampaigns());
+
+    // ✅ 공지사항 목록 조회 API
+    @GetMapping("/notices")
+    public ResponseEntity<List<NoticeDTO>> getAllNotices() {
+        return ResponseEntity.ok(noticeService.getAllNotices());
     }
 
-    // ✅ 캠페인 목표 조회 API (수량 목표 포함)
-    @GetMapping("/campaign-goals")
-    public ResponseEntity<List<CampaignGoalDTO>> getAllCampaignGoals() {
-        try {
-            return ResponseEntity.ok(campaignService.getAllCampaignGoals());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
-        }
+    // ✅ 공지사항 등록 API
+    @PostMapping("/notices/create")
+    public ResponseEntity<NoticeDTO> createNotice(@RequestBody NoticeDTO noticeDTO) {
+        return ResponseEntity.ok(noticeService.createNotice(noticeDTO));
     }
-
-    // ✅ 캠페인 기부 내역 조회 API
-    @GetMapping("/material-donations")
-    public ResponseEntity<List<MaterialDonationDTO>> getAllMaterialDonations() {
-        try {
-            return ResponseEntity.ok(campaignService.getAllMaterialDonations());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
-        }
-    }
-
-    // ✅ 캠페인 신고 현황 API (조회만 가능)
-    @GetMapping("/campaign-report")
-    public ResponseEntity<List<ReportDTO>> getReportedCampaigns() {
-        return ResponseEntity.ok(reportService.getReportedCampaigns());
-    }
-
-    // ✅ 승인 대기 중인 캠페인 목록 조회 API
-    @GetMapping("/campaigns-pending")
-    public ResponseEntity<List<CampaignDTO>> getPendingCampaigns() {
-        return ResponseEntity.ok(campaignService.getPendingCampaigns());
-    }
-
-    @PutMapping("/campaigns/{campaignId}/approve")
-    public ResponseEntity<Map<String, String>> approveCampaign(@PathVariable Long campaignId) {
-        Map<String, String> response = new HashMap<>();
-
-        try {
-            campaignService.approveCampaign(campaignId);
-            response.put("message", "캠페인이 승인되었습니다.");
-            return ResponseEntity.ok(response); // ✅ JSON 형식 응답
-        } catch (Exception e) {
-            response.put("message", "캠페인 승인 중 오류 발생: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-        }
-    }
-
 
     // ✅ 창작자 승인 대기 목록 조회 API
     @GetMapping("/creator-approval")

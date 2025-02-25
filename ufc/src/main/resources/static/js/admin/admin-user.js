@@ -50,34 +50,20 @@ let allCampaigns = [];
 let allCampaignGoals = [];
 let allMaterialDonations = [];
 function fetchCampaignStatus() {
-    Promise.all([
+    return Promise.all([
         fetch("/api/admin/campaign-status").then(res => res.json()),
         fetch("/api/admin/campaign-goals").then(res => res.json()),
         fetch("/api/admin/material-donations").then(res => res.json())
     ])
         .then(([campaigns, campaignGoals, materialDonations]) => {
-            if (!Array.isArray(campaigns) || !Array.isArray(campaignGoals) || !Array.isArray(materialDonations)) {
-                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
-            }
-
-            // ✅ 데이터를 글로벌 변수에 저장
             allCampaigns = campaigns || [];
             allCampaignGoals = campaignGoals || [];
             allMaterialDonations = materialDonations || [];
-
-            console.log("✅ 데이터 로드 완료:", allCampaigns, allCampaignGoals, allMaterialDonations);
-
-            // ✅ 데이터가 로드된 후 테이블 생성
             document.getElementById("content").innerHTML = generateCampaignStatusTable(allCampaigns, allCampaignGoals, allMaterialDonations);
-
-            // ✅ 요소가 생성된 후 updateCampaignCounts 실행 (100ms 지연)
             setTimeout(updateCampaignCounts, 100);
-        })
-        .catch(error => {
-            console.error("❌ 캠페인 현황 데이터 로드 오류:", error);
-            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
         });
 }
+
 
 
 // ✅ 캠페인 개수 업데이트 (4개 상태 반영)
@@ -259,7 +245,6 @@ function generateFilterUI() {
     `;
 }
 
-
 function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
@@ -291,7 +276,7 @@ function filterCampaignsByDate() {
         if (currentFilter === "ongoing") {
             matchesFilter = (startDate <= new Date() && endDate >= new Date());
         } else if (currentFilter === "pending") {
-            matchesFilter = !campaign.campaignStatus;
+            matchesFilter = !campaign.campaignStatus; // ✅ 승인 대기 캠페인 필터
         } else if (currentFilter === "completed") {
             matchesFilter = (endDate < new Date());
         } else if (currentFilter === "prepared") {
@@ -305,11 +290,16 @@ function filterCampaignsByDate() {
         return matchesFilter && matchesDate;
     });
 
-    // ✅ 검색 결과를 테이블에 반영
-    document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
+    // ✅ 승인 대기 캠페인 필터 시, 체크박스 포함된 테이블 사용
+    if (currentFilter === "pending") {
+        document.getElementById("table-container").innerHTML = generatePendingCampaignTable(filteredCampaigns);
+    } else {
+        document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
+    }
 
     console.log(`✅ 최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
 }
+
 
 function resetFilterUI() {
     setTimeout(() => {
@@ -434,40 +424,42 @@ function toggleAllCheckboxes(selectAllCheckbox) {
     const checkboxes = document.querySelectorAll(".campaign-checkbox");
     checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);
 }
-function approveSelectedCampaigns() {
-    const selectedCheckboxes = document.querySelectorAll(".campaign-checkbox:checked");
 
-    if (selectedCheckboxes.length === 0) {
-        alert("승인할 캠페인을 선택하세요.");
-        return;
-    }
-
-    selectedCheckboxes.forEach(checkbox => {
-        const campaignId = parseInt(checkbox.value);
-        approveCampaign(campaignId);
-    });
-}
-
-let allPendingCampaigns = [];
+//캠페인 하나만 승인
 function approveCampaign(campaignId) {
     fetch(`/api/admin/campaigns/${campaignId}/approve`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" }
     })
         .then(response => response.json())
-        .then(data => {
-            console.log(`✅ 캠페인 ${campaignId} 승인 완료:`, data);
-
-            // ✅ 승인 완료 후 알림 팝업
-            alert("✅ 승인처리 되었습니다.");
-
-            // ✅ 최신 데이터를 가져와 카드 숫자 업데이트!
-            fetchCampaignStatus(); // 캠페인 전체 데이터를 다시 불러와서 카드 개수 업데이트
-            fetchPendingCampaigns(); // 승인 대기 캠페인 목록 다시 불러오기
+        .then(() => {
+            alert("✅ 승인처리 되었습니다.");  // ✅ 개별 승인 후 alert 실행
+            return fetchCampaignStatus();
         })
-        .catch(error => {
-            console.error("❌ 캠페인 승인 오류:", error);
-        });
+        .then(fetchPendingCampaigns);
+}
+
+//캠페인 여러개 승인
+function approveSelectedCampaigns() {
+    const selectedCheckboxes = document.querySelectorAll(".campaign-checkbox:checked");
+    if (selectedCheckboxes.length === 0) {
+        alert("승인할 캠페인을 선택하세요.");
+        return;
+    }
+
+    const campaignIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+
+    fetch(`/api/admin/campaigns-approve`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ campaignIds })
+    })
+        .then(response => response.json())
+        .then(() => {
+            alert("✅ 승인처리 되었습니다.");  // ✅ 여러 개 승인 후 alert 한 번만 실행
+            return fetchCampaignStatus();
+        })
+        .then(fetchPendingCampaigns);
 }
 
 
@@ -475,37 +467,33 @@ function fetchPendingCampaigns() {
     fetch("/api/admin/campaigns-pending")
         .then(response => response.json())
         .then(data => {
-            allPendingCampaigns = data; // ✅ 데이터를 전역 변수에 저장
-            document.getElementById("table-container").innerHTML = generatePendingCampaignTable(allPendingCampaigns);
+            console.log("📢 승인 대기 캠페인 목록:", data); // ✅ 응답 확인
+            document.getElementById("table-container").innerHTML = generatePendingCampaignTable(data);
         })
-        .catch(error => {
-            console.error("❌ 승인 대기 캠페인 불러오기 오류:", error);
-        });
 }
-
 
 
 // 3. 캠페인 신고 관리
 function fetchCampaignReport() {
     fetch("/api/admin/campaign-report")
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => { throw new Error(err); });
-            }
-            return response.json();
-        })
+        .then(response => response.json()) // ✅ JSON 변환
         .then(data => {
-            if (!Array.isArray(data)) {  // 🚀 데이터가 배열인지 확인
-                throw new Error("서버에서 예상치 못한 응답을 받았습니다.");
+            if (!Array.isArray(data)) {
+                throw new Error("서버에서 예상치 못한 응답을 받았습니다. (데이터 형식 오류)");
             }
-            document.getElementById("content").innerHTML = generateCampaignReportTable(data); // ✅ `data`를 함수에 전달
+            console.log("🚀 캠페인 신고 API 응답 데이터:", data); // ✅ API 데이터 확인
+            document.getElementById("content").innerHTML = generateCampaignReportTable(data);
         })
         .catch(error => {
             console.error("❌ 캠페인 신고 관리 목록 로드 오류:", error);
-            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
+            document.getElementById("content").innerHTML = `
+                <h2>오류 발생</h2>
+                <p>데이터를 불러오는 중 오류가 발생했습니다.</p>
+                <p>🚨 오류 메시지: ${error.message}</p>
+            `;
         });
-
 }
+
 
 // 캠페인 신고 관리 동적 생성
 function generateCampaignReportTable(campaignReport) {
@@ -536,10 +524,10 @@ function generateCampaignReportTable(campaignReport) {
         tableHTML += `
             <tr>
                 <td>${report.campaignId}</td>
-                <td>${report.title}</td>
+                <td>${campaign.title}</td>
                 <td>${report.reason}</td>
-                <td>${report.reporterId}</td>
-                <td>${new Date(report.date).toLocaleDateString()}</td>
+                <td>${report.reportedBy}</td>
+                <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
                 <td>
                     ${report.status === 'registed' ? `
                         <select id="action-${report.reportId}">
@@ -784,6 +772,9 @@ function processUserReport(reportId) {
         return;
     }
 
+    // ✅ 디버깅을 위한 콘솔 출력
+    console.log("🚀 신고 처리 요청: ", { reportId, action, reason });
+
     fetch("/api/admin/user-reports/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -791,6 +782,7 @@ function processUserReport(reportId) {
     })
         .then(response => response.json())
         .then(data => {
+            console.log("✅ API 응답:", data);
             if (!data.success) throw new Error(data.message);
             alert(data.message);
             fetchUserReport(); // ✅ 신고 목록 갱신
