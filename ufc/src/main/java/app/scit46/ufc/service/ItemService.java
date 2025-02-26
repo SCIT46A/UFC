@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 public class ItemService {
     private final ItemRepository itemRepository;
 
+    // DB에 해당 이름의 아이템이 있으면 해당 아이템 반환, 없으면 생성 후 반환
     public ItemEntity addItem(ItemDTO itemDTO) {
         ItemEntity item = itemRepository.findByName(itemDTO.getName());
         if(item != null) {

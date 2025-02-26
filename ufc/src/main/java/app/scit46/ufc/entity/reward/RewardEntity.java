@@ -3,6 +3,8 @@ package app.scit46.ufc.entity.reward;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.ItemEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
@@ -45,11 +47,12 @@ public class RewardEntity {
     private Integer amount;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "campaign_id", nullable = false)
     private CampaignEntity campaign;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
+    // OneToMany: RewardItems.reward 참조
+    @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
     private List<RewardItemEntity> rewardItems;
 
     // OneToMany: RewardMaterials.reward 참조

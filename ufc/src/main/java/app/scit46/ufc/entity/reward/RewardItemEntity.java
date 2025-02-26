@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+// 캠페인의 보상으로서 제공되는 리워드에 대한 상품 정보
 
 @Getter
 @Setter
@@ -34,19 +35,24 @@ public class RewardItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "reward_id")
-    private RewardEntity reward;
+    private RewardEntity reward; // 리워드 그룹
 
     @ManyToOne
     @JoinColumn(name = "item_id")
-    private ItemEntity item;
+    private ItemEntity item; //상품
     
     @Column(name = "quantity")
-    private int quantity;
+    private int quantity;   //재고수량 / 한정수량
 
     public static RewardItemEntity toEntity(RewardItemDTO dto) {
+        if (dto == null) return null;
+        
         return RewardItemEntity.builder()
-                .reward(RewardEntity.toEntity(dto.getReward()))
-                .item(ItemEntity.toEntity(dto.getItem()))
+                .id(dto.getId())
+                .reward(dto.getReward() != null ? 
+                       RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build() : null)
+                .item(dto.getItem() != null ? 
+                     ItemEntity.builder().itemId(dto.getItem().getItemId()).build() : null)
                 .quantity(dto.getQuantity())
                 .build();
     }

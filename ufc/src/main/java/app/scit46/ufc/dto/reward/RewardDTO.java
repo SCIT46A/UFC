@@ -15,6 +15,7 @@ import lombok.*;
 @Builder
 public class RewardDTO {
     private Long rewardId;
+    private String rewardName;
     private Integer amount;
     private CampaignDTO campaign; // ✅ CampaignDTO 포함
     private List<RewardItemDTO> rewardItems; // ✅ ItemDTO 포함
@@ -23,6 +24,7 @@ public class RewardDTO {
     public static RewardDTO toDTO(RewardEntity entity) {
         return RewardDTO.builder()
                 .rewardId(entity.getRewardId())
+                .rewardName(entity.getRewardName())
                 .amount(entity.getAmount())
                 .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
                 .rewardItems(entity.getRewardItems().stream()

@@ -28,8 +28,8 @@ public class ApiCampaignController {
     @PostMapping("/update/{id}")
     public ResponseEntity<Long> updateCampaign(@PathVariable Long id, @RequestBody GenerateCampaignDTO campaign){
         
-        campaignService.editCampaign(id, campaign);
+        campaignService.editCampaign(campaignService.getCampaignById(id), campaign);
         
-        return ResponseEntity.badRequest().body(null);
+        return ResponseEntity.ok(id);
     }
 }

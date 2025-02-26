@@ -987,7 +987,7 @@ $(document).ready(function () {
             const totalFunding = {};
             
             rewardItems.forEach(rewardItem => {
-                const multiplier = parseInt(rewardItem.amount); // 해당 리워드의 생산 수량
+                const multiplier = parseInt(rewardItem.amount); // 문자열을 숫자로 변환
                 
                 rewardItem.funding.forEach(fundingItem => {
                     const itemName = fundingItem.name;
@@ -1001,7 +1001,7 @@ $(document).ready(function () {
                 });
             });
             
-            // Object를 배열로 변환
+            // fundingItems 업데이트 - 새로운 형식으로 변경
             fundingItems = Object.entries(totalFunding).map(([name, amount]) => ({
                 name: name,
                 amount: amount

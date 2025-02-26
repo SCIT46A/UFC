@@ -29,6 +29,7 @@ import app.scit46.ufc.entity.MaterialEntity;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
+import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
 import app.scit46.ufc.entity.reward.RewardItemEntity;
@@ -60,12 +61,10 @@ public class CampaignService {
     private final UserService userService;
     private final TagService tagService;
     private final CampaignTagRepository campaignTagRepository;
-    private final MaterialService materialService;
-    private final RewardMaterialService rewardMaterialService;
     private final CampaignGoalRepository campaignGoalRepository;
+    private final MaterialService materialService;
     private final MaterialDonationRepository materialDonationRepository;
     private final ImageUrlService imageService;
-    private final ItemService itemService;
     private final RewardService rewardService;
 
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
@@ -89,8 +88,8 @@ public class CampaignService {
     }
 
     // 캠페인 수정 / 캠페인 아이디와 캠페인 요소 받아서 수정
-    public CampaignEntity updateCampaign(Long campaignId, CampaignDTO campaignDTO) {
-        CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
+    public CampaignEntity updateCampaign(CampaignDTO campaignDTO) {
+        CampaignEntity campaign = campaignRepository.findById(campaignDTO.getCampaignId()).orElse(null);
         if (campaign != null) {
             campaign.setTitle(campaignDTO.getTitle());
             campaign.setDescription(campaignDTO.getDescription());
@@ -104,14 +103,14 @@ public class CampaignService {
     }
     
     // 캠페인 생성
-    public Long createCampaign(CampaignDTO campaignDTO, CreatorEntity creator, ImageUrlEntity image) {
+    public CampaignEntity createCampaign(CampaignDTO campaignDTO, CreatorEntity creator, ImageUrlEntity image) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
         CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO);
         // 영속성 문제로 인한 창작자, 이미지 자체 설정
         campaign.setCreatedBy(creator);
         campaign.setPhoto(image);
         // 캠페인 엔티티 저장 후 캠페인 아이디 반환
-        return campaignRepository.save(campaign).getCampaignId();
+        return campaignRepository.save(campaign);
     }
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
@@ -141,63 +140,69 @@ public class CampaignService {
                 .endDate(ccDTO.getEndDate())
                 .sendDate(ccDTO.getSendDate())
                 .campaignStatus(false)
+                .isSuccess(false)
                 .build();
 
         // 캠페인 생성 및 캠페인 아이디 반환
-        Long campaignId = createCampaign(campaign, creator, image);
+        CampaignEntity campaignEntity = createCampaign(campaign, creator, image);
 
-        // 지정된 태그를 먼저 저장/조회 후 태그 아이디 리스트 반환
-        List<Integer> tagIds = tagService.saveAndFindTagIds(ccDTO.getTagList());
+        // 태그 저장(검색) 후 캠페인과 연결
+        tagService.linkCampaignTags(ccDTO.getTagList(), campaignEntity);
 
-        // 태그 아이디와 캠페인 아이디를 CampaignTagEntity(태그 아이디와 캠페인 아이디를 연결하는 엔티티)에 저장
-        for (Integer tagId : tagIds) {
-            CampaignTagEntity campaignTag = CampaignTagEntity.builder()
-                    .campaign(CampaignEntity.builder().campaignId(campaignId).build())
-                    .tag(TagEntity.builder().tagId(tagId).build())
-                    .build();
-            
-            campaignTagRepository.save(campaignTag);
-        }
+        // 캠페인 총 목표 재료, 수량정보 저장
+        ccDTO.getFundingItems().forEach(funding -> {
+            // 재료 등록
+            MaterialEntity material = materialService.addMaterial(MaterialDTO.builder()
+                    .name(funding.getName())
+                    .build());
+            // 캠페인 총 목표 재료, 수량정보 저장
+            campaignGoalRepository.save(CampaignGoalEntity.builder()
+                    .campaign(campaignEntity)
+                    .material(material)
+                    .quantityRequired(funding.getAmount())
+                    .build());
+        });
 
-
-        List<RewardDTO> rewardList = new ArrayList<>();
+        // 리워드 리스트
+        List<RewardEntity> rewardList = new ArrayList<>();
         // 리워드 생성   [{"name": "리워드 제목", "amount": 0 , "funding" : [{"name" : "", "amount" : 0 },...],"reward" : [{"name" : "", "amount" : 0 },...]},...]
-        for (RewardListDTO receivedRewardList : ccDTO.getRewardList()) {
+        for (RewardListDTO receivedRewardDTO : ccDTO.getRewardList()) {
 
-            // 리워드 제목, 리워드 가격
-            String rewardName = receivedRewardList.getName();
-            Integer rewardAmount = receivedRewardList.getAmount();
+            // 리워드 아이템, 재료 등록
+            RewardEntity reward = rewardService.addReward(receivedRewardDTO, campaignEntity.getCampaignId());
+            rewardList.add(reward);
 
-            // 제공할 리워드 아이템 등록 reward
-            for(RewardFundingDTO rewardDTO : receivedRewardList.getReward()) {
+            // // 제공할 리워드 아이템 등록 reward
+            // for(RewardFundingDTO rewardDTO : receivedRewardDTO.getReward()) {
 
-                RewardItemEntity rewardItemEntity = rewardService.addRewardItem(rewardDTO, campaignId);
-            }
+            //     RewardItemEntity rewardItemEntity = rewardService.addRewardItem(receivedRewardDTO, rewardDTO, campaignId);
+            // }
 
-            // 리워드 아이템에 필요한 재료 등록 funding
-            for(RewardFundingDTO funding : receivedRewardList.getFunding()) {
-                MaterialEntity material = materialService.addMaterial(funding.getName());
+            // // 리워드 아이템에 필요한 재료 등록 funding
+            // for(RewardFundingDTO funding : receivedRewardDTO.getFunding()) {
+            //     MaterialEntity material = materialService.addMaterial(funding.getName());
 
-                RewardMaterialEntity rewardMaterial = rewardMaterialService.addRewardMaterial(RewardMaterialEntity.builder()
-                        .reward(reward)
-                        .material(material)
-                        .quantityRequired(funding.getAmount())
-                        .build());
-            }
+            //     RewardMaterialEntity rewardMaterial = rewardMaterialService.addRewardMaterial(RewardMaterialEntity.builder()
+            //             .reward(reward)
+            //             .material(material)
+            //             .quantityRequired(funding.getAmount())
+            //             .build());
+            // }
 
-            RewardDTO rewardDTO = RewardDTO.builder()
-                    .name(rewardName)
-                    .amount(rewardAmount)
-                    .build();
-            rewardList.add(rewardDTO);
+            // RewardDTO rewardDTO = RewardDTO.builder()
+            //         .name(rewardName)
+            //         .amount(rewardAmount)
+            //         .build();
+            // rewardList.add(rewardDTO);
         }
 
-        return campaignId;
+        return campaignEntity.getCampaignId();
     }
 
     // 캠페인 수정(캠페인 생성 로직 + 대상 캠페인 아이디로 다시저장하는 로직)
-    public void editCampaign(Long campaignId, GenerateCampaignDTO ccDTO) {
+    public void editCampaign(CampaignDTO campaignDTO, GenerateCampaignDTO ccDTO) {
         CampaignDTO campaign = CampaignDTO.builder()
+                .campaignId(campaignDTO.getCampaignId())
                 .title(ccDTO.getTitle())
                 .description(ccDTO.getDescription())
                 .startDate(ccDTO.getStartDate())
@@ -205,12 +210,12 @@ public class CampaignService {
                 .sendDate(ccDTO.getSendDate())
                 .build();
 
-        updateCampaign(campaignId, campaign);
+        updateCampaign(campaign);
     }
 
     // 캠페인에 할당되어 있는 태그 조회
     public List<String> getCampaignTags(Long campaignId){
-        List<CampaignTagEntity> campaignTag = campaignTagRepository.findByCampaignId(campaignId);
+        List<CampaignTagEntity> campaignTag = campaignTagRepository.findByCampaign(campaignRepository.findById(campaignId).orElse(null));
         List<String> tagNames = campaignTag.stream()
                 .map(CampaignTagEntity::getTag)
                 .map(TagEntity::getContent)
@@ -302,7 +307,7 @@ public class CampaignService {
         List<RewardListDTO> rewardList = new ArrayList<>();
         List<RewardEntity> rewards = campaign.getRewards();
         for (RewardEntity reward : rewards) {
-            String name = reward.getItem().getName();
+            String name = reward.getRewardName();
             Integer amount = reward.getAmount();
             List<RewardFundingDTO> fundingList = new ArrayList<>();
             for (RewardMaterialEntity rewardMaterial : reward.getRewardMaterials()) {
@@ -322,5 +327,10 @@ public class CampaignService {
             rewardList.add(rewardListDTO);
         }
         return rewardList;
+    }
+
+    public CampaignDTO getCampaignById(Long id) {
+        CampaignEntity campaign = campaignRepository.findById(id).orElse(null);
+        return CampaignDTO.toDTO(campaign);
     }
 }

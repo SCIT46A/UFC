@@ -25,6 +25,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+// 리워드, 판매 상품에 대한 기본 정보
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -59,17 +61,13 @@ public class ItemEntity {
     private List<RewardItemEntity> rewardItems;
 
     public static ItemEntity toEntity(ItemDTO dto) {
+        if (dto == null) return null;
+        
         return ItemEntity.builder()
-                //.itemId(dto.getItemId())  // 기본값 자동 생성이므로 주석처리
+                .itemId(dto.getItemId())
                 .name(dto.getName() != null ? dto.getName() : "")
                 .description(dto.getDescription() != null ? dto.getDescription() : "")
                 .photo(dto.getPhoto() != null ? ImageUrlEntity.toEntity(dto.getPhoto()) : null)
-                .rewardItems(dto.getRewardItems().stream()
-                        .map(RewardItemEntity::toEntity)
-                        .collect(Collectors.toList()))
-                .productItems(dto.getProductItems().stream()
-                        .map(ProductItemEntity::toEntity)
-                        .collect(Collectors.toList()))
                 .build();
     }
 }
