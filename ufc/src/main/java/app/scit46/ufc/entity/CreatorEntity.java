@@ -5,6 +5,7 @@ import java.util.List;
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
 import jakarta.persistence.Column;
@@ -59,7 +60,7 @@ public class CreatorEntity {
     private String address;
 
     @Column(name = "creator_status", nullable = false)
-    private Boolean creatorStatus = false; // 기본값: 미승인
+    private Boolean creatorStatus; // 기본값: 미승인
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "back_img_url")
@@ -98,7 +99,7 @@ public class CreatorEntity {
                 .bName(dto.getBName())
                 .companyName(dto.getCompanyName())
                 .address(dto.getAddress())
-                .creatorStatus(dto.getCreatorStatus())
+                .creatorStatus(dto.getCreatorStatus() == null ? false : dto.getCreatorStatus())
                 .backImgUrl(ImageUrlEntity.toEntity(backImgUrl))
                 .proImgUrl(ImageUrlEntity.toEntity(proImgUrl))
                 .ownUser(UserEntity.toEntity(ownUser, null)) // photoId는 여기서 필요 없을 듯 ㅎㅎ;;

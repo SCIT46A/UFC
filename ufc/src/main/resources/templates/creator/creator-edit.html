@@ -1,289 +1,291 @@
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPDA :: 창작가 프로필 수정하기</title>
-    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png">
-    <link rel="stylesheet" th:href="@{/css/creator/creator-edit.css}" href="../../static/css/creator/creator-edit.css">
-    <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
-    <link
-        rel="stylesheet"
-        th:href="@{/css/fix/header.css}"
-        href="../../static/css/fix/header.css"
-    />
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>UPDA :: 창작가 프로필 수정하기</title>
+        <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png">
+        <link rel="stylesheet" th:href="@{/css/creator/creator-edit.css}" href="../../static/css/creator/creator-edit.css">
+        <link href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css" rel="stylesheet">
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
 
-    <link
-        rel="stylesheet"
-        th:href="@{/css/fix/footer.css}"
-        href="../../static/css/fix/footer.css"
-    />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
 
-    <!-- ✅ SweetAlert2 CDN 추가 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+        <!-- ✅ SweetAlert2 CDN 추가 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
-</head>
-<body>
-    <div th:replace="~{fix/header :: header}"></div>
-    <!-- 창작가개설 페이지 시작 -->
-    <main class="club-create">
-        <div id="app">
-            <div class="create-container">
-                <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                <!-- 1단계: 창작가 이름 작성 -->
-                <div class="name-form-wrap" style="display: none;">
-                    <div class="name-form-title-wrap">
-                        <span class="name-form-title">새로운 창작가 생성</span>
-                    </div>
-                    <div class="name-form-icon-wrap">
-                        <div class="name-form-number-wrap">
-                            <span class="name-form-number">1</span>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <!-- 창작가개설 페이지 시작 -->
+        <main class="club-create">
+            <div id="app">
+                <div class="create-container">
+                    <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
+                    <!-- 1단계: 창작가 이름 작성 -->
+                    <div class="name-form-wrap" style="display: none;">
+                        <div class="name-form-title-wrap">
+                            <span class="name-form-title">새로운 창작가 생성</span>
                         </div>
-                        <div class="name-form-dash"></div>
-                        <div class="name-form-circle"></div>
-                        <div class="name-form-dash"></div>
-                        <div class="name-form-circle"></div>
-                    </div>
-                    <div class="name-form-content-wrap">
-                        <div class="name-form-text-wrap">
-                            <div class="name-form-text-title">
-                                창작가의 이름을 입력해주세요.
+                        <div class="name-form-icon-wrap">
+                            <div class="name-form-number-wrap">
+                                <span class="name-form-number">1</span>
                             </div>
-                            <div class="name-form-text-content">
-                                UPDA에서 창작가의 이름이 됩니다.
-                                <br>
-                                제작하신 제품의 성향에 맞는 이름을
-                                정해주세요.
-                            </div>
-                            <div class="name-form-input-wrap">
-                                <div>
-                                    <div>
-                                        <input type="text" class="name-form-input" placeholder="ex) UPDA" maxlength="10">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="desc-form-text-title" style="padding-top: 50px">
-                                팀에 대한 소개글을 작성해주세요.
-                            </div>
-                            <div class="desc-form-text-content">
-                                창작가에 대해 한 마디로 소개해주세요.
-                            </div>
-                            <div class="desc-form-input-wrap">
-                                <div>
-                                    <div>
-                                        <input type="text" class="desc-form-input" placeholder="우리 창작가를 한 마디로 표현한다면?" maxlength="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="name-form-button-wrap">
-                                <button class="name-form-button">
-                                    다음
-                                </button>
-                            </div>
+                            <div class="name-form-dash"></div>
+                            <div class="name-form-circle"></div>
+                            <div class="name-form-dash"></div>
+                            <div class="name-form-circle"></div>
                         </div>
-                    </div>
-                </div>
-                <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                <!-- 개설 2단계: 창작가에 대한 소개글 입력 -->
-                <div class="desc-form-wrap" style="display: none;">
-                    <div class="desc-form-title-wrap">
-                        <span class="desc-form-title">새로운 창작가 생성</span>
-                    </div>
-                    <div class="desc-form-icon-wrap">
-                        <div class="desc-form-circle-blue"></div>
-                        <div class="desc-form-dash"></div>
-                        <div class="desc-form-number-wrap">
-                            <span class="desc-form-number">2</span>
-                        </div>
-                        <div class="desc-form-dash"></div>
-                        <div class="desc-form-circle"></div>
-                    </div>
-                    <div class="desc-form-content-wrap">
-                        <div class="desc-form-text-wrap">
-                            <!-- 대괄호 안에는 이전에 입력한 창작가명을 넣습니다. -->
-                            <div class="desc-form-text-title">
-                                [UPDA]에 창작자님에 대해 적어주세요.
-                            </div>
-                            <div class="desc-form-text-content">
-                                사업자 등록번호
-                            </div>
-                            <div class="desc-form-input-wrap">
-                                <div>
+                        <div class="name-form-content-wrap">
+                            <div class="name-form-text-wrap">
+                                <div class="name-form-text-title">
+                                    창작가의 이름을 입력해주세요.
+                                </div>
+                                <div class="name-form-text-content">
+                                    UPDA에서 창작가의 이름이 됩니다.
+                                    <br>
+                                    제작하신 제품의 성향에 맞는 이름을
+                                    정해주세요.
+                                </div>
+                                <div class="name-form-input-wrap">
                                     <div>
-                                        <input type="text" class="desc-form-input" id="seller_regist_number" placeholder="사업자 등록번호" maxlength="100">
+                                        <div>
+                                            <input type="text" class="name-form-input" placeholder="ex) UPDA" maxlength="10">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="desc-form-text-content">상호</div>
-                            <div class="desc-form-input-wrap">
-                                <div>
+                                <div class="desc-form-text-title" style="padding-top: 50px">
+                                    팀에 대한 소개글을 작성해주세요.
+                                </div>
+                                <div class="desc-form-text-content">
+                                    창작가에 대해 한 마디로 소개해주세요.
+                                </div>
+                                <div class="desc-form-input-wrap">
                                     <div>
-                                        <input type="text" class="desc-form-input" id="seller_regist_name" placeholder="사업자등록증에 있는 상호명 입력" maxlength="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="desc-form-text-content">
-                                대표자 명
-                            </div>
-                            <div class="desc-form-input-wrap">
-                                <div>
-                                    <div>
-                                        <input type="text" class="desc-form-input" id="seller_regist_person" placeholder="대표자 명" maxlength="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="desc-form-text-content">
-                                사업장 소재지
-                            </div>
-                            <div class="desc-form-input-wrap">
-                                <div>
-                                    <div>
-                                        <input type="text" class="desc-form-input" id="seller_regist_location" placeholder="사업장 소재지" maxlength="100">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="desc-form-button-wrap">
-                                <button type="button" class="desc-form-prev-button">
-                                    이전 단계
-                                </button>
-                                <button type="button" class="desc-form-button">
-                                    다음
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                <!-- 개설 3단계: 창작가에 대한 소개글 입력 -->
-                <div class="img-form-wrap" style="display: block;" enctype="multipart/form-data">
-                    
-                    
-                    <div class="img-form-content-wrap">
-                        <div class="img-form-text-wrap">
-                            <div class="profile-edit-creator-wrap">
-                                <div class="profile-edit-creator">
-                                    프로필 수정하기
-                                </div>
-                                <div class="img-form-profile-size-error">
-                                    최대 10MB 이하의 이미지만 첨부할 수
-                                    있습니다.
-                                </div>
-                                <div class="img-form-settings-wrap">
-                                    <div class="cover-thumbnail-wrap" onclick="openCover()">
-                                        <div class="cover-thumbnail-container"></div>
-                                        <img class="cover-thumbnail" src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="커버 썸네일">
-                                        <div class="cover-upload-wrap">
-                                            커버 업로드
-                                        </div>
-                                        <span class="upload-span-gray">&nbsp;&nbsp; 2000*263 이상 (7.6:1)
-                                        </span>
-                                        <div class="cover-hidden">
-                                            <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*">
-                                            <img id="cover_preview" src="default-cover.png"><br>
-                                        </div>
-                                        <div class="cover-delete-wrap">
-                                            <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="cover-delete">
-                                            <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="cover-delete-hover">
-                                        </div>
-                                    </div>
-                                    <div class="club-detail-wrap">
-                                        <div class="img-form-thumbnail-wrap" onclick="openProfile()">
-                                            <div class="img-form-thumbnail-bg"></div>
-                                            <div class="img-form-img-wrap">
-                                                <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="썸네일" class="img-form-thumbnail">
-                                                <div class="profile-delete-wrap">
-                                                    <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="profile-delete">
-                                                    <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="profile-delete-hover">
-                                                </div>
-                                            </div>
-                                            <div class="img-form-hidden">
-                                                <input type="file" id="profile-image" accept="image/*" data-ratio="1:1">
-                                                <img id="profile_preview" src="default-profile.png"><br>
-                                            </div>
-                                        </div>
-                                        <div class="club-detail-title-wrap">
-                                            <div class="club-detail-name-wrap">
-                                                <div>
-                                                    <input type="text"  class="club-detail-name" name="nickname" value="" placeholder="변경할 창작가명을 입력하세요.">
-                                                </div>
-                                                <div>
-                                                    <input type="text" class="company_name" name="company_name" value="" placeholder="상호명을 입력하세요.">
-                                                </div>
-                                            </div>
-                                            <div class="club-detail-stats-wrap">
-                                                <span>
-                                                    <span class="club-detail-stats-name">
-                                                        팔로워
-                                                    </span>
-                                                    <span class="club-detail-stats-count">0</span>
-                                                </span>
-                                                <span class="club-detail-stats-event">
-                                                    <span class="club-detail-stats-name">
-                                                        누적활동
-                                                    </span>
-                                                    <span class="club-detail-stats-count">0</span>
-                                                </span>
-                                            </div>
-                                            <div>
-                                                <textarea class="club-detail-introduction" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; width: 1000px; height: 100px;" placeholder="한마디 부탁드려요."></textarea>
-                                            </div>
+                                        <div>
+                                            <input type="text" class="desc-form-input" placeholder="우리 창작가를 한 마디로 표현한다면?" maxlength="100">
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="img-form-buttons-wrap">
-                                <div class="img-form-button-wrap">
-                                    <button type="button" class="img-form-prev-button">
-                                        취소
-                                    </button>
-                                    <button type="button" class="img-form-button" onclick="update_profile()">
-                                        프로필 수정
+                                <div class="name-form-button-wrap">
+                                    <button class="name-form-button">
+                                        다음
                                     </button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>  
+                    <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
+                    <!-- 개설 2단계: 창작가에 대한 소개글 입력 -->
+                    <div class="desc-form-wrap" style="display: none;">
+                        <div class="desc-form-title-wrap">
+                            <span class="desc-form-title">새로운 창작가 생성</span>
+                        </div>
+                        <div class="desc-form-icon-wrap">
+                            <div class="desc-form-circle-blue"></div>
+                            <div class="desc-form-dash"></div>
+                            <div class="desc-form-number-wrap">
+                                <span class="desc-form-number">2</span>
+                            </div>
+                            <div class="desc-form-dash"></div>
+                            <div class="desc-form-circle"></div>
+                        </div>
+                        <div class="desc-form-content-wrap">
+                            <div class="desc-form-text-wrap">
+                                <!-- 대괄호 안에는 이전에 입력한 창작가명을 넣습니다. -->
+                                <div class="desc-form-text-title">
+                                    [UPDA]에 창작자님에 대해 적어주세요.
+                                </div>
+                                <div class="desc-form-text-content">
+                                    사업자 등록번호
+                                </div>
+                                <div class="desc-form-input-wrap">
+                                    <div>
+                                        <div>
+                                            <input type="text" class="desc-form-input" id="seller_regist_number" placeholder="사업자 등록번호" maxlength="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="desc-form-text-content">상호</div>
+                                <div class="desc-form-input-wrap">
+                                    <div>
+                                        <div>
+                                            <input type="text" class="desc-form-input" id="seller_regist_name" placeholder="사업자등록증에 있는 상호명 입력" maxlength="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="desc-form-text-content">
+                                    대표자 명
+                                </div>
+                                <div class="desc-form-input-wrap">
+                                    <div>
+                                        <div>
+                                            <input type="text" class="desc-form-input" id="seller_regist_person" placeholder="대표자 명" maxlength="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="desc-form-text-content">
+                                    사업장 소재지
+                                </div>
+                                <div class="desc-form-input-wrap">
+                                    <div>
+                                        <div>
+                                            <input type="text" class="desc-form-input" id="seller_regist_location" placeholder="사업장 소재지" maxlength="100">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="desc-form-button-wrap">
+                                    <button type="button" class="desc-form-prev-button">
+                                        이전 단계
+                                    </button>
+                                    <button type="button" class="desc-form-button">
+                                        다음
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
+                    <!-- 개설 3단계: 창작가에 대한 소개글 입력 -->
+                    <div class="img-form-wrap" style="display: block;" enctype="multipart/form-data">
+                        
+                        
+                        <div class="img-form-content-wrap">
+                            <div class="img-form-text-wrap">
+                                <div class="profile-edit-creator-wrap">
+                                    <div class="profile-edit-creator">
+                                        프로필 수정하기
+                                    </div>
+                                    <div class="img-form-profile-size-error">
+                                        최대 10MB 이하의 이미지만 첨부할 수
+                                        있습니다.
+                                    </div>
+                                    <div class="img-form-settings-wrap">
+                                        <div class="cover-thumbnail-wrap" onclick="openCover()">
+                                            <div class="cover-thumbnail-container"></div>
+                                            <img class="cover-thumbnail" src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="커버 썸네일">
+                                            <div class="cover-upload-wrap">
+                                                커버 업로드
+                                            </div>
+                                            <span class="upload-span-gray">&nbsp;&nbsp; 2000*263 이상 (7.6:1)
+                                            </span>
+                                            <div class="cover-hidden">
+                                                <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*">
+                                                <img id="cover_preview" src="default-cover.png"><br>
+                                            </div>
+                                            <div class="cover-delete-wrap">
+                                                <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="cover-delete">
+                                                <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="cover-delete-hover">
+                                            </div>
+                                        </div>
+                                        <div class="club-detail-wrap">
+                                            <div class="img-form-thumbnail-wrap" onclick="openProfile()">
+                                                <div class="img-form-thumbnail-bg"></div>
+                                                <div class="img-form-img-wrap">
+                                                    <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="썸네일" class="img-form-thumbnail">
+                                                    <div class="profile-delete-wrap">
+                                                        <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="profile-delete">
+                                                        <img src="/ufc/src/main/resources/static/images/category/cancel_image_icon.png" class="profile-delete-hover">
+                                                    </div>
+                                                </div>
+                                                <div class="img-form-hidden">
+                                                    <input type="file" id="profile-image" accept="image/*" data-ratio="1:1">
+                                                    <img id="profile_preview" src="default-profile.png"><br>
+                                                </div>
+                                            </div>
+                                            <div class="club-detail-title-wrap">
+                                                <div class="club-detail-name-wrap">
+                                                    <div>
+                                                        <input type="text"  class="club-detail-name" name="nickname" value="" placeholder="변경할 창작가명을 입력하세요.">
+                                                    </div>
+                                                    <div>
+                                                        <input type="text" class="company_name" name="company_name" value="" placeholder="상호명을 입력하세요.">
+                                                    </div>
+                                                </div>
+                                                <div class="club-detail-stats-wrap">
+                                                    <span>
+                                                        <span class="club-detail-stats-name">
+                                                            팔로워
+                                                        </span>
+                                                        <span class="club-detail-stats-count">0</span>
+                                                    </span>
+                                                    <span class="club-detail-stats-event">
+                                                        <span class="club-detail-stats-name">
+                                                            누적활동
+                                                        </span>
+                                                        <span class="club-detail-stats-count">0</span>
+                                                    </span>
+                                                </div>
+                                                <div>
+                                                    <textarea class="club-detail-introduction" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; width: 1000px; height: 100px;" placeholder="한마디 부탁드려요."></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="img-form-buttons-wrap">
+                                    <div class="img-form-button-wrap">
+                                        <button type="button" class="img-form-prev-button">
+                                            취소
+                                        </button>
+                                        <button type="button" class="img-form-button" onclick="update_profile()">
+                                            프로필 수정
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>  
+                </div>
             </div>
-        </div>
-    </main>
-    <div th:replace="~{fix/footer :: footer}"></div>
-<!-- Code injected by live-server -->
-<script>
-// <![CDATA[  <-- For SVG support
-if ('WebSocket' in window) {
-    (function () {
-        function refreshCSS() {
-            var sheets = [].slice.call(document.getElementsByTagName("link"));
-            var head = document.getElementsByTagName("head")[0];
-            for (var i = 0; i < sheets.length; ++i) {
-                var elem = sheets[i];
-                var parent = elem.parentElement || head;
-                parent.removeChild(elem);
-                var rel = elem.rel;
-                if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-                    var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-                    elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+        </main>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    <!-- Code injected by live-server -->
+    <script>
+    // <![CDATA[  <-- For SVG support
+    if ('WebSocket' in window) {
+        (function () {
+            function refreshCSS() {
+                var sheets = [].slice.call(document.getElementsByTagName("link"));
+                var head = document.getElementsByTagName("head")[0];
+                for (var i = 0; i < sheets.length; ++i) {
+                    var elem = sheets[i];
+                    var parent = elem.parentElement || head;
+                    parent.removeChild(elem);
+                    var rel = elem.rel;
+                    if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+                        var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+                        elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+                    }
+                    parent.appendChild(elem);
                 }
-                parent.appendChild(elem);
             }
-        }
-        var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-        var address = protocol + window.location.host + window.location.pathname + '/ws';
-        var socket = new WebSocket(address);
-        socket.onmessage = function (msg) {
-            if (msg.data == 'reload') window.location.reload();
-            else if (msg.data == 'refreshcss') refreshCSS();
-        };
-        if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-            console.log('Live reload enabled.');
-            sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-        }
-    })();
-}
-else {
-    console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-}
-    </script>
-</body>
-    <script th:src="@{/js/creator/creator-edit.js}" defer=""></script>
+            var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+            var address = protocol + window.location.host + window.location.pathname + '/ws';
+            var socket = new WebSocket(address);
+            socket.onmessage = function (msg) {
+                if (msg.data == 'reload') window.location.reload();
+                else if (msg.data == 'refreshcss') refreshCSS();
+            };
+            if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+                console.log('Live reload enabled.');
+                sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+            }
+        })();
+    }
+    else {
+        console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+    }
+        </script>
+    </body>
+    <script src="../../static/js/creator/creator-edit.js"></script>
+    <script th:src="@{/js/creator/creator-edit.js}" defer></script>
 </html>

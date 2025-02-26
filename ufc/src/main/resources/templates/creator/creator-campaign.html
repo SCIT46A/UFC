@@ -30,13 +30,10 @@
             href="../../static/css/fix/footer.css"
         />
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="../../static/js/creator/creator-campaign.js" defer></script>
-        <script src="../../static/js/creator/creator-campaign.js" defer></script>
-        <script src="../../static/js/fix/header.js" defer></script>
 
     </head>
     <body>
-        <div th:replace="fix/header :: header"></div>
+        <div th:replace="~{fix/header :: header}"></div>
         <main class="club-detail-main main">
             <section id="projects" style="background-color: #ffffff">
                 <div>
@@ -50,7 +47,7 @@
                     <div class="club-detail-wrap">
                         <div class="club-detail-top">
                             <img
-                                src="../../static/images/fix/logo.png"
+                                th:src="@{/images/fix/logo.png}"
                                 alt="프로필 사진"
                                 class="club-campaign-image"
                             />
@@ -2759,4 +2756,6 @@
         </main>
         <div th:replace="fix/footer :: footer"></div>
     </body>
+    <script src="../../static/js/creator/creator-campaign.js"></script>
+    <script th:src="@{/js/creator/creator-campaign.js}" defer></script>
 </html>

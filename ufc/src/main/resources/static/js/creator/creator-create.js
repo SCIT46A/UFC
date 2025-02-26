@@ -396,87 +396,6 @@ async function uploadImage(imageFile){
     
 }
 
-// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
-/*
-document.querySelector(".img-form-button").addEventListener("click", function() {
-    Swal.fire({
-        title: '창작가 개설을 진행하시겠습니까?',
-        text: '새로운 창작의 세계로 나아갈 준비가 되셨나요?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '네, 개설합니다!',
-        cancelButtonText: '아니요, 다시 생각해볼게요',
-        reverseButtons: true,
-    }).then(result => {
-        if (result.isConfirmed) { // 만약 확인 버튼을 누르면
-            fetch("/creator/create", { // ✅ 서버로 데이터 전송
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: "창작가 개설 완료!" })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error("서버 오류 발생");
-                return response.text();
-            })
-            .then(data => {
-                Swal.fire('개설 요청이 완료되었습니다.', '승인처리 될 때까지 잠시 기다려주세요~!', 'success').then(() => {
-                    window.location.href = "/"; // ✅ 성공 후 페이지 이동
-                });
-            })
-            .catch(error => {
-                Swal.fire('오류 발생!', '서버에 문제가 있습니다.', 'error');
-                console.error("❌ 오류 발생:", error);
-            });
-        } else {
-            Swal.fire('취소되었습니다.', '언제든 다시 돌아와 주세요!', 'info');
-        }
-    });
-});
-*/
-
-/* document.querySelector(".img-form-button").addEventListener("click", function() {
-    Swal.fire({
-        title: '창작가 개설을 진행하시겠습니까?',
-        text: '새로운 창작의 세계로 나아갈 준비가 되셨나요?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: '네, 개설합니다!',
-        cancelButtonText: '아니요, 다시 생각해볼게요',
-        reverseButtons: true,
-    }).then(result => {
-        if (result.isConfirmed) { // 확인 버튼 클릭 시
-            fetch("/creator/create", {  // ✅ 서버에 POST 요청
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: "창작가 개설 완료!" })
-            })
-            .then(response => {
-                if (!response.ok) {  
-                    return response.text().then(err => { throw new Error(err); }); // 서버에서 응답을 반환한 경우
-                }
-                return response.text();
-            })
-            .then(data => {
-                console.log("✅ 서버 응답:", data);  // 서버 응답 확인
-                Swal.fire('개설 요청이 완료되었습니다.', '승인처리 될 때까지 잠시 기다려주세요~!', 'success').then(() => {
-                    window.location.href = "/";  // ✅ 성공 후 메인 페이지 이동 (올바른 경로로 수정)
-                });
-            })
-            .catch(error => {
-                console.error("❌ 오류 발생:", error);
-                Swal.fire('오류 발생!', `서버에서 오류가 발생했습니다: ${error.message}`, 'error');
-            });
-        } else {
-            Swal.fire('취소되었습니다.', '언제든 다시 돌아와 주세요!', 'info');
-        }
-    });
-});
-*/
-
 // 취소하기 버튼 클릭 시 메인 홈페이지로 이동
 document.querySelector(".img-form-skip").addEventListener("click", function() {
     Swal.fire({
@@ -499,7 +418,7 @@ document.querySelector(".img-form-skip").addEventListener("click", function() {
                 timer: 2000,  // 2초 후 자동 닫힘
                 showConfirmButton: false
             }).then(() => {
-                window.location.href = "/ufc/src/main/resources/templates/index.html"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+                window.location.href = "/"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
             });
         } else {
             Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');

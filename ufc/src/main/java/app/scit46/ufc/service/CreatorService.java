@@ -1,24 +1,26 @@
 package app.scit46.ufc.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.repository.CreatorRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @Transactional // 추가됨 아마
+@RequiredArgsConstructor
 public class CreatorService {
 
     private final CreatorRepository creatorRepository;
-
-    public CreatorService(CreatorRepository creatorRepository) {
-        this.creatorRepository = creatorRepository;
-    }
+    private final ImageUrlService imageUrlService;
+    private final UserService userService;
 
     public List<CreatorDTO> getAllCreators() {
         return creatorRepository.findAll().stream()
@@ -56,16 +58,19 @@ public class CreatorService {
 
     // 해당 내용 추가됨
     @Transactional
-    public void createCreator(CreatorDTO creatorDTO) {
+    public void createCreator(CreatorCreateDTO creatorCreateDTO, String OAuthId) {
         System.out.println("🔹 DB 저장 시작...");
 
         CreatorEntity creator = CreatorEntity.builder()
-                .intro(creatorDTO.getIntro())
-                .bRegistNumber(creatorDTO.getBRegistNumber())
-                .bName(creatorDTO.getBName())
-                .companyName(creatorDTO.getCompanyName())
-                .address(creatorDTO.getAddress())
+                .intro(creatorCreateDTO.getIntro())
+                .bRegistNumber(creatorCreateDTO.getRegistNumber())
+                .bName(creatorCreateDTO.getBizName())
+                .companyName(creatorCreateDTO.getCompanyName())
+                .address(creatorCreateDTO.getAddress())
                 .creatorStatus(false) // 기본값: 미승인
+                .proImgUrl(imageUrlService.findByImageId(creatorCreateDTO.getProfileImg()))
+                .backImgUrl(imageUrlService.findByImageId(creatorCreateDTO.getBackImg()))
+                .ownUser(userService.findUserByIdentity(OAuthId))
                 .build();
 
         creatorRepository.save(creator);
