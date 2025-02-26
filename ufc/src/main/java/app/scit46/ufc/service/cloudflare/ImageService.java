@@ -36,7 +36,7 @@ public class ImageService {
     private String apiToken;
 
     @Value("${cloudflare.account-hash}")
-    private static String accountHash;
+    private String accountHash;
 
     // ------------------------------------------------------------------------------------------------
 
@@ -121,7 +121,7 @@ public class ImageService {
     }
 
     // 이미지 URL 변환
-    public static String getImageUrl(String imageId) {
+    public String getImageUrl(String imageId) {
         // 유효성 검사
         // imageId가 null 경우 null 반환
         if(imageId == null) return null;

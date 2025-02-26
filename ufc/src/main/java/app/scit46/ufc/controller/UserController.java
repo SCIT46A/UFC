@@ -23,6 +23,7 @@ import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class UserController {
     private final CampaignService campaignService;
     private final CampaignReviewService campaignReviewService;
     private final LikeService likeService;
+    private final ImageService imageService;
 
     // 유저 기본페이지 조회
     @GetMapping({"/",""})
@@ -83,14 +85,15 @@ public class UserController {
         if (session != null) {
             userId = (Long) session.getAttribute("loginUserId");
             List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
-            
             // 캠페인 정보를 가져오기 위한 코드 추가
             List<CampaignDTO> campaigns = new ArrayList<>();
+            List<String> imageUrls = new ArrayList<>();
             for (CampaignReviewDTO review : list) {
                 CampaignDTO campaign = campaignService.getCampaignById(review.getCampaignedBy().getCampaignId());
                 campaigns.add(campaign);
+                imageUrls.add(imageService.getImageUrl(review.getCampaignedBy().getPhoto().getImageId()));
             }
-            
+            model.addAttribute("imageUrls", imageUrls);
             model.addAttribute("campaignReviews", list);
             model.addAttribute("campaigns", campaigns); // 캠페인 정보 추가
             model.addAttribute("userId", userId);
@@ -139,7 +142,7 @@ public class UserController {
 
     
 
-    // 세션 날리는거 다시한번 체크하기
+    // 회원탈퇴(status 1로 변경)
     @GetMapping("/delete")
     public String delete(
         HttpSession session,
@@ -148,7 +151,6 @@ public class UserController {
         session.removeAttribute("loginUserId");
         return "logout";
     }
-    
 
     @PostMapping("/userUpdate")
     public String postMethodName(

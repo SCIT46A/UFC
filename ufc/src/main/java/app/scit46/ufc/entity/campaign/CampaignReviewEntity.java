@@ -39,6 +39,9 @@ public class CampaignReviewEntity {
     @JoinColumn(name = "campaigned_by", nullable = false)
     private CampaignEntity campaignedBy;
 
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
     public static CampaignReviewEntity toEntity(CampaignReviewDTO dto, UserEntity reviewedBy, CampaignEntity campaignedBy) {
         return CampaignReviewEntity.builder()
                 .cReviewId(dto.getCReviewId())
@@ -47,6 +50,7 @@ public class CampaignReviewEntity {
                 .rated(dto.getRated())
                 .reviewedBy(reviewedBy)
                 .campaignedBy(campaignedBy)
+                .status(dto.getStatus() != null ? dto.getStatus() : false)
                 .build();
     }
 }
