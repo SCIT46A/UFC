@@ -239,4 +239,17 @@ public class CampaignService {
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+    public List<Long> getCampaignIdsByCreator(Long creatorId) {
+        return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
+                .map(CampaignEntity::getCampaignId)
+                .collect(Collectors.toList());
+    }
+
+    public List<CampaignDTO> findByCampaign_CampaignIdIn(List<Long> campaignIds) {
+        return campaignRepository.findAllById(campaignIds).stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
 }

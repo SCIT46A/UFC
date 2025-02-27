@@ -4,15 +4,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.HashMap;
 
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.service.delivery.CourierService;
+import app.scit46.ufc.service.delivery.DeliveryService;
+import jakarta.servlet.http.HttpSession;
+import org.springframework.http.HttpStatus;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,37 +30,66 @@ public class ApiCreatorDashboardController {
 
         private final CampaignService campaignService;
         private final MaterialDonationService materialDonationService;
+        private final CourierService courierService;
+        private final DeliveryService deliveryService;
 
-        /**
-         * 🔹 기부 주문 데이터 제공 (프론트에서 AJAX 요청)
-         */
-        @GetMapping("/{creatorId}/donation-orders")
-        public ResponseEntity<Map<String, Object>> getDonationOrders(@PathVariable("creatorId") Long creatorId) {
-                // 🔹 해당 창작자의 캠페인 목록 가져오기
-                List<CampaignDTO> campaigns = campaignService.getCampaignsByCreator(creatorId);
-                System.out.println("🔹 creatorId: " + creatorId);
+        @GetMapping("/donation/orders")
+        public ResponseEntity<Map<String, Object>> getDonationOrders(HttpSession session) {
+                // 세션에서 creatorId 가져오기
+                Long creatorId = (Long) session.getAttribute("creatorId");
+                if (creatorId == null) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Unauthorized"));
+                }
 
-                // 🔹 캠페인 ID → 캠페인 제목 매핑
-                Map<Long, String> campaignIdTitleMap = campaigns.stream()
-                                .collect(Collectors.toMap(CampaignDTO::getCampaignId, CampaignDTO::getTitle));
+                // 해당 창작자의 캠페인 ID 목록 가져오기
+                List<Long> campaignIds = campaignService.getCampaignIdsByCreator(creatorId);
 
-                // 🔹 해당 창작자의 캠페인 ID 목록 추출
-                List<Long> campaignIds = campaigns.stream()
-                                .map(CampaignDTO::getCampaignId)
-                                .toList();
+                // 캠페인 ID가 없으면 빈 데이터 반환
+                if (campaignIds.isEmpty()) {
+                        return ResponseEntity.ok(Map.of(
+                                        "campaigns", List.of(),
+                                        "donations", List.of(),
+                                        "donationCounts",
+                                        Map.of("pending", 0, "ongoing", 0, "rejected", 0, "approved", 0) // 빈 개수 반환
+                        ));
+                }
 
-                // 🔹 기부 내역 조회 (최대 100개)
-                List<MaterialDonationDTO> donations = materialDonationService.getDonationsByCampaignIds(campaignIds,
-                                100);
+                // 기부 내역 조회 (creator_id에 해당하는 캠페인만 필터링)
+                List<MaterialDonationDTO> donations = materialDonationService.getDonationsByCampaignIds(campaignIds);
 
-                // 🔹 기부 상태별 개수 계산
+                // 기부 상태별 개수 계산 (판매자 ID 기준)
                 Map<String, Long> donationCounts = donations.stream()
                                 .collect(Collectors.groupingBy(MaterialDonationDTO::getStatus, Collectors.counting()));
 
+                // 로그 확인 (필터링된 개수)
+                System.out.println("🔹 필터링된 donationCounts: " + donationCounts);
+
+                // ✅ 전체 배송 상태 한 번에 조회
+                Map<String, String> trackingStatuses = deliveryService.trackMultipleDeliveries(donations);
+
+                // ✅ 변환된 기부 데이터 목록 생성 (`courierId` → `courierName`, `trackingStatus` 변환)
+                List<Map<String, Object>> transformedDonations = donations.stream().map(donation -> {
+                        String courierId = donation.getCourierId();
+                        String trackingNumber = donation.getTrackingNumber();
+
+                        Map<String, Object> donationMap = new HashMap<>();
+                        donationMap.put("donationId", donation.getDonationId());
+                        donationMap.put("campaignTitle", donation.getCampaign().getTitle());
+                        donationMap.put("donatedDate", donation.getDonatedDate());
+                        donationMap.put("userName", donation.getUser().getUserName());
+                        donationMap.put("materialName", donation.getMaterial().getName());
+                        donationMap.put("quantity", donation.getQuantity());
+                        donationMap.put("trackingNumber", trackingNumber);
+                        donationMap.put("courierName", courierService.getCourierNameById(courierId));
+                        donationMap.put("trackingStatus", trackingStatuses.getOrDefault(trackingNumber, "미등록"));
+                        return donationMap;
+                }).collect(Collectors.toList());
+
                 return ResponseEntity.ok(Map.of(
-                                "campaigns", campaigns,
-                                "campaignIdTitleMap", campaignIdTitleMap,
-                                "donations", donations,
-                                "donationCounts", donationCounts));
+                                "campaigns", campaignService.findByCampaign_CampaignIdIn(campaignIds),
+                                "donations", transformedDonations,
+                                "donationCounts", donationCounts // 기부 상태별 개수 추가
+                ));
         }
+
 }

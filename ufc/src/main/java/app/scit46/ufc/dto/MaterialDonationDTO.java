@@ -21,7 +21,7 @@ public class MaterialDonationDTO {
     private LocalDateTime donatedDate;
     private String invoice;
 
-    public String getCourierName() {
+    public String getCourierId() {
         return invoice != null ? invoice.split("#")[0] : "";
     }
 

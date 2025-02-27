@@ -10,11 +10,16 @@ import app.scit46.ufc.entity.MaterialEntity;
 import app.scit46.ufc.repository.material.MaterialRepository;
 import lombok.RequiredArgsConstructor;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.repository.MaterialDonationRepository;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class MaterialService {
 
     private final MaterialRepository materialRepository;
+    private final MaterialDonationRepository materialDonationRepository;
 
     public List<Long> addMaterial(List<RewardListDTO> fundingItems) {
         List<Long> materialIds = new ArrayList<>();
@@ -27,13 +32,20 @@ public class MaterialService {
         return null;
     }
 
-    // public void addRewardMaterial(Long campaignId, Long materialId, Integer amount) {
-    //     RewardMaterialEntity rewardMaterial = RewardMaterialEntity.builder()
-    //             .campaign(CampaignEntity.builder().campaignId(campaignId).build())
-    //             .material(material)
-    //             .amount(fundingItem.getAmount())
-    //             .build();
-    //     campaignMaterialRepository.save(campaignMaterial);
+    public List<MaterialDonationDTO> getDonationsByCampaignIds(List<Long> campaignIds) {
+        return materialDonationRepository.findByCampaign_CampaignIdIn(campaignIds).stream()
+                .map(MaterialDonationDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // public void addRewardMaterial(Long campaignId, Long materialId, Integer
+    // amount) {
+    // RewardMaterialEntity rewardMaterial = RewardMaterialEntity.builder()
+    // .campaign(CampaignEntity.builder().campaignId(campaignId).build())
+    // .material(material)
+    // .amount(fundingItem.getAmount())
+    // .build();
+    // campaignMaterialRepository.save(campaignMaterial);
     // }
-    
+
 }

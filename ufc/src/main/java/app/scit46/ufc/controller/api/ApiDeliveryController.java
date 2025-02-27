@@ -24,30 +24,32 @@ public class ApiDeliveryController {
         this.deliveryService = deliveryService;
     }
 
-    @GetMapping("/{invoice}")
-    public ResponseEntity<Map<String, Object>> track(@PathVariable("invoice") String invoice) {
-        try {
-            String[] parts = invoice.split("#");
-            if (parts.length != 2) {
-                return ResponseEntity.badRequest().body(Map.of("error", "잘못된 송장 번호 형식"));
-            }
+    // @GetMapping("/{invoice}")
+    // public ResponseEntity<Map<String, Object>> track(@PathVariable("invoice")
+    // String invoice) {
+    // try {
+    // String[] parts = invoice.split("#");
+    // if (parts.length != 2) {
+    // return ResponseEntity.badRequest().body(Map.of("error", "잘못된 송장 번호 형식"));
+    // }
 
-            String courierName = parts[0];
-            String trackingNumber = parts[1];
+    // String courierName = parts[0];
+    // String trackingNumber = parts[1];
 
-            logger.info("🚚 컨트롤러에서 받은 송장번호: {}", invoice);
+    // logger.info("🚚 컨트롤러에서 받은 송장번호: {}", invoice);
 
-            String trackingResult = deliveryService.trackDelivery(courierName, trackingNumber);
+    // String trackingResult = deliveryService.trackDelivery(courierName,
+    // trackingNumber);
 
-            Map<String, Object> response = new HashMap<>();
-            response.put("trackingData", trackingResult);
+    // Map<String, Object> response = new HashMap<>();
+    // response.put("trackingData", trackingResult);
 
-            return ResponseEntity.ok(response);
+    // return ResponseEntity.ok(response);
 
-        } catch (Exception e) {
-            logger.error("🚨 배송조회 중 오류 발생:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Map.of("error", "서버 오류 발생"));
-        }
-    }
+    // } catch (Exception e) {
+    // logger.error("🚨 배송조회 중 오류 발생:", e);
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+    // .body(Map.of("error", "서버 오류 발생"));
+    // }
+    // }
 }
