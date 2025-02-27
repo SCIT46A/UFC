@@ -50,13 +50,13 @@ public class RewardDeliveryEntity {
     @JoinColumn(name = "donation_id")
     private MaterialDonationEntity donation;
 
-    public static RewardDeliveryEntity toEntity(RewardDeliveryDTO dto, CampaignDTO campaign, MaterialDonationDTO donation) {
+    public static RewardDeliveryEntity toEntity(RewardDeliveryDTO dto) {
         return RewardDeliveryEntity.builder()
                 .rDeliveryId(dto.getRDeliveryId())
                 .invoice(dto.getInvoice())
                 .status(dto.getStatus())
-                .campaign(CampaignEntity.builder().campaignId(campaign.getCampaignId()).build())
-                .donation(MaterialDonationEntity.builder().donationId(donation.getDonationId()).build())
+                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
+                .donation(MaterialDonationEntity.builder().donationId(dto.getDonation().getDonationId()).build())
                 .build();
     }
 }

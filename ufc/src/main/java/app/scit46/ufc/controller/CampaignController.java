@@ -2,8 +2,6 @@ package app.scit46.ufc.controller;
 
 import java.util.List;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,12 +9,16 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.campaign.CampaignTagDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
-import app.scit46.ufc.dto.reward.RewardDTO;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.campaign.CampaignGoalService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
+import app.scit46.ufc.service.tag.CampaignTagService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,9 @@ public class CampaignController {
 
     private final CampaignService campaignService;
     private final ImageService imageService;
+    private final MaterialDonationService materialDonationService;
+    private final CampaignGoalService campaignGoalService;
+    private final CampaignTagService campaignTagService;
 
     @GetMapping("/all")
     public String allCampaign(Model model, @RequestParam(defaultValue = "") String searchKeyword) {
@@ -38,8 +43,40 @@ public class CampaignController {
 
     @GetMapping("/{id}")
     public String detailCampaign(@PathVariable Long id, Model model) {
+        // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
+
+        List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
+        final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
+
+        // 캠페인 이미지 처리
+        String imageUrl = (campaign.getPhoto() != null)
+                ? imageService.getImageUrl(campaign.getPhoto().getImageId())
+                : DEFAULT_IMAGE;
+        model.addAttribute("imageUrl", imageUrl);
+
+        // 크리에이터 이미지 처리
+        String creatorImageUrl = (campaign.getCreatedBy() != null
+                && campaign.getCreatedBy().getBusinessCert() != null)
+                        ? imageService.getImageUrl(campaign.getCreatedBy().getBusinessCert().getImageId())
+                        : DEFAULT_IMAGE;
+        model.addAttribute("creatorimageUrl", creatorImageUrl);
+
+        List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
+        List<MaterialDonationDTO> materialDonationDtos = materialDonationService.findDonationByCampaign(id);
+
+        int totalDonors = materialDonationDtos.size();
+        int totalQuantity = materialDonationDtos.stream()
+                .mapToInt(MaterialDonationDTO::getQuantity)
+                .sum();
+
+        model.addAttribute("tags", tags);
         model.addAttribute("campaign", campaign);
+        model.addAttribute("campaignGoalDTOS", campaignGoalDtos);
+        model.addAttribute("totalDonors", totalDonors);
+        model.addAttribute("totalQuantity", totalQuantity);
+        //log.info(campaign.toString());
+
         return "campaign/detail-campaign";
     }
 

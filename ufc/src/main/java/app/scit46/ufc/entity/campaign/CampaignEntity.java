@@ -129,20 +129,4 @@ public class CampaignEntity {
                       .collect(Collectors.toList()) : null)
               .build();
   }
-
-    // public static CampaignEntity toEntity(CampaignDTO dto, ImageUrlDTO photo) {
-    //     return CampaignEntity.builder()
-    //             //.campaignId(dto.getCampaignId())  // 기본값 자동 생성이므로 주석처리
-    //             .title(dto.getTitle())
-    //             .description(dto.getDescription())
-    //             .startDate(dto.getStartDate())
-    //             .endDate(dto.getEndDate())
-    //             .sendDate(dto.getSendDate())
-    //             //.createdDate(dto.getCreatedDate())  // 기본값 자동 생성이므로 주석처리
-    //             //.createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build()) // 영속성 문제로 인한 창작자 아이디 자체 설정
-    //             .isSuccess(dto.getIsSuccess() == null ? false : dto.getIsSuccess())
-    //             //.photo(ImageUrlEntity.builder().imageId(photo.getImageId()).build()) // 영속성 문제로 인한 이미지 아이디 자체 설정
-    //             .campaignStatus(dto.getCampaignStatus() == null ? false : dto.getCampaignStatus())
-    //             .build();
-    // }
 }

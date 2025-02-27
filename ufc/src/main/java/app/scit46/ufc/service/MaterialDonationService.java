@@ -1,7 +1,9 @@
 package app.scit46.ufc.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.entity.MaterialDonationEntity;
@@ -21,8 +23,6 @@ public class MaterialDonationService {
                 .orElseThrow(() -> new RuntimeException("Material Donation not found"));
     }
 
-
-    
     public List<MaterialDonationEntity> donationFindByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -33,4 +33,10 @@ public class MaterialDonationService {
         }
         return donations;
     }
+
+    public List<MaterialDonationDTO> findDonationByCampaign(Long campaignId) {
+        return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
 }

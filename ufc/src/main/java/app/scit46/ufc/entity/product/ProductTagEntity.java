@@ -43,11 +43,11 @@ public class ProductTagEntity {
     @JoinColumn(name = "product_id", nullable = false)
     private ProductEntity product;
 
-    public static ProductTagEntity toEntity(ProductTagDTO dto, TagDTO tag, ProductDTO product) {
+    public static ProductTagEntity toEntity(ProductTagDTO dto) {
         return ProductTagEntity.builder()
                 .pTagId(dto.getPTagId())
-                .tag(TagEntity.builder().tagId(tag.getTagId()).build())
-                .product(ProductEntity.builder().productId(product.getProductId()).build())
+                .tag(TagEntity.builder().tagId(dto.getTag().getTagId()).build())
+                .product(ProductEntity.builder().productId(dto.getProduct().getProductId()).build())
                 .build();
     }
 }
