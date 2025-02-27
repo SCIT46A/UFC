@@ -768,7 +768,7 @@ $(document).ready(function () {
             // 성공 시 처리
             if (!response.success) {
                 alert('캠페인이 성공적으로 등록되었습니다.');
-                window.location.href = '/campaign/' + response.campaignId;
+                window.location.href = '/campaign/' + response;
             } else {
                 throw new Error(response.message || '캠페인 등록에 실패했습니다.');
             }
