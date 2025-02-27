@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
+import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class CreatorController {
 
     private final CreatorService creatorService;
+    private final ImageService imageService;
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
     /*
@@ -51,12 +53,13 @@ public class CreatorController {
         return "creator/creator-campaign"; // ✅ ".html" 붙이지 않음!
     }
 
-    /** 🔹 [GET] 창작가 프로필 수정 페이지 출력 */
-    @GetMapping("/edit")
-    public String getCreatorEditPage(Model model) {
-        model.addAttribute("message", "창작가 프로필 수정 페이지입니다!");
-        return "creator/creator-edit"; // ✅ ".html" 붙이지 않음!
-    }
+    // /** 🔹 [GET] 창작가 프로필 수정 페이지 출력 */
+    // @GetMapping("/edit")
+    // public String getCreatorEditPage(Model model) {
+    // model.addAttribute("imageList", imageService.getImageUrl(null))
+    // model.addAttribute("message", "창작가 프로필 수정 페이지입니다!");
+    // return "creator/creator-edit"; // ✅ ".html" 붙이지 않음!
+    // }
 
     /** 🔹 [POST] 입력값을 DB에 저장 */
     @PostMapping("/create")
@@ -72,9 +75,17 @@ public class CreatorController {
     }
 
     /** 🔹 [GET] 창작가 수정 페이지 */
-    @GetMapping("/edit/{id}")
-    public String editProfile(@PathVariable Long id, Model model) {
-        CreatorDTO creator = creatorService.getCreator(id);
+    @GetMapping("/edit")
+    public String editProfile(Model model, HttpServletRequest httpServletRequest) {
+        String OAuthId = httpServletRequest.getUserPrincipal().getName();
+        CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
+        System.out.println(creator);
+        String profileImg = imageService.getImageUrl(creator.getProImgUrl().getImageId());
+        String backImg = imageService.getImageUrl(creator.getBackImgUrl().getImageId());
+        System.out.printf("profile : %s, back : %s", profileImg, backImg);
+        model.addAttribute("profileImgUrl", profileImg);
+        model.addAttribute("backImgUrl", backImg);
+        model.addAttribute("message", "창작가 프로필 수정 페이지입니다!");
         model.addAttribute("creator", creator);
         return "creator/creator-edit";
     }

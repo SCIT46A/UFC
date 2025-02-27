@@ -265,32 +265,6 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-
-// 입력값들이 DB로
-/* async function submitCreator(params) {
-    const creatorData = {
-        intro: document.getElementById("seller_intro").value,
-        bRegistNumber: document.getElementById("seller_regist_number").value,
-        bName: document.getElementById("bName").value,
-        companyName: document.getElementById("seller_regist_name").value,
-        address: document.getElementById("seller_regist_location").value
-    };
-
-    const response = await fetch("/creator/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(creatorData)
-    });
-
-    if (response.ok) {
-        window.location.href = "/ufc/src/main/resources/templates/index.html";
-    } else {
-        alert("오류");
-    }
-}
-*/
-
-
 document.querySelector(".img-form-button").addEventListener("click", function () {
     Swal.fire({
         title: "창작가 개설을 진행하시겠습니까?",
@@ -457,65 +431,3 @@ document.getElementById("seller_regist_number").addEventListener("keydown", func
         e.preventDefault();
     }
 });
-
-/*
-// 데이터베이스 값 저장 -> button으로 진행 (추가)
-document.querySelector(".img-form-button").addEventListener("click", async function() {
-    // 📌 입력 값 가져오기
-    const intro = document.getElementById("seller_intro").value;
-    const bRegistNumber = document.getElementById("seller_regist_number").value;
-    const bName = document.getElementById("seller_regist_person").value;
-    const companyName = document.getElementById("seller_regist_name").value;
-    const address = document.getElementById("seller_regist_location").value;
-    const coverImageFile = document.getElementById("background-image").files[0];
-    const profileImageFile = document.getElementById("profile-image").files[0];
-
-    // 📌 이미지 파일을 Base64로 변환
-    async function convertToBase64(file) {
-        return new Promise((resolve, reject) => {
-            if (!file) resolve(null);
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    }
-
-    const coverImage = await convertToBase64(coverImageFile);
-    const profileImage = await convertToBase64(profileImageFile);
-
-    // 📌 DTO에 맞는 필드명으로 JSON 객체 생성
-    const creatorData = {
-        intro,
-        bRegistNumber,
-        bName,
-        companyName,
-        address,
-        backImgUrl: coverImage, // DTO 필드명
-        proImgUrl: profileImage, // DTO 필드명
-        creatorStatus: false, // 기본값 미승인
-        ownUser: 1 // 🔥 실제 사용자 ID로 변경 필요
-    };
-
-    // 📌 서버로 JSON 데이터 전송
-    fetch("/creator/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(creatorData)
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("서버 응답 오류");
-        }
-        return response.text();
-    })
-    .then(data => {
-        alert("창작가 개설이 완료되었습니다!");
-        window.location.href = "/ufc/src/main/resources/templates/index.html"; // 성공 후 이동할 페이지
-    })
-    .catch(error => {
-        console.error("에러 발생:", error);
-        alert("창작가 개설 중 오류가 발생했습니다.");
-    });
-});
-*/

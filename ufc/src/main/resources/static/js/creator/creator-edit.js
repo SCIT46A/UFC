@@ -270,16 +270,6 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-
-// 창작가 프로필 수정 버튼 클릭 시 수정 -> 실제로 수정하면 그 값이 적용되는 것은 아직 구현 x
-/*document.addEventListener("DOMContentLoaded", function() {
-const seller_edit = document.querySelector(".img-form-button");
-seller_edit.addEventListener("click", function() {
-    alert("프로필이 수정되었습니다.")
-    window.location.href = "../../templates/creator/creator-campaign.html";
-});
-});*/
-
 // 이벤트 자동 초기화 (새로고침)
 window.onload = function () {
     document.querySelector(".club-detail-name").value = "";
@@ -300,28 +290,80 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
         cancelButtonText: '취소',
         reverseButtons: true,
     }).then(result => {
-        if (result.isConfirmed) { // 만약 확인 버튼을 누르면
-            fetch("/creator/create", { // ✅ 서버로 데이터 전송
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: "프로필 수정 완료" })
-            })
-            .then(response => {
-                if (!response.ok) throw new Error("서버 오류 발생");
-                return response.text();
-            })
-            .then(data => {
-                Swal.fire('프로필 수정이 완료되었습니다.', '더욱 완성도가 올라갔어요~!', 'success').then(() => {
-                    window.location.href = "../../templates/creator/creator-campaign.html"; // ✅ 성공 후 페이지 이동
+        if (result.isConfirmed) { // 확인 버튼을 누른 경우에만 처리
+            let updateProfileImg = document.getElementById('profile-image');
+            let updateBackImg = document.getElementById('background-image');
+
+            const newIntro = document.getElementById('update-intro');
+            const newName = document.getElementById('update-name');
+            const newCompanyName = document.getElementById('update-company'); // 따옴표 오류 수정
+
+            const creatorData = {
+                newIntro: newIntro ? newIntro.value : "소개 없음",
+                newName: newName ? newName.value : "대표자 없음",
+                newCompanyName: newCompanyName ? newCompanyName.value : "회사 없음",
+            };
+
+            Promise.all([
+                newUpdateImage(updateProfileImg.files[0]),
+                newUpdateImage(updateBackImg.files[0])
+            ]).then(images => {
+                const newUpdateData = { // updateData 정의 추가
+                    ...creatorData,
+                    updateProfileImage: images[0],
+                    updateBackImage: images[1]
+                };
+
+                console.log("이미지 업로드 후 전송할 데이터:", newUpdateData);
+                
+                return fetch("/creator/edit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(newUpdateData)
                 });
             })
+            .then(response => {
+                console.log("서버 응답:", response);
+                return Swal.fire('프로필 수정이 완료되었습니다.', '더욱 완성도가 올라갔어요~!', 'success');
+            })
+            .then(() => {
+                window.location.href = "/creator/campaign";
+            })
             .catch(error => {
-                Swal.fire('오류 발생!', '서버에 문제가 있습니다.', 'error');
                 console.error("❌ 오류 발생:", error);
+                Swal.fire('오류 발생!', '서버에 문제가 있습니다.', 'error');
             });
+        } else {
+            Swal.fire("취소되었습니다.", "언제든지 다시 수정할 수 있습니다.", "info");
         }
     });
 });
+
+async function newUpdateImg(imgFile){
+    if (!imgFile) {
+        alert('이미지가 등록되지 않았습니다.');
+        return;
+    }else{
+        try {
+            let newData = new NewData();
+            newData.append('file', imgFile);
+
+            const response = await fetch('/api/image/upload', {
+                method: 'POST',
+                body: newData
+            });
+
+            if (!response.ok) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+
+            return response.text();
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+    }
+}
 
 /*
 // 창작가 프로필 수정 취소 클릭 시 창작가 캠페인 사이트로 이동
@@ -443,3 +485,65 @@ window.onload = function () {
     sessionStorage.clear(); // 세션 스토리지 데이터 삭제 (브라우저 탭 닫으면 자동 삭제됨)
     localStorage.clear();
 };
+
+// 이미지 URL을 File 객체로 변환하고 input에 넣어주는 함수
+async function setImageToInput(imgElement, inputElement) {
+    try {
+        // 이미지 URL 가져오기
+        const imageUrl = imgElement.src;
+        
+        // URL에서 이미지 가져오기
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        
+        // File 객체 생성 (파일명은 원하는 대로 수정 가능)
+        const fileName = 'profile_image.jpg';
+        const file = new File([blob], fileName, { type: blob.type });
+        
+        // FileList 객체 생성 (DataTransfer 사용)
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        
+        // input에 FileList 설정
+        inputElement.files = dataTransfer.files;
+        
+        console.log('이미지가 input에 성공적으로 설정되었습니다.');
+        
+        // 선택적: 이미지 미리보기 업데이트
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            imgElement.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+        
+    } catch (error) {
+        console.error('이미지 설정 중 오류 발생:', error);
+    }
+}
+
+// 사용 예시
+document.addEventListener('DOMContentLoaded', function() {
+    const imgElement = document.getElementById('profile_preview');
+    const inputElement = document.getElementById('profile-image'); // input file의 id
+    
+    // 페이지 로드 시 이미지를 input에 설정
+    if (imgElement.src) {
+        setImageToInput(imgElement, inputElement);
+    }
+    
+    // 선택적: 이미지 클릭 시 파일 선택 다이얼로그 열기
+    imgElement.addEventListener('click', function() {
+        inputElement.click();
+    });
+    
+    // input의 파일이 변경되었을 때 이미지 미리보기 업데이트
+    inputElement.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});

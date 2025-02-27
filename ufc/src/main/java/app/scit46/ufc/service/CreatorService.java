@@ -90,4 +90,8 @@ public class CreatorService {
         creatorRepository.save(creator);
         System.out.println("✅ 프로필 업데이트 완료!");
     }
+
+    public CreatorDTO findCreatorByUser(String oAuthId) {
+        return CreatorDTO.toDTO(creatorRepository.findByOwnUser(userService.findUserByIdentity(oAuthId)));
+    }
 }
