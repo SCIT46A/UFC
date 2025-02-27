@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -44,6 +45,7 @@ public class CampaignBoardEntity {
     @Column(name = "content", nullable = false, columnDefinition = "MEDIUMTEXT")
     private String content;
 
+    @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 

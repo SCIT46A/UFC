@@ -13,4 +13,9 @@ public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity
 
     @Query("SELECT g FROM CampaignGoalEntity g JOIN FETCH g.campaign")
     List<CampaignGoalEntity> findAllWithCampaign();
+
+    // Repository 메소드명만 정확히 맞춰 수정 (추천)
+    List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
+
 }

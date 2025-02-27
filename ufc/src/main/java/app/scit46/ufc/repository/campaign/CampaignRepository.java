@@ -50,8 +50,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
                     "WHERE c.start_date <= CURRENT_DATE " +
                     "  AND c.end_date >= CURRENT_DATE " +
                     "GROUP BY c.campaign_id, cg.goal_id " +
-                    "ORDER BY donationPercentage ASC " +
-                    "LIMIT 10",
+                    "ORDER BY donationPercentage ASC ",
             nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
 

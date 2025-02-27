@@ -1,41 +1,50 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>진행중인 캠페인</title>
-        <link
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>진행중인 캠페인</title>
+
+    <!-- Tailwind CSS -->
+    <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-        />
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <link
-            rel="icon"
-            th:href="@{/images/fix/favicon.png}"
-            type="image/png"
-        />
-        <link
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link
             rel="stylesheet"
             th:href="@{/css/campaign/detail-campaign.css}"
             href="../../static/css/campaign/detail-campaign.css"
-        />
-        <link
+    />
+    <link
             rel="stylesheet"
             th:href="@{/css/fix/header.css}"
             href="../../static/css/fix/header.css"
-        />
-        <link
+    />
+    <link
             rel="stylesheet"
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
-        />
-        <script
-            src="../../static/js/campaign/detail-campaign.js"
-            defer
-        ></script>
-        <script th:src="@{/js/campaign/detail-campaign.js}" defer></script>
-        <script th:src="@{/js/fix/header.js}" defer></script>
-    </head>
+    />
+
+    <!-- jQuery (Summernote는 jQuery에 의존합니다) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Summernote Lite (Bootstrap 의존 없음) -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css"
+            rel="stylesheet"
+    />
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js">
+    </script>
+
+    <!-- 커스텀 JS -->
+    <script src="../../static/js/campaign/detail-campaign.js" defer></script>
+    <script th:src="@{/js/campaign/detail-campaign.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+</head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
         <main>
@@ -194,38 +203,37 @@
                                             <div
                                                 class="main-top-in-box-title-in-tag"
                                             >
-                                                <span>청바지</span>
+                                                <span th:each="tag : ${tags}" th:text="${tag.tag.content}"></span>
                                             </div>
                                             <h1
                                                 class="main-top-in-box-title-in-tag-title"
                                             >
-                                                범죄수사물&응급재난상황 자료집 |
-                                                양장본
+                                                <span th:text="${campaign.title}"></span>
                                                 <div
-                                                    class="main-funding-in-box-le"
+                                                        class="main-funding-in-box-le"
                                                 >
                                                     <div
-                                                        class="main-funding-in-box-le-in"
+                                                            class="main-funding-in-box-le-in"
                                                     >
                                                         <div
-                                                            class="main-funding-in-box-le-in-in"
+                                                                class="main-funding-in-box-le-in-in"
                                                         >
                                                             <div
-                                                                class="main-funding-in-box-le-in-in-like"
+                                                                    class="main-funding-in-box-le-in-in-like"
                                                             >
                                                                 <div
-                                                                    class="main-funding-in-box-le-in-in-like-view"
+                                                                        class="main-funding-in-box-le-in-in-like-view"
                                                                 >
                                                                     <!-- 빈하트 -->
                                                                     <svg
-                                                                        viewBox="0 0 38 34"
-                                                                        fill="none"
+                                                                            viewBox="0 0 38 34"
+                                                                            fill="none"
                                                                     >
                                                                         <path
-                                                                            fill-rule="evenodd"
-                                                                            clip-rule="evenodd"
-                                                                            d="M18.9996 5.62299L15.6051 2.55614C12.2106 -0.510215 6.56995 0.17753 3.48147 3.57849C-0.397666 7.66674 -0.397863 14.5859 3.70675 18.9121L19 33.8811L34.2923 18.9121C38.3969 14.5859 38.3971 7.66747 34.5176 3.57849C31.4291 0.17753 25.7888 -0.510094 22.3942 2.55614L18.9996 5.62299ZM32.0081 16.6701C34.9446 13.533 34.8523 8.58052 32.1962 5.78099L32.1721 5.75565L32.1487 5.72978C30.0533 3.42248 26.4219 3.23047 24.5394 4.93062L18.9996 9.93557L13.4601 4.93076C11.5777 3.2306 7.94577 3.42244 5.85042 5.72978L5.82689 5.75569L5.8028 5.78108C3.14716 8.57988 3.05453 13.533 5.99094 16.6701L18.9999 29.4033L32.0081 16.6701Z"
-                                                                            fill="#6D6D6D"
+                                                                                fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M18.9996 5.62299L15.6051 2.55614C12.2106 -0.510215 6.56995 0.17753 3.48147 3.57849C-0.397666 7.66674 -0.397863 14.5859 3.70675 18.9121L19 33.8811L34.2923 18.9121C38.3969 14.5859 38.3971 7.66747 34.5176 3.57849C31.4291 0.17753 25.7888 -0.510094 22.3942 2.55614L18.9996 5.62299ZM32.0081 16.6701C34.9446 13.533 34.8523 8.58052 32.1962 5.78099L32.1721 5.75565L32.1487 5.72978C30.0533 3.42248 26.4219 3.23047 24.5394 4.93062L18.9996 9.93557L13.4601 4.93076C11.5777 3.2306 7.94577 3.42244 5.85042 5.72978L5.82689 5.75569L5.8028 5.78108C3.14716 8.57988 3.05453 13.533 5.99094 16.6701L18.9999 29.4033L32.0081 16.6701Z"
+                                                                                fill="#6D6D6D"
                                                                         ></path>
                                                                     </svg>
                                                                 </div>
@@ -242,11 +250,10 @@
                                             <div
                                                 class="main-top-in-box-img-fi-in"
                                             >
-                                                <img
-                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWU4ZjRkOTYtY2RlNi00YzUyLWEwYzAtNGVjYTM3M2I4NmY5L2U3ZGI4OTJkLWM2ZmQtNGE5ZS05ZmNhLTExOTgwYzYyNWQ0Yy5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjEyNDAsImhlaWdodCI6MTI0MCwid2l0aG91dEVubGFyZ2VtZW50Ijp0cnVlfX19"
-                                                    alt=""
-                                                    class="main-top-in-box-img-fi-in-img"
-                                                />
+                                                <img th:src="${imageUrl}"
+                                                     alt="Campaign Image"
+                                                     class="main-top-in-box-img-fi-in-img" />
+
                                             </div>
                                         </figure>
                                     </div>
@@ -268,30 +275,23 @@
                                                 >
                                                     <span
                                                         class="main-top-in-box-content-fund-top-pi-de"
-                                                        >20 <span>개</span>
+                                                        th:text="${totalQuantity}"
+                                                        >20
                                                     </span>
-                                                    <span
-                                                        class="main-top-in-box-content-fund-top-pi-pe"
-                                                        >123 %
-                                                    </span>
+                                                    <span class="main-top-in-box-content-fund-top-pi-add-span">개</span>
                                                 </div>
                                             </div>
                                             <!-- 남은기간 -->
                                             <div
                                                 class="main-top-in-box-content-fund-mi"
                                             >
-                                                <div
-                                                    class="main-top-in-box-content-fund-top-title"
-                                                >
-                                                    남은 기간
-                                                </div>
-                                                <div
-                                                    class="main-top-in-box-content-fund-top-pi"
-                                                >
-                                                    <span
-                                                        class="main-top-in-box-content-fund-top-pi-de"
-                                                        >14 <span>일</span>
+                                                <div class="main-top-in-box-content-fund-top-title">남은 기간</div>
+                                                <div class="main-top-in-box-content-fund-top-pi">
+                                                    <span class="main-top-in-box-content-fund-top-pi-de"
+                                                          th:text="${campaign.endDate != null ? T(java.time.temporal.ChronoUnit).DAYS.between(campaign.startDate.toLocalDate(), campaign.endDate.toLocalDate()) : '-'}">
+                                                            14
                                                     </span>
+                                                    <span class="main-top-in-box-content-fund-top-pi-add-span">일</span>
                                                 </div>
                                             </div>
                                             <div
@@ -307,8 +307,10 @@
                                                 >
                                                     <span
                                                         class="main-top-in-box-content-fund-top-pi-de"
-                                                        >12 <span>명</span>
+                                                        th:text="${totalDonors}"
+                                                        >12
                                                     </span>
+                                                    <span class="main-top-in-box-content-fund-top-pi-add-span">명</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -323,38 +325,23 @@
                                                     >
                                                         목표치
                                                     </dt>
-                                                    <dd
-                                                        class="main-funding-de-box-in-dd"
-                                                    >
+                                                    <dd class="main-funding-de-box-in-dd"
+                                                        th:each="campaignGoalDTO : ${campaignGoalDTOS}"
+                                                        th:text="${campaignGoalDTO.material.name + ' ' + campaignGoalDTO.quantityRequired + '개'}">
                                                         청바지 50개
                                                     </dd>
                                                 </dl>
-                                                <dl
-                                                    class="main-funding-de-box-in"
-                                                >
-                                                    <dt
-                                                        class="main-funding-de-box-in-dt"
-                                                    >
-                                                        펀딩 기간
-                                                    </dt>
-                                                    <dd
-                                                        class="main-funding-de-box-in-dd"
-                                                    >
-                                                        2025.01.26 ~ 2025.02.06
+                                                <dl class="main-funding-de-box-in">
+                                                    <dt class="main-funding-de-box-in-dt">펀딩 기간</dt>
+                                                    <dd class="main-funding-de-box-in-dd">
+                                                        <span th:text="${#temporals.format(campaign.startDate, 'yyyy.MM.dd')}">2025.01.26</span> ~
+                                                        <span th:text="${#temporals.format(campaign.endDate, 'yyyy.MM.dd')}">2025.02.06</span>
                                                     </dd>
                                                 </dl>
-                                                <dl
-                                                    class="main-funding-de-box-in"
-                                                >
-                                                    <dt
-                                                        class="main-funding-de-box-in-dt"
-                                                    >
-                                                        예상 발송 시작일
-                                                    </dt>
-                                                    <dd
-                                                        class="main-funding-de-box-in-dd"
-                                                    >
-                                                        2025.03.27
+                                                <dl class="main-funding-de-box-in">
+                                                    <dt class="main-funding-de-box-in-dt">예상 발송 시작일</dt>
+                                                    <dd class="main-funding-de-box-in-dd">
+                                                        <span th:text="${#temporals.format(campaign.sendDate, 'yyyy.MM.dd')}">2025.03.27</span>
                                                     </dd>
                                                 </dl>
                                             </div>
@@ -374,10 +361,10 @@
                                         >
                                             캠페인 소개
                                         </div>
-                                        <div class="main-mi-na-in-box-pe board">
+                                        <div class="main-mi-na-in-box-pe board" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
                                             게시판
                                         </div>
-                                        <div class="main-mi-na-in-box-pe reply">
+                                        <div class="main-mi-na-in-box-pe reply" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
                                             댓글
                                         </div>
                                     </div>
@@ -411,45 +398,45 @@
                                                             <div
                                                                 class="reward-in-se-in-img-a-box"
                                                             >
-                                                                <span
-                                                                    class="reward-in-se-in-img-a-box-span"
-                                                                ></span>
+                                                                <span class="reward-in-se-in-img-a-box-span"
+                                                                      th:style="'background-image: url(' + ${creatorimageUrl} + ');'">
+                                                                </span>
                                                                 <div
                                                                     class="reward-in-se-in-img-a-box-in"
                                                                 >
-                                                                    <span
+                                                                    <span th:text="${campaign.createdBy.bName}"
                                                                         >세계관</span
                                                                     >
-                                                                    <div
-                                                                        class="reward-in-se-in-img-a-box-span-in"
-                                                                    >
-                                                                        <div
-                                                                            class="reward-in-se-in-img-a-box-span-in-tag"
-                                                                        >
-                                                                            <div>
-                                                                                <div
-                                                                                    class="reward-in-se-in-img-a-box-span-in-tag-box"
-                                                                                >
-                                                                                    <svg
-                                                                                        width="14"
-                                                                                        height="14"
-                                                                                        viewBox="0 0 14 14"
-                                                                                        fill="none"
-                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M7.36513 2.12658C7.22574 1.80579 6.77079 1.80579 6.6314 2.12658L5.28655 5.22166L1.92321 5.5415C1.57451 5.57466 1.43383 6.00824 1.69663 6.23982L4.22864 8.47096L3.49405 11.7624C3.41782 12.1039 3.78598 12.3718 4.0875 12.1941L6.99827 10.4791L9.90904 12.1941C10.2106 12.3718 10.5787 12.1039 10.5025 11.7624L9.76789 8.47096L12.2999 6.23982C12.5627 6.00824 12.422 5.57466 12.0733 5.5415L8.70999 5.22166L7.36513 2.12658Z"
-                                                                                            fill="#FFD200"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                    세계관
-                                                                                    최강자
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+<!--                                                                    <div-->
+<!--                                                                        class="reward-in-se-in-img-a-box-span-in"-->
+<!--                                                                    >-->
+<!--                                                                        <div-->
+<!--                                                                            class="reward-in-se-in-img-a-box-span-in-tag"-->
+<!--                                                                        >-->
+<!--                                                                            <div>-->
+<!--                                                                                <div-->
+<!--                                                                                    class="reward-in-se-in-img-a-box-span-in-tag-box"-->
+<!--                                                                                >-->
+<!--                                                                                    <svg-->
+<!--                                                                                        width="14"-->
+<!--                                                                                        height="14"-->
+<!--                                                                                        viewBox="0 0 14 14"-->
+<!--                                                                                        fill="none"-->
+<!--                                                                                        xmlns="http://www.w3.org/2000/svg"-->
+<!--                                                                                    >-->
+<!--                                                                                        <path-->
+<!--                                                                                            fill-rule="evenodd"-->
+<!--                                                                                            clip-rule="evenodd"-->
+<!--                                                                                            d="M7.36513 2.12658C7.22574 1.80579 6.77079 1.80579 6.6314 2.12658L5.28655 5.22166L1.92321 5.5415C1.57451 5.57466 1.43383 6.00824 1.69663 6.23982L4.22864 8.47096L3.49405 11.7624C3.41782 12.1039 3.78598 12.3718 4.0875 12.1941L6.99827 10.4791L9.90904 12.1941C10.2106 12.3718 10.5787 12.1039 10.5025 11.7624L9.76789 8.47096L12.2999 6.23982C12.5627 6.00824 12.422 5.57466 12.0733 5.5415L8.70999 5.22166L7.36513 2.12658Z"-->
+<!--                                                                                            fill="#FFD200"-->
+<!--                                                                                        ></path>-->
+<!--                                                                                    </svg>-->
+<!--                                                                                    세계관-->
+<!--                                                                                    최강자-->
+<!--                                                                                </div>-->
+<!--                                                                            </div>-->
+<!--                                                                        </div>-->
+<!--                                                                    </div>-->
                                                                 </div>
                                                             </div>
                                                             <div
@@ -535,25 +522,8 @@
                                                     <!-- 글 소개 -->
                                                     <div
                                                         class="reward-in-se-in-content"
+                                                        th:text="${campaign.createdBy.intro}"
                                                     >
-                                                        &lt;범죄수사물 자료집 :
-                                                        경찰편&gt;,
-                                                        &lt;응급+재난상황
-                                                        자료집&gt;의 실물 책
-                                                        펀딩으로 찾아뵙게
-                                                        되었습니다. 창작 시
-                                                        필요한 자료집이 있다면
-                                                        저희 팀에 메시지를
-                                                        보내주세요. 후원자님의
-                                                        의견이 저희에게 좋은
-                                                        영감을 줍니다. 저희 팀의
-                                                        소식이 궁금하다면 아래
-                                                        인스타그램 및 트위터
-                                                        계정으로 찾아와주세요.
-                                                        후원자님의 세계관이 갖고
-                                                        있던 무궁한 가능성이
-                                                        저희의 자료집을 통해
-                                                        펼쳐지길 기대합니다.
                                                     </div>
                                                     <!-- 문의 , 팔로우 -->
                                                 </div>
@@ -561,119 +531,25 @@
                                                 <div style="height: 20px"></div>
                                                 <!-- 내용 -->
                                                 <div class="content-box">
+                                                    <input type="hidden" th:value="${campaign.campaignId}" id="campaign-id">
                                                     <div class="content-box-in">
-                                                        <!-- 내용 들어가는 부분 -->
-                                                        <p>
-                                                            <img
-                                                                style="
-                                                                    display: block;
-                                                                    margin-left: auto;
-                                                                    margin-right: auto;
-                                                                "
-                                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC9lMjBhZDU3OS05YTgxLTQwNDUtYWEzNy01ZDljNTEzZTNmMTQuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                            /><img
-                                                                style="
-                                                                    display: block;
-                                                                    margin-left: auto;
-                                                                    margin-right: auto;
-                                                                "
-                                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC82NWU5N2U5MS1kN2IxLTQwZDQtOTg3Mi03ZWNmZWExMGQ1ZGUuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                            /><img
-                                                                style="
-                                                                    display: block;
-                                                                    margin-left: auto;
-                                                                    margin-right: auto;
-                                                                "
-                                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC8yNTE1NjUxYS02ZjYzLTQ4NDgtYTJjNy0zOWNlZWZiYzIyYjcuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                            /><img
-                                                                style="
-                                                                    display: block;
-                                                                    margin-left: auto;
-                                                                    margin-right: auto;
-                                                                "
-                                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC9iYmU1YjJjMi01YmYwLTRhZTEtYjQ2YS1iZGRjYzk1NTEyZDAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                            />
-                                                        </p>
-                                                        <p
-                                                            style="
-                                                                text-align: left;
-                                                            "
+                                                        <p style="color: gray"> ※ 게시글을 작성하셔야 관리자에게 캠페인을 승인받을 수 있습니다.</p>
+                                                        <!--섬머노트 들어가는 곳입니다~-->
+                                                        <div
+                                                                class="cam-pro-bo-ri-in-content"
                                                         >
-                                                            <br />안녕하세요,
-                                                            세계관입니다💫<br />후원자님들의
-                                                            성원 덕분에, 이번
-                                                            양장 프로젝트가
-                                                            성황리에
-                                                            시작되었습니다!<br /><br />이전
-                                                            프로젝트부터
-                                                            후원자님들께서
-                                                            &lt;그것이 알고
-                                                            싶었다&gt; 이벤트가
-                                                            좋았는데, <br />다시
-                                                            열면 좋겠다는 말씀을
-                                                            많이 해주셨어요.
-                                                            <br />그래서 본
-                                                            펀딩에서 ‘시즌 2’로
-                                                            다시 이벤트를 열게
-                                                            되었답니다!
-                                                            <br />이번에는
-                                                            범죄수사물 뿐만
-                                                            아니라 응급재난
-                                                            쪽에서도
-                                                            <br />후원자님들이
-                                                            궁금해하시는 질문을
-                                                            받아 대신
-                                                            물어봐드리려 합니다.
-                                                        </p>
-                                                        <p
-                                                            style="
-                                                                text-align: left;
-                                                            "
-                                                        >
-                                                            후원자분들께서 🤔<u
-                                                                ><strong
-                                                                    >궁금하셨던
-                                                                    것들을
-                                                                    질문으로
-                                                                    정리</strong
-                                                                ></u
-                                                            >해<br /><strong
-                                                                >✍🏻<u
-                                                                    >SNS에 저희
-                                                                    자료집
-                                                                    링크와
-                                                                    함께</u
-                                                                ></strong
-                                                            >&nbsp;올려주시면,<br />그
-                                                            질문 중&nbsp;<u
-                                                                ><strong
-                                                                    >📑10가지를
-                                                                    선정해
-                                                                    Q&amp;A북</strong
-                                                                ></u
-                                                            >을 만드는 이벤트를
-                                                            준비했습니다!<br />정리한
-                                                            파일은 PDF로
-                                                            제작하여
-                                                            <u
-                                                                >💌<strong
-                                                                    >이벤트에
-                                                                    참여해주신
-                                                                    모든
-                                                                    분께</strong
-                                                                ></u
-                                                            >&nbsp;전달드릴게요.<br /><u
-                                                                ><strong
-                                                                    >✅ SNS는
-                                                                    인스타그램,
-                                                                    트위터,
-                                                                    블로그</strong
-                                                                ></u
-                                                            >
-                                                            어느 것이든
-                                                            좋습니다.
-                                                        </p>
+                                                            <p
+                                                                    class="cam-pro-bo-ri-in-content-title"
+                                                            ></p>
+                                                            <div
+                                                                    class="cam-pro-bo-ri-in-content-sum presentation-size"
+                                                            ></div>
+                                                        </div>
                                                     </div>
+                                                    <input type="hidden" th:value="${campaign.campaignStatus}" id="campaign-status">
+                                                    <button class="summer-btn " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'">작성하기</button>
+                                                    <button class="summer-btn-edit hidden"  >수정하기</button>
+                                                    <button class="summer-btn-edit-save hidden">수정하기</button>
                                                 </div>
                                                 <!-- 댓글 -->
                                                 <div class="main-reply hidden">
@@ -799,41 +675,51 @@
                                                     <div
                                                         class="main-reply-top"
                                                     ></div>
-                                                    <div
-                                                        class="main-board-total"
-                                                    >
-                                                        게시글
-                                                        <strong>1</strong>
+                                                    <div class="main-board-top-table">
+                                                        <div
+                                                                class="main-board-total"
+                                                        >
+                                                            게시글
+                                                            <strong class="board-count-target">0</strong>
+                                                        </div>
+                                                        <button class="main-board-add-btn">등록하기</button>
+
                                                     </div>
                                                     <!-- 게시글 눌렀을때 뒤로가기 버튼 -->
                                                     <div
                                                         class="main-board-back-div hidden"
                                                     >
-                                                        <button
-                                                            class="main-board-back"
-                                                        >
+                                                        <div class="main-board-add-btn-box">
+                                                            <button
+                                                                    class="main-board-back"
+                                                            >
                                                             <span>
                                                                 <svg
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    focusable="false"
-                                                                    role="presentation"
-                                                                    class="withIcon_icon__2nnc8 Button_icon__11zrq"
-                                                                    aria-hidden="true"
+                                                                        viewBox="0 0 24 24"
+                                                                        fill="none"
+                                                                        focusable="false"
+                                                                        role="presentation"
+                                                                        class="withIcon_icon__2nnc8 Button_icon__11zrq"
+                                                                        aria-hidden="true"
                                                                 >
                                                                     <path
-                                                                        fill-rule="evenodd"
-                                                                        clip-rule="evenodd"
-                                                                        d="M16.076 2.576l.848.848L8.35 12l8.575 8.576-.848.848L6.65 12l9.425-9.424z"
+                                                                            fill-rule="evenodd"
+                                                                            clip-rule="evenodd"
+                                                                            d="M16.076 2.576l.848.848L8.35 12l8.575 8.576-.848.848L6.65 12l9.425-9.424z"
                                                                     ></path>
                                                                 </svg>
                                                                 <span
-                                                                    class="main-board-back-in"
-                                                                    >목록으로
+                                                                        class="main-board-back-in"
+                                                                >목록으로
                                                                     돌아가기</span
                                                                 >
                                                             </span>
-                                                        </button>
+                                                            </button>
+                                                            <button class="main-board-add-btn-save hidden">작성하기</button>
+                                                            <button class="main-board-detail-delete-btn hidden">삭제</button>
+                                                            <button class="main-board-add-btn-edit hidden">수정하기</button>
+                                                            <button class="main-board-add-btn-edit-save hidden">수정 적용하기</button>
+                                                        </div>
                                                         <div
                                                             class="main-board-pe-box"
                                                         >
@@ -844,17 +730,19 @@
                                                                 <p
                                                                     class="main-board-pe-in-title"
                                                                 >
-                                                                    🎁워키
-                                                                    티타늄
-                                                                    텀블러
-                                                                    알림신청하고
-                                                                    선물 받자!!
+                                                                <p
+                                                                        class="main-board-pe-in-title-add"
+                                                                >
+
                                                                 </p>
                                                                 <!-- 갱신? 날짜 -->
                                                                 <p
                                                                     class="main-board-pe-in-date"
                                                                 >
-                                                                    2025.01.31
+                                                                <p
+                                                                    class="main-board-pe-in-date-add"
+                                                                >
+
                                                                 </p>
                                                             </div>
                                                         </div>
@@ -864,208 +752,15 @@
                                                     <div
                                                         class="main-board-total-pe"
                                                     >
-                                                        <div
-                                                            class="main-board-pe"
-                                                        >
-                                                            <div
-                                                                class="main-board-pe-in"
-                                                            >
-                                                                <!-- 제목 -->
-                                                                <p
-                                                                    class="main-board-pe-in-title"
-                                                                >
-                                                                    🎁워키
-                                                                    티타늄
-                                                                    텀블러
-                                                                    알림신청하고
-                                                                    선물 받자!!
-                                                                </p>
-                                                                <!-- 갱신? 날짜 -->
-                                                                <p
-                                                                    class="main-board-pe-in-date"
-                                                                >
-                                                                    2025.01.31
-                                                                </p>
-                                                            </div>
-                                                        </div>
 
-                                                        <div
-                                                            class="main-board-pe"
-                                                        >
-                                                            <div
-                                                                class="main-board-pe-in"
-                                                            >
-                                                                <!-- 제목 -->
-                                                                <p
-                                                                    class="main-board-pe-in-title"
-                                                                >
-                                                                    🎁워키
-                                                                    티타늄
-                                                                    텀블러
-                                                                    알림신청하고
-                                                                    선물 받자!!
-                                                                </p>
-                                                                <!-- 갱신? 날짜 -->
-                                                                <p
-                                                                    class="main-board-pe-in-date"
-                                                                >
-                                                                    2025.01.31
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            class="main-board-pe"
-                                                        >
-                                                            <div
-                                                                class="main-board-pe-in"
-                                                            >
-                                                                <!-- 제목 -->
-                                                                <p
-                                                                    class="main-board-pe-in-title"
-                                                                >
-                                                                    🎁워키
-                                                                    티타늄
-                                                                    텀블러
-                                                                    알림신청하고
-                                                                    선물 받자!!
-                                                                </p>
-                                                                <!-- 갱신? 날짜 -->
-                                                                <p
-                                                                    class="main-board-pe-in-date"
-                                                                >
-                                                                    2025.01.31
-                                                                </p>
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                     <!-- 게시글 내용 보이는곳 -->
                                                     <div
                                                         class="content-board-box hidden"
                                                     >
                                                         <div
-                                                            class="content-box-in"
+                                                            class="content-box-in-target"
                                                         >
-                                                            <!-- 내용 들어가는 부분 -->
-
-                                                            <p>
-                                                                <img
-                                                                    style="
-                                                                        display: block;
-                                                                        margin-left: auto;
-                                                                        margin-right: auto;
-                                                                    "
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC9lMjBhZDU3OS05YTgxLTQwNDUtYWEzNy01ZDljNTEzZTNmMTQuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                /><img
-                                                                    style="
-                                                                        display: block;
-                                                                        margin-left: auto;
-                                                                        margin-right: auto;
-                                                                    "
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC82NWU5N2U5MS1kN2IxLTQwZDQtOTg3Mi03ZWNmZWExMGQ1ZGUuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                /><img
-                                                                    style="
-                                                                        display: block;
-                                                                        margin-left: auto;
-                                                                        margin-right: auto;
-                                                                    "
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC8yNTE1NjUxYS02ZjYzLTQ4NDgtYTJjNy0zOWNlZWZiYzIyYjcuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                /><img
-                                                                    style="
-                                                                        display: block;
-                                                                        margin-left: auto;
-                                                                        margin-right: auto;
-                                                                    "
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoicG9zdC9iYmU1YjJjMi01YmYwLTRhZTEtYjQ2YS1iZGRjYzk1NTEyZDAuanBnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjoxMjQwLCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                />
-                                                            </p>
-                                                            <p
-                                                                style="
-                                                                    text-align: left;
-                                                                "
-                                                            >
-                                                                <br />안녕하세요,
-                                                                세계관입니다💫<br />후원자님들의
-                                                                성원 덕분에,
-                                                                이번 양장
-                                                                프로젝트가
-                                                                성황리에
-                                                                시작되었습니다!<br /><br />이전
-                                                                프로젝트부터
-                                                                후원자님들께서
-                                                                &lt;그것이 알고
-                                                                싶었다&gt;
-                                                                이벤트가
-                                                                좋았는데,
-                                                                <br />다시 열면
-                                                                좋겠다는 말씀을
-                                                                많이 해주셨어요.
-                                                                <br />그래서 본
-                                                                펀딩에서 ‘시즌
-                                                                2’로 다시
-                                                                이벤트를 열게
-                                                                되었답니다!
-                                                                <br />이번에는
-                                                                범죄수사물 뿐만
-                                                                아니라 응급재난
-                                                                쪽에서도
-                                                                <br />후원자님들이
-                                                                궁금해하시는
-                                                                질문을 받아 대신
-                                                                물어봐드리려
-                                                                합니다.
-                                                            </p>
-                                                            <p
-                                                                style="
-                                                                    text-align: left;
-                                                                "
-                                                            >
-                                                                후원자분들께서
-                                                                🤔<u
-                                                                    ><strong
-                                                                        >궁금하셨던
-                                                                        것들을
-                                                                        질문으로
-                                                                        정리</strong
-                                                                    ></u
-                                                                >해<br /><strong
-                                                                    >✍🏻<u
-                                                                        >SNS에
-                                                                        저희
-                                                                        자료집
-                                                                        링크와
-                                                                        함께</u
-                                                                    ></strong
-                                                                >&nbsp;올려주시면,<br />그
-                                                                질문 중&nbsp;<u
-                                                                    ><strong
-                                                                        >📑10가지를
-                                                                        선정해
-                                                                        Q&amp;A북</strong
-                                                                    ></u
-                                                                >을 만드는
-                                                                이벤트를
-                                                                준비했습니다!<br />정리한
-                                                                파일은 PDF로
-                                                                제작하여
-                                                                <u
-                                                                    >💌<strong
-                                                                        >이벤트에
-                                                                        참여해주신
-                                                                        모든
-                                                                        분께</strong
-                                                                    ></u
-                                                                >&nbsp;전달드릴게요.<br /><u
-                                                                    ><strong
-                                                                        >✅
-                                                                        SNS는
-                                                                        인스타그램,
-                                                                        트위터,
-                                                                        블로그</strong
-                                                                    ></u
-                                                                >
-                                                                어느 것이든
-                                                                좋습니다.
-                                                            </p>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -1101,9 +796,7 @@
                                                                     >
                                                                 </div>
                                                                 <div
-                                                                    style="
-                                                                        height: 6px;
-                                                                    "
+                                                                    style="height: 6px;"
                                                                 ></div>
                                                                 <div
                                                                     class="reward-choice-top-title-select"
@@ -1145,9 +838,10 @@
                                                                             선택해주세요
                                                                         </option>
                                                                         <option
-                                                                            value="청바지"
-                                                                        >
-                                                                            청바지
+                                                                        th:each="campaignGoalDTO : ${campaignGoalDTOS}"
+                                                                        th:text="${campaignGoalDTO.material.name}"
+                                                                        th:value="${campaignGoalDTO.material.name}">
+                                                                            >
                                                                         </option>
                                                                     </select>
                                                                 </div>
@@ -1260,104 +954,6 @@
                                                                 </button>
                                                             </div>
                                                             <!-- 2번째 -->
-                                                            <div
-                                                                class="reward-choice-my-pe"
-                                                            >
-                                                                <div
-                                                                    class="reward-choice-my-pe-box"
-                                                                >
-                                                                    <div
-                                                                        class="reward-choice-my-pe-box-top"
-                                                                    >
-                                                                        <ul>
-                                                                            <li>
-                                                                                <div
-                                                                                    class="reward-choice-my-pe-box-top-in"
-                                                                                >
-                                                                                    [증수무원록언해+현대]
-                                                                                    검복+조례+잡록
-                                                                                    세트
-                                                                                    (pdf)
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div
-                                                                        class="reward-choice-my-pe-box-bo"
-                                                                    >
-                                                                        <div
-                                                                            class="reward-choice-my-pe-box-bo-le"
-                                                                        >
-                                                                            <button
-                                                                                class="reward-choice-btn"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-choice-btn-le"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            d="M6 24.1C6 22.9402 6.9402 22 8.1 22H39.9C41.0598 22 42 22.9402 42 24.1C42 25.2598 41.0598 26.2 39.9 26.2H8.1C6.9402 26.2 6 25.2598 6 24.1Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                            </button>
-                                                                            <input
-                                                                                type="text"
-                                                                                class="reward-choice-count"
-                                                                                value="1"
-                                                                                readonly
-                                                                            />
-                                                                            <button
-                                                                                class="reward-choice-btn"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-choice-btn-le"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M43.7104 21.8549H25.99V4.09524C25.99 2.89796 24.9945 2 23.9005 2C22.8054 2 21.81 2.89796 21.81 4.09524V21.9546H4.0905C2.89593 21.8549 2 22.8526 2 23.9501C2 25.0476 2.89593 26.0454 4.0905 26.0454H21.9095V43.9048C21.9095 45.0023 22.8054 46 23.999 46C25.095 46 26.0905 45.102 26.0905 43.9048V26.0454H43.9085C45.0045 26.0454 46 25.1474 46 23.9501C45.8009 22.8526 44.904 21.8549 43.7104 21.8549C43.7104 21.8549 43.81 21.8549 43.7104 21.8549Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div
-                                                                            class="reward-choice-pri"
-                                                                        >
-                                                                            청바지
-                                                                            3개
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <button
-                                                                    class="reward-choice-close"
-                                                                >
-                                                                    <div
-                                                                        class="reward-choice-close-in"
-                                                                    >
-                                                                        <svg
-                                                                            width="10"
-                                                                            height="10"
-                                                                            viewBox="0 0 10 10"
-                                                                            fill="none"
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                fill="#6D6D6D"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
                                                         </div>
                                                         <!-- 밑에 버튼 -->
                                                         <div

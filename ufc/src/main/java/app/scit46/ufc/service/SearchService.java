@@ -156,14 +156,15 @@ public class SearchService {
 
     @Transactional(readOnly = true)
     public List<CampaignWithGoalsDTO> getOngoingCampaignsWithGoals() {
-        // 평탄한 결과(캠페인×목표 행)를 조회
-        List<IntroPageCampaignDTO> rows = campaignRepository.findCampaignGoalRows();
+        // 평탄한 결과(캠페인×목표 행) 전체를 조회 (LIMIT 제거)
+        List<IntroPageCampaignDTO> rows = campaignRepository.findCampaignGoalRows(); // 쿼리에서 LIMIT을 제거
 
-        // 캠페인 ID 기준으로 그룹화
+        // 캠페인 ID 기준 그룹화
         Map<Long, List<IntroPageCampaignDTO>> grouped =
                 rows.stream().collect(Collectors.groupingBy(IntroPageCampaignDTO::getCampaignId));
 
-        List<CampaignWithGoalsDTO> result = new ArrayList<>();
+        // 그룹별로 최종 DTO로 변환
+        List<CampaignWithGoalsDTO> allCampaigns = new ArrayList<>();
         for (Map.Entry<Long, List<IntroPageCampaignDTO>> entry : grouped.entrySet()) {
             List<IntroPageCampaignDTO> dtoList = entry.getValue();
             IntroPageCampaignDTO first = dtoList.get(0);
@@ -189,10 +190,24 @@ public class SearchService {
             campaignDto.setGoals(goals);
             campaignDto.setCampaignDonors(first.getCampaignDonors() == null ? 0 : first.getCampaignDonors());
 
-            result.add(campaignDto);
+            allCampaigns.add(campaignDto);
         }
+
+        // 최종 결과 캠페인이 3개만 필요하므로, 예를 들어 donationPercentage 기준 오름차순으로 정렬 후 상위 3개 선택
+        List<CampaignWithGoalsDTO> result = allCampaigns.stream()
+                .sorted((a, b) -> {
+                    // 각 캠페인의 전체 donationPercentage 기준으로 비교(예시: 목표들 중 최소값, 또는 평균값 등 원하는 기준 사용)
+                    // 여기서는 각 캠페인의 첫 번째 목표의 donationPercentage를 비교합니다.
+                    double ap = a.getGoals().isEmpty() ? 0 : a.getGoals().get(0).getDonationPercentage();
+                    double bp = b.getGoals().isEmpty() ? 0 : b.getGoals().get(0).getDonationPercentage();
+                    return Double.compare(ap, bp);
+                })
+                .limit(3)
+                .collect(Collectors.toList());
+
         return result;
     }
+
 
 
 

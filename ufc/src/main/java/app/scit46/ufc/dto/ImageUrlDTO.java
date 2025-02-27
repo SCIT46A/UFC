@@ -3,14 +3,11 @@ package app.scit46.ufc.dto;
 import java.time.LocalDateTime;
 
 import app.scit46.ufc.entity.ImageUrlEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
