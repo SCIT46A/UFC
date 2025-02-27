@@ -22,11 +22,13 @@ public class RewardDTO {
     private List<RewardMaterialDTO> rewardMaterials; // ✅ RewardMaterialDTO 포함
 
     public static RewardDTO toDTO(RewardEntity entity) {
+        if (entity == null) return null;
         return RewardDTO.builder()
                 .rewardId(entity.getRewardId())
                 .rewardName(entity.getRewardName())
                 .amount(entity.getAmount())
-                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
+                .campaign(entity.getCampaign() != null ? 
+                    CampaignDTO.builder().campaignId(entity.getCampaign().getCampaignId()).build() : null)
                 .rewardItems(entity.getRewardItems().stream()
                         .map(RewardItemDTO::toDTO)
                         .collect(Collectors.toList())) // ✅ ItemDTO 변환

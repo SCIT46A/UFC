@@ -27,7 +27,7 @@ public class ItemDTO {
                 .itemId(entity.getItemId())
                 .name(entity.getName())
                 .description(entity.getDescription())
-                .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
+                .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null)
                 .rewardItems(entity.getRewardItems().stream()
                         .map(RewardItemDTO::toDTO)
                         .collect(Collectors.toList())) // ✅ RewardItemDTO 변환

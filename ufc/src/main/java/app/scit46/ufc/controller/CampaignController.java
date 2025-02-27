@@ -62,7 +62,7 @@ public class CampaignController {
                         : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
-        List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
+        List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.getCampaignGoalsByCampaignId(id);
         List<MaterialDonationDTO> materialDonationDtos = materialDonationService.findDonationByCampaign(id);
 
         int totalDonors = materialDonationDtos.size();

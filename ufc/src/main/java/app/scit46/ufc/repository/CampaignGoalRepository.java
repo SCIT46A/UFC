@@ -2,6 +2,7 @@ package app.scit46.ufc.repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,5 +17,5 @@ public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity
     @Query("SELECT g FROM CampaignGoalEntity g JOIN FETCH g.campaign")
     List<CampaignGoalEntity> findAllWithCampaign();
 
-    List<CampaignGoalDTO> findByCampaign_CampaignId(Long campaignId);
+    List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
 }
