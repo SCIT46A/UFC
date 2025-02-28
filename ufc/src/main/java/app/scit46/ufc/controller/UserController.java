@@ -55,7 +55,10 @@ public class UserController {
                 try {
                     // 사용자 정보를 데이터베이스에서 조회
                     UserDTO user = userService.readUserById(userId);
+                    List<String> imageUrls = new ArrayList<>();
+                    imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
                     model.addAttribute("user", user);
+                    model.addAttribute("imageUrls", imageUrls);
                 } catch (DBNotFoundException e) {
                     // 사용자 정보를 찾을 수 없는 경우 처리
                     model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
@@ -82,22 +85,31 @@ public class UserController {
     public String review(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false);
         Long userId = null;
+        
         if (session != null) {
             userId = (Long) session.getAttribute("loginUserId");
-            List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
-            // 캠페인 정보를 가져오기 위한 코드 추가
-            List<CampaignDTO> campaigns = new ArrayList<>();
-            List<String> imageUrls = new ArrayList<>();
-            for (CampaignReviewDTO review : list) {
-                CampaignDTO campaign = campaignService.getCampaignById(review.getCampaignedBy().getCampaignId());
-                campaigns.add(campaign);
-                imageUrls.add(imageService.getImageUrl(review.getCampaignedBy().getPhoto().getImageId()));
+            if (userId != null) {
+                try {
+                    UserDTO user = userService.readUserById(userId);
+                    List<CampaignReviewDTO> list = campaignReviewService.getCampaignReviewsByUserId(userId);
+                    List<CampaignDTO> campaigns = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    for (CampaignReviewDTO review : list) {
+                        CampaignDTO campaign = campaignService.getCampaignById(review.getCampaignedBy().getCampaignId());
+                        campaigns.add(campaign);
+                        imageUrls.add(imageService.getImageUrl(review.getCampaignedBy().getPhoto().getImageId()));
+                    }
+                    model.addAttribute("imageUrls", imageUrls);
+                    model.addAttribute("campaignReviews", list);
+                    model.addAttribute("campaigns", campaigns); // 캠페인 정보 추가
+                    model.addAttribute("user", user);
+                    model.addAttribute("reviewCount", list.size());
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
             }
-            model.addAttribute("imageUrls", imageUrls);
-            model.addAttribute("campaignReviews", list);
-            model.addAttribute("campaigns", campaigns); // 캠페인 정보 추가
-            model.addAttribute("userId", userId);
-            model.addAttribute("reviewCount", list.size());
+
         }
         return "user/mypage-review";
     }
@@ -116,7 +128,10 @@ public class UserController {
                 try {
                     // 사용자 정보를 데이터베이스에서 조회
                     UserDTO user = userService.readUserById(userId);
+                    List<String> imageUrls = new ArrayList<>();
+                    imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
                     model.addAttribute("user", user);
+                    model.addAttribute("imageUrls", imageUrls);
                 } catch (DBNotFoundException e) {
                     // 사용자 정보를 찾을 수 없는 경우 처리
                     model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");

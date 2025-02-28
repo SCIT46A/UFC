@@ -4,10 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UP-DA :: 작성한 후기</title>
-    <link
+    <!-- <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    />
+    /> -->
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
     <link
@@ -30,179 +30,16 @@
     <script th:src="@{/js/fix/header.js}" defer></script>
   </head>
   <body>
+
     <div th:replace="~{fix/header :: header}"></div>
     <main>
       <section id="projects" style="background-color: #ffffff">
         <ul class="ul-add hidden">
           <li>
-            <button type="button" class="ul-add-li edit">수정</button>
+            <button type="button" class="ul-add-li editbtn">수정</button>
             <button type="button" class="ul-add-li deletebtn">삭제</button>
           </li>
         </ul>
-        <!-- 수정 모달 -->
-        <div class="edit hidden">
-          <div class="edit-in">
-            <div class="edit-in-box">
-              <div class="edit-in-box-warp">
-                <div class="edit-in-box-warp-in">
-                  <!-- 상단 -->
-                  <div class="edit-in-box-warp-in-title">
-                    작성한 후기 수정
-                    <button class="edit-close">
-                      <span class="edit-close-span">
-                        <div class="edit-close-span-div">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
-                              fill="#3D3D3D"
-                            ></path>
-                          </svg>
-                        </div>
-                      </span>
-                    </button>
-                  </div>
-                  <!-- 내용 -->
-                  <div class="edit-in-box-warp-in-content">
-                    <div class="edit-in-box-warp-in-content-box">
-                      <!-- 내용 -->
-                      <div class="edit-in-box-warp-in-content-box-in">
-                        <!-- 큰글 -->
-                        <div class="edit-in-box-warp-in-content-box-in-title">
-                          후기를 정말 삭제하시겠습니까?
-                        </div>
-                        <!-- 선택지 -->
-                        <div class="edit-in-box-warp-in-content-box-in-content">
-                          <!-- 각각의 이유 -->
-                          <div
-                            class="edit-in-box-warp-in-content-box-in-content-pe junk"
-                          >
-                            프로젝트와 관련 없는 홍보/스팸 콘텐츠
-                          </div>
-                          <div
-                            class="edit-in-box-warp-in-content-box-in-content-pe add copy"
-                          >
-                            도용/사칭을 포함한 타인의 권리를 침해함
-                          </div>
-                          <div
-                            class="edit-in-box-warp-in-content-box-in-content-pe bad-word"
-                          >
-                            특정인에 대한 욕설/인신공격/비방이 포함됨
-                          </div>
-                          <div
-                            class="edit-in-box-warp-in-content-box-in-content-pe personal"
-                          >
-                            본인 또는 타인의 개인정보가 노출됨
-                          </div>
-                          <div
-                            class="edit-in-box-warp-in-content-box-in-content-pe sexual"
-                          >
-                            성적 수치심이나 불쾌감을 유발하는 내용이 포함됨
-                          </div>
-                        </div>
-                        <!-- 설명 -->
-                        <div class="edit-in-box-warp-in-content-add">
-                          <div class="edit-in-box-warp-in-content-add-more">
-                            텀블벅 운영팀에서는
-                            <a
-                              th:href="@{/terms/service}"
-                              class="editDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
-                              >이용약관</a
-                            >
-                            및
-                            <a
-                              th:href="@{/terms/service}"
-                              class="editDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
-                              >커뮤니티 운영정책</a
-                            >에 따라 신고를 검토하고 조치하고 있습니다. 텀블벅
-                            규정과 맞지 않는 게시물을 발견하시면 이곳에서 신고해
-                            주세요.<br /><br />허위로 특정 이용자 또는 글을
-                            반복적으로 신고할 경우 신고자 본인 계정의 이용이
-                            정지될 수 있으니 유의해 주세요.
-                          </div>
-                        </div>
-                      </div>
-                      <!-- 버튼쪽 -->
-                      <div class="edit-btn">
-                        <button class="edit-btn-in">신고 제출하기</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- 삭제 모달 -->
-        <div class="delete hidden">
-          <div class="delete-in">
-            <div class="delete-in-box">
-              <div class="delete-in-box-warp">
-                <div class="delete-in-box-warp-in">
-                  <!-- 상단 -->
-                  <div class="delete-in-box-warp-in-title">
-                    <button class="delete-close">
-                      <span class="delete-close-span">
-                        <div class="delete-close-span-div">
-                          <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
-                              fill="#3D3D3D"
-                            ></path>
-                          </svg>
-                        </div>
-                      </span>
-                    </button>
-                  </div>
-                  <!-- 내용 -->
-                  <div class="delete-in-box-warp-in-content">
-                    <div class="delete-in-box-warp-in-content-box">
-                      <!-- 내용 -->
-                      <div class="delete-in-box-warp-in-content-box-in">
-                        <!-- 큰글 -->
-                        <div class="delete-in-box-warp-in-content-box-in-title">
-                          후기를 정말 삭제하시겠습니까?
-                        </div>
-                        <div class="delete-in-box-warp-in-content-add">
-                          <div class="delete-in-box-warp-in-content-add-more">
-                            한 번 삭제하면 복구가 불가능하니 신중하게
-                            삭제해주세요.😟
-                          </div>
-                        </div>
-                      </div>
-                      <!-- 버튼쪽 -->
-                      <div class="delete-btn">
-                        <button
-                          class="delete-btn-in btn-delete"
-                        >
-                          삭제하기
-                        </button>
-                        <button class="cancel-btn-in btn-delete-cancel">
-                          취 소
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
         <!-- 주목할 만한 프로젝트 -->
         <div class="container mx-auto px-4 target-project">
@@ -222,7 +59,7 @@
                       <div class="main-in-box-pro-le-in-box">
                         <div class="main-in-box-pro-le-in-box-title">
                           <div class="main-in-box-pro-le-in-box-title-in">
-                            <span>Up-Da</span>
+                            <span th:text="${user.userName}">Up-Da</span>
                           </div>
                         </div>
                         <div class="main-in-box-pro-le-in-box-content">
@@ -411,8 +248,9 @@
                       </div>
                     </div>
                   </div>
-                </div>
 
+                  
+                  </div>
                 <!-- 페이지네이션 -->
                 <div class="content-box-bo">
                   <div class="content-box-bo-box">
@@ -463,6 +301,143 @@
         </div>
       </section>
     </main>
+    <!-- 수정 모달 -->
+                    <!-- <div class="edit hidden"> -->
+                    <div class="edit hidden" id="edit-modal-[[${status.index}]]">
+                      <div class="edit-in">
+                        <div class="edit-in-box">
+                          <div class="edit-in-box-warp">
+                            <div class="edit-in-box-warp-in">
+                              <!-- 상단 -->
+                              <div class="edit-in-box-warp-in-title">
+                                <button class="edit-close">
+                                  <span class="edit-close-span">
+                                    <div class="edit-close-span-div">
+                                      <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          fill-rule="evenodd"
+                                          clip-rule="evenodd"
+                                          d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                                          fill="#3D3D3D"
+                                        ></path>
+                                      </svg>
+                                    </div>
+                                  </span>
+                                </button>
+                              </div>
+                              <!-- 내용 -->
+                              <div class="edit-in-box-warp-in-content">
+                                <div class="edit-in-box-warp-in-content-box">
+                                  <!-- 내용 -->
+                                  <div class="edit-in-box-warp-in-content-box-in">
+                                    <!-- 큰글 -->
+                                    <div class="edit-in-box-warp-in-content-box-in-title">
+                                      작성한 후기 수정
+                                    </div>
+                                    <div class="edit-in-box-warp-in-content-add">
+                                      <input type="text" class="edit-in-box-warp-in-content-add-more" th:value="${campaignReview.content}">
+                                      </input>
+                                    </div>
+                                  </div>
+                                  <!-- 버튼쪽 -->
+                                  <div class="edit-btn">
+                                    <!-- <button
+                                      class="edit-btn-in btn-edit"
+                                    >
+                                      수정하기
+                                    </button> -->
+                                    <button class="edit-btn-in" th:attr="data-index=${status.index}">
+                                      수정하기
+                                    </button>
+                                    <button class="edit-cancel-btn-in btn-edit-cancel">
+                                      취 소
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  <!-- 삭제 모달 -->
+                    <!-- <div class="delete hidden"> -->
+                    <div class="delete hidden" id="delete-modal-[[${status.index}]]">
+                      <div class="delete-in">
+                        <div class="delete-in-box">
+                          <div class="delete-in-box-warp">
+                            <div class="delete-in-box-warp-in">
+                              <!-- 상단 -->
+                              <div class="delete-in-box-warp-in-title">
+                                <button class="delete-close">
+                                  <span class="delete-close-span">
+                                    <div class="delete-close-span-div">
+                                      <svg
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <path
+                                          fill-rule="evenodd"
+                                          clip-rule="evenodd"
+                                          d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                                          fill="#3D3D3D"
+                                        ></path>
+                                      </svg>
+                                    </div>
+                                  </span>
+                                </button>
+                              </div>
+                              <!-- 내용 -->
+                              <div class="delete-in-box-warp-in-content">
+                                <div class="delete-in-box-warp-in-content-box">
+                                  <!-- 내용 -->
+                                  <div class="delete-in-box-warp-in-content-box-in">
+                                    <!-- 큰글 -->
+                                    <div class="delete-in-box-warp-in-content-box-in-title">
+                                      후기를 정말 삭제하시겠습니까?
+                                    </div>
+                                    <div class="delete-in-box-warp-in-content-add">
+                                      <div class="delete-in-box-warp-in-content-add-more">
+                                        한 번 삭제하면 복구가 불가능하니 신중하게
+                                        삭제해주세요.😟
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <!-- 버튼쪽 -->
+                                  <div class="delete-btn">
+                                    <!-- <button
+                                      class="delete-btn-in btn-delete"
+                                    >
+                                      삭제하기
+                                    </button> -->
+                                    <button class="delete-btn-in" th:attr="data-index=${status.index}">
+                                      삭제하기
+                                    </button>
+                                    <button class="cancel-btn-in btn-delete-cancel">
+                                      취 소
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
     <div th:replace="~{fix/footer :: footer}"></div>
+        <div class="black-ctn hidden">
+
+  </div>
   </body>
+
 </html>
