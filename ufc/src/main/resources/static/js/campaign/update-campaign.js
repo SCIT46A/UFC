@@ -1,6 +1,6 @@
 $(document).ready(function () {
     // 페이지 로드 시 초기화 함수 호출
-    //initializePage();
+    document.querySelector('.cam-la-in-box-bottom').setAttribute('data-target', 'info');
 
     let pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
 
@@ -1147,9 +1147,9 @@ previewImage = document.getElementById('previewImage');
 deleteButton = document.querySelector('.cam-img-re-box-btn-in');
 previewContainer = document.querySelector('.cam-img-re-box-sh');
 
-// 처음에는 미리보기 숨기기
-previewImage.style.display = 'none';
-document.querySelector('.cam-img-re').style.display = 'none';
+// 처음에 미리보기 보이기
+previewImage.style.display = 'flex';
+document.querySelector('.cam-img-re').style.display = 'flex';
 
 // 이미지 업로드 이벤트
 imageInput.addEventListener('change', async function(e) {

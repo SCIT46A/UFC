@@ -25,17 +25,10 @@
         <script src="https://unpkg.com/lucide@latest"></script>
 
         <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
-        <link rel="stylesheet" th:href="@{/css/upda.css}" href="../../static/css/upda.css" />
-        <link rel="stylesheet" th:href="@{/css/campaign/create-campaign.css}"
-            href="../../static/css/campaign/create-campaign.css" />
-        <link rel="stylesheet" th:href="@{/css/fix/header.css}" href="../../static/css/fix/header.css" />
-        <link rel="stylesheet" th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
-        <link rel="stylesheet" th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
-
-        <script src="../../static/js/campaign/update-campaign.js" defer></script>
-        <script src="../../static/js/cloudflare-upload.js"></script>
-        <script src="../../static/js/fix/header.js" defer></script>
-        <script src="../../static/js/fix/footer.js" defer></script>
+        <link rel="stylesheet" th:href="@{/css/upda.css}" />
+        <link rel="stylesheet" th:href="@{/css/campaign/create-campaign.css}" />
+        <link rel="stylesheet" th:href="@{/css/fix/header.css}" />
+        <link rel="stylesheet" th:href="@{/css/fix/footer.css}" />
 
         <script th:src="@{/js/campaign/update-campaign.js}" defer></script>
         <script th:src="@{/js/cloudflare-upload.js}" defer></script>
@@ -111,7 +104,7 @@
                                                             <ul class="cam-in-box-item-ul">
                                                                 <!-- 상위 5개 태그 표시 -->
                                                                 <li th:each="tag : ${campaignTags}">
-                                                                <button class="upda-tag-big"
+                                                                <button class="upda-tag-big tag-active"
                                                                     th:text="${tag}"></button>
                                                                 </li>
                                                                 <!-- 태그 추가 버튼 -->
@@ -169,7 +162,7 @@
                                                         요약
                                                     </p>
                                                     <textarea name="shortDescription" 
-                                                        th:value="${campaign.description}"
+                                                        th:text="${campaign.description}"
                                                         placeholder="캠페인을 간단하게 설명해주세요!"
                                                         class="cam-la-in-box-bo-all-de-div-box-textarea"></textarea>
                                                     </div>
@@ -228,7 +221,6 @@
                                                                 <span>대표
                                                                     이미지</span>
                                                                 <img id="previewImage"
-                                                                    src=""
                                                                     alt="이미지 미리보기"
                                                                     th:src="${campaign.photo.imageId}"
                                                                     style="display: none; max-width: 100%; height: auto;" />
@@ -653,8 +645,8 @@
                                                                     </div>
                                         </button>
                                         <div class="cam-la-in-box-bottom-in-end">
-                                            <button class="cam-la-in-box-bottom-in-end-btn" disabled>
-                                                <span class="cam-la-in-box-bottom-in-end-btn-span"></span>
+                                            <button class="cam-la-in-box-bottom-in-end-btn">
+                                                <span class="cam-la-in-box-bottom-in-end-btn-span">다음</span>
                                                                 </button>
                                                             </div>
                                         </div>
@@ -670,9 +662,7 @@
     <!-- 로딩 오버레이 -->
     <div class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
-        <div class="loading-text">캠페인을 등록하고 있습니다...</div>
+        <div class="loading-text">캠페인을 수정하고 있습니다...</div>
     </div>
     </body>
-    <script src="../../static/js/calendar.js" defer></script>
-    <script th:src="@{/js/calendar.js}" defer></script>
 </html>

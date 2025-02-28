@@ -115,15 +115,20 @@ public class CampaignController {
     @GetMapping("/update/{id}")
     public String update(@PathVariable Long id, Model model, HttpServletRequest request) {
         String username = request.getUserPrincipal().getName();
-        model.addAttribute("username", username);
+        
         CampaignDTO campaign = campaignService.readCampaign(id);
         //ImageID 대신 ImageUrl 전달
         campaign.getPhoto().setImageId(imageService.getImageUrl(campaign.getPhoto().getImageId()));
-        model.addAttribute("campaign", campaign);
+        
         List<String> campaignTags = campaignService.getCampaignTags(id);
-        model.addAttribute("campaignTags", campaignTags);
+        
         List<RewardListDTO> rewards = campaignService.convertCampaignFundingAndRewards(id);
+
+        model.addAttribute("username", username);
+        model.addAttribute("campaign", campaign);
+        model.addAttribute("campaignTags", campaignTags);
         model.addAttribute("rewards", rewards);
+
         String rewardTitle = campaign.getTitle();
         return "campaign/update-campaign";
     }
