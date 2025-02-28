@@ -1,6 +1,9 @@
 package app.scit46.ufc.entity.reward;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.ItemEntity;
@@ -37,23 +40,36 @@ public class RewardEntity {
     @Column(name = "reward_id")
     private Long rewardId;
 
+    @Column(name = "reward_name", nullable = false, length = 100)
+    private String rewardName;
+
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
+
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "campaign_id", nullable = false)
     private CampaignEntity campaign;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "item_id", nullable = false)
-    private ItemEntity item;
+    // OneToMany: RewardItems.reward 참조
+    @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
+    private List<RewardItemEntity> rewardItems;
 
     // OneToMany: RewardMaterials.reward 참조
     @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
     private List<RewardMaterialEntity> rewardMaterials;
 
-    public static RewardEntity toEntity(RewardDTO dto, CampaignEntity campaign, ItemEntity item) {
+    public static RewardEntity toEntity(RewardDTO dto) {
         return RewardEntity.builder()
                 .rewardId(dto.getRewardId())
-                .campaign(campaign)
-                .item(item)
+                .amount(dto.getAmount())
+                .campaign(CampaignEntity.toEntity(dto.getCampaign()))
+                .rewardItems(dto.getRewardItems().stream()
+                        .map(RewardItemEntity::toEntity)
+                        .collect(Collectors.toList()))
+                .rewardMaterials(dto.getRewardMaterials().stream()
+                        .map(RewardMaterialEntity::toEntity)
+                        .collect(Collectors.toList()))
                 .build();
     }
 }

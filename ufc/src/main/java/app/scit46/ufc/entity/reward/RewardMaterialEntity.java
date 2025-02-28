@@ -46,12 +46,13 @@ public class RewardMaterialEntity {
     @Column(name = "quantity_required", nullable = false)
     private Integer quantityRequired;
 
-    public static RewardMaterialEntity toEntity(RewardMaterialDTO dto, RewardDTO reward, MaterialDTO material) {
+    public static RewardMaterialEntity toEntity(RewardMaterialDTO dto) {
         return RewardMaterialEntity.builder()
                 .reMaterId(dto.getReMaterId())
-                .reward(RewardEntity.builder().rewardId(reward.getRewardId()).build())
-                .material(MaterialEntity.builder().materialId(material.getMaterialId()).build())
                 .quantityRequired(dto.getQuantityRequired())
+                .reward(RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build())
+                .material(MaterialEntity.builder().materialId(dto.getMaterial().getMaterialId()).build())
                 .build();
     }
+
 }

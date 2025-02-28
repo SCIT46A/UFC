@@ -1,8 +1,32 @@
 $(document).ready(function () {
     const campaignId = $("#campaign-id").val();
     const campaignStatus = $("#campaign-status").val();
-    let fixedMainBoardId = null; // 고정(0번째) 게시글 ID
 
+    $(".main-review").addClass("hidden")
+
+    let fixedMainBoardId = null; // 고정(0번째) 게시글 ID
+    $(".main-mi-na-in-box-pe.campaign").on("click",()=>{
+        $(".main-reply").removeClass("hidden")
+        $(".main-review").addClass("hidden")
+        replay(fixedMainBoardId)
+    })
+
+    $(".main-mi-na-in-box-pe.board").on("click",()=> {
+        $(".main-reply").addClass("hidden")
+        $(".main-board-top-table").removeClass("hidden");
+        $(".main-board-back-div").addClass("hidden");
+        $(".main-board-total-pe").removeClass("hidden");
+        $(".content-board-box").addClass("hidden");
+        $(".main-review").addClass("hidden")
+    })
+    $(".main-mi-na-in-box-pe.review").on("click",()=> {
+        $(".main-reply").addClass("hidden")
+        $(".main-board-top-table").removeClass("hidden");
+        $(".main-board-back-div").addClass("hidden");
+        $(".main-board-total-pe").removeClass("hidden");
+        $(".content-board-box").addClass("hidden");
+        $(".main-review").removeClass("hidden")
+    })
     /* ============ 공통 Summernote 초기화 함수 ============ */
     function initSummernote(selector) {
         $(selector).summernote({
@@ -70,6 +94,7 @@ $(document).ready(function () {
                             $("#campaign-id").after(`<input type="hidden" id="board-id" value="${mainBoard.cboardId}">`);
                         }
                     }
+                    replay(mainBoard.cboardId);
                 }
                 // 목록에는 고정 게시글 제외한 추가 게시글만 표시
                 if (response) {
@@ -78,8 +103,12 @@ $(document).ready(function () {
                     $(".main-board-total-pe").empty();
                     if (otherBoards.length === 0) {
                         $(".main-board-total-pe").append(`<div class="no-posts">작성된 게시글이 없습니다.</div>`);
+                        $(".summer-btn").addClass("hidden");
+                        $(".summer-btn-edit-save").addClass("hidden");
+                        $(".main-reply").addClass("hidden")
                     } else {
                         otherBoards.forEach((data) => {
+                            $(".summer-btn-edit").addClass("hidden");
                             const htmldata = `
                             <div class="main-board-pe" data-board-id="${data.cboardId}">
                                 <div class="main-board-pe-in">
@@ -92,6 +121,11 @@ $(document).ready(function () {
                         });
                     }
                     reBoard(); // 목록 클릭 이벤트 재바인딩
+                } if (response.length ==0){
+                    $(".summer-btn-edit").addClass("hidden");
+                    $(".summer-btn").removeClass("hidden");
+                    $(".summer-btn-edit-save").addClass("hidden");
+                    $(".main-reply").addClass("hidden")
                 }
             },
             error: function (err) {
@@ -99,6 +133,32 @@ $(document).ready(function () {
             }
         });
     }
+
+    $(document).on("click", ".summer-btn", function () {
+        const content = $(".presentation-size").summernote("code");
+        const title = "Title"; // 제목 처리 (필요하면 값 가져오기)
+        const url = `/api/${campaignId}/board`; // 신규 작성 엔드포인트
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: content, title: title }),
+            credentials: "include"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("저장 실패");
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log("저장 성공:", result);
+                $(".summer-btn-edit").removeClass("hidden");
+                reLoadBoard();
+            })
+            .catch(error => {
+                console.error("저장 에러:", error);
+            });
+    });
 
     /* ============ 신규 작성 - 등록하기 ============ */
     // 신규 작성 화면은 별도의 "작성하기" 버튼(예: .main-board-add-btn)을 통해 호출되어야 함.
@@ -165,6 +225,75 @@ $(document).ready(function () {
         });
     });
 
+    // 관리자검토전 수정
+    $(document).on("click", ".summer-btn-edit", function () {
+        $.ajax({
+            url: `/api/campaign/board/${campaignId}`,
+            method: "GET",
+            success: function (response) {
+                if (response && response.length > 0) {
+                    // 편집 모드용 에디터 영역으로 변경
+                    $(".content-box-in").html(`
+                        <p style="color: gray">
+                          ※ 게시글을 작성하셔야 관리자에게 캠페인을 승인받을 수 있습니다.
+                        </p>
+                        <div id="summernote-container">
+                            <textarea id="summernote-editor"></textarea>
+                        </div>
+                    `);
+                    // hidden board id 설정
+                    if ($("#board-id").length) {
+                        $("#board-id").val(response[0].cboardId);
+                    } else {
+                        $("#campaign-id").after(`<input type="hidden" id="board-id" value="${response[0].cboardId}">`);
+                    }
+                    // 초기화: 편집용 Summernote 에디터 (#summernote-editor)
+                    $('#summernote-editor').summernote({
+                        height: 600,
+                        lang: "ko-KR",
+                        callbacks: {
+                            onImageUpload: function (files) {
+                                const file = files[0];
+                                const formData = new FormData();
+                                formData.append("file", file, file.name);
+                                fetch("/api/image/upload", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    body: formData
+                                })
+                                    .then(response => {
+                                        if (!response.ok) throw new Error("이미지 업로드 실패");
+                                        return response.text();
+                                    })
+                                    .then(imageId => {
+                                        return fetch(`/api/image/${imageId}`, { credentials: 'include' });
+                                    })
+                                    .then(response => {
+                                        if (!response.ok) throw new Error("이미지 URL 요청 실패");
+                                        return response.text();
+                                    })
+                                    .then(imageUrl => {
+                                        $('#summernote-editor').summernote("insertImage", imageUrl);
+                                    })
+                                    .catch(error => {
+                                        console.error("이미지 URL 불러오기 에러:", error);
+                                    });
+                            }
+                        }
+                    });
+                    // 기존 board 내용을 편집용 에디터에 세팅
+                    $('#summernote-editor').summernote('code', response[0].content);
+                    // 버튼 전환: 수정하기 버튼 숨기고, 수정 저장 버튼 보이기
+                    $(".summer-btn-edit").addClass("hidden");
+                    $(".summer-btn-edit-save").removeClass("hidden");
+                }
+            },
+            error: function (err) {
+                console.error(err);
+            }
+        });
+    });
+
     /* ============ 수정 적용하기 (수정 저장) ============ */
     $(document).on("click", ".main-board-add-btn-edit-save", function () {
         const boardId = $("#board-id").val();
@@ -201,6 +330,39 @@ $(document).ready(function () {
             .catch(error => {
                 console.error("수정 적용 에러:", error);
             });
+    });
+
+    // 관리자 승인전 수정상태 저장
+    $(document).on("click", ".summer-btn-edit-save", function () {
+        const content = $('#summernote-editor').summernote("code");
+        const title = "Title"; // 제목 처리 (필요하면 값 가져오기)
+        const boardId = $("#board-id").val();
+        if (!boardId || boardId.trim() === "") {
+            console.error("수정할 board id가 없습니다.");
+            return;
+        }
+        const url = `/api/${campaignId}/board/${boardId}`; // 수정 엔드포인트 (POST 방식)
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: content, title: title }),
+            credentials: "include"
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("수정 저장 실패");
+                }
+                return response.json();
+            })
+            .then(result => {
+                console.log("수정 저장 성공:", result);
+                $(".summer-btn-edit").removeClass("hidden");
+                reLoadBoard();
+            })
+            .catch(error => {
+                console.error("수정 저장 에러:", error);
+            });
+
     });
 
     /* ============ 상세보기 게시글 삭제 ============ */
@@ -278,6 +440,8 @@ $(document).ready(function () {
                     }
                 });
                 // UI 전환: 목록 -> 상세보기
+                $(".main-reply").removeClass("hidden")
+                replay(boardId);
                 boardTitle.classList.add("hidden");
                 boardInnerBox.classList.remove("hidden");
                 boardAllBox.classList.add("hidden");
@@ -291,6 +455,8 @@ $(document).ready(function () {
             boardInnerBox.classList.add("hidden");
             boardAllBox.classList.remove("hidden");
             boardInnerContent.classList.add("hidden");
+            $(".main-reply").addClass("hidden")
+
         });
     }
 
@@ -332,12 +498,307 @@ $(document).ready(function () {
         boardInnerContent.classList.add("hidden");
     }
 
-    $(".main-board-back-in").on("click", ()=>{
-        console.log("as")
-        resetBoardUI();
-        console.log("42")
-    })
+    // 댓글 관련 js
 
+    // 게시글에 맞는 댓글 가져오기
+    function replay(boardId) {
+        $.ajax({
+            url: `/api/replys/${boardId}`,
+            method: "GET",
+            success: function (response) {
+                $("#reply-border-target").val(boardId)
+                $("#reply-data-target").html(`<input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요">`);
+                $(".main-reply-total strong").html(response.length)
+                if(response.length === 0){
+                    $("#reply-data-target").html(`<input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요"><div>댓글이 없습니다.</div>`);
+                    return
+                }
+                response.forEach((data) => {
+                    let replyhtml = `
+                    <div
+                                class="main-reply-title"
+                        >
+                            <!-- 상단 이미지랑 등등 -->
+                            <div
+                                    class="main-reply-title-top"
+                            >
+                                <div
+                                        class="main-reply-title-top-pro"
+                                >
+                                    <img src="${data.replyedBy.photo && data.replyedBy.photo.imageId
+                                        ? `/api/image/${data.replyedBy.photo.imageId}`
+                                        : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                         alt="프로필 이미지" class="target-img" />
+
+                                    <div
+                                            class="main-reply-title-top-pro-name"
+                                    >
+                                        <div>
+                                            <div>${data.replyedBy.userName}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                        class="main-reply-tag report-menu"
+                                >
+                                    <div
+                                            class="main-reply-tag-box"
+                                    >
+                                        <div
+                                                class="main-reply-tag-box-btn"
+                                        >
+                                            <svg
+                                                    viewBox="0 0 48 48"
+                                            >
+                                                <path
+                                                        fill-rule="evenodd"
+                                                        clip-rule="evenodd"
+                                                        d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
+                                                ></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                    style="height: 20px"
+                            ></div>
+                            <div
+                                    class="main-reply-content"
+                            >
+                                ${data.content}
+                            </div>
+                        </div>
+                `;
+                    $("#reply-data-target").append(replyhtml);
+                });
+                // 댓글 HTML 추가 후 이미지 갱신 실행
+                $("#reply-data-target").find("img.target-img").each(function() {
+                    const $img = $(this);
+                    const endpoint = $img.attr("src"); // 이 값은 /api/image/{imageId} 형식임
+                    $.ajax({
+                        url: endpoint,
+                        method: "GET",
+                        success: function(resultUrl) {
+                            if(resultUrl) {
+                                $img.attr("src", resultUrl);
+                            }
+                        },
+                        error: function(err) {
+                            console.error("이미지 URL 요청 오류:", err);
+                        }
+                    });
+                });
+            },
+            error: function () {
+                console.error("댓글 불러오기 실패");
+            }
+        });
+    }
+
+    // 댓글 작성하기
+    $(document).on('keypress', '.main-reply-input-box', function(e) {
+        if (e.which === 13) {  // 엔터 키 코드
+            e.preventDefault();
+            const replyContent = $(this).val().trim();
+            if (!replyContent) return; // 빈 값이면 동작하지 않음
+
+            // 예시로 boardId 값을 data 속성 또는 별도 변수에서 가져옴
+            const boardId = $("#reply-border-target").val(); // 또는 적절한 방식으로 boardId를 가져오기
+
+            $.ajax({
+                url: '/api/replys/add',  // 댓글 생성 엔드포인트 (POST 방식)
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    boardId: boardId,
+                    content: replyContent
+                }),
+                success: function(response) {
+                    // 댓글 작성 성공 시 input 초기화 및 댓글 목록 갱신 등 처리
+                    $('.main-reply-input-box').val('');
+                    // 예를 들어, 기존의 reply 목록을 다시 불러옴
+                    replay(boardId);
+                },
+                error: function(err) {
+                    console.error("댓글 작성 실패:", err);
+                }
+            });
+        }
+    });
+
+    // 리뷰 불러오기
+
+    function reviews(campaignId) {
+        $.ajax({
+            url: `/api/review/${campaignId}`,
+            method: "GET",
+            success: function (response) {
+                $(".main-review-total strong").html(response.length)
+                if(response.length === 0){
+                    $("#review-data-target").html(`<div>리뷰가 없습니다.</div>`);
+                    return
+                }
+                response.forEach((data) => {
+                    let replyhtml = `
+                        <div class="main-review-title">
+                            <!-- 상단 이미지랑 등등 -->
+                            <div class="main-reply-title-top">
+                                <div class="main-reply-title-top-pro">
+                                    <img src="${data.reviewedBy.photo && data.reviewedBy.photo.imageId
+                                            ? `/api/image/${data.reviewedBy.photo.imageId}`
+                                            : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                         alt="프로필 이미지" class="target-review-img" />
+                                    <div class="main-reply-title-top-pro-name">
+                                        <div>
+                                            <div>${data.reviewedBy.userName}</div>
+                                        </div>
+                                    </div>
+                                    <div class="main-reply-title-top-pro-count">
+                                        <div>${data.rated}</div>
+                                    </div>
+                                </div>
+                                <div class="main-reply-tag report-menu">
+                                    <div class="main-reply-tag-box">
+                                        <div class="main-reply-tag-box-btn">
+                                            <svg viewBox="0 0 48 48">
+                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="height: 20px"></div>
+                            <div class="main-reply-content">
+                                <div>${data.content}</div>
+                            </div>
+                        </div>
+                `;
+                    $("#review-data-target").append(replyhtml);
+                });
+                // 댓글 HTML 추가 후 이미지 갱신 실행
+                $("#review-data-target").find("img.target-review-img").each(function() {
+                    const $img = $(this);
+                    const endpoint = $img.attr("src"); // 이 값은 /api/image/{imageId} 형식임
+                    $.ajax({
+                        url: endpoint,
+                        method: "GET",
+                        success: function(resultUrl) {
+                            if(resultUrl) {
+                                $img.attr("src", resultUrl);
+                            }
+                        },
+                        error: function(err) {
+                            console.error("이미지 URL 요청 오류:", err);
+                        }
+                    });
+                });
+            },
+            error: function () {
+                console.error("댓글 불러오기 실패");
+            }
+        });
+    }
+
+    // 별점 관련 코드
+    document.querySelectorAll('.star').forEach(function(star) {
+        // 별마다 별도의 잠금 상태와 저장된 값을 관리합니다.
+        let isLocked = false;
+        let savedValue = null;
+
+        star.addEventListener('mousemove', function(e) {
+            if (isLocked) return;  // 이미 잠금 상태면 변경하지 않음
+            const rect = this.getBoundingClientRect();
+            let percent = (e.clientX - rect.left) / rect.width;
+            percent = Math.round(percent * 20) / 20;  // 5% 단위 반올림
+            this.querySelector('em').style.width = (percent * 100) + '%';
+        });
+
+        star.addEventListener('mouseleave', function() {
+            if (isLocked) return;
+            this.querySelector('em').style.width = '0%';
+        });
+
+        star.addEventListener('click', function(e) {
+            const rect = this.getBoundingClientRect();
+            let percent = (e.clientX - rect.left) / rect.width;
+            percent = Math.round(percent * 10) / 10;  // 10단위 반올림 (원하는 단위에 맞게 조절)
+            if (!isLocked) {
+                // 클릭 시 잠금 상태가 아니라면 현재 위치의 값을 저장 및 고정
+                this.querySelector('em').style.width = (percent * 100) + '%';
+                savedValue = percent; // 예: 0.7 (70%) 값 저장
+                isLocked = true;
+                // 전역 변수에 저장해서 리뷰 등록 시 사용
+                window.starRatingValue = savedValue;
+                this.classList.add('locked');
+                console.log("Saved value:", savedValue);
+            } else {
+                // 이미 잠금 상태이면 클릭 시 해제하여 초기 상태로 복구
+                isLocked = false;
+                savedValue = null;
+                window.starRatingValue = null;
+                this.querySelector('em').style.width = '0%';
+                this.classList.remove('locked');
+                console.log("Reset value");
+            }
+        });
+    });
+
+// 리뷰 등록 관련 코드
+    $(document).on('keypress', '.main-review-input-box', function(e) {
+        if (e.which === 13) {  // 엔터 키 감지
+            e.preventDefault();
+            const reviewContent = $(this).val().trim();
+            if (!reviewContent) return;  // 내용이 없으면 처리 중단
+
+            // 별점이 등록되어 있지 않으면 리뷰 등록 불가 처리 (알림 처리 등)
+            if (!window.starRatingValue) {
+                alert("리뷰를 등록하려면 먼저 별점을 선택해주세요!");
+                return;
+            }
+
+            $.ajax({
+                url: '/api/review/add',  // 리뷰 등록 엔드포인트 (POST 방식)
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    campaignId: campaignId,            // 캠페인 ID
+                    reviewContent: reviewContent,        // 리뷰 내용
+                    rating: window.starRatingValue       // 선택된 별점 값
+                }),
+                success: function(response) {
+                    // 리뷰 등록 성공 시 input 초기화 및 리뷰 목록 갱신 처리
+                    $("#review-data-target").html("");
+                    // 예를 들어, 기존의 리뷰 목록을 다시 불러오는 함수 호출
+                    reviews(campaignId)
+                },
+                error: function(err) {
+                    console.error("리뷰 등록 실패:", err);
+                }
+            });
+        }
+    });
+
+
+
+    // 오른쪽에 뜨는 리워드 나오게
+    function rewards(campaignId) {
+        $.ajax({
+            url: `/api/reward/${campaignId}`,
+            method: "GET",
+            success: function (response) {
+                console.log(response);
+            },
+            error: function () {
+                console.error("댓글 불러오기 실패");
+            }
+        });
+    }
+
+    rewards(27);
+
+
+    reviews(campaignId);
     reLoadBoard();
     reBoard();
 });
@@ -383,7 +844,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const campaignTab = document.querySelector(".main-mi-na-in-box-pe.campaign");
     const boardTab = document.querySelector(".main-mi-na-in-box-pe.board");
-    const replyTab = document.querySelector(".main-mi-na-in-box-pe.reply");
+    const replyTab = document.querySelector(".main-mi-na-in-box-pe.review");
     const navItems = [campaignTab, boardTab, replyTab];
 
     function removeCheckClass() {
@@ -391,14 +852,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const contentBox = document.querySelector(".content-box");
-    const replyBox = document.querySelector(".main-reply");
+    // const replyBox = document.querySelector(".main-reply");
     const boardBox = document.querySelector(".main-board");
 
     campaignTab.addEventListener("click", () => {
         removeCheckClass();
         campaignTab.classList.add("check");
         contentBox.classList.remove("hidden");
-        replyBox.classList.add("hidden");
+        // replyBox.classList.add("hidden");
         boardBox.classList.add("hidden");
     });
 
@@ -407,7 +868,7 @@ document.addEventListener("DOMContentLoaded", () => {
         boardTab.classList.add("check");
         contentBox.classList.add("hidden");
         boardBox.classList.remove("hidden");
-        replyBox.classList.add("hidden");
+        // replyBox.classList.add("hidden");
     });
 
     replyTab.addEventListener("click", () => {
@@ -415,6 +876,7 @@ document.addEventListener("DOMContentLoaded", () => {
         replyTab.classList.add("check");
         contentBox.classList.add("hidden");
         boardBox.classList.add("hidden");
-        replyBox.classList.remove("hidden");
+        // replyBox.classList.remove("hidden");
     });
 });
+

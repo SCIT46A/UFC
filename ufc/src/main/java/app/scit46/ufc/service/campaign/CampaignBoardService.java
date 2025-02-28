@@ -75,7 +75,10 @@ public class CampaignBoardService {
         }
     }
 
-
+    public CampaignBoardEntity findById(Long boardId) {
+        return campaignBoardRepository.findById(boardId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다. boardId: " + boardId));
+    }
 
 
 }

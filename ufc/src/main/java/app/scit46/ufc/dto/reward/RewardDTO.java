@@ -1,6 +1,8 @@
 package app.scit46.ufc.dto.reward;
 
-import app.scit46.ufc.dto.ItemDTO;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.reward.RewardEntity;
 import lombok.*;
@@ -13,14 +15,26 @@ import lombok.*;
 @Builder
 public class RewardDTO {
     private Long rewardId;
+    private String rewardName;
+    private Integer amount;
     private CampaignDTO campaign; // ✅ CampaignDTO 포함
-    private ItemDTO item; // ✅ ItemDTO 포함
+    private List<RewardItemDTO> rewardItems; // ✅ ItemDTO 포함
+    private List<RewardMaterialDTO> rewardMaterials; // ✅ RewardMaterialDTO 포함
 
     public static RewardDTO toDTO(RewardEntity entity) {
+        if (entity == null) return null;
         return RewardDTO.builder()
                 .rewardId(entity.getRewardId())
-                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
-                .item(entity.getItem() != null ? ItemDTO.toDTO(entity.getItem()) : null) // ✅ ItemDTO 변환
+                .rewardName(entity.getRewardName())
+                .amount(entity.getAmount())
+                .campaign(entity.getCampaign() != null ?
+                        CampaignDTO.builder().campaignId(entity.getCampaign().getCampaignId()).build() : null)
+                .rewardItems(entity.getRewardItems().stream()
+                        .map(RewardItemDTO::toDTO)
+                        .collect(Collectors.toList())) // ✅ ItemDTO 변환
+                .rewardMaterials(entity.getRewardMaterials().stream()
+                        .map(RewardMaterialDTO::toDTO)
+                        .collect(Collectors.toList())) // ✅ RewardMaterialDTO 변환
                 .build();
     }
 }

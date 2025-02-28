@@ -608,6 +608,10 @@ content-box-in-target{
     border-top: 1px solid rgb(239, 239, 239);
 }
 
+.main-review{
+    border-top: 1px solid rgb(239, 239, 239);
+}
+
 .main-reply-top{
     height: 40px;
     font-size: 14px;
@@ -622,6 +626,21 @@ content-box-in-target{
     line-height: 120%;
 }
 
+.main-review-top{
+    height: 40px;
+    font-size: 14px;
+    line-height: 1.7em;
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.main-review-total{
+    margin-bottom: 20px;
+    color: rgb(28, 28, 28);
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 120%;
+}
+
 .main-reply-total strong{
     font-size: 13px;
     font-weight: bold;
@@ -629,6 +648,10 @@ content-box-in-target{
 }
 
 .main-reply-title{
+    padding: 24px 0px 20px;
+}
+
+.main-review-title{
     padding: 24px 0px 20px;
 }
 
@@ -660,6 +683,24 @@ content-box-in-target{
     display: flex;
     flex-direction: column;
     gap: 4px;
+}
+
+.main-reply-title-top-pro-count{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.main-reply-title-top-pro-count div{
+    color: orange;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 120%;
+    max-width: 169px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 5px;
 }
 
 .main-reply-title-top-pro-name div{
@@ -2189,4 +2230,43 @@ content-box-in-target{
 .main-board-add-btn-box{
     display: flex;
     justify-content: space-between;
+}
+
+.main-reply-input-box{
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 775px;
+    height: 27px;
+}
+
+.star{
+    display: inline-block;
+    width: 96px;
+    height: 28px;
+    background: url(https://web.archive.org/web/20201103035351im_/https://ssl.pstatic.net/static/comic/images/migration/common/sp_star.gif) no-repeat 0 0;
+    text-align: left;
+    vertical-align: middle;
+    background-size: 150px 242px;
+    margin-top: 4px;
+    margin-right: 20px;
+}
+
+
+.star em{
+    width: 0%;
+    height: 28px;
+    background-position: -1px -30px;
+    display: block;
+    background: url(https://web.archive.org/web/20201103035351im_/https://ssl.pstatic.net/static/comic/images/migration/common/sp_star.gif) no-repeat 0 -19px;
+    text-indent: -9999px;
+    background-size: 150px 242px;
+    margin-top: -9px;
+
+}
+
+.main-review-input-box{
+    border: 1px solid gray;
+    border-radius: 3px;
+    width: 654px;
+    height: 27px;
 }

@@ -362,10 +362,10 @@
                                             캠페인 소개
                                         </div>
                                         <div class="main-mi-na-in-box-pe board" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
-                                            게시판
+                                            새소식
                                         </div>
-                                        <div class="main-mi-na-in-box-pe reply" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
-                                            댓글
+                                        <div class="main-mi-na-in-box-pe review" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
+                                            리뷰
                                         </div>
                                     </div>
                                 </div>
@@ -548,127 +548,8 @@
                                                     </div>
                                                     <input type="hidden" th:value="${campaign.campaignStatus}" id="campaign-status">
                                                     <button class="summer-btn " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'">작성하기</button>
-                                                    <button class="summer-btn-edit hidden"  >수정하기</button>
+                                                    <button class="summer-btn-edit " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'" >수정하기</button>
                                                     <button class="summer-btn-edit-save hidden">수정하기</button>
-                                                </div>
-                                                <!-- 댓글 -->
-                                                <div class="main-reply hidden">
-                                                    <div
-                                                        class="main-reply-top"
-                                                    ></div>
-                                                    <div
-                                                        class="main-reply-total"
-                                                    >
-                                                        댓글 <strong>1</strong>
-                                                    </div>
-                                                    <!-- 각각의 댓글 나오는곳 -->
-                                                    <div
-                                                        class="main-reply-title"
-                                                    >
-                                                        <!-- 상단 이미지랑 등등 -->
-                                                        <div
-                                                            class="main-reply-title-top"
-                                                        >
-                                                            <div
-                                                                class="main-reply-title-top-pro"
-                                                            >
-                                                                <img
-                                                                    src="https://assets.tumblbug.com/profile/default_avatar.png"
-                                                                    alt=""
-                                                                />
-                                                                <div
-                                                                    class="main-reply-title-top-pro-name"
-                                                                >
-                                                                    <div>
-                                                                        댓글댓글
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="main-reply-tag report-menu"
-                                                            >
-                                                                <div
-                                                                    class="main-reply-tag-box"
-                                                                >
-                                                                    <div
-                                                                        class="main-reply-tag-box-btn"
-                                                                    >
-                                                                        <svg
-                                                                            viewBox="0 0 48 48"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            style="height: 20px"
-                                                        ></div>
-                                                        <div
-                                                            class="main-reply-content"
-                                                        >
-                                                            참여하였습니다.
-                                                        </div>
-                                                    </div>
-                                                    <!-- 2번째 -->
-                                                    <div
-                                                        class="main-reply-title"
-                                                    >
-                                                        <!-- 상단 이미지랑 등등 -->
-                                                        <div
-                                                            class="main-reply-title-top"
-                                                        >
-                                                            <div
-                                                                class="main-reply-title-top-pro"
-                                                            >
-                                                                <img
-                                                                    src="https://assets.tumblbug.com/profile/default_avatar.png"
-                                                                    alt=""
-                                                                />
-                                                                <div
-                                                                    class="main-reply-title-top-pro-name"
-                                                                >
-                                                                    <div>
-                                                                        댓글댓글
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="main-reply-tag report-menu"
-                                                            >
-                                                                <div
-                                                                    class="main-reply-tag-box"
-                                                                >
-                                                                    <div
-                                                                        class="main-reply-tag-box-btn"
-                                                                    >
-                                                                        <svg
-                                                                            viewBox="0 0 48 48"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            style="height: 20px"
-                                                        ></div>
-                                                        <div
-                                                            class="main-reply-content"
-                                                        >
-                                                            참여하였습니다.
-                                                        </div>
-                                                    </div>
                                                 </div>
                                                 <!-- 게시글 -->
                                                 <div class="main-board hidden">
@@ -718,7 +599,7 @@
                                                             <button class="main-board-add-btn-save hidden">작성하기</button>
                                                             <button class="main-board-detail-delete-btn hidden">삭제</button>
                                                             <button class="main-board-add-btn-edit hidden">수정하기</button>
-                                                            <button class="main-board-add-btn-edit-save hidden">수정 적용하기</button>
+                                                            <button class="main-board-add-btn-edit-save hidden">수정적용</button>
                                                         </div>
                                                         <div
                                                             class="main-board-pe-box"
@@ -764,9 +645,50 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <!-- 댓글 -->
+                                                <div class="main-reply">
+                                                    <div
+                                                            class="main-reply-top"
+                                                    ></div>
+                                                    <div
+                                                            class="main-reply-total"
+                                                    >
+                                                        댓글 <strong>1</strong>
+                                                    </div>
+                                                    <!-- 각각의 댓글 나오는곳 -->
+                                                    <div id="reply-data-target">
+                                                        <input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요">
+                                                    </div>
+
+                                                </div>
+                                                <div class="main-review hidden">
+                                                    <div
+                                                            class="main-review-top"
+                                                    ></div>
+                                                    <div
+                                                            class="main-review-total"
+                                                    >
+                                                        리뷰 <strong>1</strong>
+                                                    </div>
+                                                    <div>
+<!--                                                        리뷰 입력하는곳-->
+                                                        <div style="display: flex">
+                                                            <span class="star">
+                                                                <em></em>
+                                                            </span>
+                                                            <input type="text" class="main-review-input-box" placeholder="리뷰을 입력해주세요">
+                                                        </div>
+<!--                                                     사람들 리뷰 나오는곳-->
+                                                        <div id="review-data-target">
+<!--                                                            여기서 각각의 리뷰-->
+
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" id="reply-border-target">
                                     <!-- 리워드 -->
                                     <div class="reward">
                                         <div class="reward-in">

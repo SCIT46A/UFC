@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.ImageUrlEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +42,10 @@ public class CampaignService {
     private final MaterialDonationRepository materialDonationRepository;
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
 
+    public CampaignEntity findCampaignById(Long id) {
+        return campaignRepository.findById(id).orElse(null);
+    }
+
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
     public List<CampaignDTO> readCampaignList(String searchKeyword) {
         List<CampaignEntity> campaigns = campaignRepository.findByTitleContaining(searchKeyword); //임시조치
@@ -48,10 +54,10 @@ public class CampaignService {
     }
 
     // 캠페인 조회
-    public CampaignDTO readCampaign(Long campaignId) {   
+    public CampaignDTO readCampaign(Long campaignId) {
         CampaignEntity campaign = campaignRepository.findById(campaignId).orElse(null);
         return CampaignDTO.toDTO(campaign);
-    }   
+    }
 
     // 캠페인 수정 / 캠페인 아이디와 캠페인 요소 받아서 수정
     public CampaignEntity updateCampaign(Long campaignId, CampaignDTO campaignDTO) {
@@ -62,23 +68,26 @@ public class CampaignService {
             campaignRepository.save(campaign);
         }
         return campaign;
-    }   
+    }
 
     public void deleteCampaign(Long campaignId) {
         campaignRepository.deleteById(campaignId);
     }
-    
+
     // 캠페인 생성
-    public Long createCampaign(CampaignDTO campaignDTO, Long creatorId, String imageId) {
+    public CampaignEntity createCampaign(CampaignDTO campaignDTO, CreatorEntity creator, ImageUrlEntity image) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
-        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO, creatorId, imageId);
+        CampaignEntity campaign = CampaignEntity.toEntity(campaignDTO);
+        // 영속성 문제로 인한 창작자, 이미지 자체 설정
+        campaign.setCreatedBy(creator);
+        campaign.setPhoto(image);
         // 캠페인 엔티티 저장 후 캠페인 아이디 반환
-        return campaignRepository.save(campaign).getCampaignId();
+        return campaignRepository.save(campaign);
     }
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
 
-    // GenerateCampaign -> 
+    // GenerateCampaign ->
     public Long createCampaign(GenerateCampaignDTO ccDTO){
         /*
          * CreateCampaignDTO의 필드드
@@ -93,7 +102,7 @@ public class CampaignService {
          * private String imageUrl; -> ImageDTO xx
          * private Long imageId; -> ImageDTO xx
          */
-        
+
         // 이미 저장처리된 이미지 아이디 조회
         String imageId = ccDTO.getImageId();
 
@@ -110,8 +119,8 @@ public class CampaignService {
         Long creatorId = creatorRepository.findByOwnUser(userRepository.findByUserName(ccDTO.getUserName()).get()).getCreatorId();
 
         // 캠페인 생성 및 캠페인 아이디 반환
-        Long campaignId = createCampaign(campaign, creatorId, imageId);
-
+//        Long campaignId = createCampaign(campaign, creatorId, imageId);
+        Long campaignId = 1L;
         // 태그 리스트 생성
         // List<TagDTO> tagList = ccDTO.getTagList().stream()
         //         .map(tag -> TagDTO.builder()
@@ -136,7 +145,7 @@ public class CampaignService {
 
         // // 펀딩 아이템 생성
         // for (GenerateCampaignDTO.RewardListDTO fundingItem : ccDTO.getFundingItems()) {
-            
+
         // }
 
         // // 리워드 생성
@@ -189,7 +198,7 @@ public class CampaignService {
     public void approveCampaign(Long campaignId) {
         CampaignEntity campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new RuntimeException("캠페인을 찾을 수 없습니다."));
-        campaign.setCampaignStatus(1);
+        campaign.setCampaignStatus(true);
         campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
     }
 
@@ -204,7 +213,7 @@ public class CampaignService {
         }
 
         for (CampaignEntity campaign : campaigns) {
-            campaign.setCampaignStatus(1);
+            campaign.setCampaignStatus(true);
         }
 
         campaignRepository.saveAll(campaigns);
