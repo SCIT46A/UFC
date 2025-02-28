@@ -22,6 +22,9 @@ public class TagDTO {
     private Long totalUsage;
 
     public static TagDTO toDTO(TagEntity entity) {
+        if(entity == null) {
+            return null;
+        }
         return TagDTO.builder()
                 .tagId(entity.getTagId())
                 .content(entity.getContent())

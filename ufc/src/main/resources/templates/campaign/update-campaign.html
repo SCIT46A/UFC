@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>캠페인 시작하기</title>
+        <title>캠페인 수정</title>
         <!-- datapicker 시작 -->
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -32,12 +32,12 @@
         <link rel="stylesheet" th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
         <link rel="stylesheet" th:href="@{/css/fix/footer.css}" href="../../static/css/fix/footer.css" />
 
-        <script src="../../static/js/campaign/create-campaign.js" defer></script>
+        <script src="../../static/js/campaign/update-campaign.js" defer></script>
         <script src="../../static/js/cloudflare-upload.js"></script>
         <script src="../../static/js/fix/header.js" defer></script>
         <script src="../../static/js/fix/footer.js" defer></script>
 
-        <script th:src="@{/js/campaign/create-campaign.js}" defer></script>
+        <script th:src="@{/js/campaign/update-campaign.js}" defer></script>
         <script th:src="@{/js/cloudflare-upload.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script th:src="@{/js/fix/footer.js}" defer></script>
@@ -53,70 +53,14 @@
                 <div class="container mx-auto px-4 target-project">
                     <div class="main">
                         <div class="cam">
-                            <!-- 약관, 동의 -->
-                            <div class="cam-ag-box">
-                                <div class="cam-in-box-bo">
-                                    <h1>
-                                        멋진 아이디어가 있으시군요!
-                                        <br />
-                                        캠페인을 기획중이신가요?
-                                    </h1>
-                                    <h2>
-                                        시작하기 전에, 이런 준비가 필요해요.
-                                    </h2>
-                                    <p>
-                                        캠페인을 진행하시려면 아래 내용을
-                                        준비해주세요.
-                                    </p>
-                                </div>
-                                <div class="cam-ag-box-in">
-                                    <ul class="cam-ag-box-in-ul">
-                                        <li>
-                                        <label for="fi" class="cam-ag-box-in-ul-la">
-                                            <input type="checkbox" id="fi" class="cam-ag-box-in-ul-la-input" />
-                                                <div>
-                                                    나는 <strong>만 19세 이상의 성인</strong>입니다.
-                                                </div>
-                                            </label>
-                                        </li>
-                                        <li>
-                                        <label for="ce" class="cam-ag-box-in-ul-la">
-                                            <input type="checkbox" id="ce" class="cam-ag-box-in-ul-la-input" />
-                                                <div>
-                                                나는
-                                                <strong>본인 명의의 휴대폰 번호</strong>와
-                                                    <strong>이메일 주소</strong>가 있습니다.
-                                                </div>
-                                            </label>
-                                        </li>
-
-                                        <li>
-                                        <label for="th" class="cam-ag-box-in-ul-la">
-                                            <input type="checkbox" id="th" class="cam-ag-box-in-ul-la-input" />
-                                                <div>
-                                                나는
-                                                <strong>본인 명의의 사업자 등록증</strong>이 있습니다.
-                                                </div>
-                                            </label>
-                                        </li>
-
-                                    </ul>
-                                    <div class="cam-in-box-btn">
-                                        <button class="cam-create-btn">
-                                            <span>시작하기</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
                         <!-- 캠페인 기획 입력하는 곳 -->
-                            <div class="cam-la hidden">
+                            <div class="cam-la">
                                 <div class="cam-la-in">
                                     <!-- 자체해더 -->
                                 <div class="cam-la-in-box" id="header">
                                     <!-- 캠페인 -->
                                         <div class="cam-la-in-box-top-in-title">
-                                            <div>캠페인 기획</div>
+                                            <div>캠페인 수정</div>
                                         </div>
                                         <!-- 네비게이션바 -->
                                         <div class="cam-la-in-box-top-in-na">
@@ -166,9 +110,9 @@
                                                             <!-- 태그(카테고리) 설정 버튼 -->
                                                             <ul class="cam-in-box-item-ul">
                                                                 <!-- 상위 5개 태그 표시 -->
-                                                                <li th:each="tag : ${tags}">
+                                                                <li th:each="tag : ${campaignTags}">
                                                                 <button class="upda-tag-big"
-                                                                    th:text="${tag.name}">테스트1</button>
+                                                                    th:text="${tag}"></button>
                                                                 </li>
                                                                 <!-- 태그 추가 버튼 -->
                                                                 <li id="tagAdd">
@@ -201,6 +145,7 @@
                                                         </p>
                                                     <input type="text" name="title"
                                                             class="cam-la-in-box-bo-all-de-div-box-input"
+                                                            th:value="${campaign.title}"
                                                         placeholder="캠페인명을 입력해주세요!" />
                                                     </div>
                                                 </div>
@@ -223,7 +168,9 @@
                                                         <p class="cam-la-in-box-bo-all-de-div-box-title">
                                                         요약
                                                     </p>
-                                                    <textarea name="shortDescription" placeholder="캠페인을 간단하게 설명해주세요!"
+                                                    <textarea name="shortDescription" 
+                                                        th:value="${campaign.description}"
+                                                        placeholder="캠페인을 간단하게 설명해주세요!"
                                                         class="cam-la-in-box-bo-all-de-div-box-textarea"></textarea>
                                                     </div>
                                                 </div>
@@ -283,6 +230,7 @@
                                                                 <img id="previewImage"
                                                                     src=""
                                                                     alt="이미지 미리보기"
+                                                                    th:src="${campaign.photo.imageId}"
                                                                     style="display: none; max-width: 100%; height: auto;" />
                                                                 </div>
                                                             <div class="cam-img-re-box-btn">
@@ -330,7 +278,7 @@
                                                                         <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-start-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" />
+                                                                        autocomplete="off" th:value="${campaign.startDate}" />
                                                                     <!-- 시작 일자 옆에 동적으로 메시지를 표시 -->
                                                                     <span id="start-date-message" class="default-date-message"></span>
                                                                         </div>
@@ -357,7 +305,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-end-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" />
+                                                                        autocomplete="off" th:value="${campaign.endDate}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -378,7 +326,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-send-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" />
+                                                                        autocomplete="off" th:value="${campaign.sendDate}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -456,8 +404,45 @@
                                                                         </div>
                                                     <ul class="cam-gi-box-le-in-bo">
                                                         <!-- 각각의 리워드 표시 영역 -->
-                                                        </ul>
-                                                    </div>
+                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="reward : ${rewards}">
+                                                            <div>
+                                                                <button class="cam-gi-box-le-in-bo-pe-content">
+                                                                    <strong th:each="fundingItem : ${reward.funding}">[[${fundingItem.name}]] [[${fundingItem.amount}]]개+</strong>
+                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${rewardTitle}"></p>
+                                                                    <ul th:each>
+                                                                        <li>${rewardTargetName} ${rewardTargetAmount}개</li>
+                                                                    </ul>
+                                                                    <span>예상 발송 시작일: <em>${rewardSendDate}</em></span>
+                                                                    <div class="cam-gi-box-le-in-bo-pe-content-div">
+                                                                        <em class="cam-gi-em">
+                                                                            <div class="cam-gi-em-in">
+                                                                                <svg viewBox="0 0 48 48">
+                                                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                                        d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
+                                                                                        fill="#6D6D6D"></path>
+                                                                                </svg>
+                                                                            </div>
+                                                                            <span class="cam-gi-em-in">${rewardSelectedCount}</span>명이 선택
+                                                                        </em>
+                                                                        <div class="cam-gi-em-box">
+                                                                            <em>${rewardLeftAmount}개 남음</em>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                            <!-- 삭제버튼 -->
+                                                            <button class="cam-gi-de">
+                                                                <div class="cam-gi-de-in">
+                                                                    <svg viewBox="0 0 48 48">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                            d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                    </ul>
+                                                </div>
                                                 </div>
                                                 <!-- 오른쪽 내용 -->
                                                 <div class="cam-gi-box-ri">

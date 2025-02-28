@@ -50,9 +50,9 @@ public class RewardItemEntity {
         return RewardItemEntity.builder()
                 .id(dto.getId())
                 .reward(dto.getReward() != null ?
-                        RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build() : null)
+                       RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build() : null)
                 .item(dto.getItem() != null ?
-                        ItemEntity.builder().itemId(dto.getItem().getItemId()).build() : null)
+                     ItemEntity.builder().itemId(dto.getItem().getItemId()).build() : null)
                 .quantity(dto.getQuantity())
                 .build();
     }

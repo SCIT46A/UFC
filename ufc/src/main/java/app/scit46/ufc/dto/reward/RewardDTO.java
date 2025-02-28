@@ -28,7 +28,7 @@ public class RewardDTO {
                 .rewardName(entity.getRewardName())
                 .amount(entity.getAmount())
                 .campaign(entity.getCampaign() != null ?
-                        CampaignDTO.builder().campaignId(entity.getCampaign().getCampaignId()).build() : null)
+                    CampaignDTO.builder().campaignId(entity.getCampaign().getCampaignId()).build() : null)
                 .rewardItems(entity.getRewardItems().stream()
                         .map(RewardItemDTO::toDTO)
                         .collect(Collectors.toList())) // ✅ ItemDTO 변환

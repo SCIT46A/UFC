@@ -35,4 +35,8 @@ public class ImageUrlService {
     public Long getUploadedBy(String imageId) {
         return imageUrlRepository.findIdByImageId(imageId); 
     }
+
+    public ImageUrlEntity findByImageId(String imageId) {
+        return imageUrlRepository.findByImageId(imageId);
+    }
 }

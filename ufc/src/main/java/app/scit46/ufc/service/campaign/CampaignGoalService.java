@@ -14,6 +14,12 @@ public class CampaignGoalService {
 
     private final CampaignGoalRepository campaignGoalRepository;
 
+    public List<CampaignGoalDTO> getCampaignGoalsByCampaignId(Long campaignId) {
+        return campaignGoalRepository.findByCampaign_CampaignId(campaignId).stream()
+                .map(CampaignGoalDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<CampaignGoalDTO> findAll(Long campaignId) {
         return campaignGoalRepository.findByCampaign_CampaignId(campaignId)
                 .stream()

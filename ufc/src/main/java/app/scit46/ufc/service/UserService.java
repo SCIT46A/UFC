@@ -57,6 +57,10 @@ public class UserService {
         return user.getUserId();
     }
 
+    public UserEntity findUserByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElse(null);
+    }
+
     // OAuth 인증정보로 유저 조회(회원정보조회)
     public UserEntity findUserByIdentity(String identity) {
         return userRepository.findByOauthId(identity).orElse(null);

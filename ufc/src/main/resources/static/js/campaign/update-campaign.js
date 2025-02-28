@@ -3,24 +3,6 @@ $(document).ready(function () {
     //initializePage();
 
     let pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
-// 0. 약관, 동의
-    const startBtn = document.querySelector(".cam-create-btn");
-    $(document).on('click', function(){
-        if($('#fi').is(':checked')&&$('#ce').is(':checked')&&$('#th').is(':checked')){
-            startBtn.classList.add("isActive");
-            startBtn.disabled = false;
-        }else{
-            startBtn.classList.remove("isActive");
-            startBtn.disabled = true;
-        }
-    });
-
-    // 캠페인 생성 동의 체크박스 검사, 시작하기 버튼 활성화
-    $('.cam-create-btn').on('click', function(){
-        $('.cam-ag-box').addClass('hidden');
-        $('.cam-la').removeClass('hidden');
-    });
-// 약관, 동의 END
 
 // 1. 캠페인 기본정보 (캠페인 타이틀 입력 + 태그 추가 + 캠페인 소개 작성)
     let campaignTitle = document.querySelector("input[name='title']");        // 캠페인 제목
@@ -768,7 +750,7 @@ $(document).ready(function () {
             // 성공 시 처리
             if (!response.success) {
                 alert('캠페인이 성공적으로 등록되었습니다.');
-                window.location.href = '/campaign/' + response;
+                window.location.href = '/campaign/' + response.campaignId;
             } else {
                 throw new Error(response.message || '캠페인 등록에 실패했습니다.');
             }
@@ -987,7 +969,7 @@ $(document).ready(function () {
             const totalFunding = {};
             
             rewardItems.forEach(rewardItem => {
-                const multiplier = parseInt(rewardItem.amount); // 문자열을 숫자로 변환
+                const multiplier = parseInt(rewardItem.amount); // 해당 리워드의 생산 수량
                 
                 rewardItem.funding.forEach(fundingItem => {
                     const itemName = fundingItem.name;
@@ -1001,7 +983,7 @@ $(document).ready(function () {
                 });
             });
             
-            // fundingItems 업데이트 - 새로운 형식으로 변경
+            // Object를 배열로 변환
             fundingItems = Object.entries(totalFunding).map(([name, amount]) => ({
                 name: name,
                 amount: amount

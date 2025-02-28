@@ -49,10 +49,9 @@ public class RewardMaterialEntity {
     public static RewardMaterialEntity toEntity(RewardMaterialDTO dto) {
         return RewardMaterialEntity.builder()
                 .reMaterId(dto.getReMaterId())
+                .reward(RewardEntity.toEntity(dto.getReward()))
+                .material(MaterialEntity.toEntity(dto.getMaterial()))
                 .quantityRequired(dto.getQuantityRequired())
-                .reward(RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build())
-                .material(MaterialEntity.builder().materialId(dto.getMaterial().getMaterialId()).build())
                 .build();
     }
-
 }

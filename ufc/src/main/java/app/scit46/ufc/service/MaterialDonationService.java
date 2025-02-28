@@ -23,8 +23,6 @@ public class MaterialDonationService {
                 .orElseThrow(() -> new RuntimeException("Material Donation not found"));
     }
 
-
-    
     public List<MaterialDonationEntity> donationFindByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));

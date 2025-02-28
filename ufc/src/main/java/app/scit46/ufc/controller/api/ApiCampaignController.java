@@ -4,23 +4,21 @@ import app.scit46.ufc.dto.campaign.CampaignBoardDTO;
 import app.scit46.ufc.dto.campaign.CampaignBoardReplyDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
+import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
-import app.scit46.ufc.repository.campaign.CampaignBoardRepository;
 import app.scit46.ufc.service.RewardService;
 import app.scit46.ufc.service.campaign.CampaignBoardReplyService;
 import app.scit46.ufc.service.campaign.CampaignBoardService;
 import app.scit46.ufc.service.campaign.CampaignReviewService;
+import app.scit46.ufc.service.campaign.CampaignService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
-import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
-import app.scit46.ufc.service.campaign.CampaignService;
-import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +36,7 @@ public class ApiCampaignController {
     private final CampaignReviewService campaignReviewService;
     private final RewardService rewardService;
 
-    @PostMapping("/campaign/create")    
+    @PostMapping("/campaign/create")
     public ResponseEntity<Long> createCampaign(@RequestBody GenerateCampaignDTO campaign) {
         Long campaignId = null;
         try{
@@ -46,19 +44,16 @@ public class ApiCampaignController {
         }catch(Exception e){
             return ResponseEntity.badRequest().body(null);
         }
-        
+
         return ResponseEntity.ok(campaignId);
     }
 
-    @PostMapping("/campaign/update/{id}")
+    @PostMapping("/update/{id}")
     public ResponseEntity<Long> updateCampaign(@PathVariable Long id, @RequestBody GenerateCampaignDTO campaign){
-        try{
-            campaignService.editCampaign(id, campaign);
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(null);
-        }
-        
-        return ResponseEntity.badRequest().body(null);
+
+        campaignService.editCampaign(campaignService.getCampaignById(id), campaign);
+
+        return ResponseEntity.ok(id);
     }
 
     // board 신규 저장
@@ -126,7 +121,7 @@ public class ApiCampaignController {
             return ResponseEntity.status(500).build();
         }
     }
-    
+
 //  댓글 작성
 
     @PostMapping("/replys/add")
@@ -159,7 +154,7 @@ public class ApiCampaignController {
             return ResponseEntity.status(500).build();
         }
     }
-    
+
 //  리뷰 작성하기
 
     @PostMapping("/review/add")

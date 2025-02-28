@@ -46,11 +46,11 @@ public class CampaignGoalEntity {
     @Column(name = "quantity_required", nullable = false)
     private Integer quantityRequired;
 
-    public static CampaignGoalEntity toEntity(CampaignGoalDTO dto, CampaignDTO campaign, MaterialDTO material) {
+    public static CampaignGoalEntity toEntity(CampaignGoalDTO dto) {
         return CampaignGoalEntity.builder()
                 .goalId(dto.getGoalId())
-                .campaign(CampaignEntity.builder().campaignId(campaign.getCampaignId()).build())
-                .material(MaterialEntity.builder().materialId(material.getMaterialId()).build())
+                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
+                .material(MaterialEntity.builder().materialId(dto.getMaterial().getMaterialId()).build())
                 .quantityRequired(dto.getQuantityRequired())
                 .build();
     }

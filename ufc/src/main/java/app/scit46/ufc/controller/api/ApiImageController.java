@@ -19,7 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.cloudflare.ImageService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
@@ -73,8 +75,9 @@ public class ApiImageController {
     // 이미지 ID를 통해 이미지 삭제
     // UserDetails 검토 필요
     @DeleteMapping("/delete/{imageId}")
-    public ResponseEntity<Boolean> deleteImage(@PathVariable String imageId, @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = userService.findUserIdByUserName(userDetails.getUsername());
+    public ResponseEntity<Boolean> deleteImage(@PathVariable String imageId, HttpServletRequest request) {
+        String oauthId = request.getUserPrincipal().getName(); // OAuth 식별자
+        Long userId = userService.findUserByIdentity(oauthId).getUserId();
         // 이미지 삭제 권한 검사
         if(userId != imageUrlService.getUploadedBy(imageId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);

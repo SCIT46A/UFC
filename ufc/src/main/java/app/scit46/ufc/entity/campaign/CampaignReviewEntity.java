@@ -41,14 +41,14 @@ public class CampaignReviewEntity {
     @JoinColumn(name = "campaigned_by", nullable = false)
     private CampaignEntity campaignedBy;
 
-    public static CampaignReviewEntity toEntity(CampaignReviewDTO dto, UserEntity reviewedBy, CampaignEntity campaignedBy) {
+    public static CampaignReviewEntity toEntity(CampaignReviewDTO dto) {
         return CampaignReviewEntity.builder()
                 .cReviewId(dto.getCReviewId())
                 .content(dto.getContent())
                 .createdDate(dto.getCreatedDate())
                 .rated(dto.getRated())
-                .reviewedBy(reviewedBy)
-                .campaignedBy(campaignedBy)
+                .reviewedBy(UserEntity.builder().userId(dto.getReviewedBy().getUserId()).build())
+                .campaignedBy(CampaignEntity.builder().campaignId(dto.getCampaignedBy().getCampaignId()).build())
                 .build();
     }
 }

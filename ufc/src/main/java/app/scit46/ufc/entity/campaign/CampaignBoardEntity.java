@@ -57,13 +57,13 @@ public class CampaignBoardEntity {
     @OneToMany(mappedBy = "campaignBoard", fetch = FetchType.LAZY)
     private List<CampaignBoardReplyEntity> replies;
 
-    public static CampaignBoardEntity toEntity(CampaignBoardDTO dto, CampaignEntity campaign) {
+    public static CampaignBoardEntity toEntity(CampaignBoardDTO dto) {
         return CampaignBoardEntity.builder()
                 .cBoardId(dto.getCBoardId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .createdDate(dto.getCreatedDate())
-                .campaign(campaign)
+                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
                 .build();
     }
 }

@@ -59,12 +59,12 @@ public class MaterialEntity {
     @OneToMany(mappedBy = "material", fetch = FetchType.LAZY)
     private List<RewardMaterialEntity> rewardMaterials;
 
-    public static MaterialEntity toEntity(MaterialDTO dto, ImageUrlEntity photo) {
+    public static MaterialEntity toEntity(MaterialDTO dto) {
         return MaterialEntity.builder()
                 .materialId(dto.getMaterialId())
                 .name(dto.getName())
                 //.description(dto.getDescription())
-                .photo(photo)
+                .photo(dto.getPhoto() != null ? ImageUrlEntity.toEntity(dto.getPhoto()) : null)
                 .build();
     }
 }
