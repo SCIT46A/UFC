@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.stream.Collectors;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -51,4 +52,21 @@ public class MaterialDonationService {
                 .map(MaterialDonationDTO::toDTO)
                 .toList();
     }
+
+    @Transactional
+    public void updateDonationStatus(Long donationId, boolean isApproved) {
+        try {
+            MaterialDonationEntity donation = materialDonationRepository.findById(donationId)
+                    .orElseThrow(() -> new RuntimeException("Material Donation not found"));
+
+            donation.setStatus(isApproved ? "approved" : "rejected");
+            materialDonationRepository.save(donation);
+
+            System.out.println("✅ DB 저장 완료: " + donation.getDonationId() + ", 상태: " + donation.getStatus());
+        } catch (Exception e) {
+            System.err.println("❌ DB 업데이트 실패: " + e.getMessage());
+            throw e; // 예외를 다시 던져서 트랜잭션이 롤백되는지 확인
+        }
+    }
+
 }

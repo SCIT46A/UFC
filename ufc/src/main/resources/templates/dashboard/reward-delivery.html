@@ -99,6 +99,13 @@
                 </div>
             </section>
 
+            <!-- Batch Actions -->
+            <div class="batch-actions">
+                <button class="btn btn-secondary" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
+                <button class="btn btn-secondary" onclick="processSelectedDonations()">선택 기부 처리</button>
+                <button class="btn btn-warning">기부 취소 요청 처리</button>
+            </div>
+
             <!-- Search Section -->
             <section class="search-section">
                 <div class="search-row">
@@ -206,6 +213,34 @@
                 <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
             </div>
     </div>
+    </div>
+    <!-- Batch Invoice Modal -->
+    <div id="batchInvoiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>송장번호 일괄등록</h3>
+                <button class="btn" onclick="closeBatchInvoiceModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-row">
+                    <label>택배사</label>
+                    <select class="search-input">
+                        <option value="">택배사 선택</option>
+                        <option value="cj">CJ대한통운</option>
+                        <option value="lotte">롯데택배</option>
+                        <option value="hanjin">한진택배</option>
+                    </select>
+                </div>
+                <div class="search-row">
+                    <label>송장번호</label>
+                    <textarea class="search-input" rows="4" placeholder="송장번호를 입력하세요 (여러 개인 경우 줄바꿈으로 구분)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="processBatchInvoice()">일괄등록</button>
+                <button class="btn" onclick="closeBatchInvoiceModal()">취소</button>
+            </div>
+        </div>
     </div>
     </section>
     </div>

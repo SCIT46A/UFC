@@ -1,5 +1,6 @@
 package app.scit46.ufc.service.delivery;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.Random;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.entity.MaterialDonationEntity;
+import app.scit46.ufc.repository.MaterialDonationRepository;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DeliveryService {
@@ -27,6 +32,9 @@ public class DeliveryService {
     private final ExecutorService executor = Executors.newFixedThreadPool(3); // 🚀 동시 요청 개수 제한
     private static final Logger logger = LoggerFactory.getLogger(DeliveryService.class);
     private static final Random random = new Random();
+
+    @Autowired
+    private MaterialDonationRepository materialDonationRepository;
 
     @Value("${tracker.api-key}")
     private String apiKey;
@@ -116,11 +124,41 @@ public class DeliveryService {
                         return trackDelivery(courierId, trackingNumber);
                     }
                     return "미등록";
-                }, executor).thenAccept(status -> trackingResults.put(donation.getTrackingNumber(), status)))
-                .toList();
+                }, executor).thenAccept(status -> {
+                    trackingResults.put(donation.getTrackingNumber(), status);
 
+                    // ✅ 배송 상태가 "배송완료"이고 현재 상태가 "processing"이면 pending으로 변경
+                    if ("배송완료".equals(status) && "processing".equals(donation.getStatus())) {
+                        logger.info("✅ 배송완료 확인: 기부 ID {} → 상태 변경 (processing → pending)", donation.getDonationId());
+                        updateDonationStatusToPending(donation.getDonationId());
+
+                        // ✅ 업데이트된 상태를 다시 조회하여 반영
+                        MaterialDonationEntity updatedDonation = materialDonationRepository
+                                .findById(donation.getDonationId()).orElse(null);
+                        if (updatedDonation != null) {
+                            donation.setStatus(updatedDonation.getStatus()); // 🚀 최신 상태 반영
+                        }
+                    }
+                })).toList();
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
         return trackingResults;
     }
+
+    @Transactional
+    public void updateDonationStatusToPending(Long donationId) {
+        MaterialDonationEntity donation = materialDonationRepository.findById(donationId)
+                .orElseThrow(() -> new RuntimeException("기부 내역을 찾을 수 없습니다. ID: " + donationId));
+
+        if (!"processing".equals(donation.getStatus())) {
+            logger.warn("⚠ 상태 변경 불가: 기부 ID {}의 상태가 이미 {}입니다.", donationId, donation.getStatus());
+            return;
+        }
+
+        // ✅ 상태 변경 후 저장
+        donation.setStatus("pending");
+        materialDonationRepository.save(donation);
+        logger.info("✅ DB 업데이트 완료: 기부 ID {} → 상태 변경됨 (pending)", donationId);
+    }
+
 }
