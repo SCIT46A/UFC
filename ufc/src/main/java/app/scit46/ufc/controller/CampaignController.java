@@ -2,6 +2,8 @@ package app.scit46.ufc.controller;
 
 import java.util.List;
 
+import app.scit46.ufc.dto.LikeDTO;
+import app.scit46.ufc.service.LikeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,6 +42,8 @@ public class CampaignController {
 
     private final MaterialDonationService materialDonationService;
 
+    private final LikeService likeService;
+
     @GetMapping("/all")
     public String allCampaign(Model model, @RequestParam(defaultValue = "") String searchKeyword) {
         List<CampaignDTO> campaigns = campaignService.readCampaignList(searchKeyword);
@@ -48,7 +52,7 @@ public class CampaignController {
     }
 
     @GetMapping("/{id}")
-    public String detailCampaign(@PathVariable Long id, Model model) {
+    public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
 
@@ -76,12 +80,21 @@ public class CampaignController {
                 .mapToInt(MaterialDonationDTO::getQuantity)
                 .sum();
 
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long loginUserId = null; // 기본값 설정
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+        }
+        boolean campaignLike = likeService.likeCheck(campaign.getCampaignId(), loginUserId, "campaign");
+        boolean creatorLike = likeService.likeCheck(campaign.getCreatedBy().getCreatorId(), loginUserId, "creator");
+        model.addAttribute("campaignLike", campaignLike);
+        model.addAttribute("creatorLike", creatorLike);
+
         model.addAttribute("tags", tags);
         model.addAttribute("campaign", campaign);
         model.addAttribute("campaignGoalDTOS", campaignGoalDtos);
         model.addAttribute("totalDonors", totalDonors);
         model.addAttribute("totalQuantity", totalQuantity);
-        log.info(campaign.toString());
 
         return "campaign/detail-campaign";
     }

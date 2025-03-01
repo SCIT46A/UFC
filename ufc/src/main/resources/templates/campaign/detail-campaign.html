@@ -220,6 +220,8 @@
                                                         >
                                                             <div
                                                                     class="main-funding-in-box-le-in-in-like"
+                                                                    th:data-creator-id="${campaign.createdBy.creatorId}"
+                                                                    th:classappend="${creatorLike} ? ' ' : 'likeFill' "
                                                             >
                                                                 <div
                                                                         class="main-funding-in-box-le-in-in-like-view"
@@ -227,10 +229,8 @@
                                                                     <!-- 빈하트 -->
                                                                     <svg
                                                                             viewBox="0 0 38 34"
-                                                                            fill="none"
                                                                     >
                                                                         <path
-                                                                                fill-rule="evenodd"
                                                                                 clip-rule="evenodd"
                                                                                 d="M18.9996 5.62299L15.6051 2.55614C12.2106 -0.510215 6.56995 0.17753 3.48147 3.57849C-0.397666 7.66674 -0.397863 14.5859 3.70675 18.9121L19 33.8811L34.2923 18.9121C38.3969 14.5859 38.3971 7.66747 34.5176 3.57849C31.4291 0.17753 25.7888 -0.510094 22.3942 2.55614L18.9996 5.62299ZM32.0081 16.6701C34.9446 13.533 34.8523 8.58052 32.1962 5.78099L32.1721 5.75565L32.1487 5.72978C30.0533 3.42248 26.4219 3.23047 24.5394 4.93062L18.9996 9.93557L13.4601 4.93076C11.5777 3.2306 7.94577 3.42244 5.85042 5.72978L5.82689 5.75569L5.8028 5.78108C3.14716 8.57988 3.05453 13.533 5.99094 16.6701L18.9999 29.4033L32.0081 16.6701Z"
                                                                                 fill="#6D6D6D"
@@ -361,10 +361,10 @@
                                         >
                                             캠페인 소개
                                         </div>
-                                        <div class="main-mi-na-in-box-pe board" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
+                                        <div class="main-mi-na-in-box-pe board " th:classappend="${campaign.campaignStatus == false} ? 'hidden'">
                                             새소식
                                         </div>
-                                        <div class="main-mi-na-in-box-pe review" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
+                                        <div class="main-mi-na-in-box-pe review" th:classappend="${campaign.campaignStatus == false} ? 'hidden'">
                                             리뷰
                                         </div>
                                     </div>
@@ -495,9 +495,11 @@
                                                                     <div
                                                                         class="reward-in-se-in-bo-btn-in"
                                                                     >
-                                                                        <button
-                                                                            class="reward-in-se-in-bo-btn-ri"
-                                                                        >
+
+                                                                        <button class="reward-in-se-in-bo-btn-ri"
+                                                                                th:data-creator-id="${campaign.createdBy.creatorId}"
+                                                                                th:classappend="${creatorLike} ? ' unlike' : '' "
+                                                                               >
                                                                             <svg
                                                                                 width="48"
                                                                                 height="48"
@@ -777,105 +779,7 @@
                                                             class="reward-choice-my"
                                                         >
                                                             <!-- 각각의 내가 선택한거 -->
-                                                            <div
-                                                                class="reward-choice-my-pe"
-                                                            >
-                                                                <div
-                                                                    class="reward-choice-my-pe-box"
-                                                                >
-                                                                    <div
-                                                                        class="reward-choice-my-pe-box-top"
-                                                                    >
-                                                                        <ul>
-                                                                            <li>
-                                                                                <div
-                                                                                    class="reward-choice-my-pe-box-top-in"
-                                                                                >
-                                                                                    [증수무원록언해+현대]
-                                                                                    검복+조례+잡록
-                                                                                    세트
-                                                                                    (pdf)
-                                                                                </div>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                    <div
-                                                                        class="reward-choice-my-pe-box-bo"
-                                                                    >
-                                                                        <div
-                                                                            class="reward-choice-my-pe-box-bo-le"
-                                                                        >
-                                                                            <button
-                                                                                class="reward-choice-btn"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-choice-btn-le"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            d="M6 24.1C6 22.9402 6.9402 22 8.1 22H39.9C41.0598 22 42 22.9402 42 24.1C42 25.2598 41.0598 26.2 39.9 26.2H8.1C6.9402 26.2 6 25.2598 6 24.1Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                            </button>
-                                                                            <input
-                                                                                type="text"
-                                                                                class="reward-choice-count"
-                                                                                value="1"
-                                                                                readonly
-                                                                            />
-                                                                            <button
-                                                                                class="reward-choice-btn"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-choice-btn-le"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M43.7104 21.8549H25.99V4.09524C25.99 2.89796 24.9945 2 23.9005 2C22.8054 2 21.81 2.89796 21.81 4.09524V21.9546H4.0905C2.89593 21.8549 2 22.8526 2 23.9501C2 25.0476 2.89593 26.0454 4.0905 26.0454H21.9095V43.9048C21.9095 45.0023 22.8054 46 23.999 46C25.095 46 26.0905 45.102 26.0905 43.9048V26.0454H43.9085C45.0045 26.0454 46 25.1474 46 23.9501C45.8009 22.8526 44.904 21.8549 43.7104 21.8549C43.7104 21.8549 43.81 21.8549 43.7104 21.8549Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div
-                                                                            class="reward-choice-pri"
-                                                                        >
-                                                                            청바지
-                                                                            3개
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <button
-                                                                    class="reward-choice-close"
-                                                                >
-                                                                    <div
-                                                                        class="reward-choice-close-in"
-                                                                    >
-                                                                        <svg
-                                                                            width="10"
-                                                                            height="10"
-                                                                            viewBox="0 0 10 10"
-                                                                            fill="none"
-                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
-                                                                                fill="#6D6D6D"
-                                                                            ></path>
-                                                                        </svg>
-                                                                    </div>
-                                                                </button>
-                                                            </div>
-                                                            <!-- 2번째 -->
+
                                                         </div>
                                                         <!-- 밑에 버튼 -->
                                                         <div
@@ -886,370 +790,16 @@
                                                                 class="reward-btn-in"
                                                             >
                                                                 <span
-                                                                    >총<b
-                                                                        >청바지
-                                                                        3개</b
+                                                                    ><b
+                                                                        >
+                                                                        </b
                                                                     >후원하기</span
                                                                 >
                                                             </button>
                                                         </div>
                                                     </div>
                                                     <!-- 여기에 각각의 리워드가 들어감 -->
-                                                    <div
-                                                        class="reward-info-in-box"
-                                                    >
-                                                        <div
-                                                            class="reward-info-in-box-in"
-                                                        >
-                                                            <div
-                                                                class="reward-info-in-box-in-warp"
-                                                            >
-                                                                <section
-                                                                    class="reward-info-in-box-in-warp-section"
-                                                                >
-                                                                    <div
-                                                                        class="reward-info-in-box-in-warp-section-in"
-                                                                    >
-                                                                        <!-- 몇명선택했는지 -->
-                                                                        <div
-                                                                            class="reward-info-in-box-in-warp-section-in-top"
-                                                                        >
-                                                                            <div
-                                                                                class="reward-info-in-box-in-warp-section-in-top-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-in-box-in-warp-section-in-top-in-img"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                12
-                                                                                명이
-                                                                                선택
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 가격 -->
-                                                                        <div
-                                                                            class="reward-info-pr"
-                                                                        >
-                                                                            <!-- 상단 가격 -->
-                                                                            <div
-                                                                                class="reward-info-pr-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-pr-in-de"
-                                                                                >
-                                                                                    청바지
-                                                                                    3개
-                                                                                    +
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- 하단? -->
-                                                                            <div
-                                                                                class="reward-info-pr-in-bo"
-                                                                            >
-                                                                                자연과
-                                                                                함께1개
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 리워드 -->
-                                                                        <ul
-                                                                            class="reward-ul"
-                                                                        >
-                                                                            <li
-                                                                                class="reward-ul-li"
-                                                                            >
-                                                                                <span
-                                                                                    >범죄수사물
-                                                                                    자료집
-                                                                                    (양장본)</span
-                                                                                >
-                                                                                <span>
-                                                                                    (x1)</span
-                                                                                >
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- 2번째 -->
-                                                    <div
-                                                        class="reward-info-in-box"
-                                                    >
-                                                        <div
-                                                            class="reward-info-in-box-in"
-                                                        >
-                                                            <div
-                                                                class="reward-info-in-box-in-warp"
-                                                            >
-                                                                <section
-                                                                    class="reward-info-in-box-in-warp-section"
-                                                                >
-                                                                    <div
-                                                                        class="reward-info-in-box-in-warp-section-in"
-                                                                    >
-                                                                        <!-- 몇명선택했는지 -->
-                                                                        <div
-                                                                            class="reward-info-in-box-in-warp-section-in-top"
-                                                                        >
-                                                                            <div
-                                                                                class="reward-info-in-box-in-warp-section-in-top-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-in-box-in-warp-section-in-top-in-img"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                12
-                                                                                명이
-                                                                                선택
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 가격 -->
-                                                                        <div
-                                                                            class="reward-info-pr"
-                                                                        >
-                                                                            <!-- 상단 가격 -->
-                                                                            <div
-                                                                                class="reward-info-pr-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-pr-in-de"
-                                                                                >
-                                                                                    청바지
-                                                                                    3개
-                                                                                    +
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- 하단? -->
-                                                                            <div
-                                                                                class="reward-info-pr-in-bo"
-                                                                            >
-                                                                                자연과
-                                                                                함께1개
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 리워드 -->
-                                                                        <ul
-                                                                            class="reward-ul"
-                                                                        >
-                                                                            <li
-                                                                                class="reward-ul-li"
-                                                                            >
-                                                                                <span
-                                                                                    >범죄수사물
-                                                                                    자료집
-                                                                                    (양장본)</span
-                                                                                >
-                                                                                <span>
-                                                                                    (x1)</span
-                                                                                >
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="reward-info-in-box"
-                                                    >
-                                                        <div
-                                                            class="reward-info-in-box-in"
-                                                        >
-                                                            <div
-                                                                class="reward-info-in-box-in-warp"
-                                                            >
-                                                                <section
-                                                                    class="reward-info-in-box-in-warp-section"
-                                                                >
-                                                                    <div
-                                                                        class="reward-info-in-box-in-warp-section-in"
-                                                                    >
-                                                                        <!-- 몇명선택했는지 -->
-                                                                        <div
-                                                                            class="reward-info-in-box-in-warp-section-in-top"
-                                                                        >
-                                                                            <div
-                                                                                class="reward-info-in-box-in-warp-section-in-top-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-in-box-in-warp-section-in-top-in-img"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                12
-                                                                                명이
-                                                                                선택
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 가격 -->
-                                                                        <div
-                                                                            class="reward-info-pr"
-                                                                        >
-                                                                            <!-- 상단 가격 -->
-                                                                            <div
-                                                                                class="reward-info-pr-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-pr-in-de"
-                                                                                >
-                                                                                    청바지
-                                                                                    3개
-                                                                                    +
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- 하단? -->
-                                                                            <div
-                                                                                class="reward-info-pr-in-bo"
-                                                                            >
-                                                                                자연과
-                                                                                함께1개
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 리워드 -->
-                                                                        <ul
-                                                                            class="reward-ul"
-                                                                        >
-                                                                            <li
-                                                                                class="reward-ul-li"
-                                                                            >
-                                                                                <span
-                                                                                    >범죄수사물
-                                                                                    자료집
-                                                                                    (양장본)</span
-                                                                                >
-                                                                                <span>
-                                                                                    (x1)</span
-                                                                                >
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="reward-info-in-box"
-                                                    >
-                                                        <div
-                                                            class="reward-info-in-box-in"
-                                                        >
-                                                            <div
-                                                                class="reward-info-in-box-in-warp"
-                                                            >
-                                                                <section
-                                                                    class="reward-info-in-box-in-warp-section"
-                                                                >
-                                                                    <div
-                                                                        class="reward-info-in-box-in-warp-section-in"
-                                                                    >
-                                                                        <!-- 몇명선택했는지 -->
-                                                                        <div
-                                                                            class="reward-info-in-box-in-warp-section-in-top"
-                                                                        >
-                                                                            <div
-                                                                                class="reward-info-in-box-in-warp-section-in-top-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-in-box-in-warp-section-in-top-in-img"
-                                                                                >
-                                                                                    <svg
-                                                                                        viewBox="0 0 48 48"
-                                                                                    >
-                                                                                        <path
-                                                                                            fill-rule="evenodd"
-                                                                                            clip-rule="evenodd"
-                                                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z"
-                                                                                        ></path>
-                                                                                    </svg>
-                                                                                </div>
-                                                                                12
-                                                                                명이
-                                                                                선택
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 가격 -->
-                                                                        <div
-                                                                            class="reward-info-pr"
-                                                                        >
-                                                                            <!-- 상단 가격 -->
-                                                                            <div
-                                                                                class="reward-info-pr-in"
-                                                                            >
-                                                                                <div
-                                                                                    class="reward-info-pr-in-de"
-                                                                                >
-                                                                                    청바지
-                                                                                    3개
-                                                                                    +
-                                                                                </div>
-                                                                            </div>
-                                                                            <!-- 하단? -->
-                                                                            <div
-                                                                                class="reward-info-pr-in-bo"
-                                                                            >
-                                                                                자연과
-                                                                                함께1개
-                                                                            </div>
-                                                                        </div>
-                                                                        <!-- 리워드 -->
-                                                                        <ul
-                                                                            class="reward-ul"
-                                                                        >
-                                                                            <li
-                                                                                class="reward-ul-li"
-                                                                            >
-                                                                                <span
-                                                                                    >범죄수사물
-                                                                                    자료집
-                                                                                    (양장본)</span
-                                                                                >
-                                                                                <span>
-                                                                                    (x1)</span
-                                                                                >
-                                                                            </li>
-                                                                            <li
-                                                                                class="reward-ul-li"
-                                                                            >
-                                                                                <span
-                                                                                    >비~밀
-                                                                                    자료</span
-                                                                                >
-                                                                                <span>
-                                                                                    (x2)</span
-                                                                                >
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </section>
-                                                            </div>
-                                                        </div>
+                                                    <div class="reward-target">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1259,152 +809,44 @@
                             </div>
                             <!-- 하단 다른 프로젝트 추천 -->
                             <div class="main-bo">
-                                <div class="main-bo-in">
-                                    <div class="main-bo-in-box">
-                                        <!-- 제목 -->
-                                        <div class="main-bo-in-box-title">
-                                            이런 프로젝트 어때요?
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="main-bo-in-box-content">
-                                            <div
-                                                class="main-bo-in-box-content-in"
-                                            >
-                                                <div
-                                                    class="main-bo-in-box-content-in-warp"
-                                                >
-                                                    <!-- 내용 -->
-                                                    <div
-                                                        class="main-bo-in-box-content-in-warp-content"
-                                                    >
-                                                        <div
-                                                            class="main-bo-add"
-                                                        >
-                                                            <div
-                                                                class="main-bo-add-in"
-                                                            >
-                                                                <!-- 각각의 캠페인들  추후 컴포넌트 화 필요-->
-                                                                <div
-                                                                    th:each="number : ${#numbers.sequence(1, 5)}"
-                                                                    class="main-bo-add-in-pe"
-                                                                >
-                                                                    <div
-                                                                        class="main-bo-add-in-pe-box"
-                                                                    >
-                                                                        <a
-                                                                            href="/"
-                                                                            class="main-bo-add-in-pe-box-a"
-                                                                        >
-                                                                            <!-- 이미지 -->
-                                                                            <div
-                                                                                class="main-bo-add-in-pe-box-a-img"
-                                                                            >
-                                                                                <img
-                                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzQyNmUyNWItZGYyNy00NjhlLTgzYmItNGI0YjhmYmVjOWYyL2UxYzViNWNmLTI0NjMtNGY2OC04YjM4LTc4OWViMTE4MGYxZi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                                    alt=""
-                                                                                    class="main-bo-add-in-pe-box-a-img-in"
-                                                                                />
-                                                                                <!-- like버튼 -->
-                                                                                <div
-                                                                                    class="main-bo-add-in-pe-box-a-img-like"
-                                                                                >
-                                                                                    <svg
-                                                                                        width="40"
-                                                                                        height="40"
-                                                                                        viewBox="0 0 40 40"
-                                                                                        fill="none"
-                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                    >
-                                                                                        <path
-                                                                                            d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
-                                                                                            fill="black"
-                                                                                            fill-opacity="0.25"
-                                                                                            stroke="white"
-                                                                                            stroke-width="1.6"
-                                                                                        ></path>
-                                                                                        <g
-                                                                                            filter="url(#filter0_dd_909_4706012)"
-                                                                                        >
-                                                                                            <path
-                                                                                                fill-rule="evenodd"
-                                                                                                clip-rule="evenodd"
-                                                                                                d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
-                                                                                                fill="white"
-                                                                                            ></path>
-                                                                                        </g>
-                                                                                    </svg>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div
-                                                                                class="main-bo-add-in-pe-box-a-content"
-                                                                            >
-                                                                                <div
-                                                                                    class="main-bo-add-in-pe-box-a-content-box"
-                                                                                >
-                                                                                    <div
-                                                                                        class="main-bo-add-in-pe-box-a-content-box-se"
-                                                                                    >
-                                                                                        <div
-                                                                                            class="main-bo-add-in-pe-box-a-content-box-se-in"
-                                                                                        >
-                                                                                            <div>
-                                                                                                뭉치공방
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="main-bo-add-in-pe-box-a-content-box-content"
-                                                                                    >
-                                                                                        <div
-                                                                                            class="main-bo-add-in-pe-box-a-content-box-content-in"
-                                                                                        >
-                                                                                            겨울엔
-                                                                                            붕어빵!코바늘로
-                                                                                            뜨는
-                                                                                            귀여운
-                                                                                            손난로
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="main-bo-add-in-pe-box-a-content-pe"
-                                                                                    >
-                                                                                        930%
-                                                                                        달성
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="main-bo-add-in-pe-box-a-content-box-tag"
-                                                                                    >
-                                                                                        <div
-                                                                                            class="main-bo-add-in-pe-box-a-content-box-tag-box"
-                                                                                        >
-                                                                                            <!-- 태그 여러개 -->
-                                                                                            <div
-                                                                                                class="main-add-tag"
-                                                                                            >
-                                                                                                청바지
-                                                                                            </div>
-                                                                                            <div
-                                                                                                class="main-add-tag"
-                                                                                            >
-                                                                                                청바지
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </a>
-                                                                    </div>
-                                                                </div>
-                                                                <!-- 컴포넌트 화 필요 -->
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- 버튼 -->
-                                                </div>
+                                <div class="main-item-titie">
+                                    <div class="main-item-titie-box">
+                                        <div class="main-item-titie-box-top">
+                                            <div class="main-item-titie-box-top-title">
+                                                이런 캠페인은 어떠세요?
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                                <!-- 메인 내용 -->
+                                <div class="main-resent">
+                                    <!-- 메인 전체 묶는거 -->
+                                    <div class="main-resent-all" id="campaign-target">
+                                        <!-- 각각의 캠페인 -->
+                                    </div>
+                                </div>
+                                <button class="main-resent-all-add-btn-le hidden">
+                                    <div class="main-resent-all-add-btn-in">
+                                        <svg viewBox="0 0 48 48">
+                                            <path
+                                                    fill-rule="evenodd"
+                                                    clip-rule="evenodd"
+                                                    d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <button class="main-resent-all-add-btn-ri">
+                                    <div class="main-resent-all-add-btn-in">
+                                        <svg viewBox="0 0 48 48">
+                                            <path
+                                                    fill-rule="evenodd"
+                                                    clip-rule="evenodd"
+                                                    d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                            ></path>
+                                        </svg>
+                                    </div>
+                                </button>
                             </div>
                         </div>
                     </div>
