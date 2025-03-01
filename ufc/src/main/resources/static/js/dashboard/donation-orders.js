@@ -1,3 +1,9 @@
+// ✅ `cachedDonations` 전역 변수 선언을 중복 방지
+if (typeof cachedDonations === "undefined") {
+    var cachedDonations = []; // 전역 변수로 설정
+}
+
+
 function initDonationOrders() {
     console.log("🎁 기부 내역 관리 JS 실행됨");
 
@@ -11,73 +17,22 @@ function initDonationOrders() {
         fragmentContainer.addEventListener("click", modifyApprovalClickHandler);
     }
 
+    initFilters();
     // 최초 데이터 로드 (백엔드에서 필터링된 데이터 사용)
     loadDonationOrders();
-
-    // "전체 선택" 체크박스 기능
-    document.getElementById("selectAll")?.addEventListener("change", (e) => {
-        document.querySelectorAll('tbody input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = e.target.checked;
-        });
-    });
-
-    // 필터 변경 시 적용
-    document.getElementById('status')?.addEventListener("change", applyFilters);
-    document.querySelectorAll(".date-range input[type='date']").forEach(input => {
-        input.addEventListener("change", applyFilters);
-    });
-
-    // 기간 선택 버튼 기능
-    document.querySelectorAll(".period-buttons button").forEach((button) => {
-        button.addEventListener("click", () => {
-            document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
-            button.classList.add("active");
-            updateDateRange(button.textContent);
-            applyFilters();
-        });
-    });
-
-    function updateDateRange(period) {
-        const endDate = new Date();
-        let startDate = new Date();
-
-        switch (period) {
-            case "오늘":
-                break;
-            case "1주일":
-                startDate.setDate(endDate.getDate() - 7);
-                break;
-            case "1개월":
-                startDate.setMonth(endDate.getMonth() - 1);
-                break;
-            case "3개월":
-                startDate.setMonth(endDate.getMonth() - 3);
-                break;
-        }
-
-        document.querySelectorAll(".date-range input[type='date']")[0].value = formatDate(startDate);
-        document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
-    }
-
-    function formatDate(date) {
-        return date.toISOString().split("T")[0];
-    }
-}
-
-// 필터 적용 함수
-function applyFilters() {
-    const status = document.getElementById('status')?.value;
-    const startDate = document.querySelector(".date-range input[type='date']")?.value;
-    const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value;
-
-    console.log("📊 필터 적용:", { status, startDate, endDate });
-
-    loadDonationOrders({ status, startDate, endDate });
 }
 
 // 기부 내역 가져오기
-async function loadDonationOrders(filters = {}) {
+async function loadDonationOrders(filters = {}, forceReload = false) {
     try {
+        // 🔹 forceReload가 false이고, 캐싱된 데이터가 있으면 API 호출 없이 캐싱된 데이터 사용
+        if (!forceReload && Object.keys(filters).length === 0 && cachedDonations.length > 0) {
+            console.log("🔄 캐싱된 데이터 사용 (필터 적용)");
+            updateDonationCounts(getDonationCounts(cachedDonations)); // ✅ 상태 카드 값 업데이트
+            renderDonationOrders(cachedDonations);
+            return;
+        }
+
         console.log("🚀 기부 주문 데이터 로딩 중...", filters);
 
         let queryParams = new URLSearchParams(filters).toString();
@@ -94,26 +49,20 @@ async function loadDonationOrders(filters = {}) {
             console.warn("⚠ 기부 데이터가 비어 있습니다:", data.donations);
         }
 
-        // 기부 상태별 개수 업데이트
+        // 🔹 처음 데이터 로드 시 `cachedDonations`에 저장
+        cachedDonations = data.donations;
+
+        // ✅ 상태 카드 값 업데이트
         updateDonationCounts(data.donationCounts);
 
-        // 테이블 데이터 업데이트
-        renderDonationOrders(data.donations);
+        // ✅ 테이블 데이터 업데이트
+        renderDonationOrders(cachedDonations);
     } catch (error) {
         console.error("❌ 기부 주문 데이터 로딩 실패:", error);
     }
 }
 
-
-// 기부 상태별 개수 업데이트
-function updateDonationCounts(counts) {
-    document.getElementById("pendingDonationCount").textContent = counts.pending || 0;
-    document.getElementById("processingDonationCount").textContent = counts.processing || 0;
-    document.getElementById("rejectedDonationCount").textContent = counts.rejected || 0;
-    document.getElementById("approvedDonationCount").textContent = counts.approved || 0;
-}
-
-
+// 기부 내역 렌더링
 async function renderDonationOrders(donations) {
     const tbody = document.querySelector(".donation-table tbody");
     if (!tbody) {
@@ -175,19 +124,6 @@ async function renderDonationOrders(donations) {
 
     console.log("✅ 기부 데이터 렌더링 완료!");
 }
-
-
-
-
-function getStatusClass(status) {
-    return status === "pending" ? "pending" :
-        status === "approved" ? "approved" : "rejected";
-}
-function getStatusText(status) {
-    return status === "pending" ? "검수 대기" :
-        status === "approved" ? "승인" : "반려";
-}
-
 
 async function updateRowAfterInspection(donationId, isApproved) {
     const row = document.querySelector(`.donation-checkbox[value="${donationId}"]`)?.closest("tr");
@@ -255,6 +191,13 @@ async function handleApprovalClick(event) {
 
             console.log(`✅ 기부 ${isApproved ? "승인" : "반려"} 성공:`, donationId);
 
+
+            // 🚀 캐시 데이터(`cachedDonations`)도 변경
+            let cachedDonation = cachedDonations.find(donation => donation.donationId == donationId);
+            if (cachedDonation) {
+                cachedDonation.status = isApproved ? "approved" : "rejected"; // 🔹 캐시 데이터 업데이트
+            }
+
             // 🚨 백엔드에서 updateDonationStatus 실행되었는지 확인
             let responseData = await response.json();
             console.log("📌 서버 응답 데이터:", responseData);
@@ -268,7 +211,7 @@ async function handleApprovalClick(event) {
     }
 }
 
-
+// "수정" 버튼을 삭제하고 승인/반려 버튼 복구
 function resetApprovalStatus(donationId) {
     const row = document.querySelector(`.donation-checkbox[value="${donationId}"]`)?.closest("tr");
     if (!row) return;
@@ -284,7 +227,7 @@ function resetApprovalStatus(donationId) {
     console.log(`🔄 승인/반려 버튼 복구 완료: ${donationId}`);
 }
 
-
+// resetApprovalStatus(donationId)를 호출하여 승인/반려 버튼 복구
 function modifyApprovalClickHandler(event) {
     let target = event.target;
 
@@ -295,5 +238,259 @@ function modifyApprovalClickHandler(event) {
     }
 }
 
-// ✅ 프래그먼트 변경 감지 시 이벤트 리스너 재적용
-document.addEventListener("reapplyEventListeners", initDonationOrders);
+// 기부 상태별 개수 업데이트
+function updateDonationCounts(counts) {
+    document.getElementById("pendingDonationCount").textContent = counts.pending || 0;
+    document.getElementById("processingDonationCount").textContent = counts.processing || 0;
+    document.getElementById("rejectedDonationCount").textContent = counts.rejected || 0;
+    document.getElementById("approvedDonationCount").textContent = counts.approved || 0;
+
+    // ✅ 전체 개수 업데이트
+    document.querySelector(".left-section span").textContent = `목록 (총 ${cachedDonations.length}개)`;
+}
+
+function getStatusClass(status) {
+    return status === "processing" ? "processing" : // 🔹 추가
+        status === "pending" ? "pending" :
+            status === "approved" ? "approved" : "rejected";
+}
+
+function getStatusText(status) {
+    return status === "processing" ? "기부 진행 중" : // 🔹 추가
+        status === "pending" ? "검수 대기" :
+            status === "approved" ? "승인" : "반려";
+}
+
+
+function initFilters() {
+    console.log("🛠 필터 초기화 실행됨");
+
+    // 기존 이벤트 리스너 제거 후 다시 등록
+    document.querySelector(".btn-primary")?.removeEventListener("click", applyFilters);
+    document.querySelector(".btn-primary")?.addEventListener("click", applyFilters);
+
+    document.querySelector(".btn-secondary")?.removeEventListener("click", resetFilters);
+    document.querySelector(".btn-secondary")?.addEventListener("click", resetFilters);
+
+    // 상태 필터 변경 시 자동 적용
+    document.querySelector("select.search-input")?.removeEventListener("change", applyFilters);
+    document.querySelector("select.search-input")?.addEventListener("change", applyFilters);
+
+    // 날짜 입력 필터 변경 시 자동 적용
+    document.querySelectorAll(".date-range input[type='date']").forEach(input => {
+        input.removeEventListener("change", applyFilters);
+        input.addEventListener("change", applyFilters);
+    });
+
+    // 기간 버튼 클릭 시 필터 적용
+    document.querySelectorAll(".period-buttons button").forEach(button => {
+        button.removeEventListener("click", handlePeriodClick);
+        button.addEventListener("click", handlePeriodClick);
+    });
+}
+
+function handlePeriodClick(event) {
+    document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+    updateDateRange(event.target.textContent);
+    applyFilters();
+}
+
+function applyFilters() {
+    if (!cachedDonations || cachedDonations.length === 0) {
+        console.warn("⚠️ 캐시된 기부 데이터가 없습니다.");
+        return;
+    }
+
+    // 캠페인 제목과 기부자 이름 모두 검색하는 하나의 텍스트 입력 필드
+    const searchText = document.querySelector(".search-input[type='text']").value.trim().toLowerCase();
+    const status = document.querySelector("select.search-input")?.value;
+    const startDate = document.querySelector(".date-range input[type='date']:nth-of-type(1)")?.value;
+    const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value;
+
+    let filteredDonations = cachedDonations.filter(donation => {
+        let matchesSearch = true;
+        let matchesStatus = true;
+        let matchesDate = true;
+
+        // 검색어가 입력되어 있다면 캠페인 제목 또는 기부자 이름에서 검색어가 포함되어 있는지 확인
+        if (searchText) {
+            const normalizedSearch = searchText.replace(/\s+/g, "");
+            const normalizedTitle = donation.campaignTitle.replace(/\s+/g, "").toLowerCase();
+            const normalizedDonor = donation.userName.replace(/\s+/g, "").toLowerCase();
+            matchesSearch =
+                normalizedTitle.includes(normalizedSearch) ||
+                normalizedDonor.includes(normalizedSearch);
+        }
+
+        if (status) {
+            matchesStatus = donation.status === status;
+        }
+
+        if (startDate && endDate) {
+            const donationDate = new Date(donation.donatedDate).toISOString().split("T")[0];
+            matchesDate = donationDate >= startDate && donationDate <= endDate;
+        }
+
+        return matchesSearch && matchesStatus && matchesDate;
+    });
+
+    // 현재 선택된 정렬 기준을 적용
+    const sortOrder = document.getElementById("sortOrder").value;
+    filteredDonations = sortDonations(filteredDonations, sortOrder);
+
+    renderDonationOrders(filteredDonations);
+}
+
+
+function resetFilters() {
+    document.querySelector(".search-input[type='text']").value = "";
+
+    const statusSelect = document.querySelector("select.search-input");
+    if (statusSelect) {
+        statusSelect.value = "";
+    }
+
+    document.querySelectorAll(".date-range input[type='date']").forEach(input => input.value = "");
+
+    document.querySelectorAll(".period-buttons button").forEach(button => button.classList.remove("active"));
+    document.querySelector(".period-buttons button:first-child").classList.add("active");
+
+    applyFilters(); // 초기화 후 필터 다시 적용
+}
+
+function updateDateRange(period) {
+    const endDate = new Date();
+    let startDate = new Date();
+
+    switch (period) {
+        case "오늘":
+            break;
+        case "1주일":
+            startDate.setDate(endDate.getDate() - 7);
+            break;
+        case "1개월":
+            startDate.setMonth(endDate.getMonth() - 1);
+            break;
+        case "3개월":
+            startDate.setMonth(endDate.getMonth() - 3);
+            break;
+    }
+
+    document.querySelectorAll(".date-range input[type='date']")[0].value = formatDate(startDate);
+    document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
+}
+
+function formatDate(date) {
+    return date.toISOString().split("T")[0];
+}
+
+function sortDonations(donations, sortOrder) {
+    const sorted = [...donations]; // 원본 배열을 복사
+    switch (sortOrder) {
+        case "latest":
+            sorted.sort((a, b) => new Date(b.donatedDate) - new Date(a.donatedDate));
+            break;
+        case "oldest":
+            sorted.sort((a, b) => new Date(a.donatedDate) - new Date(b.donatedDate));
+            break;
+        case "campaignTitleAsc":
+            sorted.sort((a, b) => a.campaignTitle.localeCompare(b.campaignTitle));
+            break;
+        case "campaignTitleDesc":
+            sorted.sort((a, b) => b.campaignTitle.localeCompare(a.campaignTitle));
+            break;
+    }
+    return sorted;
+}
+
+document.getElementById("sortOrder")?.addEventListener("change", function () {
+    applyFilters();
+});
+
+
+// ✅ 상태 카드 값 업데이트를 위한 카운트 계산 함수
+function getDonationCounts(donations) {
+    return donations.reduce((acc, donation) => {
+        acc[donation.status] = (acc[donation.status] || 0) + 1;
+        return acc;
+    }, { pending: 0, processing: 0, rejected: 0, approved: 0 });
+}
+
+// 전체 승인 처리 함수 (선택된 항목들을 승인 처리)
+async function bulkApproveSelectedDonations() {
+    const checkboxes = document.querySelectorAll('.donation-checkbox:checked');
+    if (checkboxes.length === 0) {
+        console.warn("승인할 기부 내역이 선택되지 않았습니다.");
+        return;
+    }
+    // 선택된 각 기부 항목에 대해 승인 처리
+    for (const checkbox of checkboxes) {
+        const donationId = checkbox.value;
+        const donation = cachedDonations.find(d => d.donationId == donationId);
+        // 기부 상태가 pending인 경우에만 승인 대상
+        if (donation && donation.status === "pending") {
+            // 배송 상태 확인 (배송완료여야 승인 가능)
+            let trackingStatus = donation.trackingStatus ? donation.trackingStatus.trim() : "배송 상태 없음";
+            const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
+            if (isDelivered) {
+                try {
+                    let response = await fetch(`/api/creator/dashboard/donation/orders/${donationId}/approved`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ donationId, status: "approved" })
+                    });
+                    if (!response.ok) {
+                        console.error(`Donation ${donationId} 승인 실패: HTTP 오류 ${response.status}`);
+                        continue;
+                    }
+                    // 캐시 데이터 업데이트
+                    donation.status = "approved";
+                    // UI 업데이트 (개별 행에 대해 승인 처리된 상태 적용)
+                    updateRowAfterInspection(donationId, true);
+                } catch (error) {
+                    console.error(`Donation ${donationId} 승인 실패:`, error);
+                }
+            }
+        }
+    }
+    // 승인 처리가 끝난 후 전체 체크박스 및 개별 체크박스 모두 해제
+    document.getElementById("selectAll").checked = false;
+    document.querySelectorAll(".donation-checkbox").forEach(chk => chk.checked = false);
+    console.log("전체 승인 처리 완료.");
+}
+
+// "전체 승인" 버튼 클릭 시 bulkApproveSelectedDonations 함수 호출
+document.querySelector(".table-header > button.btn-secondary")?.addEventListener("click", bulkApproveSelectedDonations);
+
+// 전체 체크박스(select all) 변경 시, 모든 행을 체크 처리하고, 
+// 검수대기 상태(pending)인 항목들을 자동으로 승인 처리
+document.getElementById("selectAll")?.addEventListener("change", function (event) {
+    const isChecked = event.target.checked;
+    const checkboxes = document.querySelectorAll(".donation-checkbox");
+    checkboxes.forEach(chk => {
+        chk.checked = isChecked;
+    });
+});
+
+// 데이터 갱신 버튼 클릭 시, 데이터 갱신
+document.querySelector(".data-refresh-btn")?.addEventListener("click", function () {
+    // forceReload 매개변수를 true로 하여 새 데이터를 불러옵니다.
+    loadDonationOrders({}, true);
+});
+
+// ✅ 프래그먼트 변경 후 `cachedDonations`를 이용해 데이터 갱신
+document.addEventListener("reapplyEventListeners", () => {
+    console.log("🔄 프래그먼트 변경 감지: 상태 카드 값 갱신");
+
+    initFilters();
+
+    // ✅ 기존 데이터로 상태 카드 값 다시 적용
+    if (cachedDonations.length > 0) {
+        updateDonationCounts(getDonationCounts(cachedDonations));
+        renderDonationOrders(cachedDonations);
+    } else {
+        // ✅ 캐싱된 데이터가 없으면 다시 불러오기
+        loadDonationOrders({}, true);
+    }
+});

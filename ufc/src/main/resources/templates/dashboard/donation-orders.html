@@ -30,8 +30,8 @@
                 <!-- Search Section -->
                 <div class="search-section">
                     <div class="search-row">
-                        <label>캠페인 제목</label>
-                        <input type="text" class="search-input" placeholder="캠페인 제목을 입력하세요">
+                        <label>캠페인 제목/기부자</label>
+                        <input type="text" class="search-input" placeholder="캠페인 제목/기부자를 입력하세요">
                     </div>
                     <div class="search-row">
                         <label>기부 상태</label>
@@ -67,12 +67,19 @@
                 <div class="table-header">
                     <div class="left-section">
                         <span>목록 (총 [[${donationCounts}]]개)</span>
-                        <select>
-                            <option>최근 기부순</option>
-                            <option>오래된 기부순</option>
+                        <select id="sortOrder">
+                            <option value="latest">최신 기부순</option>
+                            <option value="oldest">오래된 기부순</option>
+                            <option value="campaignTitleAsc">캠페인명 오름차순</option>
+                            <option value="campaignTitleDesc">캠페인명 내림차순</option>
                         </select>
                     </div>
-                    <button class="btn-secondary">전체 승인</button>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary">전체 승인</button>
+                        <button class="btn btn-info data-refresh-btn">
+                            데이터 갱신 <span class="refresh-icon">&#x21bb;</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="table-container">
                     <table class="donation-table">
