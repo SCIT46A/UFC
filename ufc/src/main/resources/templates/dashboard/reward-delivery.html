@@ -157,50 +157,19 @@
                             <th>
                                 <input type="checkbox" id="selectAll" />
                             </th>
-                            <th>캠페인아이디</th>
+                            <th>캠페인 제목</th>
                             <th>기부번호</th>
                             <th>기부자명</th>
                             <th>기부자연락처</th>
                             <th>기부자주소</th>
-                            <th>리워드내역</th>
+                            <th>리워드 내역</th>
                             <th>발송마감일</th>
-                            <th>택배사명(발송방법)</th>
+                            <th>택배사</th>
                             <th>송장번호</th>
                             <th>발송처리</th>
                             <th>배송상태</th>
                         </tr>
                     </thead>
-                    <!-- <tbody>
-                        <tr th:each="delivery : ${deliveries}" th:if="${not #lists.isEmpty(deliveries)}">
-                            <td><input type="checkbox" th:value="${delivery.r_delivery_id}"></td>
-                            <td th:text="${delivery.sellerId}">판매자ID</td>
-                            <td th:text="${delivery.orderNumber}">주문번호</td>
-                            <td th:text="${delivery.status}">주문상태</td>
-                            <td th:text="${delivery.productId}">상품번호</td>
-                            <td th:text="${delivery.productName}">상품명</td>
-                            <td th:text="${#temporals.format(delivery.dueDate, 'yyyy-MM-dd')}">발송마감일</td>
-                            <td th:text="${delivery.deliveryCompany}">택배사명(발송방법)</td>
-                            <td th:text="${delivery.invoice != null ? delivery.invoice : '-'}">송장번호</td>
-                            <td th:text="${delivery.deliveryPolicy}">발송정책</td>
-                        </tr>
-
-                       
-                        <tr th:if="${#lists.isEmpty(deliveries)}">
-                            <td colspan="10">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody> -->
-
                     <tbody id="delivery-table-body">
                         <!-- JS에서 동적으로 데이터 삽입 -->
                     </tbody>
