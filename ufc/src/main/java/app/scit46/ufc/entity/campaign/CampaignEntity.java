@@ -99,8 +99,6 @@ public class CampaignEntity {
     @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY)
     private List<CampaignTagEntity> campaignTags;
 
-    @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY)
-    private List<RewardDeliveryEntity> rewardDeliveries;
 
     // OneToMany: AlertTarget.target_campaign 참조
     @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)

@@ -4,9 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import app.scit46.ufc.dto.reward.RewardDTO;
-import app.scit46.ufc.entity.ItemEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -51,17 +49,22 @@ public class RewardEntity {
     @JoinColumn(name = "campaign_id", nullable = false)
     private CampaignEntity campaign;
 
-    // OneToMany: RewardItems.reward 참조
+    // 기존의 RewardItemEntity와의 관계
     @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
     private List<RewardItemEntity> rewardItems;
 
-    // OneToMany: RewardMaterials.reward 참조
+    // 기존의 RewardMaterialEntity와의 관계
     @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
     private List<RewardMaterialEntity> rewardMaterials;
+
+    // 추가된 RewardDeliveryEntity와의 1:N 관계 설정
+    @OneToMany(mappedBy = "reward", fetch = FetchType.LAZY)
+    private List<RewardDeliveryEntity> rewardDeliveries;
 
     public static RewardEntity toEntity(RewardDTO dto) {
         return RewardEntity.builder()
                 .rewardId(dto.getRewardId())
+                .rewardName(dto.getRewardName())
                 .amount(dto.getAmount())
                 .campaign(CampaignEntity.toEntity(dto.getCampaign()))
                 .rewardItems(dto.getRewardItems().stream()

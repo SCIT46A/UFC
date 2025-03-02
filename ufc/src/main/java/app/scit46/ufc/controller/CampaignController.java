@@ -106,17 +106,23 @@ public class CampaignController {
     }
 
     @GetMapping("/pay")
-    public String payCampaign(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false); // 세션 가져오기
-        Long loginUserId = null; // 기본값 설정
-
+    public String payCampaign(@RequestParam(required = false) String donationDetails,
+                              HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
         if (session != null) {
-            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            loginUserId = (Long) session.getAttribute("loginUserId");
         }
         String username = request.getUserPrincipal().getName();
         model.addAttribute("username", username);
+
+        // donationDetails 값이 전달되었으면 모델에 추가합니다.
+        model.addAttribute("donationDetails", donationDetails);
+        log.info(donationDetails.toString());
+
         return "campaign/pay-campaign";
     }
+
 
     @GetMapping("/intro")
     public String intro() {
