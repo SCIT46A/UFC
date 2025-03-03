@@ -8,12 +8,8 @@
         <div class="content-wrapper">
             <!-- Delivery Tracking Status -->
             <section class="card-container">
-                <!-- <div class="tracking-header">
-                        <span class="text-red">배송지 확인해주세요!</span>
-                        <span class="text-green">발송처리를 진행해주세요</span>
-                    </div> -->
-
                 <div class="tracking-grid">
+                    <!-- 발송기한 초과 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper gray">
@@ -26,8 +22,10 @@
                             </div>
                             <span>발송기한 초과</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="overdueCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 자동처리 예정 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper gray">
@@ -39,8 +37,10 @@
                             </div>
                             <span>자동처리 예정</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="autoProcessCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 신규주문/발주 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper green">
@@ -54,20 +54,24 @@
                             </div>
                             <span>신규주문/발주 건</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="newOrdersCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 배송 준비 완료 (추가된 상태) -->
                     <div class="tracking-card">
                         <div class="card-content">
-                            <div class="icon-wrapper gray">
+                            <div class="icon-wrapper blue">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
                             </div>
-                            <span>신규주문/발주 처리</span>
+                            <span>배송 준비 완료</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="readyToShipCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 발송처리 D-1 -->
                     <div class="tracking-card orange">
                         <div class="card-content">
                             <div class="icon-wrapper">
@@ -81,8 +85,10 @@
                             </div>
                             <span>발송처리 D-1</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="shipmentD1Count">0<span>건</span></div>
                     </div>
+
+                    <!-- 발송마감 D-day -->
                     <div class="tracking-card orange">
                         <div class="card-content">
                             <div class="icon-wrapper">
@@ -94,7 +100,7 @@
                             </div>
                             <span>발송마감 D-day</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="shipmentDdayCount">0<span>건</span></div>
                     </div>
                 </div>
             </section>
@@ -195,9 +201,11 @@
                     <label>택배사</label>
                     <select class="search-input">
                         <option value="">택배사 선택</option>
-                        <option value="cj">CJ대한통운</option>
-                        <option value="lotte">롯데택배</option>
-                        <option value="hanjin">한진택배</option>
+                        <option value="kr.cjlogistics">CJ대한통운</option>
+                        <option value="kr.epost">우체국택배</option>
+                        <option value="kr.hanjin">한진택배</option>
+                        <option value="kr.cupost">CU편의점택배</option>
+                        <option value="kr.cvsnet">GS Postbox</option>
                     </select>
                 </div>
                 <div class="search-row">

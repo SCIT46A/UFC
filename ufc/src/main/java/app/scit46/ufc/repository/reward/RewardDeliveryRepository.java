@@ -1,11 +1,15 @@
 package app.scit46.ufc.repository.reward;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.util.List;
 
-public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEntity, Long> {
-    List<RewardDeliveryEntity> findByCampaign_CampaignIdInAndStatus(List<Long> campaignIds, String status);
+import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 
-    List<RewardDeliveryEntity> findByCampaign_CampaignIdIn(List<Long> campaignIds);
+public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEntity, Long> {
+
+    @Query("SELECT r FROM RewardDeliveryEntity r WHERE r.reward.campaign.campaignId IN :campaignIds")
+    List<RewardDeliveryEntity> findByCampaignIdIn(@Param("campaignIds") List<Long> campaignIds);
+
 }

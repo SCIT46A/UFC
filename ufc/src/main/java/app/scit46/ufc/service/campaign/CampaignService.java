@@ -252,4 +252,8 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
+    public List<Long> getSuccessfulCampaignIdsByCreator(Long creatorId) {
+        return campaignRepository.findSuccessfulCampaignIdsByCreator(creatorId);
+    }
+
 }

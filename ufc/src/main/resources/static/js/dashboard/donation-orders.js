@@ -461,7 +461,7 @@ async function bulkApproveSelectedDonations() {
 }
 
 // "전체 승인" 버튼 클릭 시 bulkApproveSelectedDonations 함수 호출
-document.querySelector(".table-header > button.btn-secondary")?.addEventListener("click", bulkApproveSelectedDonations);
+document.querySelector(".btn-group > button.btn-secondary")?.addEventListener("click", bulkApproveSelectedDonations);
 
 // 전체 체크박스(select all) 변경 시, 모든 행을 체크 처리하고, 
 // 검수대기 상태(pending)인 항목들을 자동으로 승인 처리

@@ -31,4 +31,8 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
     List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
 
+    // ✅ 창작자가 성공한 캠페인 ID 조회 (Creator Dashboard)
+    @Query("SELECT c.campaignId FROM CampaignEntity c WHERE c.createdBy.id = :creatorId AND c.isSuccess = true")
+    List<Long> findSuccessfulCampaignIdsByCreator(@Param("creatorId") Long creatorId);
+
 }
