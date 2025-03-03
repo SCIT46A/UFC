@@ -46,16 +46,6 @@ public class CreatorService {
         creator.setCreatorStatus(true);
     }
 
-    // 검토 필요
-    public void updateCreator(CreatorDTO creator) {
-        // 테스트하는데 문제생겨서 주석했습니다 필요 시 문의주세요 - cho
-        // creatorRepository.save(CreatorEntity.toEntity(creator,
-        // ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
-        // ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
-        // ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
-        // UserDTO.builder().userId(creator.getOwnUser()).build()));
-    }
-
     // 해당 내용 추가됨
     @Transactional
     public void createCreator(CreatorCreateDTO creatorCreateDTO, String OAuthId) {
@@ -76,6 +66,29 @@ public class CreatorService {
         creatorRepository.save(creator);
         System.out.println("✅ DB 저장 완료!");
     }
+    /*
+     * @Transactional
+     * public void updateCreatorProfile(CreatorDTO creatorDTO) {
+     * CreatorEntity creator = creatorRepository.findById(creatorDTO.getCreatorId())
+     * .orElseThrow(() -> new RuntimeException("창작자를 찾을 수 없습니다!"));
+     * 
+     * creator.setIntro(creatorDTO.getIntro());
+     * creator.setCompanyName(creatorDTO.getCompanyName());
+     * creator.setAddress(creatorDTO.getAddress());
+     * creator.setBName(creatorDTO.getBName());
+     * creator.setIntro(creatorDTO.getIntro());
+     * 
+     * if (creatorDTO.getProImgUrl() != null) {
+     * creator.setProImgUrl(ImageUrlEntity.toEntity(creatorDTO.getProImgUrl()));
+     * }
+     * if (creatorDTO.getBackImgUrl() != null) {
+     * creator.setBackImgUrl(ImageUrlEntity.toEntity(creatorDTO.getBackImgUrl()));
+     * }
+     * 
+     * creatorRepository.save(creator);
+     * System.out.println("✅ 프로필 업데이트 완료!");
+     * }
+     */
 
     // 기존 getCreator 메서드 삭제 - 중복 메서드 해결
     @Transactional
@@ -85,7 +98,7 @@ public class CreatorService {
 
         creator.setIntro(creatorDTO.getIntro());
         creator.setCompanyName(creatorDTO.getCompanyName());
-        creator.setAddress(creatorDTO.getAddress());
+        creator.setBName(creatorDTO.getBName());
 
         creatorRepository.save(creator);
         System.out.println("✅ 프로필 업데이트 완료!");

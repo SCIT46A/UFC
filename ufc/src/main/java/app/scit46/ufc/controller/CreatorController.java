@@ -30,16 +30,6 @@ public class CreatorController {
     private final ImageService imageService;
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
-    /*
-     * @GetMapping("/create")
-     * public String getCreatorPage(Model model, HttpServletRequest request) {
-     * model.addAttribute("message", "창작가 개설 페이지입니다!");
-     * model.addAttribute("username", request.getUserPrincipal().getName().trim());
-     * return "creator/creator-create"; // ✅ ".html" 붙이지 않음!
-     * }
-     */
-
-    /** 🔹 [GET] 창작가 개설 페이지 출력 */
     @GetMapping("/create")
     public String getCreatorPage(Model model) {
         model.addAttribute("message", "창작가 개설 페이지입니다!");
@@ -49,8 +39,8 @@ public class CreatorController {
     /** 🔹 [GET] 창작가 캠페인 페이지 출력 */
     @GetMapping("/campaign")
     public String getCreatorCampaignPage(Model model) {
-        model.addAttribute("message", "창작가 캠페인 페이지입니다!");
-        return "creator/creator-campaign"; // ✅ ".html" 붙이지 않음!
+        System.out.println("✅ [LOG] 창작가 캠페인 페이지 요청됨!"); // 🚀 요청 확인용 로그
+        return "creator/creator-campaign";
     }
 
     // /** 🔹 [GET] 창작가 프로필 수정 페이지 출력 */
@@ -90,13 +80,15 @@ public class CreatorController {
         return "creator/creator-edit";
     }
 
-    /** 🔹 [POST] 프로필 수정 */
+    /** 🔹 [POST] 창작가 프로필 수정 */
     @PostMapping("/update")
     @ResponseBody
-    public ResponseEntity<String> updateProfile(@RequestBody CreatorDTO creatorDTO) {
-        System.out.println("📥 수정 데이터: " + creatorDTO.toString());
+    public ResponseEntity<String> updateCreator(@RequestBody CreatorDTO creatorDTO) {
+        System.out.println("📥 수정 데이터 수신: " + creatorDTO.toString());
 
-        creatorService.updateCreator(creatorDTO);
+        // 서비스에서 업데이트 로직 실행
+        creatorService.updateCreatorProfile(creatorDTO);
+
         return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다!");
     }
 
@@ -104,7 +96,26 @@ public class CreatorController {
     @GetMapping("/campaign/{id}")
     public String getCreatorCampaignPage(@PathVariable Long id, Model model) {
         CreatorDTO creator = creatorService.getCreator(id);
+
+        if (creator == null) {
+            // 기본 데이터를 설정해서 NullPointerException 방지
+            creator = new CreatorDTO();
+            creator.setCreatorId(0L);
+            creator.setCompanyName("기본 상호명");
+            creator.setIntro("기본 소개글");
+        }
+
         model.addAttribute("creator", creator);
         return "creator/creator-campaign";
     }
+
+    /** 🔹 [GET] 기존 데이터 불러오기 */
+    @GetMapping("/edit/data")
+    @ResponseBody
+    public ResponseEntity<CreatorDTO> getCreatorEditData(HttpServletRequest httpServletRequest) {
+        String OAuthId = httpServletRequest.getUserPrincipal().getName();
+        CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
+        return ResponseEntity.ok(creator);
+    }
+
 }

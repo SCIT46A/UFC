@@ -26,100 +26,102 @@
     <body>
         <div th:replace="~{fix/header :: header}"></div>
         <!-- 창작가개설 페이지 시작 -->
-        <main class="club-create">
-            <div id="app">
-                <div class="create-container">
-                    <!-- 창작가에 대한 프로필 수정 입력 -->
-                    <div class="img-form-wrap" style="display: block;" enctype="multipart/form-data">
-                        <div class="img-form-content-wrap">
-                            <div class="img-form-text-wrap">
-                                <div class="profile-edit-creator-wrap">
-                                    <div class="profile-edit-creator">
-                                        프로필 수정하기
-                                    </div>
-                                    <div class="img-form-profile-size-error">
-                                        최대 10MB 이하의 이미지만 첨부할 수
-                                        있습니다.
-                                    </div>
-                                    <div class="img-form-settings-wrap">
-                                        <div class="cover-thumbnail-wrap" onclick="openCover()">
-                                            <div class="cover-thumbnail-container"></div>
-                                            <img class="cover-thumbnail" src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="커버 썸네일">
-                                            <div class="cover-upload-wrap">
-                                                커버 업로드
+        <form id="editForm" method="POST" action="/creator/edit">
+            <main class="club-create">
+                <div id="app">
+                    <div class="create-container">
+                        <!-- 창작가에 대한 프로필 수정 입력 -->
+                        <div class="img-form-wrap" style="display: block;" enctype="multipart/form-data">
+                            <div class="img-form-content-wrap">
+                                <div class="img-form-text-wrap">
+                                    <div class="profile-edit-creator-wrap">
+                                        <div class="profile-edit-creator">
+                                            프로필 수정하기
+                                        </div>
+                                        <div class="img-form-profile-size-error">
+                                            최대 10MB 이하의 이미지만 첨부할 수
+                                            있습니다.
+                                        </div>
+                                        <div class="img-form-settings-wrap">
+                                            <div class="cover-thumbnail-wrap" onclick="openCover()">
+                                                <div class="cover-thumbnail-container"></div>
+                                                <img class="cover-thumbnail" src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="커버 썸네일">
+                                                <div class="cover-upload-wrap">
+                                                    커버 업로드
+                                                </div>
+                                                <span class="upload-span-gray">&nbsp;&nbsp; 2000*263 이상 (7.6:1)
+                                                </span>
+                                                <div class="cover-hidden">
+                                                    <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*" >
+                                                    <img id="cover_preview" th:src="${backImgUrl}" /><br>
+                                                </div>
+                                                <div class="cover-delete-wrap">
+                                                    <img th:src="@{/images/category/cancel_image_icon.png}" class="cover-delete">
+                                                    <img th:src="@{/images/category/cancel_image_icon.png}" class="cover-delete-hover">
+                                                </div>
                                             </div>
-                                            <span class="upload-span-gray">&nbsp;&nbsp; 2000*263 이상 (7.6:1)
-                                            </span>
-                                            <div class="cover-hidden">
-                                                <input type="file" id="background-image" data-ratio="7.6:1" accept="image/*" >
-                                                <img id="cover_preview" th:src="${backImgUrl}" /><br>
-                                            </div>
-                                            <div class="cover-delete-wrap">
-                                                <img th:src="@{/images/category/cancel_image_icon.png}" class="cover-delete">
-                                                <img th:src="@{/images/category/cancel_image_icon.png}" class="cover-delete-hover">
+                                            <div class="club-detail-wrap">
+                                                <div class="img-form-thumbnail-wrap" onclick="openProfile()">
+                                                    <div class="img-form-thumbnail-bg"></div>
+                                                    <div class="img-form-img-wrap">
+                                                        <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="썸네일" class="img-form-thumbnail">
+                                                        <div class="profile-delete-wrap">
+                                                            <img th:src="@{/images/category/cancel_image_icon.png}" class="profile-delete">
+                                                            <img th:src="@{/images/category/cancel_image_icon.png}" class="profile-delete-hover">
+                                                        </div>
+                                                    </div>
+                                                    <div class="img-form-hidden">
+                                                        <input type="file" id="profile-image" accept="image/*" data-ratio="1:1">
+                                                        <img id="profile_preview" th:src="${profileImgUrl}" /><br>
+                                                    </div>
+                                                </div>
+                                                <div class="club-detail-title-wrap">
+                                                    <div class="club-detail-name-wrap">
+                                                        <div>
+                                                            <input type="text"  class="club-detail-name" id="update-name" name="nickname" th:value="${creator.bName}" placeholder="변경할 창작가명을 입력하세요.">
+                                                        </div>
+                                                        <div>
+                                                            <input type="text" class="company_name" id="update-company" name="company_name" th:value="${creator.companyName}" placeholder="상호명을 입력하세요.">
+                                                        </div>
+                                                    </div>
+                                                    <div class="club-detail-stats-wrap">
+                                                        <span>
+                                                            <span class="club-detail-stats-name">
+                                                                팔로워
+                                                            </span>
+                                                            <span class="club-detail-stats-count">0</span>
+                                                        </span>
+                                                        <span class="club-detail-stats-event">
+                                                            <span class="club-detail-stats-name">
+                                                                누적활동
+                                                            </span>
+                                                            <span class="club-detail-stats-count">0</span>
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <textarea class="club-detail-introduction" id="update-intro" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; width: 1000px; height: 100px;" placeholder="한마디 부탁드려요."></textarea>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="club-detail-wrap">
-                                            <div class="img-form-thumbnail-wrap" onclick="openProfile()">
-                                                <div class="img-form-thumbnail-bg"></div>
-                                                <div class="img-form-img-wrap">
-                                                    <img src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_upload_01.png" alt="썸네일" class="img-form-thumbnail">
-                                                    <div class="profile-delete-wrap">
-                                                        <img th:src="@{/images/category/cancel_image_icon.png}" class="profile-delete">
-                                                        <img th:src="@{/images/category/cancel_image_icon.png}" class="profile-delete-hover">
-                                                    </div>
-                                                </div>
-                                                <div class="img-form-hidden">
-                                                    <input type="file" id="profile-image" accept="image/*" data-ratio="1:1">
-                                                    <img id="profile_preview" th:src="${profileImgUrl}" /><br>
-                                                </div>
-                                            </div>
-                                            <div class="club-detail-title-wrap">
-                                                <div class="club-detail-name-wrap">
-                                                    <div>
-                                                        <input type="text"  class="club-detail-name" id="update-name" name="nickname" value="" placeholder="변경할 창작가명을 입력하세요.">
-                                                    </div>
-                                                    <div>
-                                                        <input type="text" class="company_name" id="update-company" name="company_name" value="" placeholder="상호명을 입력하세요.">
-                                                    </div>
-                                                </div>
-                                                <div class="club-detail-stats-wrap">
-                                                    <span>
-                                                        <span class="club-detail-stats-name">
-                                                            팔로워
-                                                        </span>
-                                                        <span class="club-detail-stats-count">0</span>
-                                                    </span>
-                                                    <span class="club-detail-stats-event">
-                                                        <span class="club-detail-stats-name">
-                                                            누적활동
-                                                        </span>
-                                                        <span class="club-detail-stats-count">0</span>
-                                                    </span>
-                                                </div>
-                                                <div>
-                                                    <textarea class="club-detail-introduction" id="update-intro" contenteditable="true" style="border: 1px solid #ccc; padding: 10px; width: 1000px; height: 100px;" placeholder="한마디 부탁드려요."></textarea>
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="img-form-buttons-wrap">
-                                    <div class="img-form-button-wrap">
-                                        <button type="button" class="img-form-prev-button">
-                                            취소
-                                        </button>
-                                        <button type="button" class="img-form-button" onclick="update_profile()">
-                                            프로필 수정
-                                        </button>
+                                    <div class="img-form-buttons-wrap">
+                                        <div class="img-form-button-wrap">
+                                            <button type="button" class="img-form-prev-button">
+                                                취소
+                                            </button>
+                                            <button type="button" class="img-form-button">
+                                                프로필 수정
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>  
+                        </div>  
+                    </div>
                 </div>
-            </div>
-        </main>
+            </main>
+        </form>
         <div th:replace="~{fix/footer :: footer}"></div>
     <!-- Code injected by live-server -->
     

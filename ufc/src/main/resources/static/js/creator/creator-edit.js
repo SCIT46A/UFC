@@ -270,6 +270,119 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
+
+document.querySelector(".img-form-button").addEventListener("click", function() {
+    Swal.fire({
+        title: '프로필을 수정하시겠습니까?',
+        text: '변경된 정보가 저장됩니다!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: '네, 수정할게요!',
+        cancelButtonText: '아니요, 취소할게요'
+    }).then(result => {
+        if (result.isConfirmed) {
+            // 1️⃣ 수정할 데이터 가져오기
+            let profileImageFile = document.getElementById('profile-image').files[0]; // 프로필 이미지
+            let backgroundImageFile = document.getElementById('background-image').files[0]; // 커버 이미지
+
+            const updateIntro = document.getElementById('update-intro').value || "소개 없음";
+            const updateName = document.getElementById('update-name').value || "창작가 없음";
+            const updateCompanyName = document.getElementById('update-company').value || "회사 없음";
+
+            // 2️⃣ 이미지 업로드 후 서버에 데이터 전송
+            Promise.all([
+                uploadImage(profileImageFile),  // 프로필 이미지 업로드
+                uploadImage(backgroundImageFile) // 커버 이미지 업로드
+            ]).then(images => {
+                console.log("📌 프로필 이미지 URL:", images[0]);
+                console.log("📌 커버 이미지 URL:", images[1]);
+
+                const updateData = {
+                    intro: updateIntro,
+                    bName: updateName,
+                    companyName: updateCompanyName,
+                    profileImgUrl: images[0] || null, // 프로필 이미지 URL (없으면 null)
+                    backImgUrl: images[1] || null // 커버 이미지 URL (없으면 null)
+                };
+
+                console.log("📌 최종 전송 데이터:", updateData);
+
+                return fetch("/creator/update", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updateData)
+                });
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("서버 오류 발생!");
+                return response.text();
+            })
+            .then(data => {
+                Swal.fire('수정 완료!', '프로필이 성공적으로 수정되었습니다.', 'success').then(() => {
+                    window.location.href = "/creator/campaign"; // ✅ 수정 완료 후 캠페인 페이지로 이동
+                });
+            })
+            .catch(error => {
+                console.error("❌ 오류 발생:", error);
+                Swal.fire('수정 실패!', '서버에 문제가 있습니다.', 'error');
+            });
+        }
+    });
+});
+
+async function uploadImage(imgFile) {
+    if (!imgFile) {
+        console.warn('⚠️ 이미지가 등록되지 않음 (null 반환)');
+        return null; // ✅ 이미지 없으면 null 반환
+    }
+
+    try {
+        let formData = new FormData();
+        formData.append('file', imgFile);
+
+        const response = await fetch('/api/image/upload', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('이미지 업로드 실패!');
+        }
+
+        const imageUrl = await response.text(); // 이미지 URL 반환
+        console.log("📌 이미지 업로드 성공! 결과:", imageUrl);
+        return imageUrl;
+
+    } catch (error) {
+        console.error('❌ 이미지 업로드 중 오류 발생:', error);
+        return null; // ❗ 에러 발생 시 null 반환
+    }
+}
+
+
+
+
+
+
+
+/*
+// 기존 데이터 불러오기
+document.addEventListener("DOMContentLoaded", async function () {
+    try {
+        const response = await fetch("/creator/edit/data");  // 🔹 수정할 데이터 요청
+        if (!response.ok) throw new Error("데이터 로드 실패");
+
+        const creator = await response.json();
+        document.getElementById("companyName").value = creator.companyName;
+        document.getElementById("bName").value = creator.bName;
+        document.getElementById("intro").value = creator.intro;
+    } catch (error) {
+        console.error("❌ 데이터 불러오기 실패:", error);
+    }
+});
+
 // 이벤트 자동 초기화 (새로고침)
 window.onload = function () {
     document.querySelector(".club-detail-name").value = "";
@@ -398,59 +511,7 @@ async function updateProfile() {
     }
 }
 */
-
-// 브라우저에서만 값 저장장
-document.addEventListener("DOMContentLoaded", function() {
-    const newName = document.querySelector(".club-detail-name");
-    const newCompany = document.querySelector(".company_name");
-    const newIntro = document.querySelector(".club-detail-introduction");
-    const newCover = document.querySelector(".cover-thumbnail-wrap");
-    const newProfile = document.querySelector(".img-form-thumbnail-wrap");
-    const saveProfile = document.querySelector(".img-form-button");
-
-    // 기존 데이터 불러오기 (수정 시 이전 값 유지)
-    if (localStorage.getItem("profileName")) {
-        newName.value = localStorage.getItem("profileName");
-    }
-
-    if (localStorage.getItem("profileCompany")) {
-        newCompany.value = localStorage.getItem("profileCompany");
-    }
-
-    if (localStorage.getItem("profileIntro")) {
-        newIntro.value = localStorage.getItem("profileIntro");
-    }
-
-    // 저장 버튼 클릭 시 데이터 저장
-    saveProfile.addEventListener("click", function() {
-        localStorage.setItem("profileName", newName.value);
-        localStorage.setItem("profileCompany", newCompany.value);
-        localStorage.setItem("profileIntro", newIntro.value);
-
-        // 이미지 파일 저장
-        const coverFile = newCover.files[0];
-        if (coverFile) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem("coverImage", e.target.result);
-            };
-            reader.readAsDataURL(coverFile);
-        }
-
-        const profileFile = newProfile.files[0];
-        if (profileFile) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                localStorage.setItem("profileImage", e.target.result);
-            };
-            reader.readAsDataURL(profileFile);
-        }
-
-        alert("프로필이 저장되었습니다.");
-        window.location.href = "creator-campaign.html"; // 페이지 이동
-    });
-});
-
+/*
 document.querySelector(".img-form-prev-button").addEventListener("click", function() {
     Swal.fire({
         title: '정말 취소하시겠습니까?',
@@ -472,20 +533,20 @@ document.querySelector(".img-form-prev-button").addEventListener("click", functi
                 timer: 2000,  // 2초 후 자동 닫힘
                 showConfirmButton: false
             }).then(() => {
-                window.location.href = "/ufc/src/main/resources/templates/creator/creator-campaign.html"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+                window.location.href = "/creator/campaign"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
             });
         } else {
             Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
         }
     });
-});
-
+});*/
+/*
 // 새로고침할 때 입력값 초기화
 window.onload = function () {
     sessionStorage.clear(); // 세션 스토리지 데이터 삭제 (브라우저 탭 닫으면 자동 삭제됨)
     localStorage.clear();
-};
-
+};*/
+/*
 // 이미지 URL을 File 객체로 변환하고 input에 넣어주는 함수
 async function setImageToInput(imgElement, inputElement) {
     try {
@@ -519,8 +580,8 @@ async function setImageToInput(imgElement, inputElement) {
     } catch (error) {
         console.error('이미지 설정 중 오류 발생:', error);
     }
-}
-
+}*/
+/*
 // 사용 예시
 document.addEventListener('DOMContentLoaded', function() {
     const imgElement = document.getElementById('profile_preview');
@@ -547,3 +608,4 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+*/
