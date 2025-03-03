@@ -2,11 +2,14 @@ package app.scit46.ufc.entity.product;
 
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ItemEntity;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -33,6 +36,16 @@ public class ProductEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)
     private CreatorEntity createdBy;
+
+    @Column(name = "price")
+    private Integer price;
+
+    @Column(name = "status")
+    private int status;
+
+    @Column(name = "create_time")
+    @CreationTimestamp
+    private LocalDateTime createTime;
 
     // OneToMany: ProductPayments.product 참조
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)

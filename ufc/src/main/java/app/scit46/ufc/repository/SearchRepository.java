@@ -47,7 +47,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "    (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = p.created_by) AS sellerName, " +
             "    i.name AS title, " +
             "    i.description AS description, " +
-            "    i.price AS price, " +
+            "    p.price AS price, " +
             "    NULL AS remainingDays, " +
             "    NULL AS donatedQuantity, " +
             "    NULL AS donationPercentage, " +
@@ -126,7 +126,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = p.created_by) AS sellerName, " +
             "  i.name AS title, " +
             "  i.description AS description, " +
-            "  i.price AS price, " +
+            "  p.price AS price, " +
             "  NULL AS remainingDays, " +
             "  NULL AS donatedQuantity, " +
             "  NULL AS donationPercentage, " +
@@ -180,7 +180,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  (SELECT cr.b_name FROM Creators cr WHERE cr.creator_id = p.created_by) AS sellerName, " +
             "  i.name AS title, " +
             "  i.description AS description, " +
-            "  i.price AS price, " +
+            "  p.price AS price, " +
             "  NULL AS remainingDays, " +
             "  NULL AS donatedQuantity, " +
             "  NULL AS donationPercentage, " +

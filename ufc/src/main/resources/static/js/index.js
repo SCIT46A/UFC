@@ -64,9 +64,9 @@ $(function () {
                         ${goalsHtml}
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-gray-500">후원자: ${campaign.campaignDonors ? campaign.campaignDonors : 0}</span>
-                            <button class="btn-outline">
+                            <a class="btn-outline" href="/campaign/${campaign.campaignId}">
                                 후원하기
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -106,9 +106,9 @@ $(function () {
                 <div class="main-resent-pe">
                     <div class="main-resent-pe-all">
                         <div class="main-resent-pe-all-in">
-                            <div class="main-resent-pe-all-in-img">
+                            <a class="main-resent-pe-all-in-img" href="/campaign/${data.originalId}">
                                 <img alt="" src="/api/image/${data.imageId}" class="main-resent-pe-all-in-img-in">
-                            </div>
+                            </a>
                             <div></div>
                             <div class="main-resent-pe-all-content">
                                 <div class="main-resent-content-box">
@@ -169,9 +169,9 @@ $(function () {
                 <div class="main-resent-pe">
                     <div class="main-resent-pe-all">
                         <div class="main-resent-pe-all-in">
-                            <div class="main-resent-pe-all-in-img">
+                            <a class="main-resent-pe-all-in-img" href="/product/${data.originalId}">
                                 <img alt="" src="/api/image/${data.imageId}" class="main-resent-pe-all-in-img-in">
-                            </div>
+                            </a>
                             <div></div>
                             <div class="main-resent-pe-all-content">
                                 <div class="main-resent-content-box">

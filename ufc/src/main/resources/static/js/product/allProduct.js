@@ -64,7 +64,7 @@ $(function () {
                             htmlResult += `
                                 <div class="main-bo-in-bo-pe" data-id="${data.originalId}" data-type="${data.type}">
                                     <div class="main-bo-in-bo-pe-box">
-                                        <a href="/product/detail/${data.originalId}" class="main-bo-in-bo-pe-box-a">
+                                        <a href="/product/${data.originalId}" class="main-bo-in-bo-pe-box-a">
                                             <div class="main-bo-in-bo-pe-box-a-img">
                                                 <img alt="" src="/api/image/${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
                                                 <div class="main-like-btn ${data.isLiked ? 'liked' : ''}">
