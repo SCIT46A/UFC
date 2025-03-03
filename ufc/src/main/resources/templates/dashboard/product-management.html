@@ -7,25 +7,25 @@
             <!-- Status Cards -->
             <section class="card-container">
                 <div class="status-grid">
-                    <div class="status-card" th:data-status="full">
+                    <div class="status-card" data-status="full">
                         <span>전체</span>
-                        <span class="count" th:text="${fullCount}">0</span>
+                        <span class="count">0</span>
                     </div>
-                    <div class="status-card" th:data-status="on-sale">
+                    <div class="status-card" data-status="on-sale">
                         <span>판매중</span>
-                        <span class="count" th:text="${onSaleCount}">0</span>
+                        <span class="count">0</span>
                     </div>
-                    <div class="status-card" th:data-status="waiting">
+                    <div class="status-card" data-status="waiting">
                         <span>판매대기</span>
-                        <span class="count" th:text="${waitingCount}">0</span>
+                        <span class="count">0</span>
                     </div>
-                    <div class="status-card" th:data-status="out-of-stock">
+                    <div class="status-card" data-status="out-of-stock">
                         <span>품절</span>
-                        <span class="count" th:text="${outOfStockCount}">0</span>
+                        <span class="count">0</span>
                     </div>
-                    <div class="status-card" th:data-status="stopped">
+                    <div class="status-card" data-status="stopped">
                         <span>판매중지</span>
-                        <span class="count" th:text="${stoppedCount}">0</span>
+                        <span class="count">0</span>
                     </div>
                 </div>
             </section>
@@ -37,12 +37,8 @@
                     <input type="text" class="search-input" placeholder="상품명 또는 상품번호를 입력하세요">
                 </div>
                 <div class="search-row">
-                    <label>카테고리</label>
-                    <select class="search-input">
-                        <option value="">전체</option>
-                        <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}">
-                            카테고리명</option>
-                    </select>
+                    <label>태그</label>
+                    <input type="text" class="search-input" placeholder="태그를 입력하세요">
                 </div>
                 <div class="search-row">
                     <label>기간</label>
@@ -67,7 +63,7 @@
             <!-- Product Table -->
             <div class="table-header">
                 <div class="left-section">
-                    <span>목록 (총 1개)</span>
+                    <span>목록 (총 <span id="product-count">0</span>개)</span>
                     <select>
                         <option>최근주문순</option>
                     </select>
@@ -84,48 +80,15 @@
                             <th><input type="checkbox" id="selectAll"></th>
                             <th>상품번호</th>
                             <th>상품명</th>
-                            <th>카테고리</th>
-                            <th>판매상태</th>
+                            <th>태그</th>
                             <th>재고</th>
                             <th>등록일</th>
+                            <th>판매상태</th>
                             <th>관리</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- 데이터가 있을 경우 -->
-                        <tr th:each="product : ${products}" th:if="${not #lists.isEmpty(products)}">
-                            <td><input type="checkbox" th:value="${product.id}"></td>
-                            <td th:text="${product.id}">P001</td>
-                            <td th:text="${product.name}">상품명</td>
-                            <td th:text="${product.category}">카테고리</td>
-                            <td th:text="${product.status}">판매중</td>
-                            <td th:text="${product.stock}">100</td>
-                            <td th:text="${#temporals.format(product.createdAt, 'yyyy-MM-dd')}">2024-02-16</td>
-                            <td>
-                                <div class="action-buttons">
-                                    <button class="btn btn-secondary"
-                                        th:onclick="'editProduct(' + ${product.id} + ')'">수정</button>
-                                    <button class="btn btn-secondary"
-                                        th:onclick="'deleteProduct(' + ${product.id} + ')'">삭제</button>
-                                </div>
-                            </td>
-                        </tr>
-
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${products==null or #lists.isEmpty(products)}">
-                            <td colspan="8">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="product-list">
+                        <!-- JavaScript에서 데이터 로드 -->
                     </tbody>
                 </table>
             </div>
@@ -136,7 +99,7 @@
             <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
         </div>
     </div>
-    <script th:src="@{/js/dashboard/product-management.js}" async></script>
+    <script src="/js/dashboard/product-management.js" async></script>
 </body>
 
 </html>

@@ -95,24 +95,9 @@ public class CreatorDashboardController {
      * 🔹 캠페인 관리 페이지
      */
     @GetMapping("/campaigns/management")
-    public String getCampaignManagementPage(HttpSession session, Model model) {
-        // 🔹 세션에서 creatorId 가져오기
-        Long creatorId = (Long) session.getAttribute("creatorId");
-
-        // ✅ 로그 출력으로 확인
-        if (creatorId == null) {
-            logger.warn("❌ 세션에 creatorId가 없음");
-            return "redirect:/error/403";
-        }
-
-        logger.info("📌 [Controller] 세션에서 가져온 creatorId: {}", creatorId);
-
-        // 🔹 Creator ID로 캠페인 조회
-        List<CampaignDTO> campaigns = campaignService.getCampaignsByCreator(creatorId);
-        model.addAttribute("campaigns", campaigns);
-        model.addAttribute("creatorId", creatorId);
-
-        return "dashboard/campaign-management :: campaign-management";
+    public String getCampaignManagementPage(Model model, Authentication authentication, HttpSession session) {
+        return addCreatorIdToModel(model, authentication, session,
+                "dashboard/campaign-management :: campaign-management");
     }
 
     /**

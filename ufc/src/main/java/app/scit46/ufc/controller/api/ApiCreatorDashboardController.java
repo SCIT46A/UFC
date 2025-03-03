@@ -12,17 +12,23 @@ import java.util.Map;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.HashMap;
-
+import java.util.Collections;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.MaterialDonationService;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.service.delivery.CourierService;
+import app.scit46.ufc.service.reward.RewardDeliveryService;
 import app.scit46.ufc.service.delivery.DeliveryService;
+import app.scit46.ufc.service.product.ProductService;
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.service.CourierService;
+import app.scit46.ufc.dto.product.ProductDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestParam;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
-import app.scit46.ufc.service.reward.RewardDeliveryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -33,6 +39,27 @@ public class ApiCreatorDashboardController {
         private final CampaignService campaignService;
         private final MaterialDonationService materialDonationService;
         private final RewardDeliveryService rewardDeliveryService;
+        private final ProductService productService;
+        private final Logger logger = LoggerFactory.getLogger(ApiCreatorDashboardController.class);
+
+        /**
+         * 
+         * @param session
+         * @return
+         */
+        @GetMapping("/campaigns/management")
+        public ResponseEntity<?> getCampaigns(HttpSession session) {
+                Long creatorId = (Long) session.getAttribute("creatorId");
+
+                if (creatorId == null) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                        .body(Collections.singletonMap("error", "세션에 creatorId가 없습니다."));
+                }
+
+                List<CampaignDTO> campaigns = campaignService.getCampaignsByCreator(creatorId);
+
+                return ResponseEntity.ok(campaigns);
+        }
 
         /**
          * 기부 내역 조회
@@ -93,7 +120,6 @@ public class ApiCreatorDashboardController {
 
                 List<Long> campaignIds = campaignService.getCampaignIdsByCreator(creatorId);
 
-                // ✅ 서비스 계층으로 로직 이동
                 Map<String, Long> donationCounts = materialDonationService.getDonationCountsByCampaignIds(campaignIds);
 
                 return ResponseEntity.ok(Map.of("donationCounts", donationCounts));
@@ -122,6 +148,31 @@ public class ApiCreatorDashboardController {
                 Map<String, Object> rewardDeliveryData = rewardDeliveryService.getRewardDeliveryData(campaignIds);
 
                 return ResponseEntity.ok(rewardDeliveryData);
+        }
+
+        /**
+         * 크리에이터 상품 관리
+         * 
+         * @param session
+         * @return
+         */
+        @GetMapping("/products")
+        public ResponseEntity<?> getCreatorProducts(HttpSession session) {
+                try {
+                        Long creatorId = (Long) session.getAttribute("creatorId");
+                        if (creatorId == null) {
+                                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                                .body(Collections.singletonMap("error", "로그인이 필요합니다."));
+                        }
+
+                        List<Map<String, Object>> products = productService.getProductsByCreator(creatorId);
+
+                        return ResponseEntity.ok(products);
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Collections.singletonMap("error",
+                                                        "상품 데이터를 불러오는 중 오류 발생: " + e.getMessage()));
+                }
         }
 
 }

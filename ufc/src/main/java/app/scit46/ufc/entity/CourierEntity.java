@@ -18,7 +18,7 @@ public class CourierEntity {
     @Column(name = "courier_id")
     private String courierId;
 
-    @Column(name = "courier_name")
+    @Column(name = "courier_name", nullable = false)
     private String courierName;
 
     public static CourierEntity toEntity(CourierDTO dto) {

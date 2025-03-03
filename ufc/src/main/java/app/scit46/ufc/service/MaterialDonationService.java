@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
-import app.scit46.ufc.service.delivery.CourierService;
+import app.scit46.ufc.service.CourierService;
 import app.scit46.ufc.service.delivery.DeliveryService;
 import app.scit46.ufc.service.campaign.CampaignService;
 

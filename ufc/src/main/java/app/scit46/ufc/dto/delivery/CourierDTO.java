@@ -1,6 +1,6 @@
 package app.scit46.ufc.dto.delivery;
 
-import app.scit46.ufc.entity.delivery.CourierEntity;
+import app.scit46.ufc.entity.CourierEntity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;

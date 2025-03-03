@@ -91,13 +91,13 @@ async function renderRewardDeliveries(rewardDeliveries) {
 
         row.innerHTML = `
         <td><input type="checkbox" class="delivery-checkbox" value="${rewardDelivery.rdeliveryId}"></td>
-        <td>${rewardDelivery.donation?.campaign?.title || '-'}</td>
+        <td>${rewardDelivery.donation?.campaignTitle || '-'}</td>
         <td>${rewardDelivery.donation?.donationId || '-'}</td>
-        <td>${rewardDelivery.donation?.user?.userName || '-'}</td>
-        <td>${rewardDelivery.donation?.user?.phoneNumber || '-'}</td>
-        <td>${rewardDelivery.donation?.user?.userAddress || '-'}</td> 
+        <td>${rewardDelivery.donation?.userName || '-'}</td>
+        <td>${rewardDelivery.donation?.donorPhone || '-'}</td>
+        <td>${rewardDelivery.donation?.donorAddress || '-'}</td>
         <td>${rewardDelivery.rewardName || '-'} (x${rewardDelivery.amount || 0})</td>
-        <td>${rewardDelivery.donation?.campaign?.sendDate ? formatDate(new Date(rewardDelivery.donation.campaign.sendDate)) : '-'}</td>
+        <td>${rewardDelivery.donation?.dueDate ? formatDate(new Date(rewardDelivery.donation.dueDate)) : '-'}</td>
         <td>
             <select class="courier-select">
                 <option value="">택배사 선택</option>

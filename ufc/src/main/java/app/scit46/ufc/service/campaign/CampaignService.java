@@ -31,6 +31,7 @@ import app.scit46.ufc.entity.reward.RewardItemEntity;
 import app.scit46.ufc.entity.reward.RewardMaterialEntity;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import app.scit46.ufc.repository.tag.CampaignTagRepository;
+import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.ItemService;
