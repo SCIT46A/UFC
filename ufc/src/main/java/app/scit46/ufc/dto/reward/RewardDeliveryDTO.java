@@ -1,6 +1,7 @@
 package app.scit46.ufc.dto.reward;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import lombok.*;
 
@@ -14,19 +15,21 @@ public class RewardDeliveryDTO {
     private Long rDeliveryId;
     private String invoice;
     private String status;
-    private Long rewardId; // ✅ rewardId 추가
-    private MaterialDonationDTO donation; // ✅ MaterialDonationDTO 유지
+    // 캠페인 대신 리워드 정보를 포함하도록 수정
+    private RewardDTO reward;
+    private MaterialDonationDTO donation;
+    // 추가된 amount 필드
     private Integer amount;
 
     public static RewardDeliveryDTO toDTO(RewardDeliveryEntity entity) {
+        if (entity == null)
+            return null;
         return RewardDeliveryDTO.builder()
                 .rDeliveryId(entity.getRDeliveryId())
                 .invoice(entity.getInvoice())
-                .status(entity.getStatus()) // ✅ Enum 타입으로 유지
-                .rewardId(entity.getReward() != null ? entity.getReward().getRewardId() : null) // ✅ RewardEntity 변환
-                .donation(entity.getDonation() != null ? MaterialDonationDTO.toDTO(entity.getDonation()) : null) // ✅
-                                                                                                                 // MaterialDonationDTO
-                                                                                                                 // 변환
+                .status(entity.getStatus())
+                .reward(entity.getReward() != null ? RewardDTO.toDTOMinimal(entity.getReward()) : null)
+                .donation(entity.getDonation() != null ? MaterialDonationDTO.toDTOMinimal(entity.getDonation()) : null)
                 .amount(entity.getAmount())
                 .build();
     }

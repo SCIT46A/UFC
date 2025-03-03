@@ -69,13 +69,12 @@ public class MaterialDonationEntity {
     @OneToMany(mappedBy = "donation", fetch = FetchType.LAZY)
     private List<RewardDeliveryEntity> rewardDeliveries;
 
-    public static MaterialDonationEntity toEntity(MaterialDonationDTO dto, CampaignDTO campaign, UserDTO user,
-            MaterialDTO material) {
+    public static MaterialDonationEntity toEntity(MaterialDonationDTO dto) {
         return MaterialDonationEntity.builder()
                 .donationId(dto.getDonationId())
-                .campaign(CampaignEntity.builder().campaignId(campaign.getCampaignId()).build())
-                .user(UserEntity.builder().userId(user.getUserId()).build())
-                .material(MaterialEntity.builder().materialId(material.getMaterialId()).build())
+                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
+                .user(UserEntity.builder().userId(dto.getUser().getUserId()).build())
+                .material(MaterialEntity.builder().materialId(dto.getMaterial().getMaterialId()).build())
                 .quantity(dto.getQuantity())
                 .status(dto.getStatus())
                 .donatedDate(dto.getDonatedDate())

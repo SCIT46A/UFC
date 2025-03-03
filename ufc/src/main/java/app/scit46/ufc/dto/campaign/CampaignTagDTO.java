@@ -21,10 +21,14 @@ public class CampaignTagDTO {
     private TagDTO tag; // ✅ TagDTO 포함
 
     public static CampaignTagDTO toDTO(CampaignTagEntity entity) {
+        if (entity == null)
+            return null;
         return CampaignTagDTO.builder()
                 .cTagId(entity.getCTagId())
-                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
-                .tag(entity.getTag() != null ? TagDTO.toDTO(entity.getTag()) : null) // ✅ TagDTO 변환
+                .campaign(entity.getCampaign() != null ? 
+                    CampaignDTO.builder().campaignId(entity.getCampaign().getCampaignId()).build() : null)
+                .tag(entity.getTag() != null ? 
+                    TagDTO.builder().tagId(entity.getTag().getTagId()).content(entity.getTag().getContent()).build() : null)
                 .build();
     }
 }

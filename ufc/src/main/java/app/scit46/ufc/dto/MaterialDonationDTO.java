@@ -45,4 +45,14 @@ public class MaterialDonationDTO {
                 .invoice(entity.getInvoice())
                 .build();
     }
+
+    public static MaterialDonationDTO toDTOMinimal(MaterialDonationEntity entity) {
+        if (entity == null)
+            return null;
+        return MaterialDonationDTO.builder()
+                .donationId(entity.getDonationId())
+                .invoice(entity.getInvoice())
+                .build();
+    }
+
 }

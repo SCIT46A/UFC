@@ -22,7 +22,7 @@ public class SearchResultDTO {
     // 타입: "campaign" 또는 "product"
     private String type;
     // 이미지 id (PublicPhotoEntity의 photo_id)
-    private Long imageId;
+    private String imageId;
     // 판매자 이름
     private String sellerName;
     // 제목
@@ -43,6 +43,8 @@ public class SearchResultDTO {
     private Integer likes;
     // 태그 목록
     private List<String> tags;
+    // ✅ 사용자가 좋아요를 눌렀는지 여부 추가
+    private Boolean isLiked;
 
     /**
      * Native Query 결과 매핑용 단일 생성자
@@ -53,14 +55,15 @@ public class SearchResultDTO {
     @ConstructorProperties({
             "originalId", "type", "imageId", "sellerName", "title", "description",
             "price", "remainingDays", "donatedQuantity", "donationPercentage",
-            "createdDate", "likes", "tags"
+            "createdDate", "likes", "tags", "isLiked"
     })
-    public SearchResultDTO(Number originalId, String type, Number imageId, String sellerName, String title,
+    public SearchResultDTO(Number originalId, String type, String imageId, String sellerName, String title,
                            String description, Number price, Number remainingDays, Number donatedQuantity,
-                           Number donationPercentage, Timestamp createdDate, Number likes, String tags) {
+                           Number donationPercentage, Timestamp createdDate, Number likes, String tags,
+                           Number isLiked) {
         this.originalId = (originalId == null) ? null : originalId.longValue();
         this.type = type;
-        this.imageId = (imageId == null) ? null : imageId.longValue();
+        this.imageId = imageId; // 수정됨: imageId를 String 그대로 받음
         this.sellerName = sellerName;
         this.title = title;
         this.description = description;
@@ -73,5 +76,7 @@ public class SearchResultDTO {
         this.tags = (tags != null && !tags.trim().isEmpty())
                 ? Arrays.asList(tags.split(","))
                 : Collections.emptyList();
+        this.isLiked = (isLiked != null && isLiked.intValue() == 1);
     }
+
 }

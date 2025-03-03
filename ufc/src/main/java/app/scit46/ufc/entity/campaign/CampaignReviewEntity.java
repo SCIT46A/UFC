@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
 import app.scit46.ufc.entity.UserEntity;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -26,6 +27,7 @@ public class CampaignReviewEntity {
     private String content;
 
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @Column(name = "rated", nullable = false)
@@ -39,14 +41,14 @@ public class CampaignReviewEntity {
     @JoinColumn(name = "campaigned_by", nullable = false)
     private CampaignEntity campaignedBy;
 
-    public static CampaignReviewEntity toEntity(CampaignReviewDTO dto, UserEntity reviewedBy, CampaignEntity campaignedBy) {
+    public static CampaignReviewEntity toEntity(CampaignReviewDTO dto) {
         return CampaignReviewEntity.builder()
                 .cReviewId(dto.getCReviewId())
                 .content(dto.getContent())
                 .createdDate(dto.getCreatedDate())
                 .rated(dto.getRated())
-                .reviewedBy(reviewedBy)
-                .campaignedBy(campaignedBy)
+                .reviewedBy(UserEntity.builder().userId(dto.getReviewedBy().getUserId()).build())
+                .campaignedBy(CampaignEntity.builder().campaignId(dto.getCampaignedBy().getCampaignId()).build())
                 .build();
     }
 }

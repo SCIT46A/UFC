@@ -38,12 +38,12 @@ public class BadgeEntity {
     @OneToMany(mappedBy = "targetBadge", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static BadgeEntity toEntity(BadgeDTO dto, ImageUrlEntity photo) {
+    public static BadgeEntity toEntity(BadgeDTO dto) {
         return BadgeEntity.builder()
                 .badgeId(dto.getBadgeId())
                 .name(dto.getName())
                 .description(dto.getDescription())
-                .photo(photo)
+                .photo(ImageUrlEntity.builder().imageId(dto.getPhoto().getImageId()).build())
                 .build();
     }
 }

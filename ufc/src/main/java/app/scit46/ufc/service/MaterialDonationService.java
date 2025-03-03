@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.stream.Collectors;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.entity.MaterialDonationEntity;
@@ -42,6 +43,11 @@ public class MaterialDonationService {
             throw new RuntimeException("Material Donation not found");
         }
         return donations;
+    }
+
+    public List<MaterialDonationDTO> findDonationByCampaign(Long campaignId) {
+        return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
     public List<MaterialDonationDTO> getDonationsByCampaignIds(List<Long> campaignIds) {

@@ -1,10 +1,13 @@
 package app.scit46.ufc.dto.campaign;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.cloudflare.Image;
+import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +33,9 @@ public class CampaignDTO {
     private CreatorDTO createdBy; // ✅ CreatorDTO 포함
     private Boolean isSuccess;
     private ImageUrlDTO photo; // ✅ PhotoDTO 포함
-    private Integer campaignStatus;
+    private Boolean campaignStatus;
+    private List<CampaignTagDTO> campaignTags;
+    private List<RewardDTO> rewards;
 
     public static CampaignDTO toDTO(CampaignEntity entity) {
         return CampaignDTO.builder()
@@ -47,6 +52,12 @@ public class CampaignDTO {
                                                                                                            // 변환
                 .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
                 .campaignStatus(entity.getCampaignStatus())
+                .campaignTags(entity.getCampaignTags() != null ? entity.getCampaignTags().stream()
+                        .map(CampaignTagDTO::toDTO)
+                        .collect(Collectors.toList()) : null)
+                .rewards(entity.getRewards() != null ? entity.getRewards().stream()
+                        .map(RewardDTO::toDTO)
+                        .collect(Collectors.toList()) : null)
                 .build();
     }
 }

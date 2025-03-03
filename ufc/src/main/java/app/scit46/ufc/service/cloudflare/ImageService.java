@@ -1,12 +1,11 @@
 package app.scit46.ufc.service.cloudflare;
 
+import java.io.IOException;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -36,7 +35,7 @@ public class ImageService {
     private String apiToken;
 
     @Value("${cloudflare.account-hash}")
-    private static String accountHash;
+    private String accountHash;
 
     // ------------------------------------------------------------------------------------------------
 
@@ -44,26 +43,36 @@ public class ImageService {
 
     private final ImageUrlService imageUrlService;    //사진Url DB 수정시 사용
 
-    // 이미지 업로드
-    public String uploadImage(MultipartFile file, Long userId) {
+    // 이미지 업로드 // MultipartFile을 Byte[]로 직렬화하는 중 IOException 발생 가능
+    public String uploadImage(MultipartFile file, Long userId) throws IOException {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환
         //if(file == null || userId == null) return null;
-        
+
+        // 원본 파일 이름 가져오기
+        String originalFilename = file.getOriginalFilename(); // 원본 파일 이름
+
         // Cloudflare IMAGE Upload API URL
         String url = "https://api.cloudflare.com/client/v4/accounts/" + accountId + "/images/v1";
+
         // Cloudflare API 호출 형식 헤더 생성
         HttpHeaders headers = new HttpHeaders();
         // 인증 토큰 설정
         headers.set("Authorization", "Bearer " + apiToken);
+
         // 콘텐츠 형식 설정
-        headers.set("Content-Type", "multipart/form-data");
+        headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         // 이미지 파일 업로드 형식 바디 설정
         // LinkedMultiValueMap : 여러 값을 가질 수 있는 맵, 파일 업로드(multipart/form-data) 형식 지원
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         // 요청할 내용에 파일 첨부(구성)
-        body.add("file", file);
+        body.add("file", new ByteArrayResource(file.getBytes()){
+            @Override
+            public String getFilename() {
+                return originalFilename;
+            }
+        });
 
         // 요청 엔티티 생성(헤더, 바디 설정)
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
@@ -72,6 +81,7 @@ public class ImageService {
         try{
             // 요청 결과 반환
             response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ApiResponse.class);
+            log.info("=== Success - cloudflare API response : {}", response);
         }catch(Exception e){
             // 오류 발생시 오류 로그 출력
             log.error("imgsrv.UPL - Cloudflare API 호출 오류", e);
@@ -83,11 +93,11 @@ public class ImageService {
         // TODO: 이미지ID, 원본이름 db에 저장로직 추가
         // 이미지 업로드 성공 후 반환된 이미지ID, 원본이름, 업로드 사용자 정보 저장
         imageUrlService.save(
-            ImageUrlDTO.builder()
-            .imageId(response.getBody().getResult().getId())
-            .filename(response.getBody().getResult().getFilename())
-            .uploadedBy(userId)
-            .build());
+                ImageUrlDTO.builder()
+                        .imageId(response.getBody().getResult().getId())
+                        .filename(response.getBody().getResult().getFilename())
+                        .uploadedBy(userId)
+                        .build());
         return response.getBody().getResult().getId(); // ImageId
     }
 
@@ -121,11 +131,8 @@ public class ImageService {
     }
 
     // 이미지 URL 변환
-    public static String getImageUrl(String imageId) {
-        // 유효성 검사
-        // imageId가 null 경우 null 반환
+    public String getImageUrl(String imageId) {
         if(imageId == null) return null;
-        // imageID가 UUID 형식인지 검사
         if(!UUID.fromString(imageId).toString().equals(imageId)){
             log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
             return null;

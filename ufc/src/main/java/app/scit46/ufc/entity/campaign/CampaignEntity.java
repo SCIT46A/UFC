@@ -2,6 +2,7 @@ package app.scit46.ufc.entity.campaign;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.hibernate.annotations.CreationTimestamp;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -52,7 +53,7 @@ public class CampaignEntity {
   private LocalDateTime createdDate;
 
   @Column(name = "campaign_status", nullable = false)
-  private Integer campaignStatus;
+  private Boolean campaignStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonIgnore // 순환 참조 방지
@@ -89,17 +90,28 @@ public class CampaignEntity {
   @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)
   private List<AlertTargetEntity> alertTargets;
 
-  public static CampaignEntity toEntity(CampaignDTO dto, Long createdBy, String photo) {
+  public static CampaignEntity toEntity(CampaignDTO dto) {
     return CampaignEntity.builder()
+        // .campaignId(dto.getCampaignId()) // 기본값 자동 생성이므로 주석처리
         .title(dto.getTitle())
         .description(dto.getDescription())
         .startDate(dto.getStartDate())
         .endDate(dto.getEndDate())
         .sendDate(dto.getSendDate())
-        .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
-        .isSuccess(dto.getIsSuccess())
-        .photo(ImageUrlEntity.builder().imageId(photo).build())
-        .campaignStatus(dto.getCampaignStatus())
+        .createdDate(dto.getCreatedDate())
+        // .createdDate(dto.getCreatedDate()) // 기본값 자동 생성이므로 주석처리
+        // .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())
+        // // 영속성 문제로 인한 창작자 아이디 자체 설정
+        .isSuccess(dto.getIsSuccess() == null ? false : dto.getIsSuccess())
+        // .photo(ImageUrlEntity.builder().imageId(photo).build()) // 영속성 문제로 인한 이미지 아이디
+        // 자체 설정
+        .campaignStatus(dto.getCampaignStatus() == null ? false : dto.getCampaignStatus())
+        .rewards(dto.getRewards() != null ? dto.getRewards().stream()
+            .map(RewardEntity::toEntity)
+            .collect(Collectors.toList()) : null)
+        .campaignTags(dto.getCampaignTags() != null ? dto.getCampaignTags().stream()
+            .map(CampaignTagEntity::toEntity)
+            .collect(Collectors.toList()) : null)
         .build();
   }
 }
