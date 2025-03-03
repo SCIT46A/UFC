@@ -18,13 +18,13 @@ public class MaterialService {
     public MaterialEntity addMaterial(MaterialDTO materialDTO) {
         // 기존 재료가 있는지 먼저 확인
         return materialRepository.findByName(materialDTO.getName())
-            .orElseGet(() -> {
-                // 없으면 새로 저장
-                MaterialEntity material = MaterialEntity.builder()
-                    .name(materialDTO.getName())
-                    .build();
-                return materialRepository.save(material);
-            });
+                .orElseGet(() -> {
+                    // 없으면 새로 저장
+                    MaterialEntity material = MaterialEntity.builder()
+                            .name(materialDTO.getName())
+                            .build();
+                    return materialRepository.save(material);
+                });
     }
 
     // public void addRewardMaterial(Long campaignId, Long materialId, Integer amount) {
@@ -35,5 +35,8 @@ public class MaterialService {
     //             .build();
     //     campaignMaterialRepository.save(campaignMaterial);
     // }
-    
+
+    public MaterialDTO getMaterial(Long materialId) {
+        return materialRepository.findById(materialId).stream().map(MaterialDTO::toDTO).findFirst().orElse(null);
+    }
 }

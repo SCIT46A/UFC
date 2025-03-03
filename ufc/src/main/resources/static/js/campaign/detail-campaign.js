@@ -718,27 +718,47 @@ $(document).ready(function () {
     // 총합 업데이트 함수
     // 총합 업데이트 함수 (각 항목별 이름과 총 개수를 표시)
     function updateDonationTotal() {
+        // 항목들을 고유 키(예: basename, materialId, rewardId의 조합)로 그룹화합니다.
         let items = [];
         $(".reward-choice-my-pe").each(function () {
             let baseName = $(this).data("basename") || "";
             let count = parseInt($(this).find(".reward-choice-count").val()) || 0;
             let required = parseInt($(this).data("required")) || 1;
+            let materialId = $(this).data("material-id") || "";
+            let rewardId = $(this).data("reward-id") || "";
             let total = count * required;
-            // 이미 동일한 항목이 있다면 합산 (원하는 경우, 중복 없이 목록에 표시)
-            let existing = items.find(item => item.name === baseName);
+            // 그룹핑을 위해 세 가지 값의 조합을 키로 사용합니다.
+            let key = baseName + "|" + materialId + "|" + rewardId;
+            let existing = items.find(item => item.key === key);
             if (existing) {
+                // count와 total을 누적합니다.
+                existing.count += count;
                 existing.total += total;
             } else {
-                items.push({ name: baseName, total: total });
+                items.push({
+                    key: key,
+                    name: baseName,
+                    count: count,
+                    required: required,
+                    total: total,
+                    materialId: materialId,
+                    rewardId: rewardId,
+                    campaignId : campaignId
+                });
             }
         });
-        // 예: "a 10개, b 20개" 형식의 문자열 생성
-        let text = items.map(item => `${item.name} ${item.total}개`).join(", ");
-        $(".reward-btn-in span b").text(text);
+        // 화면에 보여줄 텍스트: 예) "병뚜껑 40개, ..."
+        let displayText = items.map(item => `${item.name} ${item.total}개`).join(", ");
+        // 숨겨진 p 태그에는 상세 정보(각 항목의 이름, count, required, total, materialId, rewardId)를 JSON 문자열로 저장
+        let valueText = JSON.stringify(items);
+        $(".reward-btn-in span b").text(displayText);
+        $(".reward-btn-in p").text(valueText);
     }
 
+
 // --- addRewardChoice 함수 (네 개 인자 사용)
-    function addRewardChoice(displayName, baseName, required, available) {
+//
+    function addRewardChoice(displayName, baseName, required, available, materialId, rewardId) {
         // 이미 같은 항목이 추가되어 있으면 아무 작업도 하지 않음 (displayName 기준)
         if ($(".reward-choice-my-pe-box-top-in").filter(function() {
             return $(this).text().trim() === displayName;
@@ -748,7 +768,7 @@ $(document).ready(function () {
         let defaultCount = 1;
         let total = defaultCount * required;
         let newRewardHtml = `
-        <div class="reward-choice-my-pe" data-available="${available}" data-required="${required}" data-basename="${baseName}">
+        <div class="reward-choice-my-pe" data-available="${available}" data-required="${required}" data-basename="${baseName}" data-material-id="${materialId}" data-reward-id="${rewardId}">
             <div class="reward-choice-my-pe-box">
                 <div class="reward-choice-my-pe-box-top">
                     <ul>
@@ -800,9 +820,10 @@ $(document).ready(function () {
         let baseName = $(this).val();
         if (!baseName) return;
         let displayName = baseName + " 기부하기";
-        let available = 10; // 기본 최대 수량
+        let available = 100; // 기본 최대 수량
+        let materialId = $(this).find("option:selected").data("material-id");
         // 여기서는 요구수량을 1로 처리 (필요시 변경)
-        addRewardChoice(displayName, baseName, 1, available);
+        addRewardChoice(displayName, baseName, 1, available,materialId , null);
         $(this).prop('selectedIndex', 0);
     });
 
@@ -814,7 +835,10 @@ $(document).ready(function () {
         let required = $(this).data("required");
         let available = $(this).data("available");
         // 여기서는 targetName을 baseName으로 사용 (하단 표시에는 "기부하기" 없이)
-        addRewardChoice(rewardName, targetName, required, available);
+        let materialId = $(this).data("target-id");
+        let rewardId = $(this).data("reward_id");
+        addRewardChoice(rewardName, targetName, required, available, materialId, rewardId);
+
     });
 
 // --- 개수 증가 버튼 (최대 available까지만 증가; 총합은 선택수 × 요구수량)
@@ -875,41 +899,49 @@ $(document).ready(function () {
                     // target 정보는 첫 번째 재료를 기준으로 설정
                     let targetName = data.rewardMaterials.length > 0 ? data.rewardMaterials[0].material.name : "";
                     let required = data.rewardMaterials.length > 0 ? data.rewardMaterials[0].quantityRequired : 1;
+                    let targetId = data.rewardMaterials.length > 0 ? data.rewardMaterials[0].material.materialId : "";
                     let rewardhtml = `
-                    <div class="reward-info-in-box" data-reward-name="${data.rewardName}" data-available="${data.amount}" data-reward-target-name="${targetName}" data-required="${required}">
-                        <div class="reward-info-in-box-in">
-                            <div class="reward-info-in-box-in-warp">
-                                <section class="reward-info-in-box-in-warp-section">
-                                    <div class="reward-info-in-box-in-warp-section-in">
-                                        <div class="reward-info-in-box-in-warp-section-in-top">
-                                            <div class="reward-info-in-box-in-warp-section-in-top-in">
-                                                <div class="reward-info-in-box-in-warp-section-in-top-in-img">
-                                                    <svg viewBox="0 0 48 48">
-                                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                                            d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z">
-                                                        </path>
-                                                    </svg>
+                        <div class="reward-info-in-box" 
+                             data-reward-name="${data.rewardName}" 
+                             data-available="${data.amount}" 
+                             data-reward-target-name="${targetName}" 
+                             data-required="${required}"
+                             data-reward_id="${data.rewardId}"
+                             data-target-id="${targetId}">
+                            <div class="reward-info-in-box-in">
+                                <div class="reward-info-in-box-in-warp">
+                                    <section class="reward-info-in-box-in-warp-section">
+                                        <div class="reward-info-in-box-in-warp-section-in">
+                                            <div class="reward-info-in-box-in-warp-section-in-top">
+                                                <div class="reward-info-in-box-in-warp-section-in-top-in">
+                                                    <div class="reward-info-in-box-in-warp-section-in-top-in-img">
+                                                        <svg viewBox="0 0 48 48">
+                                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                d="M41.6 8L18.9 30.8L6.2 19L2 23.5L19.1 39.4L46 12.4L41.6 8Z">
+                                                            </path>
+                                                        </svg>
+                                                    </div>
+                                                    ${data.amount}개 남음
                                                 </div>
-                                                ${data.amount}개 남음
                                             </div>
+                                            <div class="reward-info-pr">
+                                                <div class="reward-info-pr-in">
+                                                    ${rewardMaterialsHtml}
+                                                </div>
+                                                <div class="reward-info-pr-in-bo">
+                                                    ${data.rewardName}
+                                                </div>
+                                            </div>
+                                            <ul class="reward-ul">
+                                                ${rewardItemHtml}
+                                            </ul>
                                         </div>
-                                        <div class="reward-info-pr">
-                                            <div class="reward-info-pr-in">
-                                                ${rewardMaterialsHtml}
-                                            </div>
-                                            <div class="reward-info-pr-in-bo">
-                                                ${data.rewardName}
-                                            </div>
-                                        </div>
-                                        <ul class="reward-ul">
-                                            ${rewardItemHtml}
-                                        </ul>
-                                    </div>
-                                </section>
+                                    </section>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                `;
+                        `;
+
                     $(".reward-target").append(rewardhtml);
                 });
             },
@@ -1098,9 +1130,9 @@ $(document).ready(function () {
             });
         }
     }
-    
-    
-    
+
+
+
     // 좋아요 버튼 만들기
     $(document).on("click", ".reward-in-se-in-bo-btn-ri", function(event) {
         event.preventDefault();
@@ -1198,7 +1230,7 @@ $(document).ready(function () {
     $(document).on("click", ".reward-btn-in", function(event) {
         event.preventDefault();
         // 기부 정보 텍스트(예: "a 10개, b 20개")를 가져옵니다.
-        var donationDetails = $(".reward-btn-in span b").text().trim();
+        var donationDetails = $(".reward-btn-in p").text().trim();
         // 추가적으로 전달할 값이 있다면 여기서 변수에 담거나 URL에 추가할 수 있습니다.
         // 예를 들어, donationDetails가 비어있으면 기본값을 설정할 수 있습니다.
         if (!donationDetails) {

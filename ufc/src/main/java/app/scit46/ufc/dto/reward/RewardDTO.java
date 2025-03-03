@@ -42,4 +42,11 @@ public class RewardDTO {
                         .collect(Collectors.toList()))
                 .build();
     }
+
+    public static RewardDTO toDTOMinimal(RewardEntity entity) {
+        if (entity == null) return null;
+        return RewardDTO.builder()
+                .rewardId(entity.getRewardId())
+                .build();
+    }
 }

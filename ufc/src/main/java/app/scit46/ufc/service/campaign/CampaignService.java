@@ -7,13 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import app.scit46.ufc.dto.*;
+import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
+import app.scit46.ufc.entity.*;
+import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import app.scit46.ufc.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import app.scit46.ufc.dto.CreatorDTO;
-import app.scit46.ufc.dto.ItemDTO;
-import app.scit46.ufc.dto.MaterialDTO;
-import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.campaign.CampaignTagDTO;
@@ -22,22 +23,12 @@ import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.dto.reward.RewardMaterialDTO;
-import app.scit46.ufc.entity.CreatorEntity;
-import app.scit46.ufc.entity.ImageUrlEntity;
-import app.scit46.ufc.entity.ItemEntity;
-import app.scit46.ufc.entity.MaterialEntity;
-import app.scit46.ufc.entity.TagEntity;
-import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
 import app.scit46.ufc.entity.reward.RewardItemEntity;
 import app.scit46.ufc.entity.reward.RewardMaterialEntity;
-import app.scit46.ufc.repository.CampaignGoalRepository;
-import app.scit46.ufc.repository.CreatorRepository;
-import app.scit46.ufc.repository.MaterialDonationRepository;
-import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import app.scit46.ufc.repository.tag.CampaignTagRepository;
 import app.scit46.ufc.service.CreatorService;
@@ -66,6 +57,7 @@ public class CampaignService {
     private final MaterialDonationRepository materialDonationRepository;
     private final ImageUrlService imageService;
     private final RewardService rewardService;
+    private final RewardDeliveryRepository rewardDeliveryRepository;
 
     public CampaignEntity findCampaignById(Long id) {
         return campaignRepository.findById(id).orElse(null);
@@ -337,4 +329,138 @@ public class CampaignService {
         CampaignEntity campaign = campaignRepository.findById(id).orElse(null);
         return CampaignDTO.toDTO(campaign);
     }
+
+
+//  캠페인 구매 시 반응하는거
+
+    @Transactional
+    public void processDonation(Long loginUserId, Map<String, Object> formData) {
+        // 캠페인 정보 처리
+        Long campaignId = null;
+        Object campaignIdObj = formData.get("campaignId");
+        if (campaignIdObj != null) {
+            if (campaignIdObj instanceof Number) {
+                campaignId = ((Number) campaignIdObj).longValue();
+            } else if (campaignIdObj instanceof String) {
+                campaignId = Long.parseLong((String) campaignIdObj);
+            }
+        }
+        CampaignDTO campaignDTO = campaignRepository.findById(campaignId)
+                .stream()
+                .map(CampaignDTO::toDTO)
+                .findFirst()
+                .orElse(null);
+
+        // 기존 유저 정보 수정
+        UserDTO user = userService.findByIdDTO(loginUserId);
+        user.setUserName((String) formData.get("username"));
+        user.setPhoneNumber((String) formData.get("userPhone"));
+        user.setUserAddress((String) formData.get("useraddress"));
+        userService.updateUser(user);
+
+        // rewardItems 리스트는 formData의 최상위에서 가져오기 (별도 리스트)
+        List<Map<String, Object>> rewardItemsList = (List<Map<String, Object>>) formData.get("rewardItems");
+
+        // donationItems 처리
+        List<Map<String, Object>> donationItems = (List<Map<String, Object>>) formData.get("donationItems");
+        if (donationItems != null) {
+            for (Map<String, Object> item : donationItems) {
+                // donationMaterialId 변환
+                Long donationMaterialId = null;
+                Object dmIdObj = item.get("donationMaterialId");
+                if (dmIdObj instanceof Number) {
+                    donationMaterialId = ((Number) dmIdObj).longValue();
+                } else if (dmIdObj instanceof String) {
+                    donationMaterialId = Long.parseLong((String) dmIdObj);
+                }
+                MaterialDTO materialDTO = materialService.getMaterial(donationMaterialId);
+
+                // donationTotal 변환 (정수형)
+                Integer donationTotal = null;
+                Object dtObj = item.get("donationTotal");
+                if (dtObj instanceof Number) {
+                    donationTotal = ((Number) dtObj).intValue();
+                } else if (dtObj instanceof String) {
+                    donationTotal = Integer.parseInt((String) dtObj);
+                }
+
+                // MaterialDonationDTO 생성 및 저장
+                MaterialDonationDTO donation = new MaterialDonationDTO();
+                donation.setCampaign(campaignDTO);
+                donation.setUser(user);
+                donation.setMaterial(materialDTO);
+                donation.setQuantity(donationTotal);
+                donation.setStatus("processing");
+                donation.setInvoice((String) formData.get("invoice"));
+                // donatedDate 값을 현재 시각으로 설정
+                donation.setDonatedDate(LocalDateTime.now());
+                MaterialDonationEntity donationEntity = MaterialDonationEntity.toEntity(donation);
+                materialDonationRepository.save(donationEntity);
+
+                // donationReward가 존재하면 rewardItems 처리
+                Object donationRewardObj = item.get("donationReward");
+                if (donationRewardObj != null) {
+                    // donationReward가 콤마 구분 문자열이라 가정 (예: "12,11")
+                    String donationRewardStr = donationRewardObj.toString();
+                    String[] rewardIdsArr = donationRewardStr.split(",");
+                    for (String rewardIdStr : rewardIdsArr) {
+                        rewardIdStr = rewardIdStr.trim();
+                        if (!rewardIdStr.isEmpty()) {
+                            Long rewardId = Long.parseLong(rewardIdStr);
+                            RewardDTO rewardDTO = rewardService.getReward(rewardId);
+
+                            // rewardTotal은 rewardItems 리스트에서 해당 rewardId에 맞춰 파싱
+                            Integer rewardTotal = null;
+                            if (rewardItemsList != null) {
+                                for (Map<String, Object> rewardItem : rewardItemsList) {
+                                    Object rIdObj = rewardItem.get("rewardId");
+                                    Long rId = null;
+                                    if (rIdObj instanceof Number) {
+                                        rId = ((Number) rIdObj).longValue();
+                                    } else if (rIdObj instanceof String) {
+                                        rId = Long.parseLong((String) rIdObj);
+                                    }
+                                    if (rId != null && rId.equals(rewardId)) {
+                                        Object rtObj = rewardItem.get("rewardTotal");
+                                        if (rtObj instanceof Number) {
+                                            rewardTotal = ((Number) rtObj).intValue();
+                                        } else if (rtObj instanceof String && !((String) rtObj).isEmpty()) {
+                                            rewardTotal = Integer.parseInt((String) rtObj);
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            // 기본값 처리: null이면 0 할당
+                            if (rewardTotal == null) {
+                                rewardTotal = 0;
+                            }
+
+                            // RewardDeliveryDTO 생성 – donation 정보를 minimal 변환 후 세팅
+                            RewardDeliveryDTO rewardDeliveryDTO = new RewardDeliveryDTO();
+                            rewardDeliveryDTO.setInvoice((String) formData.get("invoice"));
+                            rewardDeliveryDTO.setStatus("preparing");
+                            // 이미 저장된 donationEntity를 DTO로 변환해서 세팅
+                            rewardDeliveryDTO.setDonation(MaterialDonationDTO.toDTO(donationEntity));
+                            rewardDeliveryDTO.setReward(rewardDTO);
+                            rewardDeliveryDTO.setAmount(rewardTotal);
+
+                            // RewardDeliveryEntity 변환 후 저장
+                            RewardDeliveryEntity rewardDeliveryEntity = RewardDeliveryEntity.toEntity(rewardDeliveryDTO);
+                            rewardDeliveryRepository.save(rewardDeliveryEntity);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+
 }

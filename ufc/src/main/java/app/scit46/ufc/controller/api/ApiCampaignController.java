@@ -185,6 +185,11 @@ public class ApiCampaignController {
         return rewardService.getRewards(campaignId);
     }
 
+    @GetMapping("/reward/target/{id}")
+    public RewardDTO getReward(@PathVariable Long id) {
+        return rewardService.getReward(id);
+    }
+
 
 
 }

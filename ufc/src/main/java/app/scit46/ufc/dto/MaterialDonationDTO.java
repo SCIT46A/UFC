@@ -19,6 +19,7 @@ public class MaterialDonationDTO {
     private Integer quantity;
     private String status;
     private LocalDateTime donatedDate;
+    private String invoice;
 
     public static MaterialDonationDTO toDTO(MaterialDonationEntity entity) {
         return MaterialDonationDTO.builder()
@@ -29,6 +30,16 @@ public class MaterialDonationDTO {
                 .quantity(entity.getQuantity())
                 .status(entity.getStatus())
                 .donatedDate(entity.getDonatedDate())
+                .invoice(entity.getInvoice())
                 .build();
     }
+
+    public static MaterialDonationDTO toDTOMinimal(MaterialDonationEntity entity) {
+        if (entity == null) return null;
+        return MaterialDonationDTO.builder()
+                .donationId(entity.getDonationId())
+                .invoice(entity.getInvoice())
+                .build();
+    }
+
 }

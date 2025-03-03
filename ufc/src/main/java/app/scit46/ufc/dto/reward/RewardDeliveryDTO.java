@@ -27,12 +27,13 @@ public class RewardDeliveryDTO {
     private Integer amount;
 
     public static RewardDeliveryDTO toDTO(RewardDeliveryEntity entity) {
+        if (entity == null) return null;
         return RewardDeliveryDTO.builder()
                 .rDeliveryId(entity.getRDeliveryId())
                 .invoice(entity.getInvoice())
                 .status(entity.getStatus())
-                .reward(entity.getReward() != null ? RewardDTO.toDTO(entity.getReward()) : null)
-                .donation(entity.getDonation() != null ? MaterialDonationDTO.toDTO(entity.getDonation()) : null)
+                .reward(entity.getReward() != null ? RewardDTO.toDTOMinimal(entity.getReward()) : null)
+                .donation(entity.getDonation() != null ? MaterialDonationDTO.toDTOMinimal(entity.getDonation()) : null)
                 .amount(entity.getAmount())
                 .build();
     }

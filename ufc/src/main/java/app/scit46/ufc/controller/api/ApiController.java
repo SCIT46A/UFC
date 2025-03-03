@@ -4,23 +4,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import app.scit46.ufc.dto.*;
 import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
-import app.scit46.ufc.service.LikeService;
+import app.scit46.ufc.service.*;
 import app.scit46.ufc.service.campaign.CampaignService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import app.scit46.ufc.dto.SearchDTO;
-import app.scit46.ufc.dto.SearchResultDTO;
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.UserAlertDTO;
-import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.SearchService;
-import app.scit46.ufc.service.UserAlertService;
-import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.tag.TagService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -32,17 +26,18 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 public class ApiController {
-    
+
     private final UserService userService;
 
     private final TagService tagService;
-    
+
     private final SearchService searchService;
-    
+
     private final UserAlertService userAlertService;
 
     private final LikeService likeService;
     private final CampaignService campaignService;
+    private final CourierService courierService;
 
 
     //  카테고리 입력
@@ -90,7 +85,7 @@ public class ApiController {
         return user;
     }
 
-    
+
 
     @GetMapping("/lowertDonation")
     public ResponseEntity<List<CampaignWithGoalsDTO>> getCampaignsWithGoals() {
@@ -134,5 +129,30 @@ public class ApiController {
         String message = newState ? "좋아요가 추가되었습니다." : "좋아요가 취소되었습니다.";
         return ResponseEntity.ok(Map.of("success", true, "isLiked", newState, "message", message));
     }
+
+
+    //  송장등록시 택배사 id?받아오기
+    @GetMapping("/invoice")
+    public List<CourierDTO> couriers() {
+        return courierService.findAll();
+    }
+
+    @PostMapping("/pay/last")
+    public ResponseEntity<?> payLast(@RequestBody Map<String, Object> formData, HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long loginUserId = null; // 기본값 설정
+
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+        }
+
+
+        // 트랜잭션 범위 내에서 처리하는 서비스 호출
+        campaignService.processDonation(loginUserId ,formData);
+
+        return ResponseEntity.ok().build();
+    }
+
+
 
 }

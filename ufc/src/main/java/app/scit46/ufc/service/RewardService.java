@@ -29,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-
 public class RewardService {
     private final RewardRepository rewardRepository;
     private final RewardItemRepository rewardItemRepository;
@@ -111,6 +110,12 @@ public class RewardService {
         return rewardEntities.stream()
                 .map(RewardDTO::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public RewardDTO getReward(Long rewardId) {
+        RewardEntity rewardEntity = rewardRepository.findById(rewardId).orElse(null);
+        return RewardDTO.toDTO(rewardEntity);
+
     }
 
 }
