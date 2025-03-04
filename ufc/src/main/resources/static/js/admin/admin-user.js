@@ -651,8 +651,6 @@ function fetchCreatorApproval() {
         });
 }
 
-
-
 function generateCreatorApprovalTable(creators) {
     if (!creators || creators.length === 0) {
         return `<h2>창작자 승인 대기</h2><p>승인 대기 중인 창작자가 없습니다.</p>`;
