@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UP-DA :: 내가 후원한 캠페인 상세정보</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/user/mypage-donation-detail.css}"
+      href="../../static/css/user/mypage-donation-detail.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/header.css}"
+      href="../../static/css/fix/header.css"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/css/fix/footer.css}"
+      href="../../static/css/fix/footer.css"
+    />
+    <script src="../../static/js/user/mypage-donation-detail.js" defer></script>
+    <script th:src="@{/js/user/mypage-donation-detail.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+  </head>
+  <body>
+    <div th:replace="~{fix/header :: header}"></div>
+    <main>
+      <section id="projects" style="background-color: #ffffff">
+        <!-- 주목할 만한 프로젝트 -->
+        <div class="container mx-auto px-4 target-project">
+          <div class="cancle-modal hidden">
+            <div class="cancle-modal-in">
+              <div class="cancle-modal-in-box">
+                <div class="cancle-modal-in-box-sh">
+                  <div class="cancle-modal-in-box-sh-in">
+                    <div class="cancle-modal-in-box-sh-in-top">
+                      <button class="cancle-modal-in-box-sh-in-top-btn">
+                        <span>
+                          <div class="cancle-modal-in-box-sh-in-top-btn-in">
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                                fill="#3D3D3D"
+                              ></path>
+                            </svg>
+                          </div>
+                        </span>
+                      </button>
+                    </div>
+                    <div class="cancle-modal-in-box-sh-in-bo">
+                      <div class="cancle-modal-in-box-sh-in-bo-in">
+                        <div>
+                          <div class="cancle-modal-in-box-sh-in-bo-in-title">
+                            리워드 변경
+                          </div>
+                          <div class="cancle-modal-in-box-sh-in-bo-in-select">
+                            <select id="rewardSelect" class="reward-select">
+                              <option value="" disabled selected>
+                                리워드를 선택해주세요
+                              </option>
+                              <option value="reward1">
+                                [리워드 1] Go to work
+                              </option>
+                              <option value="reward2">
+                                [리워드 2] Work from home
+                              </option>
+                              <option value="reward3">
+                                [리워드 3] Full package
+                              </option>
+                            </select>
+                            <!-- <div class="cancle-modal-in-box-sh-in-bo-in-img-in">
+                              이 프로젝트에는 후원자님이 필요해요.
+                            </div>
+                            <div class="cancle-modal-in-box-sh-in-bo-in-img-bo">
+                              후원자님의 따뜻한 응원과 격려가 누군가에겐 큰
+                              기회가 됩니다. <br />
+                              새로운 크리에이터의 탄생에 힘을 보태주세요.
+                            </div> -->
+                          </div>
+                          <dl class="cancle-modal-in-box-sh-in-bo-in-bo">
+                            <dt>
+                              <svg
+                                width="24"
+                                height="24"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M20.9723 12C20.9723 16.9552 16.9553 20.9722 12.0001 20.9722C7.04483 20.9722 3.02783 16.9552 3.02783 12C3.02783 7.04477 7.04483 3.02777 12.0001 3.02777C16.9553 3.02777 20.9723 7.04477 20.9723 12Z"
+                                  fill="#3D3D3D"
+                                ></path>
+                                <path
+                                  d="M10.75 10.5817C10.75 10.5542 10.7724 10.5319 10.8 10.5319H13.2C13.2276 10.5319 13.25 10.5542 13.25 10.5817V17.9502C13.25 17.9777 13.2276 18 13.2 18H10.8C10.7724 18 10.75 17.9777 10.75 17.9502V10.5817Z"
+                                  fill="white"
+                                ></path>
+                                <path
+                                  d="M10.5 7.49402C10.5 6.6689 11.1716 6 12 6C12.8284 6 13.5 6.6689 13.5 7.49402C13.5 8.31915 12.8284 8.98805 12 8.98805C11.1716 8.98805 10.5 8.31915 10.5 7.49402Z"
+                                  fill="white"
+                                ></path>
+                              </svg>
+                              펀딩이 마감되면 더이상 변경이 어려워요!
+                            </dt>
+                            <dd>
+                              펀딩이 마감되면 리워드 변경이 불가능해요. 신중하게
+                              고민하시고 변경을 결정해주세요.
+                            </dd>
+                          </dl>
+                        </div>
+                        <!-- 밑에 버튼 -->
+                        <div class="cancle-modal-btn">
+                          <button class="cancle-modal-btn-cancle">
+                            유지하기
+                          </button>
+                          <button class="cancle-modal-btn-none">
+                            리워드 변경
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="address hidden">
+            <div class="address-in">
+              <div class="address-in-box">
+                <div class="address-in-box-in">
+                  <div class="address-in-box-in-wrap">
+                    <div class="address-in-box-in-wrap-top">
+                      배송지 변경
+                      <button class="address-in-box-in-wrap-top-btn">
+                        <span>
+                          <div class="address-in-box-in-wrap-top-btn-in">
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                clip-rule="evenodd"
+                                d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                                fill="#3D3D3D"
+                              ></path>
+                            </svg>
+                          </div>
+                        </span>
+                      </button>
+                    </div>
+                    <div class="address-in-box-in-wrap-bo">
+                      <section class="address-in-box-in-wrap-bo-box">
+                        <input
+                          type="text"
+                          class="address-in-box-in-wrap-bo-box-input"
+                          placeholder="주소를 입력해주세요"
+                        />
+                        <button class="address-btn">
+                          <span>선택완료</span>
+                        </button>
+                      </section>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="main">
+            <!-- 후원취소 모달 -->
+
+            <div class="main-in">
+              <!-- 상단 캠페인 내용 -->
+              <section class="main-in-top">
+                <div class="main-in-top-box">
+                  <div class="main-in-top-box-img">
+                    <a href="/">
+                      <img
+                        src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWEwZDIwMjctYzYzZi00NDMzLWFmZGQtOTgyYzZkYmU1NzZjLzc1YmIyYmMwLTlkYTYtNGUyZi1hNWM4LTBhNTVlN2Q5OGZiOS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                        alt=""
+                      />
+                    </a>
+                  </div>
+                  <div class="main-in-top-box-content">
+                    <span class="main-in-top-box-content-top"
+                      >캐릭터 · 굿즈</span
+                    >
+                    <h3 class="main-in-top-box-content-mi">
+                      <a href="">일하기 싫은 직장인 그 자체 +모지 키링+</a>
+                    </h3>
+                    <div class="main-in-top-box-content-bo">
+                      <strong>청바지 20개</strong>
+                      <span class="main-in-top-box-content-bo-mi">38%</span>
+                      <span class="main-in-top-box-content-bo-bo"
+                        >4일 남음</span
+                      >
+                    </div>
+                  </div>
+                  <!-- 창작자 문의버튼 위치 -->
+                  <!-- <div></div> -->
+                </div>
+              </section>
+              <!-- 내 구매 내역 -->
+              <div class="main-in-mi">
+                <!-- 내용 -->
+                <div class="main-in-mi-content">
+                  <!-- 사실상 여기 반복 -->
+                  <div class="main-in-mi-content-box">
+                    <div class="main-in-mi-content-box-title">
+                      <p class="main-in-mi-content-box-title-le">후원 정보</p>
+                      <div class="main-in-mi-content-box-title-ri">
+                        <button class="main-in-mi-content-box-title-ri-btn">
+                          리워드 변경
+                        </button>
+                      </div>
+                    </div>
+                    <div class="main-in-mi-content-box-content">
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>캠페인 상태</dt>
+                        <dd class="add">캠페인 진행중</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>후원 상태</dt>
+                        <dd class="add">후원 중</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>후원 날짜</dt>
+                        <dd>2025. 01. 31</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>펀딩 마감일</dt>
+                        <dd>2025. 02. 05</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <!-- 사실상 여기 반복 -->
+                  <div class="main-in-mi-content-box">
+                    <div class="main-in-mi-content-box-title">
+                      <p class="main-in-mi-content-box-title-le">선물 정보</p>
+                    </div>
+                    <div class="main-in-mi-content-box-content">
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>선물 구성</dt>
+                        <dd>
+                          <div class="main-in-mi-content-box-content-in-div">
+                            <div>
+                              <div>Go to work 패키지 (x1)</div>
+                              <ul
+                                class="main-in-mi-content-box-content-in-div-ul"
+                              >
+                                <li
+                                  class="main-in-mi-content-box-content-in-div-ul-li"
+                                >
+                                  모지 인형 키링
+                                </li>
+                                <li
+                                  class="main-in-mi-content-box-content-in-div-ul-li"
+                                >
+                                  모지의 비밀 부적
+                                </li>
+                              </ul>
+                              <span
+                                class="main-in-mi-content-box-content-in-div-span"
+                                >2025년 03월 17일 전달예정</span
+                              >
+                            </div>
+                          </div>
+                        </dd>
+                      </dl>
+
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>기부품</dt>
+                        <dd>청바지 20개</dd>
+                      </dl>
+                    </div>
+                  </div>
+                  <!-- 사실상 여기 반복 -->
+                  <div class="main-in-mi-content-box">
+                    <div class="main-in-mi-content-box-title">
+                      <p class="main-in-mi-content-box-title-le">배송 정보</p>
+                      <div class="main-in-mi-content-box-title-ri">
+                        <button class="main-in-mi-content-box-title-ri-btn-add">
+                          변경
+                        </button>
+                      </div>
+                    </div>
+                    <div class="main-in-mi-content-box-content">
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>받는 사람</dt>
+                        <dd>사람사람</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>연락처</dt>
+                        <dd>010-1234-1234</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>주소</dt>
+                        <dd>주소는 주소주소</dd>
+                      </dl>
+                      <dl class="main-in-mi-content-box-content-in">
+                        <dt>송장번호</dt>
+                        <dd>아직 등록 ㄴㄴ</dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+                <!-- 밑에 버튼 -->
+                <div class="main-in-mi-content-box-btn">
+                  <a th:href="@{/user/donation}">
+                    <button class="main-in-mi-content-box-btn-in">
+                      후원 목록 보기
+                    </button>
+                  </a>
+                </div>
+              </div>
+              <!-- 추천 -->
+              <div class="main-in-bo">
+                <div class="main-in-bo-box">
+                  <div class="main-in-bo-box-title">
+                    이 프로젝트와 비슷한 프로젝트
+                  </div>
+                  <div class="main-in-bo-box-content">
+                    <div class="main-in-bo-box-content-in">
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                      <!-- 각각의 div들어감 -->
+                      <div class="main-in-bo-box-content-in-pe">
+                        <div class="main-in-bo-box-content-in-pe-box">
+                          <a
+                            href="/"
+                            class="main-in-bo-box-content-in-pe-box-a"
+                          >
+                            <div class="main-in-bo-box-content-in-pe-box-a-img">
+                              <img
+                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzZhNzU4NjgtMzA3Ni00ODk5LTlmOTEtNGQwZDMzNGY1NGExL2FmYjZmMTNmLTM3ZjktNGQxZC1iYTUzLTU2M2FhNDFjNWY3Mi5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
+                                alt=""
+                                class="main-in-bo-box-content-in-pe-box-a-img-in"
+                              />
+                              <!-- 좋아요 버튼 -->
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-img-like"
+                              >
+                                <svg
+                                  width="40"
+                                  height="40"
+                                  viewBox="0 0 40 40"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                    fill="black"
+                                    fill-opacity="0.25"
+                                    stroke="white"
+                                    stroke-width="1.6"
+                                  ></path>
+                                  <g filter="url(#filter0_dd_909_4706012)">
+                                    <path
+                                      fill-rule="evenodd"
+                                      clip-rule="evenodd"
+                                      d="M19.9992 17.111L17.0789 14.4725C17.0789 14.4725 17.079 14.4726 17.0789 14.4725C16.1903 13.67 14.4337 13.7447 13.4126 14.8691L13.3995 14.8835L13.3861 14.8976C12.0903 16.2633 12.039 18.6949 13.4805 20.2374L19.9994 26.6181L26.518 20.2374C27.9595 18.6949 27.9084 16.2637 26.6123 14.8976L26.5989 14.8835L26.5859 14.8691C25.5648 13.7447 23.8085 13.6699 22.9198 14.4725C22.9198 14.4725 22.9198 14.4724 22.9198 14.4725L19.9992 17.111ZM21.728 13.1533C23.4567 11.5918 26.3291 11.942 27.902 13.6739C29.8776 15.7563 29.8775 19.2796 27.7872 21.4827L19.9995 29.1058L12.2112 21.4827C10.1209 19.2796 10.121 15.7559 12.0965 13.6739C13.6694 11.942 16.5419 11.5917 18.2706 13.1533L19.9993 14.7151L21.728 13.1533Z"
+                                      fill="white"
+                                    ></path>
+                                  </g>
+                                </svg>
+                              </div>
+                            </div>
+                            <div
+                              class="main-in-bo-box-content-in-pe-box-a-content"
+                            >
+                              <div
+                                class="main-in-bo-box-content-in-pe-box-a-content-box"
+                              >
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-content-box-top"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-content-box-top-in"
+                                  >
+                                    슬리핑코 워크샵
+                                  </div>
+                                </div>
+                                <!-- 이름 -->
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-title"
+                                >
+                                  자나 깨나 꿈 많은 토끼, 나는 슬리핑코!
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-per"
+                                >
+                                  172% 달성
+                                </div>
+                                <div
+                                  class="main-in-bo-box-content-in-pe-box-a-tag"
+                                >
+                                  <div
+                                    class="main-in-bo-box-content-in-pe-box-a-tag-in"
+                                  >
+                                    <!-- 각각의 태그 -->
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      청바지
+                                    </div>
+                                    <div
+                                      class="main-in-bo-box-content-in-pe-box-a-tag-in-pe"
+                                    >
+                                      히트상품
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <div th:replace="~{fix/footer :: footer}"></div>
+  </body>
+</html>

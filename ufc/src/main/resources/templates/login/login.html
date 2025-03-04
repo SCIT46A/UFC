@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>joinDetail</title>
+        <link rel="stylesheet" th:href="@{/css/login/joindetail.css}" />
+        <link rel="stylesheet" href="../../static/css/login/joindetail.css" />
+        <style>
+            /* SNS 회원가입 부분 */
+            .sns-join-container {
+                --tw-space-y-reverse: 0;
+                margin-top: calc(1.5rem * (1 - var(--tw-space-y-reverse)));
+                margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+                justify-content: center; /* 가로 중앙 정렬 */
+                align-items: center; /* 세로 중앙 정렬 */
+            }
+
+            /* sns버튼 속성 모음 */
+            .sns-button {
+                --tw-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.05);
+                --tw-shadow-colored: 0 1px 1px 0 var(--tw-shadow-color);
+                box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+                    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+                line-height: 1;
+                font-weight: 400;
+                padding-left: 1rem;
+                padding-right: 1rem;
+                --tw-bg-opacity: 1;
+                background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+                border-width: 1px;
+                border-radius: 0.375rem;
+                justify-content: center;
+                align-items: center;
+                width: 100%;
+                height: 3rem;
+                display: flex;
+            }
+
+            /* 카카오 버튼 */
+            .kakao:hover {
+                background-color: #f2f4f5;
+            }
+
+            .kakao-img {
+                height: 1.25rem;
+            }
+
+            .kakao-text {
+                margin-left: 0.5rem;
+            }
+
+            /* 네이버 버튼 */
+            .naver {
+                --tw-space-y-reverse: 0;
+                margin-top: calc(0.75rem * (1 - var(--tw-space-y-reverse)));
+                margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+            }
+
+            .naver:hover {
+                background-color: #f2f4f5;
+            }
+            .naver-img {
+                height: 1.25rem;
+            }
+
+            .naver-text {
+                margin-left: 0.5rem;
+            }
+
+            /* 구글 버튼 */
+            .google {
+                --tw-space-y-reverse: 0;
+                margin-top: calc(0.75rem * (1 - var(--tw-space-y-reverse)));
+                margin-bottom: calc(0.75rem * var(--tw-space-y-reverse));
+            }
+
+            .google:hover {
+                background-color: #f2f4f5;
+            }
+
+            .google-img {
+                height: 1.6rem;
+            }
+
+            .google-text {
+                margin-left: 0.3rem;
+            }
+        </style>
+    </head>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="../../static/js/login/joindetail.js"></script>
+    <script th:src="@{/js/login/joindetail.js}"></script>
+    <body>
+        <div class="screen-all-wrap">
+            <div class="screen-full-wrap">
+                <div class="screen-wrap">
+                    <div class="app-screen-all-wrap">
+                        <div class="app-screen-wrap">
+                            <div>
+                                <img
+                                    th:src="@{/images/fix/logo.png}"
+                                    alt=""
+                                    style="width: 410px"
+                                />
+                            </div>
+                            <div class="line-container">
+                                <div class="line"></div>
+                                <div class="line-text">
+                                    <span>로그인</span>
+                                </div>
+                                <div class="line"></div>
+                            </div>
+                            <div class="sns-join-container">
+                                <div class="sns-button-items">
+                                    <!-- 카카오 버튼 -->
+                                    <a
+                                        href="/oauth2/authorization/kakao"
+                                        class="sns-button kakao"
+                                    >
+                                        <svg
+                                            class="kakao-img"
+                                            version="1.1"
+                                            viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="m9.9999 2c5.0494 0 9.143 3.2827 9.143 7.3313 0 4.0487-4.0933 7.3313-9.143 7.3313a11.083 10.938 0 0 1-2.3926-0.26349c-0.44435-0.090231-3.4195 1.8254-4.0549 1.5791-0.44801-0.17145 1.3175-2.5653 0.75427-2.9109a6.9487 6.8574 0 0 1-3.4496-5.7359c0-4.0487 4.0933-7.3313 9.143-7.3313z"
+                                                fill="#ffd95f"
+                                                stroke-width=".90556"
+                                            ></path>
+                                        </svg>
+                                        <span class="kakao-text">
+                                            <span>카카오로 시작하기</span>
+                                        </span>
+                                    </a>
+                                    <a
+                                        href="/oauth2/authorization/google"
+                                        class="sns-button google"
+                                    >
+                                        <img
+                                            class="google-img"
+                                            src="https://www.google.com/favicon.ico"
+                                        />
+                                        <span class="google-text">
+                                            <span>구글로 시작하기</span>
+                                        </span>
+                                    </a>
+                                    <a
+                                        href="/oauth2/authorization/naver"
+                                        class="sns-button google"
+                                    >
+                                        <svg
+                                            class="naver-img"
+                                            version="1.1"
+                                            viewBox="0 0 20 20"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <path
+                                                d="m12.849 10.563-5.9315-8.5627h-4.9174v16h5.1511v-8.5627l5.9315 8.5627h4.9174v-15.998h-5.1511z"
+                                                fill="#03cf5d"
+                                                stroke-width="1.0187"
+                                            ></path>
+                                        </svg>
+                                        <span class="google-text">
+                                            <span>네이버로 시작하기</span>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

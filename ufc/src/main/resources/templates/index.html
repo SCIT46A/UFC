@@ -1,12 +1,242 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UFC Main Page</title>
-</head>
-<body>
-  <h1>Main Index</h1>
-  <a th:href="@{/user}">User</a>
-</body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <title>UPDA - 지속 가능한 미래에 투자하세요</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/index.css}"
+            href="../static/css/index.css"
+        />
+        <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+        <script src="../../resources/static/js/index.js" defer></script>
+        <script th:src="@{/js/index.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <div class="flex-col min-h-screen bg-green-50">
+            <main class="flex-grow">
+                <section
+                    class="bg-gradient-to-r from-green-600 to-green-400 text-white py-20"
+                >
+                    <div
+                        class="container mx-auto px-4 flex flex-col md:flex-row items-center"
+                    >
+                        <div class="md:w-1/2 mb-8 md:mb-0">
+                            <h1 class="text-4xl md:text-5xl font-bold mb-6">
+                                지속 가능한 미래에 <br />
+                                투자하세요
+                            </h1>
+                            <p class="text-xl mb-8 max-w-2xl">
+                                UPDA에서 혁신적인 업사이클링 캠페인에 펀딩하고,
+                                <br />
+                                함께 더 나은 세상을 만들어가요.
+                            </p>
+                            <a
+                                href="/campaign/active"
+                                class="inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-full hover:bg-green-100 transition-colors"
+                            >
+                                캠페인 둘러보기
+                                <i data-lucide="arrow-right" class="ml-2"></i>
+                            </a>
+                        </div>
+                        <div class="md:w-1/2 main-box">
+                            <div class="slider-container">
+                                <div class="slider">
+                                    <div class="image-container">
+                                        <img
+                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1hc3NldHMiLCJrZXkiOiJoZXJvZXMvbWFpbl9tX3NpYl95b29rLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                            alt="Slide 1"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                새해 소망을 이루어줄게요
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image-container">
+                                        <img
+                                            src="https://cdn3.wadiz.kr/studio/images/2025/01/17/819c20dc-9611-44f8-9760-8124d046518d.jpeg/wadiz/resize/400/format/jpg/quality/85/"
+                                            alt="Slide 2"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                22222222
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image-container">
+                                        <img
+                                            src="https://cdn3.wadiz.kr/studio/images/2025/01/06/328b5913-636b-4b5a-827b-ac0f1cea4112.jpeg/wadiz/resize/400/format/jpg/quality/85/"
+                                            alt="Slide 3"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                33333333
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 좌우 버튼 -->
+                            <div class="main-container">
+                                <div class="main-container-count">
+                                    <strong class="main-container-count-point"
+                                        >1</strong
+                                    >
+                                    / 3
+                                </div>
+                                <div class="main-container-count-control">
+                                    <button
+                                        class="main-container-count-control-l"
+                                    >
+                                        &#9665;
+                                    </button>
+                                    <button
+                                        class="main-container-count-control-r"
+                                    >
+                                        &#9655;
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="projects" class="py-20">
+                    <!-- 주목할 만한 캠페인 -->
+                    <div class="container mx-auto px-4 target-project">
+                        <div
+                            class="text-3xl font-bold text-center mb-12 target-project-title"
+                        >
+                            주목할 만한 캠페인
+                        </div>
+                        <!-- 전체 캠페인 담당 -->
+                        <div class="grid md:grid-cols-3 gap-8 topTarget">
+                            <!-- 각각의 캠페인 -->
+                        </div>
+                    </div>
+                </section>
+                <!-- 인기있는 캠페인 -->
+                <div class="main-item container mx-auto px-4">
+                    <!-- 상단부분 -->
+                    <div class="main-item-titie">
+                        <div class="main-item-titie-box">
+                            <div class="main-item-titie-box-top">
+                                <div class="main-item-titie-box-top-title">
+                                    인기있는 캠페인
+                                </div>
+                                <a href="/campaign/active" class="main-item-titie-box-top-all"
+                                    >전체보기</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 메인 내용 -->
+                    <div class="main-resent">
+                        <!-- 메인 전체 묶는거 -->
+                        <div class="main-resent-all" id="campaign-target">
+                            <!-- 각각의 캠페인 -->
+                        </div>
+                    </div>
+                    <button class="main-resent-all-add-btn-le hidden">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <button class="main-resent-all-add-btn-ri">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+                <!-- 인기있는 물품 -->
+                <div class="main-item container mx-auto px-4">
+                    <!-- 상단부분 -->
+                    <div class="main-item-titie">
+                        <div class="main-item-titie-box">
+                            <div class="main-item-titie-box-top">
+                                <div class="main-item-titie-box-top-title">
+                                    인기있는 물품
+                                </div>
+                                <a href="/product/all" class="main-item-titie-box-top-all"
+                                    >전체보기</a
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 메인 내용 -->
+                    <div class="main-resent">
+                        <!-- 메인 전체 묶는거 -->
+                        <div class="main-resent-all-add" id="product-target"></div>
+
+                    </div>
+                    <button class="main-resent-all-add-btn-add-le hidden">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <button class="main-resent-all-add-btn-add-ri">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+            </main>
+        </div>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </body>
 </html>

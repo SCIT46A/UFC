@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>캠페인 시작하기</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/campaign/intro-campaign.css}"
+            href="../../static/css/campaign/intro-campaign.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <script src="../../static/js/campaign/intro-campaign.js" defer></script>
+        <script th:src="@{/js/campaign/intro-campaign.js}" defer></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <main>
+            <section id="projects" style="background-color: #ffffff">
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <div class="main-intro">
+                            <div class="main-intro-box">
+                                <!-- 각각의 서비스 들어감 -->
+                                <!-- ㄹㅇ 만들기 -->
+                                <div class="main-intro-start">
+                                    <p class="main-intro-start-a">
+                                        누구나 쉽고 빠르게<br />캠페인을 시작할
+                                        수 있습니다.
+                                    </p>
+                                    <p class="main-intro-start-p">
+                                        필요없는게 없는 UP-DA에서
+                                    </p>
+                                    <div class="main-intro-start-btn">
+                                        <button><a href="../campaign/create-campaign.html" th:href="@{/campaign/create}">지금 시작하기</a></button>
+                                        <!-- 필요하면 만들기 -->
+                                        <a href="/">창작자 가이드</a>
+                                    </div>
+                                </div>
+                                <!-- 이미지 슬라이드 힘들면 빼기 -->
+                                <div class="main-intro-sl">
+                                    <div class="main-intro-sl-box">
+                                        <div class="main-intro-sl-box-in">
+                                            <!-- 여기 js걸어서 해야할듯 전체 담는 박스임 -->
+                                            <div
+                                                class="main-intro-sl-box-in-box"
+                                            >
+                                                <!-- 각각이 들어감 -->
+                                                <div
+                                                    th:each="num : ${#numbers.sequence(1,5)}"
+                                                    class="main-intro-sl-box-in-box-pe"
+                                                >
+                                                    <a
+                                                        href="/"
+                                                        class="main-intro-sl-box-in-box-pe-a"
+                                                    >
+                                                        <div
+                                                            class="main-intro-sl-box-in-box-pe-a-img"
+                                                        >
+                                                            <img
+                                                                src="https://d1ohqa58xvigdz.cloudfront.net/start/project4.jpg"
+                                                                alt=""
+                                                            />
+                                                        </div>
+                                                        <p
+                                                            class="main-intro-sl-box-in-box-pe-a-tag"
+                                                        >
+                                                            청바지
+                                                        </p>
+                                                        <p
+                                                            class="main-intro-sl-box-in-box-pe-a-title"
+                                                        >
+                                                            아기 오구의 모험기
+                                                        </p>
+                                                        <p
+                                                            class="main-intro-sl-box-in-box-pe-a-content"
+                                                        >
+                                                            인기 이모티콘을 넘어
+                                                            게임까지
+                                                        </p>
+                                                        <p
+                                                            class="main-intro-sl-box-in-box-pe-a-per"
+                                                        >
+                                                            1919% 달성!
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- upda를 해야하는 이유? -->
+                                <div class="main-intro-re">
+                                    <div class="main-intro-re-in">
+                                        <div class="main-intro-re-in-top">
+                                            업사이클링이면 UP-DA를<br />선택해야하는
+                                            이유
+                                        </div>
+                                        <div class="main-intro-re-in-mi">
+                                            <div class="main-intro-re-in-mi-pe">
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-box"
+                                                >
+                                                    후원
+                                                </div>
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-to"
+                                                >
+                                                    <strong>800</strong>만
+                                                    건(예정)
+                                                </div>
+                                            </div>
+                                            <div class="main-intro-re-in-mi-pe">
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-box"
+                                                >
+                                                    회원
+                                                </div>
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-to"
+                                                >
+                                                    <strong>340</strong>만
+                                                    명(예정)
+                                                </div>
+                                            </div>
+                                            <div class="main-intro-re-in-mi-pe">
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-box"
+                                                >
+                                                    후원
+                                                </div>
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-to"
+                                                >
+                                                    <strong>690</strong>% (예정)
+                                                </div>
+                                            </div>
+                                            <div class="main-intro-re-in-mi-pe">
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-box"
+                                                >
+                                                    목표액까지 평균
+                                                </div>
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-to"
+                                                >
+                                                    <strong>5</strong>일내
+                                                    달성하고싶다
+                                                </div>
+                                            </div>
+                                            <div class="main-intro-re-in-mi-pe">
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-box"
+                                                >
+                                                    크라우드 펀딩
+                                                </div>
+                                                <div
+                                                    class="main-intro-re-in-mi-pe-to"
+                                                >
+                                                    월 방문자 수
+                                                    <strong>1</strong>위 (예정)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="main-intro-re-in-bo">
+                                            <div
+                                                class="main-intro-re-in-bo-img"
+                                            >
+                                                <div></div>
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 1300 480"
+                                                    width="1300"
+                                                    height="480"
+                                                    preserveAspectRatio="xMidYMid meet"
+                                                    style="
+                                                        width: 100%;
+                                                        height: 100%;
+                                                        transform: translate3d(
+                                                            0px,
+                                                            0px,
+                                                            0px
+                                                        );
+                                                        content-visibility: visible;
+                                                    "
+                                                >
+                                                    <defs>
+                                                        <clipPath
+                                                            id="__lottie_element_2"
+                                                        >
+                                                            <rect
+                                                                width="1300"
+                                                                height="480"
+                                                                x="0"
+                                                                y="0"
+                                                            ></rect>
+                                                        </clipPath>
+                                                    </defs>
+                                                    <g
+                                                        clip-path="url(#__lottie_element_2)"
+                                                    >
+                                                        <g
+                                                            transform="matrix(1,0,0,1,0,0)"
+                                                            opacity="1"
+                                                            style="
+                                                                display: block;
+                                                            "
+                                                        >
+                                                            <rect
+                                                                width="1300"
+                                                                height="480"
+                                                                fill="#ffffff"
+                                                            ></rect>
+                                                        </g>
+                                                        <g
+                                                            transform="matrix(0.835669994354248,0,0,0.9748899936676025,740,266)"
+                                                            opacity="1"
+                                                            style="
+                                                                display: block;
+                                                            "
+                                                        >
+                                                            <g
+                                                                opacity="1"
+                                                                transform="matrix(0.9999989867210388,0.0014137162361294031,-0.0014137162361294031,0.9999989867210388,0,0)"
+                                                            >
+                                                                <path
+                                                                    stroke-linecap="butt"
+                                                                    stroke-linejoin="miter"
+                                                                    fill-opacity="0"
+                                                                    stroke-miterlimit="4"
+                                                                    stroke="rgb(248,100,83)"
+                                                                    stroke-opacity="1"
+                                                                    stroke-width="5"
+                                                                    d=" M-574.4219970703125,227.71200561523438 C-568.4219970703125,227.71200561523438 -354.5400085449219,191.29800415039062 -354.5400085449219,191.29800415039062 C-354.5400085449219,191.29800415039062 -244.0659942626953,129.5970001220703 -244.0659942626953,129.5970001220703 C-244.0659942626953,129.5970001220703 -189.74200439453125,157.0500030517578 -189.74200439453125,157.0500030517578 C-189.74200439453125,157.0500030517578 -102.13800048828125,150.64999389648438 -102.13800048828125,150.64999389648438 C-102.13800048828125,150.64999389648438 29.166000366210938,86.48600006103516 29.166000366210938,86.48600006103516 C29.166000366210938,86.48600006103516 118.98400115966797,121.0250015258789 118.98400115966797,121.0250015258789 C118.98400115966797,121.0250015258789 166.12399291992188,111.5479965209961 166.12399291992188,111.5479965209961 C166.12399291992188,111.5479965209961 277.9840087890625,-26.31800079345703 277.9840087890625,-26.31800079345703 C277.9840087890625,-26.31800079345703 322.6520080566406,-12.199000358581543 322.6520080566406,-12.199000358581543 C322.6520080566406,-12.199000358581543 405.114990234375,-80.19999694824219 405.114990234375,-80.19999694824219 C405.114990234375,-80.19999694824219 466.0350036621094,-57.24399948120117 466.0350036621094,-57.24399948120117 C466.0350036621094,-57.24399948120117 697.5390014648438,-276.6319885253906 697.5390014648438,-276.6319885253906"
+                                                                ></path>
+                                                            </g>
+                                                            <g
+                                                                opacity="1"
+                                                                transform="matrix(1,0,0,1,0,0)"
+                                                            >
+                                                                <path
+                                                                    fill="rgb(255,255,255)"
+                                                                    fill-opacity="1"
+                                                                    d=" M-1158.3580322265625,363.1180114746094"
+                                                                ></path>
+                                                                <path
+                                                                    stroke-linecap="butt"
+                                                                    stroke-linejoin="miter"
+                                                                    fill-opacity="0"
+                                                                    stroke-miterlimit="4"
+                                                                    stroke="rgb(248,100,83)"
+                                                                    stroke-opacity="1"
+                                                                    stroke-width="5"
+                                                                    d=" M-1158.3580322265625,363.1180114746094"
+                                                                ></path>
+                                                            </g>
+                                                        </g>
+                                                    </g>
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 어케하누 -->
+                                <div class="main-intro-ho">
+                                    <div class="main-intro-ho-box">
+                                        <div class="main-intro-ho-box-title">
+                                            펀딩은 어떻게 진행하나요?
+                                        </div>
+                                        <ul class="main-intro-ho-box-content">
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-01.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    캠페인 작성
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-02.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    캠페인 심사 및 승인
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-03.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    캠페인 공개예정 (선택)
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-04.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    캠페인 오픈
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-05.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    후원 성사 및 정산
+                                                </div>
+                                            </li>
+                                            <li
+                                                class="main-intro-ho-box-content-in"
+                                            >
+                                                <div
+                                                    class="main-intro-ho-box-content-in-img"
+                                                >
+                                                    <img
+                                                        src="https://d1ohqa58xvigdz.cloudfront.net/start/process-img-pc-06.png"
+                                                        alt=""
+                                                    />
+                                                </div>
+                                                <div
+                                                    class="main-intro-ho-box-content-in-title"
+                                                >
+                                                    후원자 선물 전달
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </body>
+</html>

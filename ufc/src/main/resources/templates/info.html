@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" th:href="@{/css/index.css}" href="../../static/css/index.css" />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <title>up다 설명페이지</title>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <!-- 밑에는 기본임 -->
+
+        <section id="how-it-works" class="py-20 bg-green-100">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">이용 방법</h2>
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div
+                            class="bg-white rounded-full p-6 inline-block mb-4"
+                        >
+                            <i data-lucide="search" class="text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">
+                            프로젝트 찾기
+                        </h3>
+                        <p class="text-gray-600">
+                            관심 있는 업사이클링 프로젝트를 찾아보세요.
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="bg-white rounded-full p-6 inline-block mb-4"
+                        >
+                            <i
+                                data-lucide="lightbulb"
+                                class="text-green-600"
+                            ></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">
+                            아이디어 제안
+                        </h3>
+                        <p class="text-gray-600">
+                            직접 지속 가능한 프로젝트를 제안해보세요.
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="bg-white rounded-full p-6 inline-block mb-4"
+                        >
+                            <i
+                                data-lucide="credit-card"
+                                class="text-green-600"
+                            ></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">후원하기</h3>
+                        <p class="text-gray-600">
+                            마음에 드는 프로젝트에 후원해주세요.
+                        </p>
+                    </div>
+                    <div class="text-center">
+                        <div
+                            class="bg-white rounded-full p-6 inline-block mb-4"
+                        >
+                            <i data-lucide="recycle" class="text-green-600"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold mb-2">변화 만들기</h3>
+                        <p class="text-gray-600">
+                            함께 지속 가능한 미래를 만들어갑니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="impact" class="py-20">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold text-center mb-12">
+                    UP-DA의 환경 영향
+                </h2>
+                <div class="grid md:grid-cols-4 gap-8">
+                    <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                        <i data-lucide="trending-up" class="text-green-600"></i>
+                        <div class="text-3xl font-bold my-2">5억원</div>
+                        <div class="text-gray-600">모금액</div>
+                    </div>
+                    <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                        <i data-lucide="sprout" class="text-green-600"></i>
+                        <div class="text-3xl font-bold my-2">100+</div>
+                        <div class="text-gray-600">성공 프로젝트</div>
+                    </div>
+                    <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                        <i data-lucide="users" class="text-green-600"></i>
+                        <div class="text-3xl font-bold my-2">10,000+</div>
+                        <div class="text-gray-600">후원자</div>
+                    </div>
+                    <div class="text-center bg-white p-6 rounded-lg shadow-lg">
+                        <i data-lucide="globe" class="text-green-600"></i>
+                        <div class="text-3xl font-bold my-2">5,000톤</div>
+                        <div class="text-gray-600">재활용 자원</div>
+                    </div>
+                </div>
+                <p class="text-center mt-8 text-lg text-gray-600">
+                    UP-DA와 함께 지속 가능한 미래를 만들어갑니다. 여러분의
+                    후원이 환경을 변화시키고 있습니다.
+                </p>
+            </div>
+        </section>
+
+        <section
+            id="start-project"
+            class="py-20 bg-gradient-to-r from-green-600 to-green-400 text-white"
+        >
+            <div class="container mx-auto px-4 text-center">
+                <h2 class="text-3xl font-bold mb-6">
+                    당신의 아이디어를 현실로
+                </h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">
+                    지속 가능한 미래를 위한 혁신적인 업사이클링 프로젝트가
+                    있으신가요? UP-DA에서 당신의 아이디어를 세상과 공유하고
+                    후원을 받아보세요.
+                </p>
+                <div class="space-x-4">
+                    <button class="btn-primary">프로젝트 시작하기</button>
+                    <button class="btn-secondary">자세히 알아보기</button>
+                </div>
+            </div>
+        </section>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </body>
+</html>

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>진행중인 캠페인</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/campaign/all-campaign.css}"
+            href="../../static/css/campaign/all-campaign.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+        <script src="../../static/js/campaign/all-campaign.js" defer></script>
+        <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script th:src="@{/js/campaign/all-campaign.js}" defer></script>
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <main>
+            <section
+                id="projects"
+                style="background-color: #ffffff; padding-bottom: 30px"
+            >
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <div class="main-container">
+                            <!-- 상단 태그부분 -->
+                            <div class="main-top">
+                                <div class="main-top-in">
+                                    <div class="main-top-in-content">
+                                        <!-- 최상단 셀렉트박스 -->
+                                        <div class="main-top-in-content-target">
+                                            <div
+                                                class="main-top-in-content-target-box"
+                                            >
+                                                <!-- 달성률 -->
+                                                <span
+                                                    class="main-top-in-content-target-box-span"
+                                                >
+                                                    <button
+                                                        class="main-top-in-content-target-box-span-btn"
+                                                    >
+                                                        <span
+                                                            class="main-top-in-content-target-box-span-btn-spab"
+                                                            >달성률</span
+                                                        >
+                                                        <!-- 열림기준 -->
+                                                        <span class="icon-open"
+                                                            ><div
+                                                                name="arrow1-down"
+                                                                class="Icon__SVGICON-sc-bv7y1u-0 fuBkMs FilterUIButton__StyledSVGIcon-sc-aco6bu-0 fXaCUQ"
+                                                            >
+                                                                <svg
+                                                                    viewBox="0 0 48 48"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
+                                                                    ></path>
+                                                                </svg></div
+                                                        ></span>
+                                                    </button>
+                                                </span>
+                                                <!-- 검색 모달 -->
+                                                <div class="main-modal-per">
+                                                    <div
+                                                        class="main-modal-per-in"
+                                                    >
+                                                        <div
+                                                            class="main-modal-per-in-con"
+                                                        >
+                                                            <div
+                                                                class="main-modal-per-in-con-box"
+                                                            >
+                                                                <div
+                                                                    class="main-modal-per-in-con-box-choice"
+                                                                >
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in on"
+                                                                    >
+                                                                        전체보기
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        50% 이하
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >51% ~ 100%</div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in off"
+                                                                    >
+                                                                        100%이상
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="main-modal-per-close"
+                                                ></div>
+                                                <!-- 재료 기준 -->
+                                                <span
+                                                    class="main-top-in-content-target-box-span"
+                                                >
+                                                    <button
+                                                        class="main-top-in-content-target-box-span-btn-re"
+                                                    >
+                                                        <span
+                                                            class="main-top-in-content-target-box-span-btn-spab-add"
+                                                            >전체보기</span
+                                                        >
+                                                        <!-- 열림기준 -->
+                                                        <span class="icon-open"
+                                                            ><div
+                                                                name="arrow1-down"
+                                                                class="Icon__SVGICON-sc-bv7y1u-0 fuBkMs FilterUIButton__StyledSVGIcon-sc-aco6bu-0 fXaCUQ"
+                                                            >
+                                                                <svg
+                                                                    viewBox="0 0 48 48"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M45.4003 15.1217L23.9125 36L2.5247 15.1217C1.8251 14.4225 1.8251 13.2237 2.5247 12.5245C3.2243 11.8252 4.42362 11.8252 5.22317 12.5245L23.9125 30.8054L42.7019 12.5245C43.4015 11.8252 44.6008 11.8252 45.4003 12.5245C45.8001 12.8241 46 13.3236 46 13.8231C45.9001 14.3226 45.7002 14.8221 45.4003 15.1217Z"
+                                                                    ></path>
+                                                                </svg></div
+                                                        ></span>
+                                                    </button>
+                                                </span>
+                                                <div class="main-modal-per-add">
+                                                    <div
+                                                        class="main-modal-per-in-add"
+                                                    >
+                                                        <div
+                                                            class="main-modal-per-in-con-add"
+                                                        >
+                                                            <div
+                                                                class="main-modal-per-in-con-box-add"
+                                                            >
+                                                                <div
+                                                                    class="main-modal-per-in-con-box-choice-add"
+                                                                >
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in-add on"
+                                                                    >
+                                                                        전체보기
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in-add off"
+                                                                    >
+                                                                        좋아요 많은순
+                                                                    </div>
+                                                                    <div
+                                                                        class="main-modal-per-in-con-box-choice-in-add off"
+                                                                    >
+                                                                        마감 임박순
+                                                                    </div>
+                                                                    <div
+                                                                            class="main-modal-per-in-con-box-choice-in-add off"
+                                                                    >
+                                                                        최신순
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- 검색창 -->
+                                            <div class="main-search-box-all">
+                                                <div
+                                                    class="modal-search-box-in-top-input-img"
+                                                >
+                                                    <svg
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        class="w-5 h-5"
+                                                        viewBox="0 0 20 20"
+                                                        fill="currentColor"
+                                                    >
+                                                        <path
+                                                            fill-rule="evenodd"
+                                                            d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                            clip-rule="evenodd"
+                                                        ></path>
+                                                    </svg>
+                                                </div>
+                                                <input
+                                                    type="text"
+                                                    placeholder="태그를 입력해주세요"
+                                                    class="main-search-box"
+                                                />
+                                                <!-- 모달 검색창 -->
+                                            </div>
+                                        </div>
+                                        <!-- 태그 검색 하는곳 -->
+                                        <div class="main-search-tag">
+                                            <!-- 각각의 태그 들어가는곳 -->
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-tag-search">
+                                    <!-- 진짜 창 -->
+                                    <div class="modal-login-in">
+                                        <div class="modal-re-search-box">
+                                            <!-- 추천 태그 나오게 -->
+                                            <div
+                                                class="modal-re-search-box-top-add"
+                                            >
+                                                <!-- 각각의 태그 반복 -->
+                                                <div>
+                                                    검색어를 입력해주세요!.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 닫기위한 전체 창 -->
+                                    <div
+                                        class="modal-login-close"
+                                        id="modal-controller-tag-search"
+                                    ></div>
+                                </div>
+                            </div>
+                            <!-- 캠페인 들어가는 부분 -->
+                            <div class="main-bo">
+                                <div class="main-bo-in">
+                                    <!--몇개인지 카운트 하는곳 -->
+                                    <div class="main-bo-in-top">
+
+                                    </div>
+                                    <!-- 내용들 반복하는곳 -->
+                                    <div class="main-bo-in-bo">
+                                        <!-- 각각의 내용이 들어가는 곳 -->
+
+
+                                        <!-- 무한 스크롤 제작~ -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </body>
+</html>

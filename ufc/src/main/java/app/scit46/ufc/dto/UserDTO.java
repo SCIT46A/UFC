@@ -17,23 +17,39 @@ import lombok.ToString;
 @ToString
 @Builder
 public class UserDTO {
-    private String userId;
-    private String username;
+    private Long userId;
+    private String oauthId;
+    private String loginType;
+    private String userName;
     private String email;
-    private String password;
+    private String phoneNumber;
+    private String userAddress;
     private String roles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    
-    public static UserDTO toDTO(UserEntity userEntity) {
+    private ImageUrlDTO photo; // ✅ PhotoDTO 포함
+    private String intro;
+    private int isMarketed;
+    private int userStatus;
+    private String statusReason;
+
+    public static UserDTO toDTO(UserEntity entity) {
         return UserDTO.builder()
-            .userId(userEntity.getUserId())
-            .username(userEntity.getUsername())
-            .email(userEntity.getEmail())
-            .password(userEntity.getPassword())
-            .roles(userEntity.getRoles())
-            .createdAt(userEntity.getCreatedAt())
-            .updatedAt(userEntity.getUpdatedAt())
-            .build();
+                .userId(entity.getUserId())
+                .oauthId(entity.getOauthId())
+                .loginType(entity.getLoginType())
+                .userName(entity.getUserName())
+                .email(entity.getEmail())
+                .phoneNumber(entity.getPhoneNumber())
+                .userAddress(entity.getUserAddress())
+                .roles(entity.getRoles())
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
+                .photo(entity.getPhotoId() != null ? ImageUrlDTO.toDTO(entity.getPhotoId()) : null) // ✅ PhotoDTO 변환
+                .intro(entity.getIntro())
+                .isMarketed(entity.getIsMarketed())
+                .userStatus(entity.getUserStatus())
+                .statusReason(entity.getStatusReason())
+                .build();
     }
 }
