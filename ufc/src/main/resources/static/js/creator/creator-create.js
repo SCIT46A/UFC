@@ -265,6 +265,15 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
+document.getElementById("seller_regist_date").addEventListener("keydown", function (event) {
+    let value = this.value;
+    let parts = value.split("-");
+
+    if (parts.length > 0 && parts[0].length >= 4 && event.key !== "Backspace" && event.key !== "Tab") {
+        event.preventDefault(); // 4자리 이상 입력 시 입력 방지
+    }
+});
+
 document.querySelector(".img-form-button").addEventListener("click", function () {
     Swal.fire({
         title: "창작가 개설을 진행하시겠습니까?",

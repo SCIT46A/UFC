@@ -312,7 +312,8 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
                 return fetch("/creator/update", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updateData)
+                    body: JSON.stringify(updateData),
+                    credentials: "include"
                 });
             })
             .then(response => {

@@ -3,6 +3,7 @@ package app.scit46.ufc.controller;
 import java.net.http.HttpRequest;
 
 import org.apache.catalina.connector.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 
 import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.cloudflare.ImageService;
@@ -36,23 +38,6 @@ public class CreatorController {
         return "creator/creator-create"; // ✅ ".html" 붙이지 않음!
     }
 
-    /** 🔹 [GET] 창작가 캠페인 페이지 출력 */
-    /*
-     * @GetMapping("/campaign")
-     * public String getCreatorCampaignPage(Model model) {
-     * System.out.println("✅ [LOG] 창작가 캠페인 페이지 요청됨!"); // 🚀 요청 확인용 로그
-     * return "creator/creator-campaign";
-     * }
-     */
-
-    // /** 🔹 [GET] 창작가 프로필 수정 페이지 출력 */
-    // @GetMapping("/edit")
-    // public String getCreatorEditPage(Model model) {
-    // model.addAttribute("imageList", imageService.getImageUrl(null))
-    // model.addAttribute("message", "창작가 프로필 수정 페이지입니다!");
-    // return "creator/creator-edit"; // ✅ ".html" 붙이지 않음!
-    // }
-
     /** 🔹 [POST] 입력값을 DB에 저장 */
     @PostMapping("/create")
     @ResponseBody
@@ -66,7 +51,13 @@ public class CreatorController {
         return ResponseEntity.ok("창작가가 성공적으로 저장되었습니다!");
     }
 
-    /** 🔹 [GET] 특정 창작가 정보 불러오기 */
+    private String getImageUrl(ImageUrlDTO image) {
+        if (image == null || image.getImageId() == null) {
+            return "/images/default-profile.png"; // 기본 이미지 경로 (적절하게 변경 가능)
+        }
+        return "/uploads/" + image.getImageId(); // 실제 업로드된 이미지 URL
+    }
+
     /** 🔹 [GET] 특정 창작가 정보 불러오기 */
     @GetMapping("/campaign")
     public String getCreatorCampaignPage(Model model, HttpServletRequest request) {
@@ -78,17 +69,12 @@ public class CreatorController {
             return "error"; // 오류 페이지로 이동
         }
 
-        // ✅ 이미지 서버의 기본 URL (ex: AWS S3, 서버 내 저장소 등)
-        String imageBaseUrl = "/images/";
-
-        // ✅ `imageId`를 이용해 URL 직접 생성
+        // ✅ `imageId`를 `URL`로 변환하여 모델에 추가
         model.addAttribute("creator", creator);
-        model.addAttribute("profileImgUrl",
-                creator.getProImgUrl() != null ? imageBaseUrl + creator.getProImgUrl().getImageId()
-                        : "/images/default-profile.png");
-        model.addAttribute("backImgUrl",
-                creator.getBackImgUrl() != null ? imageBaseUrl + creator.getBackImgUrl().getImageId()
-                        : "/images/default-background.png");
+        model.addAttribute("profileImgUrl", imageService.getImageUrl(creator.getProImgUrl().getImageId())); // ✅ 변환된 URL
+                                                                                                            // 사용
+        model.addAttribute("backImgUrl", imageService.getImageUrl(creator.getBackImgUrl().getImageId())); // ✅ 변환된 URL
+                                                                                                          // 사용
 
         return "creator/creator-campaign"; // 창작가 캠페인 페이지로 이동
     }
@@ -113,12 +99,22 @@ public class CreatorController {
     @PostMapping("/update")
     @ResponseBody
     public ResponseEntity<String> updateCreator(@RequestBody CreatorDTO creatorDTO) {
-        System.out.println("📥 수정 데이터 수신: " + creatorDTO.toString());
+        try {
+            System.out.println("📥 수정 데이터 수신: " + creatorDTO.toString());
 
-        // 서비스에서 업데이트 로직 실행
-        creatorService.updateCreator(creatorDTO);
+            // 서비스에서 업데이트 실행
+            boolean isUpdated = creatorService.updateCreator(creatorDTO);
 
-        return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다!");
+            if (!isUpdated) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("업데이트 실패: 존재하지 않는 사용자");
+            }
+
+            return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다!");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("서버 오류 발생: " + e.getMessage());
+        }
     }
 
     /** 🔹 [GET] 캠페인 페이지 */
