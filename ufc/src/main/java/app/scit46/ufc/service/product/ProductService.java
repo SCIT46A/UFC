@@ -7,14 +7,18 @@ import app.scit46.ufc.dto.ItemDTO;
 import app.scit46.ufc.dto.custom.GenerateProductDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.ItemEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
+import app.scit46.ufc.repository.ItemRepository;
 import app.scit46.ufc.repository.ProductRepository;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.ItemService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.tag.TagService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -28,24 +32,36 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final EntityManager entityManager;
     private final ItemService itemService;
     private final ProductRepository productRepository;
     private final ImageUrlService imageUrlService;
     private final UserService userService;
     private final CreatorService creatorService;
     private final TagService tagService;
-
+    private final ItemRepository itemRepository;
+    
     public ProductEntity saveProduct(ProductEntity product) {
         return productRepository.save(product);
     }
 
+    @Transactional
     public Long registProduct(GenerateProductDTO cpDTO) {
-        ItemDTO itemDTO = ItemDTO.builder()
-            .name(cpDTO.getTitle())
-            .description(cpDTO.getDescription())
-            .photo(ImageUrlDTO.toDTO(imageUrlService.findByImageId(cpDTO.getImageId())))
-            .build();
-        ItemEntity item = itemService.addItem(itemDTO);
+        
+        // ImageUrlEntity image = entityManager.getReference(ImageUrlEntity.class, cpDTO.getImageId());
+        ImageUrlEntity image = imageUrlService.findByImageId(cpDTO.getImageId());
+        Long id = image.getId();
+        image = imageUrlService.findImage(id);
+
+        ItemEntity item = new ItemEntity();
+        item.setName(cpDTO.getTitle());
+        item.setDescription(cpDTO.getDescription());
+
+        if(image != null) {
+            item.setPhoto(image);
+        }
+
+        item = itemRepository.save(item);
 
         ProductEntity product = ProductEntity.builder()
             .item(item)

@@ -48,7 +48,7 @@ public class ItemEntity {
     @Column(name = "description", nullable = false, length = 255)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "photo_id")
     private ImageUrlEntity photo;
 

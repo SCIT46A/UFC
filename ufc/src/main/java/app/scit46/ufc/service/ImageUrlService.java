@@ -26,9 +26,8 @@ public class ImageUrlService {
         imageUrlRepository.deleteById(id);
     }
 
-    public String findImage(Long id) {
-        ImageUrlEntity imageUrlEntity = imageUrlRepository.findById(id).orElseThrow(() -> new RuntimeException("Image not found"));
-        return imageUrlEntity.getImageId();
+    public ImageUrlEntity findImage(Long id) {
+        return imageUrlRepository.findById(id).orElseThrow(() -> new RuntimeException("Image not found"));
     }
 
     // 이미지에 대한 업로드 사용자ID 조회
