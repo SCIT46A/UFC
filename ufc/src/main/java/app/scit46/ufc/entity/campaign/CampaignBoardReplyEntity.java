@@ -19,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -38,7 +39,9 @@ public class CampaignBoardReplyEntity {
     @Column(name = "content", nullable = false, length = 255)
     private String content;
 
+
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @ManyToOne(fetch = FetchType.LAZY)

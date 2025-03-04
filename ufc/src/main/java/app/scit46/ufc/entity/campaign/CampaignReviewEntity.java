@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
 import app.scit46.ufc.entity.UserEntity;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -26,6 +27,7 @@ public class CampaignReviewEntity {
     private String content;
 
     @Column(name = "created_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdDate;
 
     @Column(name = "rated", nullable = false)

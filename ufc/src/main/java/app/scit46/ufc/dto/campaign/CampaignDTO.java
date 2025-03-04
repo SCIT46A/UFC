@@ -47,7 +47,9 @@ public class CampaignDTO {
                 .sendDate(entity.getSendDate())
                 .createdDate(entity.getCreatedDate())
                 .isSuccess(entity.getIsSuccess())
-                .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅ CreatorDTO 변환
+                .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅
+                                                                                                           // CreatorDTO
+                                                                                                           // 변환
                 .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
                 .campaignStatus(entity.getCampaignStatus())
                 .campaignTags(entity.getCampaignTags() != null ? entity.getCampaignTags().stream()

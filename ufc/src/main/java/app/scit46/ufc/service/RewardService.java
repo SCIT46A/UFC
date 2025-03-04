@@ -2,6 +2,7 @@ package app.scit46.ufc.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -23,13 +24,11 @@ import app.scit46.ufc.repository.RewardItemRepository;
 import app.scit46.ufc.repository.RewardRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import app.scit46.ufc.repository.material.RewardMaterialRepository;
-import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.material.MaterialService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-
 public class RewardService {
     private final RewardRepository rewardRepository;
     private final RewardItemRepository rewardItemRepository;
@@ -37,13 +36,14 @@ public class RewardService {
     private final CampaignRepository campaignRepository;
     private final MaterialService materialService;
     private final RewardMaterialRepository rewardMaterialRepository;
+    final private RewardRepository RewardRepository;
 
     // public RewardEntity addReward(RewardDTO reward) {
     //     return rewardRepository.save(RewardEntity.toEntity(reward));
     // }
 
     // rewardListDTO : {"name" : "", "amount" : 0, "reward" : [  {"name" : "", "amount" : 0 },...]}
-    // rewardFundingDTO : [  {"name" : "", "amount" : 0 }  ,...] -> 
+    // rewardFundingDTO : [  {"name" : "", "amount" : 0 }  ,...] ->
     public RewardEntity addReward(RewardListDTO rewardListDTO, Long campaignId) {
         // 리워드 제목, 리워드 갯수제한
         String rewardName = rewardListDTO.getName();
@@ -104,5 +104,18 @@ public class RewardService {
         return rewardRepository.save(reward);
     }
 
+    public List<RewardDTO> getRewards(Long campaignId) {
+        // 예시: RewardEntity 리스트를 조회 후 DTO로 변환
+        List<RewardEntity> rewardEntities = RewardRepository.findAllByCampaign_CampaignId(campaignId);
+        return rewardEntities.stream()
+                .map(RewardDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public RewardDTO getReward(Long rewardId) {
+        RewardEntity rewardEntity = rewardRepository.findById(rewardId).orElse(null);
+        return RewardDTO.toDTO(rewardEntity);
+
+    }
 
 }

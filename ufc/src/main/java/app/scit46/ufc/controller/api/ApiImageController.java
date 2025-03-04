@@ -1,6 +1,8 @@
 package app.scit46.ufc.controller.api;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -46,10 +48,10 @@ public class ApiImageController {
             log.error("=== file is empty");
             return ResponseEntity.badRequest().body("파일이 비어 있습니다.");
         }
-        
+
         String oauthId = request.getUserPrincipal().getName(); // OAuth 식별자
         Long userId = userService.findUserByIdentity(oauthId).getUserId();
-        
+
         try {
             // 파일과 업로드한 유저의 ID를 파라미터로 전달하여 이미지 업로드/DB 저장 후 이미지ID 반환
             log.info("image upload start");

@@ -87,59 +87,21 @@
                 </div>
                 <button class="btn-secondary">조회항목 설정</button>
             </div>
+            <input type="hidden" id="creatorId" th:value="${creatorId}">
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
                             <th>캠페인 ID</th>
-                            <th>이름</th>
+                            <th>제목</th>
                             <th>시작일</th>
                             <th>종료일</th>
                             <th>상태</th>
-                            <th>제출 수</th>
-                            <th>액션</th>
+                            <th>달성률</th>
+                            <th>상세보기</th>
                         </tr>
                     </thead>
-                    <tbody> <!-- 데이터가 있을 경우 -->
-                        <tr th:each="campaign : ${campaigns}" th:if="${not #lists.isEmpty(campaigns)}">
-                            <td th:text="${campaign.id}">CAM001</td>
-                            <td th:text="${campaign.name}">여름 신제품 홍보</td>
-                            <td th:text="${#temporals.format(campaign.startDate, 'yyyy-MM-dd')}">2024-06-01</td>
-                            <td th:text="${#temporals.format(campaign.endDate, 'yyyy-MM-dd')}">2024-08-31</td>
-                            <td>
-                                <span class="status-badge"
-                                    th:classappend="${campaign.status == 'FULL' ? 'full' : 
-                                                               campaign.status == 'IN_PROGRESS' ? 'in-progress' : 
-                                                               campaign.status == 'CLOSED' ? 'closed' : 
-                                                               campaign.status == 'ACHIEVED' ? 'achieved' : 'unachieved'}" th:text="${campaign.status == 'FULL' ? '모집 완료' : 
-                                                        campaign.status == 'IN_PROGRESS' ? '진행 중' : 
-                                                        campaign.status == 'CLOSED' ? '종료' : 
-                                                        campaign.status == 'ACHIEVED' ? '목표 달성' : '목표 미달성'}">진행
-                                    중</span>
-                            </td>
-                            <td th:text="${campaign.submissions}">150</td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    th:onclick="'viewCampaignDetails(\'' + ${campaign.id} + '\')'">상세
-                                    보기</button>
-                            </td>
-                        </tr>
-
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${campaigns==null or #lists.isEmpty(campaigns)}">
-                            <td colspan="8">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="campaign-table-body">
                     </tbody>
                 </table>
             </div>

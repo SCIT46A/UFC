@@ -16,7 +16,7 @@ import lombok.ToString;
 @Builder
 @ToString
 public class ProductItemDTO {
- 
+
     private Long id;
     private ItemDTO item;
     private ProductDTO product;

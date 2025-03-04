@@ -16,10 +16,11 @@ public class CampaignTagService {
     private final CampaignTagRepository campaignTagRepository;
 
     public List<CampaignTagDTO> findTagsByCampaignId(Long campaignId) {
-        List<CampaignTagEntity> tagEntities = campaignTagRepository.findTagsByCampaign_CampaignId(campaignId);
+        List<CampaignTagEntity> tagEntities = campaignTagRepository.findTagsByCampaignId(campaignId);
         return tagEntities.stream()
                 .map(CampaignTagDTO::toDTO) // 기존 DTO 변환 유지
                 .collect(Collectors.toList());
     }
+
 
 }

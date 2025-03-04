@@ -1,10 +1,7 @@
 package app.scit46.ufc.entity.reward;
 
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
-import app.scit46.ufc.entity.campaign.CampaignEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -36,27 +33,35 @@ public class RewardDeliveryEntity {
     @Column(name = "r_delivery_id")
     private Long rDeliveryId;
 
-    @Column(name = "invoice", nullable = false, length = 40)
+    @Column(name = "invoice", length = 100)
     private String invoice;
 
     @Column(name = "status", length = 100)
     private String status;
 
+    // 기존 CampaignEntity 대신 RewardEntity와 연결
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id", nullable = false)
-    private CampaignEntity campaign;
+    @JoinColumn(name = "reward_id", nullable = false)
+    private RewardEntity reward;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "donation_id")
     private MaterialDonationEntity donation;
+
+    // 추가된 amount 컬럼
+    @Column(name = "amount", nullable = false)
+    private Integer amount;
 
     public static RewardDeliveryEntity toEntity(RewardDeliveryDTO dto) {
         return RewardDeliveryEntity.builder()
                 .rDeliveryId(dto.getRDeliveryId())
                 .invoice(dto.getInvoice())
                 .status(dto.getStatus())
-                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
-                .donation(MaterialDonationEntity.builder().donationId(dto.getDonation().getDonationId()).build())
+                .reward(RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build())
+                .donation(dto.getDonation() != null
+                        ? MaterialDonationEntity.builder().donationId(dto.getDonation().getDonationId()).build()
+                        : null)
+                .amount(dto.getAmount())
                 .build();
     }
 }

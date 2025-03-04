@@ -62,7 +62,7 @@ public class ItemEntity {
 
     public static ItemEntity toEntity(ItemDTO dto) {
         if (dto == null) return null;
-        
+
         return ItemEntity.builder()
                 .itemId(dto.getItemId())
                 .name(dto.getName() != null ? dto.getName() : "")

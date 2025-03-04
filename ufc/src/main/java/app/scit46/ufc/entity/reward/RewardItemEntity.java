@@ -28,7 +28,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "RewardItems")
 public class RewardItemEntity {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -40,18 +40,18 @@ public class RewardItemEntity {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private ItemEntity item; //상품
-    
+
     @Column(name = "quantity")
     private int quantity;   //재고수량 / 한정수량
 
     public static RewardItemEntity toEntity(RewardItemDTO dto) {
         if (dto == null) return null;
-        
+
         return RewardItemEntity.builder()
                 .id(dto.getId())
-                .reward(dto.getReward() != null ? 
+                .reward(dto.getReward() != null ?
                        RewardEntity.builder().rewardId(dto.getReward().getRewardId()).build() : null)
-                .item(dto.getItem() != null ? 
+                .item(dto.getItem() != null ?
                      ItemEntity.builder().itemId(dto.getItem().getItemId()).build() : null)
                 .quantity(dto.getQuantity())
                 .build();
