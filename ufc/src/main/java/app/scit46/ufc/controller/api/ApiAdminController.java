@@ -1,14 +1,15 @@
 package app.scit46.ufc.controller.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
+
+import app.scit46.ufc.dto.*;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+
+
+import app.scit46.ufc.entity.CreatorEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,14 +20,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import app.scit46.ufc.dto.CreatorDTO;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.NoticeDTO;
-import app.scit46.ufc.dto.ReportDTO;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.NoticeService;
 import app.scit46.ufc.service.ReportService;
 import app.scit46.ufc.service.campaign.CampaignService;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -38,6 +36,7 @@ public class ApiAdminController {
     private final CreatorService creatorService;
     private final ReportService.UserUnbanScheduler userUnbanScheduler;
 
+
     public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService, ReportService.UserUnbanScheduler userUnbanScheduler) {
         this.noticeService = noticeService;
         this.reportService = reportService;
@@ -46,7 +45,7 @@ public class ApiAdminController {
         this.userUnbanScheduler = userUnbanScheduler;
     }
 
-    // ✅ 캠페인 전체 조회
+    // 캠페인 전체 조회
     @GetMapping("/campaign-status")
     public ResponseEntity<List<CampaignDTO>> getCampaignStatus() {
         return ResponseEntity.ok(campaignService.getAllCampaigns());
@@ -58,7 +57,7 @@ public class ApiAdminController {
         return ResponseEntity.ok(campaignService.getAllCampaignsWithoutPhoto());
     }
 
-    // ✅ 캠페인 목표 조회 API (수량 목표 포함)
+    // 캠페인 목표 조회 API (수량 목표 포함)
     @GetMapping("/campaign-goals")
     public ResponseEntity<List<CampaignGoalDTO>> getAllCampaignGoals() {
         try {
@@ -69,7 +68,7 @@ public class ApiAdminController {
         }
     }
 
-    // ✅ 캠페인 기부 내역 조회 API
+    // 캠페인 기부 내역 조회 API
     @GetMapping("/material-donations")
     public ResponseEntity<List<MaterialDonationDTO>> getAllMaterialDonations() {
         try {
@@ -80,14 +79,14 @@ public class ApiAdminController {
         }
     }
 
-    // ✅ 펀딩 대기 캠페인 목록 조회 API 추가
+    // 펀딩 대기 캠페인 목록 조회 API 추가
     @GetMapping("/campaigns-funding-waiting")
     public ResponseEntity<List<CampaignDTO>> getFundingWaitingCampaigns() {
         return ResponseEntity.ok(campaignService.getFundingWaitingCampaigns());
     }
 
 
-    // ✅ 승인 대기 중인 캠페인 목록 조회 API
+    // 승인 대기 중인 캠페인 목록 조회 API
     @GetMapping("/campaigns-pending")
     public ResponseEntity<List<CampaignDTO>> getPendingCampaigns() {
         return ResponseEntity.ok(campaignService.getPendingCampaigns());
@@ -113,7 +112,7 @@ public class ApiAdminController {
     }
 
 
-    // ✅ 캠페인 신고 현황
+    // 캠페인 신고 현황
     @GetMapping("/campaign-report")
     public ResponseEntity<List<Map<String, Object>>> getReportedCampaigns() {
         return ResponseEntity.ok(reportService.getReportedCampaigns());
@@ -141,13 +140,13 @@ public class ApiAdminController {
         }
     }
 
-    // ✅ 유저 신고 목록 API
+    //유저 신고 목록 API
     @GetMapping("/user-reports")
     public ResponseEntity<List<ReportDTO>> getUserReports() {
         return ResponseEntity.ok(reportService.getAllReportedUsers());
     }
 
-    // ✅ 유저 신고 조치 API
+    //유저 신고 조치 API
     @PostMapping("/user-reports/action")
     public ResponseEntity<Map<String, Object>> processUserReport(@RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
@@ -155,11 +154,11 @@ public class ApiAdminController {
         try {
             Long reportId = Long.parseLong(request.get("reportId"));
             String action = request.get("action");
-            String reason = request.get("reason");  // ✅ reason 추가
+            String reason = request.get("reason");
 
             System.out.println("🚀 신고 처리 요청: reportId=" + reportId + ", action=" + action + ", reason=" + reason);
 
-            reportService.processUserReport(reportId, action, reason); // ✅ reason 전달!
+            reportService.processUserReport(reportId, action, reason);
 
             response.put("success", true);
             response.put("message", "신고 처리가 완료되었습니다.");
@@ -172,65 +171,76 @@ public class ApiAdminController {
         }
     }
 
-    // ✅ 정지 해제 즉시 실행 API
+    //정지 해제 즉시 실행
     @PostMapping("/unban-check")
     public ResponseEntity<String> unbanCheck() {
-        userUnbanScheduler.unbanExpiredUsers(); // ✅ 즉시 실행
+        userUnbanScheduler.unbanExpiredUsers();
         return ResponseEntity.ok("정지 해제 체크 실행 완료");
     }
 
 
-    // ✅ 공지사항 목록 조회 API
+    //공지사항 목록 조회
     @GetMapping("/notices")
     public ResponseEntity<List<NoticeDTO>> getAllNotices() {
         return ResponseEntity.ok(noticeService.getAllNotices());
     }
 
-    // ✅ 공지사항 등록 API
+    //공지사항 등록
     @PostMapping("/notices/create")
     public ResponseEntity<NoticeDTO> createNotice(@RequestBody NoticeDTO noticeDTO) {
         return ResponseEntity.ok(noticeService.createNotice(noticeDTO));
     }
 
-    // ✅ 창작자 승인 대기 목록 조회 API
-    @GetMapping("/creator-approval")
-    public ResponseEntity<List<Map<String, Object>>> getPendingCreators() {
-        List<CreatorDTO> creators = creatorService.getPendingCreators();
 
-        List<Map<String, Object>> formattedCreators = creators.stream()
-                .map(creator -> {
-                    Map<String, Object> map = new HashMap<>();
-                    map.put("creatorId", creator.getCreatorId());
-                    map.put("companyName", creator.getCompanyName());
-                    map.put("bName", creator.getBName());
-                    map.put("bRegistNumber", creator.getBRegistNumber());
-                    map.put("address", creator.getAddress());
-                    map.put("creatorStatus", creator.getCreatorStatus());
+    // ✅ 창작자 사업자 등록 검증 API 엔드포인트
+    @PostMapping("/verify/{creatorId}")
+    public ResponseEntity<String> verifyCreator(@PathVariable Long creatorId) {
+        // 🔹 DB에서 창작자 정보 가져오기
+        CreatorEntity creator = creatorService.getCreatorById(creatorId);
+        if (creator == null) {
+            return ResponseEntity.badRequest().body("🚨 창작자를 찾을 수 없습니다. (creatorId=" + creatorId + ")");
+        }
 
-                    // 창작자 승인 대기 목록에서 유저 정보는 필요 없을 듯 하여 주석처리
-                    // if (creator.getOwnUser() != null) {
-                    //     map.put("userId", creator.getOwnUser().getUserId());
-                    //     map.put("userName", creator.getOwnUser().getUserName());
-                    //     map.put("email", creator.getOwnUser().getEmail());
-                    //     map.put("createdAt", creator.getOwnUser().getCreatedAt() != null ? creator.getOwnUser().getCreatedAt().toString() : null);
-                    //     map.put("updatedAt", creator.getOwnUser().getUpdatedAt() != null ? creator.getOwnUser().getUpdatedAt().toString() : null);
-                    // }
-                    return map;
-                })
-                .collect(Collectors.toList());
+        // 🔹 DTO 생성
+        CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
+                .bRegistNumber(creator.getBRegistNumber())
+                .bName(creator.getBName())
+                .startDt("20231111")  // 개업일자 기본값 설정
+                .build();
 
-        return ResponseEntity.ok(formattedCreators);
+        // 🔹 API 호출 (검증 실행)
+        creatorService.verifyCreatorBusiness(dto);
+
+        return ResponseEntity.ok("✅ 사업자 등록번호 검증 요청 완료");
     }
 
-    // ✅ 창작자 승인 API (URL 통일)
-    @PostMapping("/creators/{creatorId}/approve")
-    public ResponseEntity<String> approveCreator(@PathVariable Long creatorId) {
+
+    // ✅ 2. 창작자 승인 (검증 없이 승인만 처리)
+    @PutMapping("/creator/{creatorId}/approve")
+    public ResponseEntity<Map<String, String>> approveCreator(@PathVariable Long creatorId) {
+        Map<String, String> response = new HashMap<>();
+
         try {
+            // ✅ 승인 상태 변경
             creatorService.approveCreator(creatorId);
-            return ResponseEntity.ok("창작자 승인 완료!");
+            response.put("message", "창작자 승인 완료!");
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("창작자 승인 중 오류 발생: " + e.getMessage());
+            response.put("message", "🚨 창작자 승인 중 오류 발생: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    // ✅ 3. 창작자 승인 대기 목록 조회 API
+    @GetMapping("/creator-approval")
+    public ResponseEntity<List<CreatorDTO>> getPendingCreators() {
+        try {
+            List<CreatorDTO> pendingCreators = creatorService.getPendingCreators();
+            return ResponseEntity.ok(pendingCreators);
+        } catch (Exception e) {
+            System.err.println("🚨 창작자 승인 목록 조회 오류: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+        }
+    }
+
 }

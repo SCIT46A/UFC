@@ -8,13 +8,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const page = this.getAttribute("data-page");
 
             console.log(`📢 선택된 페이지: ${page}`);
-            // ✅ 모든 페이지에서 CSS를 미리 로드
+            // 모든 페이지에서 CSS를 미리 로드
             loadCampaignStyles(); // 캠페인 CSS 항상 로드
 
             // 캠페인 운영 현황 (카운트 업데이트 필요)
             if (page === "campaign-status") {
                 fetchCampaignStatus();
-                setTimeout(updateCampaignCounts, 500); // ✅ 딜레이 추가
+                setTimeout(updateCampaignCounts, 500);
             }
 
             // 캠페인 신고 관리
@@ -32,10 +32,10 @@ document.addEventListener("DOMContentLoaded", function () {
             // 공지사항
             else if (page === "notice") {
                 fetchNotice();
-                loadNoticeStyles(); // ✅ 공지사항 CSS 로드
+                loadNoticeStyles();
             }
             else if (page === "notice-form") {
-                loadNoticeStyles(); // ✅ 공지사항 CSS 로드
+                loadNoticeStyles();
             }
             else {
                 contentArea.innerHTML = generatePageContent(page);
@@ -66,7 +66,7 @@ function fetchCampaignStatus() {
 
 
 
-// ✅ 캠페인 개수 업데이트 (4개 상태 반영)
+// 캠페인 개수 업데이트 (4개 상태 반영)
 function updateCampaignCounts() {
     const ongoingCountElem = document.getElementById("ongoing-count");
     const pendingCountElem = document.getElementById("pending-count");
@@ -88,7 +88,7 @@ function updateCampaignCounts() {
         if (campaign.campaignStatus === 0) {
             pendingCount++; // 승인 대기
         } else if (startDate > now) {
-            preparedCount++; // 펀딩 대기 🔥 추가
+            preparedCount++; // 펀딩 대기
         } else if (startDate <= now && now <= endDate) {
             ongoingCount++; // 진행 중
         } else if (endDate < now) {
@@ -105,9 +105,9 @@ function updateCampaignCounts() {
 }
 
 
-// ✅ 현재 필터 상태 저장
-let currentFilter = "ongoing"; // 기본값: 진행 중 캠페인
-// ✅ 카드 클릭 시 필터링 (펀딩 대기 추가)
+// 현재 필터 상태 저장
+let currentFilter = "ongoing";
+// 카드 클릭 시 필터링
 function filterCampaigns(type) {
     let filteredCampaigns = [];
     const now = new Date();
@@ -119,16 +119,16 @@ function filterCampaigns(type) {
 
     currentFilter = type;
 
-    // ✅ 모든 카드의 기존 선택 효과 제거
+    // 모든 카드의 기존 선택 효과 제거
     document.querySelectorAll(".tracking-card").forEach(card => card.classList.remove("selected-card"));
 
-    // ✅ 현재 선택한 카드에 테두리 효과 추가
+    // 현재 선택한 카드에 테두리 효과 추가
     const selectedCard = document.getElementById(`${type}-card`);
     if (selectedCard) {
         selectedCard.classList.add("selected-card");
     }
 
-    // ✅ 카드를 클릭하면 날짜 필터를 초기화
+    // 카드를 클릭하면 날짜 필터를 초기화
     resetFilterUI();
 
     if (type === "pending") {
@@ -161,20 +161,20 @@ function filterCampaigns(type) {
 
 
 
-// ✅ 캠페인 현황 페이지 CSS 로드
+// 캠페인 현황 페이지 CSS 로드
 function loadCampaignStyles() {
     let existingLink = document.getElementById("campaign-css");
     if (!existingLink) {
         let link = document.createElement("link");
         link.id = "campaign-css";
         link.rel = "stylesheet";
-        link.href = "/css/admin/campaignStatus.css";  // ✅ 파일 확장자 추가
+        link.href = "/css/admin/campaignStatus.css";
         document.head.appendChild(link);
     }
 }
 
 
-// ✅ 캠페인 현황 페이지 테이블 생성 (카드 4개 추가)
+// 캠페인 현황 페이지 테이블 생성 (카드 4개 추가)
 function generateCampaignStatusTable(campaigns) {
     return `
         <section class="delivery-tracking">
@@ -201,7 +201,7 @@ function generateCampaignStatusTable(campaigns) {
                 
                 <div class="tracking-card" id="prepared-card" onclick="filterCampaigns('prepared')"> 
                     <div class="card-content">
-                        <span>펀딩 대기 캠페인</span> <!-- 🔥 추가된 카드 -->
+                        <span>펀딩 대기 캠페인</span> 
                     </div>
                     <div class="count" id="prepared-count">0건</div>
                 </div>
@@ -249,23 +249,22 @@ function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
 
-    // ✅ 분기 시작 월과 종료 월 설정
+    // 분기 시작 월과 종료 월 설정
     const quarterStartMonth = (selectedQuarter - 1) * 3;
     const quarterEndMonth = quarterStartMonth + 2;
 
-    // ✅ 선택한 분기의 시작일과 종료일 설정
+    // 선택한 분기의 시작일과 종료일 설정
     const quarterStartDate = new Date(selectedYear, quarterStartMonth, 1);
     const quarterEndDate = new Date(selectedYear, quarterEndMonth + 1, 0, 23, 59, 59);
 
     console.log(`🔍 검색 범위: ${quarterStartDate.toISOString()} ~ ${quarterEndDate.toISOString()}`);
     console.log(`📌 현재 선택된 필터: ${currentFilter}`);
 
-    // ✅ 첫 검색 시에는 기본 필터를 all로 설정, 하지만 카드 클릭 후에는 유지
+    // 첫 검색 시에는 기본 필터를 all로 설정, 하지만 카드 클릭 후에는 유지
     if (currentFilter === "ongoing" && !document.querySelector(".tracking-card.active")) {
         currentFilter = "all";
     }
 
-    console.log(`📌 적용할 필터 상태: ${currentFilter}`);
 
     let filteredCampaigns = allCampaigns.filter(campaign => {
         const startDate = new Date(campaign.startDate);
@@ -290,14 +289,14 @@ function filterCampaignsByDate() {
         return matchesFilter && matchesDate;
     });
 
-    // ✅ 승인 대기 캠페인 필터 시, 체크박스 포함된 테이블 사용
+    // 승인 대기 캠페인 필터 시, 체크박스 포함된 테이블 사용
     if (currentFilter === "pending") {
         document.getElementById("table-container").innerHTML = generatePendingCampaignTable(filteredCampaigns);
     } else {
         document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
     }
 
-    console.log(`✅ 최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
+    console.log(`최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
 }
 
 
@@ -311,9 +310,9 @@ function resetFilterUI() {
             return;
         }
 
-        yearSelect.selectedIndex = 0;  // ✅ 연도 선택 초기화
-        quarterSelect.selectedIndex = 0;  // ✅ 분기 선택 초기화
-    }, 100);  // 100ms 후 실행하여 요소가 렌더링될 시간을 줌
+        yearSelect.selectedIndex = 0;
+        quarterSelect.selectedIndex = 0;
+    }, 100);
 }
 
 
@@ -354,7 +353,7 @@ function generateCampaignTable(campaigns) {
             </div>
         `;
 
-        // ✅ 대기 중 캠페인일 경우 승인 버튼 표시
+        // 대기 중 캠페인일 경우 승인 버튼 표시
         if (!campaign.campaignStatus) {
             fundingStatusHTML = `<button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button>`;
         }
@@ -433,7 +432,7 @@ function approveCampaign(campaignId) {
     })
         .then(response => response.json())
         .then(() => {
-            alert("✅ 승인처리 되었습니다.");  // ✅ 개별 승인 후 alert 실행
+            alert("✅ 승인처리 되었습니다.");
             return fetchCampaignStatus();
         })
         .then(fetchPendingCampaigns);
@@ -467,7 +466,7 @@ function fetchPendingCampaigns() {
     fetch("/api/admin/campaigns-pending")
         .then(response => response.json())
         .then(data => {
-            console.log("📢 승인 대기 캠페인 목록:", data); // ✅ 응답 확인
+            console.log("📢 승인 대기 캠페인 목록:", data);
             document.getElementById("table-container").innerHTML = generatePendingCampaignTable(data);
         })
 }
@@ -476,14 +475,14 @@ function fetchPendingCampaigns() {
 // 3. 캠페인 신고 관리
 function fetchCampaignReport() {
     fetch("/api/admin/campaign-report")
-        .then(response => response.json()) // ✅ JSON 변환
+        .then(response => response.json())
         .then(data => {
             if (!Array.isArray(data)) {
                 throw new Error("서버에서 예상치 못한 응답을 받았습니다. (데이터 형식 오류)");
             }
-            console.log("🚀 캠페인 신고 API 응답 데이터:", data); // ✅ API 데이터 확인
-            allCampaignReports = data; // ✅ 데이터를 저장하여 탭 전환 가능하도록 설정
-            renderCampaignTab('pending'); // ✅ 기본적으로 미처리 신고 탭 표시
+            console.log("🚀 캠페인 신고 API 응답 데이터:", data);
+            allCampaignReports = data;
+            renderCampaignTab('pending');
         })
         .catch(error => {
             console.error("❌ 캠페인 신고 관리 목록 로드 오류:", error);
@@ -496,7 +495,7 @@ function fetchCampaignReport() {
 }
 
 function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
-    // ✅ 탭 버튼 추가
+
     let tabHTML = `
     <h2>신고된 캠페인 목록</h2>
         <p>신고된 캠페인 정보를 확인하세요.</p>
@@ -506,18 +505,17 @@ function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
         </div>
     `;
 
-    // ✅ 선택된 탭에 따라 필터링
     let filteredReports = campaignReport.filter(report =>
         (selectedTab === 'pending' && report.status === "registed") ||
         (selectedTab === 'resolved' && (report.status !== "registed"))
     );
 
-    // ✅ 신고가 없는 경우 안내 메시지 표시
+
     if (filteredReports.length === 0) {
         let noReportMessage = selectedTab === 'pending'
             ? "<p class='no-report'>✅ 현재 미처리된 신고가 없습니다.</p>"
             : "<p class='no-report'>✔ 처리 완료된 신고가 없습니다.</p>";
-        return tabHTML + noReportMessage; // 안내 메시지만 반환
+        return tabHTML + noReportMessage;
     }
 
     let tableHTML = `
@@ -572,7 +570,7 @@ function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
     return tabHTML + tableHTML;
 }
 
-// ✅ 캠페인 신고 처리 (저장 버튼 클릭 시 실행)
+//  캠페인 신고 처리 (저장 버튼 클릭 시 실행)
 function processCampaignReport(reportId) {
     const action = document.getElementById(`action-${reportId}`).value;
 
@@ -580,9 +578,6 @@ function processCampaignReport(reportId) {
         alert("조치를 선택해주세요.");
         return;
     }
-
-    // ✅ 디버깅을 위한 콘솔 출력
-    console.log("🚀 캠페인 신고 처리 요청:", { reportId, action });
 
     fetch("/api/admin/campaign-reports/action", {
         method: "POST",
@@ -605,7 +600,7 @@ function processCampaignReport(reportId) {
 
 
 function renderCampaignTab(tabType) {
-    const container = document.getElementById("content"); // ✅ ID 확인
+    const container = document.getElementById("content");
 
     if (!container) {
         console.error("❌ 오류: 'content' 요소를 찾을 수 없습니다.");
@@ -621,33 +616,34 @@ function renderCampaignTab(tabType) {
 // ✅ 창작자 승인 대기 목록 조회
 function fetchCreatorApproval() {
     fetch("/api/admin/creator-approval")
-        .then(response => {
-            if (!response.ok) {
-                return response.text().then(err => {
-                    throw new Error("서버 오류 발생: " + err);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log("📢 API 원본 응답 데이터:", data);
+        .then(res => res.json())
+        .then(creators => {
+            console.log("📢 창작자 목록 응답 데이터:", creators);
 
-            // 🔥 `ownUser.creators` 삭제 후 JSON 무결성 확인
-            const cleanedData = data.map(creator => {
-                if (creator.ownUser) {
-                    // 🔥 ownUser가 비어 있으면 undefined 방지
-                    if (creator.ownUser.creators) {
-                        delete creator.ownUser.creators;
-                    }
-                } else {
-                    creator.ownUser = null;  // JSON 형식 유지
-                }
-                return creator;
+            // ✅ API 요청 URL이 정확한지 확인!
+            const verificationPromises = creators.map(creator =>
+                fetch(`/api/admin/verify/${creator.creatorId}`, {
+                    method: "POST",  // ✅ GET 대신 POST 사용
+                    headers: { "Content-Type": "application/json" }
+                })
+                    .then(res => {
+                        if (!res.ok) {
+                            throw new Error(`HTTP error! Status: ${res.status}`);
+                        }
+                        return res.json();
+                    })
+                    .then(verification => {
+                        creator.verificationStatus = verification.businessValidationStatus;
+                    })
+                    .catch(error => {
+                        console.error(`❌ 창작자 ${creator.creatorId} 검증 오류:`, error);
+                        creator.verificationStatus = "확인 불가능";
+                    })
+            );
+
+            Promise.all(verificationPromises).then(() => {
+                document.getElementById("content").innerHTML = generateCreatorApprovalTable(creators);
             });
-
-            console.log("🚀 순환 참조 제거된 데이터:", cleanedData);
-
-            document.getElementById("content").innerHTML = generateCreatorApprovalTable(cleanedData);
         })
         .catch(error => {
             console.error("❌ 창작자 승인 대기 목록 로드 오류:", error);
@@ -656,7 +652,7 @@ function fetchCreatorApproval() {
 }
 
 
-// 창작자 승인 대기 테이블 생성
+
 function generateCreatorApprovalTable(creators) {
     if (!creators || creators.length === 0) {
         return `<h2>창작자 승인 대기</h2><p>승인 대기 중인 창작자가 없습니다.</p>`;
@@ -668,11 +664,11 @@ function generateCreatorApprovalTable(creators) {
             <table>
                 <thead>
                     <tr>
-                      
                         <th>창작자 번호</th>
                         <th>사업자 이름</th>
                         <th>상호</th>
                         <th>사업자 등록번호</th>
+                        <th>진위 여부</th> 
                         <th>승인여부</th>
                         <th>승인</th>
                     </tr>
@@ -681,17 +677,23 @@ function generateCreatorApprovalTable(creators) {
     `;
 
     creators.forEach(creator => {
-        const creatorStatus = creator.creatorStatus ? "승인됨" : "대기 중";  // 🔥 Boolean을 텍스트로 변환
+        const creatorStatus = creator.creatorStatus ? "승인됨" : "대기 중";
+        const verificationStatus = creator.verificationStatus || "확인 중...";  // 기본값을 "확인 중..."으로 변경
+
+        // ✅ "확인됨"인 경우에만 승인 버튼 활성화
+        const approveButton = verificationStatus === "확인됨"
+            ? `<button onclick="approveCreator(${creator.creatorId})">승인</button>`
+            : `<button disabled>승인</button>`;
 
         tableHTML += `
             <tr>
-                
                 <td>${creator.creatorId}</td>
                 <td>${creator.bName || "N/A"}</td>
                 <td>${creator.companyName || "N/A"}</td>
                 <td>${creator.bRegistNumber || "N/A"}</td>
+                <td>${verificationStatus}</td> 
                 <td>${creatorStatus}</td>
-                <td><button onclick="approveCreator(${creator.creatorId})">승인</button></td>
+                <td>${approveButton}</td>
             </tr>
         `;
     });
@@ -701,19 +703,32 @@ function generateCreatorApprovalTable(creators) {
 }
 
 
+// ✅ 창작자 승인 요청
+function approveCreator(creatorId) {
+    fetch(`/api/admin/${creatorId}/approve`, { method: "PUT" })
+        .then(res => res.json())
+        .then(response => {
+            alert(response.message);
+            fetchCreatorApproval(); // ✅ 승인 후 목록 갱신
+        })
+        .catch(error => {
+            console.error("❌ 승인 요청 오류:", error);
+            alert("승인 요청 중 오류가 발생했습니다.");
+        });
+}
+
+
 //5. 유저 신고 관리
 
-
 // 유저 신고 관리
-let allUserReports = []; // 🚀 전역 변수로 선언 (모든 함수에서 접근 가능)
+let allUserReports = [];
 
 function fetchUserReport() {
     fetch("/api/admin/user-reports")
         .then(response => response.json())
         .then(data => {
-            console.log("🚀 API 응답 데이터:", data);
-            allUserReports = data; // ✅ 전체 데이터를 저장
-            renderTab('pending'); // ✅ 기본값: 미처리 신고 탭
+            allUserReports = data;
+            renderTab('pending');
         })
         .catch(error => {
             console.error("❌ 유저 신고 목록 로드 오류:", error);
@@ -764,14 +779,13 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
     `;
 
     filteredReports.forEach(report => {
-        // ✅ 전체 신고 목록에서 해당 유저가 정지된 횟수(`ok` 상태)를 세기
         let banCount = allUserReports.filter(r => r.userId === report.userId && r.status === "ok").length;
 
         let accountStatus = "";
         let actionColumn = "";
         let saveButtonColumn = "";
 
-        // ✅ 정지 남은 기간 계산
+        // 정지 남은 기간 계산
         let banEndDate = report.userUpdatedAt ? new Date(report.userUpdatedAt) : null;
         let today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -793,7 +807,7 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
         } else if (report.status === "ok") {
             accountStatus = `<span style="color: green;">✅ 조치 완료</span>`;
 
-            // ✅ 정지 남은 기간 표시
+            // 정지 남은 기간 표시
             if (daysRemaining !== null && daysRemaining > 0) {
                 actionColumn = `<span style="color: red;">정지 ${daysRemaining}일 남음</span>`;
             } else {
@@ -864,8 +878,6 @@ function processUserReport(reportId) {
         return;
     }
 
-    // ✅ 디버깅: reason 값 확인
-    console.log("🚀 신고 처리 요청:", { reportId, action, reason });
 
     fetch("/api/admin/user-reports/action", {
         method: "POST",
@@ -874,13 +886,11 @@ function processUserReport(reportId) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log("✅ API 응답:", data);
             if (!data.success) throw new Error(data.message);
             alert(data.message);
             fetchUserReport(); // ✅ 신고 목록 갱신
         })
         .catch(error => {
-            console.error("❌ 유저 신고 처리 오류:", error);
             alert("신고 처리 중 오류가 발생했습니다.");
         });
 }
