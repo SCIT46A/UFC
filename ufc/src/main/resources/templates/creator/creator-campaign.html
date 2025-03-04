@@ -39,7 +39,7 @@
                 <div>
                     <div style="text-align: center">
                         <img
-                            src="https://event-us.kr/Content/neweventus/image/hostcenter_top_image.jpg"
+                            th:src="${backImgUrl}"
                             alt="커버 이미지"
                             class="club-cover-image"
                             referrerpolicy="no-referrer"
@@ -48,9 +48,10 @@
                     <div class="club-detail-wrap">
                         <div class="club-detail-top">
                             <img
-                                th:src="@{/images/fix/logo.png}"
+                                th:src="${profileImgUrl}"
                                 alt="프로필 사진"
                                 class="club-campaign-image"
+                                referrerpolicy="no-referrer"
                             />
                             <div class="club-top-button-wrap">
                                 <div class="club-top-button-container">
@@ -74,10 +75,10 @@
                         <div class="club-detail-title-wrap">
                             <div class="club-detail-name-wrap">
                                 <div class="club-detail-name">
-                                    <span th:text="${creator != null ? creator.creatorId : 'UPDA'}">UPDA</span>
+                                    <span th:text="${creator.bName}">창작가 이름</span>
                                 </div>
                                 <div class="company_name">
-                                    <span th:text="${creator != null ? creator.companyName : '상호명'}">상호명</span>
+                                    <span th:text="${creator.companyName}">상호명</span>
                                 </div>
                             </div>
                             <div class="club-detail-stats-wrap">
@@ -91,9 +92,8 @@
                                 </span>
                             </div>
                             <div class="club-detail-introduction">
-                                <span th:text="${creator != null ? creator.intro : '안녕하세요! UPDA 입니다. 세상에 필요한건~ UPDA~!'}">
-                                    안녕하세요! UPDA 입니다. 세상에 필요한건~
-                                    UPDA~!
+                                <span th:text="${creator.intro}">
+                                    창작가 소개
                                 </span>
                             </div>
                         </div>
@@ -874,10 +874,10 @@
                                                 </div>
                                                 <!-- 진행 중인 캠페인 더보기 버튼 -->
                                                 <div class="show-more-btn-in-process-wrap">
-                                                    <button id="toggleBtn" class="toggle-btn hidden-btn"
+                                                    <button id="toggleBtn" class="toggle-btn hidden-btn">
                                                         <svg
                                                             xmlns="http://www.w3.org/2000/svg"
-                                                            class="show-more-arrow-in-progress"
+                                                            class="show-more-arrow-in"
                                                             viewBox="0 0 20 20"
                                                             fill="currentColor"
                                                         >
@@ -2756,9 +2756,9 @@
                 </div>
             </section>
         </main>
-        <div th:replace="fix/footer :: footer"></div>
+        <div th:replace="~{fix/footer :: footer}"></div>
     </body>
-    <script src="../../static/js/creator/creator-campaign.js"></script>
+    <!-- <script src="../../static/js/creator/creator-campaign.js"></script> -->
     <script th:src="@{/js/creator/creator-campaign.js}" defer></script>
 </html>
 

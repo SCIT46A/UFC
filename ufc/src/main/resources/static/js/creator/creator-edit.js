@@ -361,6 +361,62 @@ async function uploadImage(imgFile) {
     }
 }
 
+document.querySelector(".img-form-prev-button").addEventListener("click", function() {
+    Swal.fire({
+        title: '정말 취소하시겠습니까?',
+        text: '지금까지 작성한 내용이 사라질 수 있습니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',  // 취소 버튼은 빨간색 느낌으로
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네, 취소할게요',
+        cancelButtonText: '아니요, 계속 작성할래요',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ✅ 취소 확정 시 실행할 코드
+            Swal.fire({
+                title: '취소되었습니다.',
+                text: '작성이 취소되었습니다.',
+                icon: 'info',
+                timer: 2000,  // 2초 후 자동 닫힘
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "/creator/campaign"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+            });
+        } else {
+            Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
+        }
+    });
+});
+
+// 사용 예시
+document.addEventListener('DOMContentLoaded', function() {
+    const imgElement = document.getElementById('profile_preview');
+    const inputElement = document.getElementById('profile-image'); // input file의 id
+    
+    // 페이지 로드 시 이미지를 input에 설정
+    if (imgElement.src) {
+        setImageToInput(imgElement, inputElement);
+    }
+    
+    // 선택적: 이미지 클릭 시 파일 선택 다이얼로그 열기
+    imgElement.addEventListener('click', function() {
+        inputElement.click();
+    });
+    
+    // input의 파일이 변경되었을 때 이미지 미리보기 업데이트
+    inputElement.addEventListener('change', function(e) {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imgElement.src = e.target.result;
+            };
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+});
+
 
 
 
@@ -478,7 +534,7 @@ async function newUpdateImg(imgFile){
     }
 }
 
-/*
+
 // 창작가 프로필 수정 취소 클릭 시 창작가 캠페인 사이트로 이동
 document.addEventListener("DOMContentLoaded", function() {
     const seller_edit_cancel = document.querySelector(".img-form-prev-button");
@@ -489,7 +545,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
                 window.location.href = "../../templates/creator/creator-campaign.html";
             });
-    });*/
+    });
 
 // 프로필 수정 값이 DB로 전송되고 creator-campaign페이지에도 출력되게 함
 /*
@@ -511,35 +567,8 @@ async function updateProfile() {
     }
 }
 */
-/*
-document.querySelector(".img-form-prev-button").addEventListener("click", function() {
-    Swal.fire({
-        title: '정말 취소하시겠습니까?',
-        text: '지금까지 작성한 내용이 사라질 수 있습니다.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',  // 취소 버튼은 빨간색 느낌으로
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: '네, 취소할게요',
-        cancelButtonText: '아니요, 계속 작성할래요',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // ✅ 취소 확정 시 실행할 코드
-            Swal.fire({
-                title: '취소되었습니다.',
-                text: '작성이 취소되었습니다.',
-                icon: 'info',
-                timer: 2000,  // 2초 후 자동 닫힘
-                showConfirmButton: false
-            }).then(() => {
-                window.location.href = "/creator/campaign"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
-            });
-        } else {
-            Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
-        }
-    });
-});*/
+
+
 /*
 // 새로고침할 때 입력값 초기화
 window.onload = function () {
@@ -581,31 +610,3 @@ async function setImageToInput(imgElement, inputElement) {
         console.error('이미지 설정 중 오류 발생:', error);
     }
 }*/
-/*
-// 사용 예시
-document.addEventListener('DOMContentLoaded', function() {
-    const imgElement = document.getElementById('profile_preview');
-    const inputElement = document.getElementById('profile-image'); // input file의 id
-    
-    // 페이지 로드 시 이미지를 input에 설정
-    if (imgElement.src) {
-        setImageToInput(imgElement, inputElement);
-    }
-    
-    // 선택적: 이미지 클릭 시 파일 선택 다이얼로그 열기
-    imgElement.addEventListener('click', function() {
-        inputElement.click();
-    });
-    
-    // input의 파일이 변경되었을 때 이미지 미리보기 업데이트
-    inputElement.addEventListener('change', function(e) {
-        if (this.files && this.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                imgElement.src = e.target.result;
-            };
-            reader.readAsDataURL(this.files[0]);
-        }
-    });
-});
-*/

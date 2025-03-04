@@ -9,14 +9,14 @@ profile_edit.addEventListener("click", function() {
     localStorage.removeItem("coverImage");
     localStorage.removeItem("profileImage");
 
-    window.location.href = "../../templates/creator/creator-edit.html";
+    window.location.href = "/creator/edit";
 });
 
 // 캠페인 제작하기 버튼 클릭 시 intro-campaign 페이지로 이동
-const start_campaign = document.querySelector("#create_campaign");
-start_campaign.addEventListener("click", function () {
-    window.location.href = "../../templates/campaign/intro-campaign.html";
+document.getElementById("create_campaign").addEventListener("click", function () {
+    window.location.href = "/campaign/intro"; // ✅ 서버 경로 기준으로 이동
 });
+
 
 // 더보기 버튼 기능
 document.addEventListener("DOMContentLoaded", function() {
@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+/*
 document.addEventListener("DOMContentLoaded", function() {
     const displayName = document.querySelector(".club-detail-name");
     const displayCompany = document.querySelector(".company_name");
@@ -70,6 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
         displayProfile.src = "default-profile.jpg"; // 기본 이미지
     }
 });
+*/
 
 // 데이터를 받아와서 프로필에 구현하기
 /*
