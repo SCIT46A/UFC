@@ -33,7 +33,7 @@ public class RewardDeliveryEntity {
     @Column(name = "r_delivery_id")
     private Long rDeliveryId;
 
-    @Column(name = "invoice", nullable = false, length = 40)
+    @Column(name = "invoice", length = 100)
     private String invoice;
 
     @Column(name = "status", length = 100)

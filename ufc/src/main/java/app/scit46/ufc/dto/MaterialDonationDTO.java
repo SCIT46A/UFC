@@ -21,12 +21,24 @@ public class MaterialDonationDTO {
     private LocalDateTime donatedDate;
     private String invoice;
 
+    public String getCourierId() {
+        return invoice != null ? invoice.split("#")[0] : "";
+    }
+
+    public String getTrackingNumber() {
+        return invoice != null ? invoice.split("#")[1] : "";
+    }
+
     public static MaterialDonationDTO toDTO(MaterialDonationEntity entity) {
         return MaterialDonationDTO.builder()
                 .donationId(entity.getDonationId())
-                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅ CampaignDTO 변환
+                .campaign(entity.getCampaign() != null ? CampaignDTO.toDTO(entity.getCampaign()) : null) // ✅
+                                                                                                         // CampaignDTO
+                                                                                                         // 변환
                 .user(entity.getUser() != null ? UserDTO.toDTO(entity.getUser()) : null) // ✅ UserDTO 변환
-                .material(entity.getMaterial() != null ? MaterialDTO.toDTO(entity.getMaterial()) : null) // ✅ MaterialDTO 변환
+                .material(entity.getMaterial() != null ? MaterialDTO.toDTO(entity.getMaterial()) : null) // ✅
+                                                                                                         // MaterialDTO
+                                                                                                         // 변환
                 .quantity(entity.getQuantity())
                 .status(entity.getStatus())
                 .donatedDate(entity.getDonatedDate())
@@ -35,7 +47,8 @@ public class MaterialDonationDTO {
     }
 
     public static MaterialDonationDTO toDTOMinimal(MaterialDonationEntity entity) {
-        if (entity == null) return null;
+        if (entity == null)
+            return null;
         return MaterialDonationDTO.builder()
                 .donationId(entity.getDonationId())
                 .invoice(entity.getInvoice())

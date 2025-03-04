@@ -3,12 +3,7 @@ package app.scit46.ufc.dto.reward;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -27,7 +22,8 @@ public class RewardDeliveryDTO {
     private Integer amount;
 
     public static RewardDeliveryDTO toDTO(RewardDeliveryEntity entity) {
-        if (entity == null) return null;
+        if (entity == null)
+            return null;
         return RewardDeliveryDTO.builder()
                 .rDeliveryId(entity.getRDeliveryId())
                 .invoice(entity.getInvoice())

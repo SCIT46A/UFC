@@ -14,12 +14,12 @@ public class CourierService {
 
     private final CourierRepository courierRepository;
 
-
     public List<CourierDTO> findAll() {
         return courierRepository.findAll().stream().map(CourierDTO::toDTO).collect(Collectors.toList());
     }
 
-
-
+    public String getCourierNameById(String courierId) {
+        return courierRepository.findCourierNameByCourierId(courierId);
+    }
 
 }

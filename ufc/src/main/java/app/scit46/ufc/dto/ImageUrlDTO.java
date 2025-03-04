@@ -12,22 +12,22 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ImageUrlDTO {
-    
-    private Long id;
-    private String imageId;
-    private String filename;
-    private LocalDateTime uploadedAt;
-    private Long uploadedBy;
 
-    public static ImageUrlDTO toDTO(ImageUrlEntity entity) {
-        if (entity == null) return null;
-        
-        return ImageUrlDTO.builder()
-                .id(entity.getId())
-                .imageId(entity.getImageId())
-                .filename(entity.getFilename())
-                .uploadedAt(entity.getUploadedAt())
-                .uploadedBy(entity.getUploadedBy().getUserId())
-                .build();
-    }
+        private Long id;
+        private String imageId;
+        private String filename;
+        private LocalDateTime uploadedAt;
+        private Long uploadedBy;
+
+        public static ImageUrlDTO toDTO(ImageUrlEntity entity) {
+                if (entity == null)
+                        return null;
+
+                return ImageUrlDTO.builder()
+                                .imageId(entity.getImageId())
+                                .filename(entity.getFilename())
+                                .uploadedAt(entity.getUploadedAt())
+                                .uploadedBy(entity.getUploadedBy().getUserId())
+                                .build();
+        }
 }
