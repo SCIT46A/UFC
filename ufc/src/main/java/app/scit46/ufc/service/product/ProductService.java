@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.ItemDTO;
-import app.scit46.ufc.dto.custom.GenerateProduct;
+import app.scit46.ufc.dto.custom.GenerateProductDTO;
+import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ItemEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
@@ -13,6 +14,7 @@ import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.ItemService;
 import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
@@ -31,24 +33,31 @@ public class ProductService {
     private final ImageUrlService imageUrlService;
     private final UserService userService;
     private final CreatorService creatorService;
+    private final TagService tagService;
 
-    public String registProduct(GenerateProduct generateProduct) {
+    public ProductEntity saveProduct(ProductEntity product) {
+        return productRepository.save(product);
+    }
+
+    public Long registProduct(GenerateProductDTO cpDTO) {
         ItemDTO itemDTO = ItemDTO.builder()
-            .name(generateProduct.getTitle())
-            .description(generateProduct.getDescription())
-            .photo(ImageUrlDTO.toDTO(imageUrlService.findByImageId(generateProduct.getImageId())))
+            .name(cpDTO.getTitle())
+            .description(cpDTO.getDescription())
+            .photo(ImageUrlDTO.toDTO(imageUrlService.findByImageId(cpDTO.getImageId())))
             .build();
         ItemEntity item = itemService.addItem(itemDTO);
 
         ProductEntity product = ProductEntity.builder()
             .item(item)
-
-            .stockQuantity(generateProduct.getStock())
-            .createdBy(creatorService.findByOwnUser(userService.findUserByUserName(generateProduct.getUserName().trim())))
+            .price(cpDTO.getPrice())
+            .stockQuantity(cpDTO.getStock())
+            .createdBy(creatorService.findByOwnUser(userService.findUserByUserName(cpDTO.getUserName().trim())))
             .build();
-        productRepository.save(product);
+        product = saveProduct(product);
+
+        tagService.linkProductTags(cpDTO.getTagList(), product);
         
-        return "success";
+        return product.getProductId();
     }
 
     public List<Map<String, Object>> getProductsByCreator(Long creatorId) {

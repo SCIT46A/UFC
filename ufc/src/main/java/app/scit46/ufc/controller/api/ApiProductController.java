@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.scit46.ufc.dto.custom.GenerateProduct;
+import app.scit46.ufc.dto.custom.GenerateProductDTO;
 import app.scit46.ufc.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,10 +17,10 @@ public class ApiProductController {
     private final ProductService productService;
 
     @PostMapping("/regist")
-    public String generateProduct(@RequestBody GenerateProduct generateProduct) {
+    public String generateProduct(@RequestBody GenerateProductDTO generateProduct) {
 
-        String productId = productService.registProduct(generateProduct);
-        
-        return productId;
+        Long productId = productService.registProduct(generateProduct);
+
+        return productId.toString();
     }
 }

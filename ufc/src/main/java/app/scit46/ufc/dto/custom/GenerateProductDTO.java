@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class GenerateProduct {
+public class GenerateProductDTO {
     private List<String> tagList; // 캠페인 태그 리스트
     private String title; // 상품 제목
     private String description; // 상품 설명

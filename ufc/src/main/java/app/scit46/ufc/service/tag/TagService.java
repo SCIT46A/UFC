@@ -11,7 +11,10 @@ import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
+import app.scit46.ufc.entity.product.ProductEntity;
+import app.scit46.ufc.entity.product.ProductTagEntity;
 import app.scit46.ufc.repository.tag.CampaignTagRepository;
+import app.scit46.ufc.repository.tag.ProductTagRepository;
 import app.scit46.ufc.repository.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class TagService {
     private final TagRepository tagRepository;
     private final CampaignTagRepository campaignTagRepository;
+    private final ProductTagRepository productTagRepository;
 
     public List<Integer> saveAndFindTagIds(List<String> tagList){
         List<TagEntity> tags = tagList.stream()
@@ -62,6 +66,19 @@ public class TagService {
                     .build();
 
             campaignTagRepository.save(campaignTag);
+        }
+    }
+
+    public void linkProductTags(List<String> tagList, ProductEntity productEntity) {
+        List<Integer> tagIds = saveAndFindTagIds(tagList);
+
+        for (Integer tagId : tagIds) {
+            ProductTagEntity productTag = ProductTagEntity.builder()
+                    .product(ProductEntity.builder().productId(productEntity.getProductId()).build())
+                    .tag(TagEntity.builder().tagId(tagId).build())
+                    .build();
+
+            productTagRepository.save(productTag);
         }
     }
 
