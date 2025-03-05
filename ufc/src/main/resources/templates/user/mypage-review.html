@@ -4,11 +4,20 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>UP-DA :: 작성한 후기</title>
-    <!-- <link
+    <link
       rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-    /> -->
+    />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" />
+        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
     <link
       rel="stylesheet"
@@ -25,22 +34,14 @@
       th:href="@{/css/fix/footer.css}"
       href="../../static/css/fix/footer.css"
     />
-    <script src="../../static/js/user/mypage-review.js" defer></script>
-    <script th:src="@{/js/user/mypage-review.js}" defer></script>
     <script th:src="@{/js/fix/header.js}" defer></script>
+    <script th:src="@{/js/user/mypage-review.js}" defer></script>
   </head>
   <body>
 
     <div th:replace="~{fix/header :: header}"></div>
     <main>
       <section id="projects" style="background-color: #ffffff">
-        <ul class="ul-add hidden">
-          <li>
-            <button type="button" class="ul-add-li editbtn">수정</button>
-            <button type="button" class="ul-add-li deletebtn">삭제</button>
-          </li>
-        </ul>
-
         <!-- 주목할 만한 프로젝트 -->
         <div class="container mx-auto px-4 target-project">
           <div class="main">
@@ -53,6 +54,7 @@
                     <div class="main-in-box-pro-le-in">
                       <img
                         src="https://assets.tumblbug.com/profile/default_avatar.png"
+                        th:src="${userImageId}"
                         alt=""
                         class="main-in-box-pro-le-in-img"
                       />
@@ -196,16 +198,17 @@
                 <!-- 각각의 내용들 들어감 -->
                 <div
                   class="content-box-in"
-                  th:each="campaignReview, status : ${campaignReviews}"
+                  th:each="campaignReview, status : ${paging.content}"
                 >
                   <!-- 유저 -->
+                   <a href=""></a>
                   <div class="content-box-in-user">
                     <div class="content-box-in-user-box">
                       <!-- 캠페인 -->
                       <div class="content-box-in-cam">
                         <!-- 나중에 작업할 내용 -->
                         <a
-                          th:href="@{/campaign/detail/{campaignId}(campaignId=${campaignReview.campaignedBy.campaignId})}"
+                          th:href="@{/campaign/{campaignId}(campaignId=${campaignReview.campaignedBy.campaignId})}"
                           class="content-box-in-cam-in"
                         >
                           <img
@@ -233,10 +236,9 @@
                     </div>
                   </div>
                   <!-- 내용 -->
-                  <div
-                    class="content-box-in-content"
-                    th:text="${campaignReview.content}"
-                  >
+                   <div 
+                    class="content-box-in-content" 
+                    th:text="${campaignReview.content != null ? campaignReview.content : '내용이 없습니다.'}">
                     <!-- 리뷰 내용 -->
                   </div>
 
@@ -248,192 +250,36 @@
                       </div>
                     </div>
                   </div>
-
-                  
-                  </div>
-                <!-- 페이지네이션 -->
-                <div class="content-box-bo">
-                  <div class="content-box-bo-box">
-                    <ul>
-                      <li class="btn-choice">
-                        <div class="btn-choice-in">
-                          <svg viewBox="0 0 48 48">
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
-                            ></path>
-                          </svg>
-                        </div>
-                      </li>
-                      <li class="btn-count choice">
-                        <a href="/">1</a>
-                      </li>
-                      <li class="btn-count">
-                        <a href="/">2</a>
-                      </li>
-                      <li class="btn-count">
-                        <a href="/">3</a>
-                      </li>
-                      <li class="btn-count">
-                        <a href="/">4</a>
-                      </li>
-                      <li class="btn-count">
-                        <a href="/">5</a>
-                      </li>
-                      <li class="btn-choice">
-                        <div class="btn-choice-in">
-                          <svg viewBox="0 0 48 48">
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
-                            ></path>
-                          </svg>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
                 </div>
+                  <div class="content-box-bo">
+                    <div class="content-box-bo-box">
+                        <ul>
+                          <!-- 이전 버튼: 현재 페이지가 0보다 크면 -->
+                          <li th:if="${paging.hasPrevious()}">
+                            <a th:href="@{/user/review(page=${paging.number - 1}, size=${paging.size})}">이전</a>
+                          </li>
+                          
+                          <!-- 페이지 번호 목록 -->
+                          <li th:each="i : ${#numbers.sequence(0, paging.totalPages - 1)}">
+                            <a th:href="@{/user/review(page=${i}, size=${paging.size})}"
+                              th:text="${i + 1}"
+                              th:classappend="${i == paging.number} ? 'active' : ''"></a>
+                          </li>
+                          
+                          <!-- 다음 버튼: 현재 페이지가 마지막 페이지보다 작으면 -->
+                          <li th:if="${paging.hasNext()}">
+                            <a th:href="@{/user/review(page=${paging.number + 1}, size=${paging.size})}">다음</a>
+                          </li>
+                        </ul>
+                      </div>
+                  </div>
               </div>
             </div>
           </div>
         </div>
       </section>
     </main>
-    <!-- 수정 모달 -->
-                    <!-- <div class="edit hidden"> -->
-                    <div class="edit hidden" id="edit-modal-[[${status.index}]]">
-                      <div class="edit-in">
-                        <div class="edit-in-box">
-                          <div class="edit-in-box-warp">
-                            <div class="edit-in-box-warp-in">
-                              <!-- 상단 -->
-                              <div class="edit-in-box-warp-in-title">
-                                <button class="edit-close">
-                                  <span class="edit-close-span">
-                                    <div class="edit-close-span-div">
-                                      <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 20 20"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          fill-rule="evenodd"
-                                          clip-rule="evenodd"
-                                          d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
-                                          fill="#3D3D3D"
-                                        ></path>
-                                      </svg>
-                                    </div>
-                                  </span>
-                                </button>
-                              </div>
-                              <!-- 내용 -->
-                              <div class="edit-in-box-warp-in-content">
-                                <div class="edit-in-box-warp-in-content-box">
-                                  <!-- 내용 -->
-                                  <div class="edit-in-box-warp-in-content-box-in">
-                                    <!-- 큰글 -->
-                                    <div class="edit-in-box-warp-in-content-box-in-title">
-                                      작성한 후기 수정
-                                    </div>
-                                    <div class="edit-in-box-warp-in-content-add">
-                                      <input type="text" class="edit-in-box-warp-in-content-add-more" th:value="${campaignReview.content}">
-                                      </input>
-                                    </div>
-                                  </div>
-                                  <!-- 버튼쪽 -->
-                                  <div class="edit-btn">
-                                    <!-- <button
-                                      class="edit-btn-in btn-edit"
-                                    >
-                                      수정하기
-                                    </button> -->
-                                    <button class="edit-btn-in" th:attr="data-index=${status.index}">
-                                      수정하기
-                                    </button>
-                                    <button class="edit-cancel-btn-in btn-edit-cancel">
-                                      취 소
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  <!-- 삭제 모달 -->
-                    <!-- <div class="delete hidden"> -->
-                    <div class="delete hidden" id="delete-modal-[[${status.index}]]">
-                      <div class="delete-in">
-                        <div class="delete-in-box">
-                          <div class="delete-in-box-warp">
-                            <div class="delete-in-box-warp-in">
-                              <!-- 상단 -->
-                              <div class="delete-in-box-warp-in-title">
-                                <button class="delete-close">
-                                  <span class="delete-close-span">
-                                    <div class="delete-close-span-div">
-                                      <svg
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 20 20"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                      >
-                                        <path
-                                          fill-rule="evenodd"
-                                          clip-rule="evenodd"
-                                          d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
-                                          fill="#3D3D3D"
-                                        ></path>
-                                      </svg>
-                                    </div>
-                                  </span>
-                                </button>
-                              </div>
-                              <!-- 내용 -->
-                              <div class="delete-in-box-warp-in-content">
-                                <div class="delete-in-box-warp-in-content-box">
-                                  <!-- 내용 -->
-                                  <div class="delete-in-box-warp-in-content-box-in">
-                                    <!-- 큰글 -->
-                                    <div class="delete-in-box-warp-in-content-box-in-title">
-                                      후기를 정말 삭제하시겠습니까?
-                                    </div>
-                                    <div class="delete-in-box-warp-in-content-add">
-                                      <div class="delete-in-box-warp-in-content-add-more">
-                                        한 번 삭제하면 복구가 불가능하니 신중하게
-                                        삭제해주세요.😟
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <!-- 버튼쪽 -->
-                                  <div class="delete-btn">
-                                    <!-- <button
-                                      class="delete-btn-in btn-delete"
-                                    >
-                                      삭제하기
-                                    </button> -->
-                                    <button class="delete-btn-in" th:attr="data-index=${status.index}">
-                                      삭제하기
-                                    </button>
-                                    <button class="cancel-btn-in btn-delete-cancel">
-                                      취 소
-                                    </button>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+</div>
     <div th:replace="~{fix/footer :: footer}"></div>
         <div class="black-ctn hidden">
 

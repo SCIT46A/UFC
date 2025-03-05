@@ -28,7 +28,17 @@ public class MaterialDonationService {
                 .toList();
     }
     
+    public List<MaterialDonationDTO> getMaterialDonationsByUserId(Long userId) {
+        List<MaterialDonationEntity> temp = materialDonationRepository.findAllByUser_UserId(userId);
+        if (temp.isEmpty()) {
+            throw new RuntimeException("Material Donation not found");
+        }
+        return temp.stream()
+                .map(MaterialDonationDTO::toDTO)
+                .toList();
+    }
 
+    
     // public List<MaterialDonationEntity> donationFindByUserId(Long userId) {
     //     UserEntity user = userRepository.findById(userId)
     //             .orElseThrow(() -> new RuntimeException("User not found"));

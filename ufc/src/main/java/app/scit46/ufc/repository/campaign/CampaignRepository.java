@@ -27,5 +27,5 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findByTitleContaining(String title);
 
     //List<CampaignEntity> findByTitleContainingOrTagsContaining(String searchKeyword, String searchKeyword2);
-    
+
 }

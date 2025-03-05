@@ -14,6 +14,53 @@ body {
   color: rgba(0, 0, 0, 0.87);
   box-sizing: inherit;
 }
+.pagination {
+  margin: 20px 0;
+  text-align: center;
+}
+
+/* ul 스타일: 가로로 정렬, 리스트 스타일 제거 */
+.pagination ul {
+  display: inline-flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* 각 페이지 번호 또는 버튼 li에 대한 마진 */
+.pagination ul li {
+  margin: 0 5px;
+}
+
+/* 각 페이지 번호 a 태그 스타일 */
+.pagination ul li a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  font-size: 14px;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 호버 효과 */
+.pagination ul li a:hover {
+  background-color: #f2f2f2;
+  color: #000;
+}
+
+/* 현재 선택된 페이지 스타일 (active 클래스가 붙은 경우) */
+.pagination ul li a.active {
+  background-color: #007BFF;
+  color: #fff;
+  border-color: #007BFF;
+}
+
+/* "이전", "다음" 버튼에 대해 별도의 아이콘이나 추가 스타일을 주고 싶다면 */
+.pagination ul li a.btn-choice {
+  font-weight: bold;
+}
 
 .black-ctn{
   position: fixed;

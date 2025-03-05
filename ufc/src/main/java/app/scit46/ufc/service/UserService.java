@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ImageUrlService imageUrlService;
 
 // ------------------ CRUD ------------------
 
@@ -46,6 +47,8 @@ public class UserService {
         entity.setIntro(userDTO.getIntro());
         entity.setPhoneNumber(userDTO.getPhoneNumber());
         entity.setUserAddress(userDTO.getUserAddress());
+        entity.setPhotoId(imageUrlService.findByImageId(userDTO.getPhoto().getImageId()));
+        userRepository.save(entity);
     }
     // ------------------ CRUD ------------------ //End
 

@@ -11,11 +11,13 @@ import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
+import app.scit46.ufc.entity.LikeEntity;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
 import app.scit46.ufc.repository.CreatorRepository;
+import app.scit46.ufc.repository.LikeRepository;
 import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
@@ -40,6 +42,7 @@ public class CampaignService {
     private final CampaignGoalRepository campaignGoalRepository;
     private final MaterialDonationRepository materialDonationRepository;
     private final MaterialDonationService materialDonationService;
+    private final LikeRepository likeRepository;
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
@@ -70,6 +73,14 @@ public class CampaignService {
         campaignRepository.deleteById(campaignId);
     }
     
+    public List<CampaignDTO> getCampaignsLikedByUser(Long userId) {
+        List<LikeEntity> likes = likeRepository.findByUser_UserId(userId);
+        return likes.stream()
+                .filter(like -> like.getCampaign() != null)
+                    .map(like -> CampaignDTO.toDTO(like.getCampaign()))
+                    .collect(Collectors.toList());
+    }
+
     // 캠페인 생성
     public Long createCampaign(CampaignDTO campaignDTO, Long creatorId, String imageId) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)
