@@ -8,12 +8,9 @@ import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.ItemDTO;
 import app.scit46.ufc.dto.MaterialDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
-import app.scit46.ufc.dto.reward.RewardItemDTO;
-import app.scit46.ufc.dto.reward.RewardMaterialDTO;
 import app.scit46.ufc.entity.ItemEntity;
 import app.scit46.ufc.entity.MaterialEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;

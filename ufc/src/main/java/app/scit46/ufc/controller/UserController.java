@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
@@ -79,13 +78,14 @@ public class UserController {
         HttpSession session = request.getSession(false);
         Long userId = null;
         if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId");
             try {
-                userId = (Long) session.getAttribute("loginUserId");
                 UserDTO user = userService.readUserById(userId);
                 List<CampaignDTO> likedCampaigns = new ArrayList<>();
-                 String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" 
-                         + user.getPhoto().getImageId() + "/public";
-                likedCampaigns = campaignService.getCampaignsLikedByUser(userId);
+                String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" 
+                        + user.getPhoto().getImageId() + "/public";
+                likedCampaigns = likeService.getCampaignsLikedByUser(userId);
+                log.info("likedCampaigns: {}", likedCampaigns);
                 model.addAttribute("userImageId", userImageId);
                 model.addAttribute("likedCampaigns", likedCampaigns);
                 model.addAttribute("user", user);

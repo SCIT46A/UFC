@@ -3,10 +3,7 @@ package app.scit46.ufc.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import app.scit46.ufc.dto.MaterialDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import jakarta.persistence.Column;

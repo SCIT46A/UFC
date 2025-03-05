@@ -1,8 +1,6 @@
 package app.scit46.ufc.entity.product;
 
-import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.dto.product.ProductDeliveryDTO;
-import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

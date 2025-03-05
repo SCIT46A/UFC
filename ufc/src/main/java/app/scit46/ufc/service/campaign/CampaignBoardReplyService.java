@@ -1,6 +1,11 @@
 package app.scit46.ufc.service.campaign;
 
-import app.scit46.ufc.dto.campaign.CampaignBoardDTO;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import app.scit46.ufc.dto.campaign.CampaignBoardReplyDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
@@ -8,12 +13,6 @@ import app.scit46.ufc.entity.campaign.CampaignBoardReplyEntity;
 import app.scit46.ufc.repository.campaign.CampaignBoardReplyRepository;
 import app.scit46.ufc.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

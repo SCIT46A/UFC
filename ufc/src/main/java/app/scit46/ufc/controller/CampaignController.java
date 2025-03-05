@@ -5,14 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import app.scit46.ufc.dto.LikeDTO;
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.LikeService;
-import app.scit46.ufc.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import com.fasterxml.jackson.core.type.TypeReference; // ✅ 여기가 중요함!
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +12,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.fasterxml.jackson.core.type.TypeReference; // ✅ 여기가 중요함!
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.campaign.CampaignTagDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
+import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignGoalService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
@@ -33,6 +32,7 @@ import app.scit46.ufc.service.tag.CampaignTagService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/campaign")

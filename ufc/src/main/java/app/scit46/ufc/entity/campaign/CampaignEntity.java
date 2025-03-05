@@ -5,18 +5,31 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.hibernate.annotations.CreationTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.AlertTargetEntity;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.MaterialDonationEntity;
-import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

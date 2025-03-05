@@ -1,34 +1,25 @@
 package app.scit46.ufc.controller.api;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.http.ResponseEntity;
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.HashMap;
 import java.util.Collections;
-import app.scit46.ufc.service.campaign.CampaignService;
-import app.scit46.ufc.service.MaterialDonationService;
-import app.scit46.ufc.service.reward.RewardDeliveryService;
-import app.scit46.ufc.service.delivery.DeliveryService;
-import app.scit46.ufc.service.product.ProductService;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.service.CourierService;
-import app.scit46.ufc.dto.product.ProductDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestParam;
-import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.product.ProductService;
+import app.scit46.ufc.service.reward.RewardDeliveryService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
 @RestController

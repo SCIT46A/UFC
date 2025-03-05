@@ -7,7 +7,6 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;

@@ -3,8 +3,6 @@ package app.scit46.ufc.entity.product;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import app.scit46.ufc.dto.UserDTO;
-import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import app.scit46.ufc.entity.UserEntity;
 import jakarta.persistence.Column;

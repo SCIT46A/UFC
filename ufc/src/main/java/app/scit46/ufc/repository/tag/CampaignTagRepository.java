@@ -2,17 +2,12 @@ package app.scit46.ufc.repository.tag;
 
 import java.util.List;
 
-import app.scit46.ufc.dto.campaign.CampaignTagDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-
-import java.util.List;
 
 public interface CampaignTagRepository extends JpaRepository<CampaignTagEntity, Long> {
 

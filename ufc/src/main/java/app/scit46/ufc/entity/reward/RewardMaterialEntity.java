@@ -1,7 +1,5 @@
 package app.scit46.ufc.entity.reward;
 
-import app.scit46.ufc.dto.MaterialDTO;
-import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.dto.reward.RewardMaterialDTO;
 import app.scit46.ufc.entity.MaterialEntity;
 import jakarta.persistence.Column;

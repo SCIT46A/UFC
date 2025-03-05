@@ -1,24 +1,21 @@
 package app.scit46.ufc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.MaterialDonationDTO;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-import app.scit46.ufc.service.CourierService;
-import app.scit46.ufc.service.delivery.DeliveryService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.delivery.DeliveryService;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

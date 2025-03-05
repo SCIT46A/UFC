@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
-import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.product.ProductPaymentEntity;
 import jakarta.persistence.Column;

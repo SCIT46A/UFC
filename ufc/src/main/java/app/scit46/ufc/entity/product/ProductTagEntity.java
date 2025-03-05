@@ -1,7 +1,5 @@
 package app.scit46.ufc.entity.product;
 
-import app.scit46.ufc.dto.TagDTO;
-import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.dto.product.ProductTagDTO;
 import app.scit46.ufc.entity.TagEntity;
 import jakarta.persistence.Column;

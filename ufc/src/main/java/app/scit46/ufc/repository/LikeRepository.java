@@ -17,13 +17,15 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 
     int countByProduct(ProductEntity product); // ✅ ProductEntity도 동일하게 적용
 
-    List<LikeEntity> findByUser_UserId(Long userId);
+    List<LikeEntity> findByUser_userId(Long userId);
   
     LikeEntity findByUserAndCampaign(UserEntity user, CampaignEntity campaign);
   
     LikeEntity findByUserAndProduct(UserEntity user, ProductEntity product);
   
     LikeEntity findByUserAndCreator(UserEntity user, CreatorEntity creator);
+
+
 
 
 }

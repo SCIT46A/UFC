@@ -1,7 +1,12 @@
 package app.scit46.ufc.service;
 
 
-import app.scit46.ufc.dto.LikeDTO;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.LikeEntity;
 import app.scit46.ufc.entity.UserEntity;
@@ -14,7 +19,6 @@ import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -57,7 +61,24 @@ public class LikeService {
         return false;
     }
 
+    public List<CampaignDTO> getCampaignsLikedByUser(Long userId) {
+        List<CampaignDTO> likedCampaigns = new ArrayList<>();
+        List<LikeEntity> likes = likeRepository.findByUser_userId(userId);
+        for (LikeEntity like : likes) {
+            CampaignEntity campaign = like.getCampaign();
+            CampaignDTO campaignDTO = CampaignDTO.toDTO(campaign);
+            likedCampaigns.add(campaignDTO);
+        }
+        return likedCampaigns;
+    }
 
+//     public List<CampaignDTO> getCampaignsLikedByUser(Long userId) {
+//     List<LikeEntity> likes = likeRepository.findByUser_UserId(userId);
+//     return likes.stream()
+//                 .filter(like -> like.getCampaign() != null)
+//                 .map(like -> CampaignDTO.toDTO(like.getCampaign()))
+//                 .collect(Collectors.toList());
+// }
 
 
 

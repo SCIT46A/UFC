@@ -8,5 +8,4 @@ public interface ImageUrlRepository extends JpaRepository<ImageUrlEntity, Long> 
     ImageUrlEntity findByImageId(String imageId);
     Long findIdByImageId(String imageId);
 
-    ImageUrlEntity findByImageId(String imageId);
 }

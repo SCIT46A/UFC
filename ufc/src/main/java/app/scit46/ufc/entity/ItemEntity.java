@@ -1,12 +1,9 @@
 package app.scit46.ufc.entity;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.ItemDTO;
-import app.scit46.ufc.entity.product.ProductEntity;
 import app.scit46.ufc.entity.product.ProductItemEntity;
-import app.scit46.ufc.entity.reward.RewardEntity;
 import app.scit46.ufc.entity.reward.RewardItemEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

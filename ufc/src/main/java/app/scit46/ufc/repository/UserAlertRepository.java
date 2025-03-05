@@ -1,12 +1,12 @@
 package app.scit46.ufc.repository;
 
-import app.scit46.ufc.dto.UserAlertDTO;
-import app.scit46.ufc.entity.UserAlertEntity;
-import app.scit46.ufc.entity.UserEntity;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import app.scit46.ufc.entity.UserAlertEntity;
+import app.scit46.ufc.entity.UserEntity;
 
 @Repository
 public interface UserAlertRepository extends JpaRepository<UserAlertEntity, Long> {

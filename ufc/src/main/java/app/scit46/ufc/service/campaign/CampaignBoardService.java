@@ -1,19 +1,18 @@
 package app.scit46.ufc.service.campaign;
 
-import app.scit46.ufc.dto.campaign.CampaignBoardDTO;
-import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
-import app.scit46.ufc.entity.campaign.CampaignBoardReplyEntity;
-import app.scit46.ufc.repository.campaign.CampaignBoardRepository;
-import app.scit46.ufc.repository.campaign.CampaignRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import app.scit46.ufc.dto.campaign.CampaignBoardDTO;
+import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
+import app.scit46.ufc.repository.campaign.CampaignBoardRepository;
+import app.scit46.ufc.repository.campaign.CampaignRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

@@ -1,26 +1,20 @@
 package app.scit46.ufc.controller;
 
-import app.scit46.ufc.entity.CreatorEntity;
-import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
-import app.scit46.ufc.service.UserService;
-import app.scit46.ufc.service.campaign.CampaignService;
-import app.scit46.ufc.service.MaterialDonationService;
-
-import jakarta.servlet.http.HttpSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Collectors;
 
+import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Controller
 @RequestMapping("/creator/dashboard")

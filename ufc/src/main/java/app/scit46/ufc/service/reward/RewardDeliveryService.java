@@ -1,16 +1,16 @@
 package app.scit46.ufc.service.reward;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
 import java.util.Optional;
-import app.scit46.ufc.repository.RewardRepository;
+
+import org.springframework.stereotype.Service;
+
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
-import java.util.HashMap;
+import app.scit46.ufc.repository.RewardRepository;
+import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

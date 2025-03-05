@@ -1,9 +1,13 @@
 package app.scit46.ufc.dto.reward;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

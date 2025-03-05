@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.CreatorDTO;
-import app.scit46.ufc.dto.ImageUrlDTO;
-import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;

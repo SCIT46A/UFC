@@ -1,7 +1,5 @@
 package app.scit46.ufc.entity.campaign;
 
-import app.scit46.ufc.dto.MaterialDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.entity.MaterialEntity;
 import jakarta.persistence.Column;

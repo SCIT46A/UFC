@@ -1,10 +1,14 @@
 package app.scit46.ufc.service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
-import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import app.scit46.ufc.dto.SearchDTO;
 import app.scit46.ufc.dto.SearchResultDTO;
 import app.scit46.ufc.dto.TagDTO;
+import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
+import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.entity.SearchEntity;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.repository.LikeRepository;
