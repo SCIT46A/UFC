@@ -1,6 +1,7 @@
 package app.scit46.ufc.controller.api;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 import app.scit46.ufc.dto.*;
@@ -259,5 +260,21 @@ public class ApiAdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
+    @GetMapping("/creator-status")
+    public ResponseEntity<List<Map<String, Object>>> getCreatorStatus() {
+        List<CreatorDTO> creators = creatorService.getAllCreators();
+
+        // ✅ JSON 응답을 Map 형태로 변환
+        List<Map<String, Object>> responseList = creators.stream().map(creator -> {
+            Map<String, Object> creatorMap = new HashMap<>();
+            creatorMap.put("creatorId", creator.getCreatorId());
+            creatorMap.put("bname", creator.getBName());
+            creatorMap.put("companyName", creator.getCompanyName());
+            return creatorMap;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(responseList);
+    }
+
 
 }

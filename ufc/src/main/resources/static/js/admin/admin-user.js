@@ -25,6 +25,10 @@ document.addEventListener("DOMContentLoaded", function () {
             else if (page === "creator-approval") {
                 fetchCreatorApproval();
             }
+            // 창작자 현황 페이지 추가
+            else if (page === "creator-status") {
+                fetchCreatorStatus();
+            }
             // 유저 신고 관리
             else if (page === "user-report") {
                 fetchUserReport();
@@ -655,9 +659,7 @@ function fetchCreatorApproval() {
 }
 
 
-
-// ✅ 창작자 승인 대기 테이블 생성
-// ✅ 창작자 승인 대기 테이블 생성
+// 창작자 승인 대기 테이블 생성
 function generateCreatorApprovalTable(creators) {
     console.log("📢 테이블 렌더링 시작. 현재 creators 데이터:", creators);
 
@@ -750,6 +752,60 @@ function approveCreator(creatorId) {
         .catch(error => {
             console.error(`❌ 승인 요청 오류:`, error);
         });
+}
+
+// 창작자 현황 리스트
+
+// ✅ 창작자 현황 데이터 가져오기
+function fetchCreatorStatus() {
+    fetch("/api/admin/creator-status")
+        .then(res => res.json())
+        .then(creators => {
+            console.log("📢 창작자 현황 데이터:", creators);
+            document.getElementById("content").innerHTML = generateCreatorStatusTable(creators);
+        })
+        .catch(error => {
+            console.error("❌ 창작자 현황 데이터 로드 오류:", error);
+            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
+        });
+}
+// ✅ 창작자 현황 테이블 생성
+function generateCreatorStatusTable(creators) {
+    if (!creators || creators.length === 0) {
+        return `<h2>창작자 현황</h2><p>현재 등록된 창작자가 없습니다.</p>`;
+    }
+
+    let tableHTML = `
+        <h2>창작자 현황</h2>
+        <p>현재 등록된 창작자 목록을 확인하세요.</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>창작자 번호</th>
+                        <th>이름</th>
+                        <th>상호</th>
+                      
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    creators.forEach(creator => {
+        const creatorStatus = creator.creatorStatus ? "⭕ 승인됨" : "❌ 미승인";
+
+        tableHTML += `
+            <tr>
+                <td>${creator.creatorId}</td>
+                <td>${creator.bname || "N/A"}</td>
+                <td>${creator.companyName || "N/A"}</td>
+              
+            </tr>
+        `;
+    });
+
+    tableHTML += `</tbody></table></div>`;
+    return tableHTML;
 }
 
 //5. 유저 신고 관리
