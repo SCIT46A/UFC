@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 import org.springframework.web.client.RestTemplate;
 
@@ -110,6 +111,7 @@ public class CreatorService {
         creatorRepository.save(creator);
     }
 
+
     //api 호출, 검증
     public ResponseEntity<String> callBusinessValidationAPI(CreatorApprovalDTO dto) {
         try {
@@ -146,6 +148,25 @@ public class CreatorService {
         return creatorRepository.save(creator); // JPA를 이용한 저장
     }
 
+
+
+    // 검토 필요
+    public void updateCreator(CreatorDTO creator) {
+//        테스트하는데 문제생겨서 주석했습니다 필요 시 문의주세요 - cho
+//        creatorRepository.save(CreatorEntity.toEntity(creator,
+//                ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
+//                ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
+//                ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
+//                UserDTO.builder().userId(creator.getOwnUser()).build()));
+    }
+
+    public CreatorEntity findByOwnUser(UserEntity user) {
+        CreatorEntity creator = creatorRepository.findByOwnUser(user);
+        if (creator == null) {
+            throw new RuntimeException("창작자를 찾을 수 없습니다.");
+        }
+        return creator;
+    }
 
 }
 

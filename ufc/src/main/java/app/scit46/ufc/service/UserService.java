@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final ImageUrlService imageUrlService;
 
 // ------------------ CRUD ------------------
 
@@ -33,7 +34,7 @@ public class UserService {
         user.setUserStatus(0);
         userRepository.save(user);
     }
-    
+
     //회원 정보 업데이트
     @Transactional
     public void userUpdate(UserDTO userDTO) {
@@ -46,6 +47,8 @@ public class UserService {
         entity.setIntro(userDTO.getIntro());
         entity.setPhoneNumber(userDTO.getPhoneNumber());
         entity.setUserAddress(userDTO.getUserAddress());
+        entity.setPhotoId(imageUrlService.findByImageId(userDTO.getPhoto().getImageId()));
+        userRepository.save(entity);
     }
     // ------------------ CRUD ------------------ //End
 
@@ -55,6 +58,10 @@ public class UserService {
     public Long findUserIdByUserName(String userName) {
         UserEntity user = userRepository.findByUserName(userName).orElse(null);
         return user.getUserId();
+    }
+
+    public UserEntity findUserByUserName(String userName) {
+        return userRepository.findByUserName(userName).orElse(null);
     }
 
     // OAuth 인증정보로 유저 조회(회원정보조회)
@@ -77,10 +84,28 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public UserEntity updateUser(UserDTO userDTO) {
+        // 가정: userId로 사용자 조회 (이 방식이 더 안전할 수 있음)
+        UserEntity user = userRepository.findById(userDTO.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setUserName(userDTO.getUserName());
+        user.setUserAddress(userDTO.getUserAddress());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        return userRepository.save(user);
+    }
+
+
     public UserEntity findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public UserDTO findByIdDTO(Long userId) {
+        return userRepository.findById(userId).map(UserDTO::toDTO).orElse(null);
+    }
+
+
 
 
 

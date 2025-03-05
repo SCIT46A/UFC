@@ -17,7 +17,6 @@ import lombok.ToString;
 @ToString
 @Builder
 public class UserDTO {
-
     private Long userId;
     private String oauthId;
     private String loginType;
@@ -28,7 +27,7 @@ public class UserDTO {
     private String roles;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Long photoId;
+    private ImageUrlDTO photo; // ✅ PhotoDTO 포함
     private String intro;
     private int isMarketed;
     private int userStatus;
@@ -46,7 +45,7 @@ public class UserDTO {
                 .roles(entity.getRoles())
                 .createdAt(entity.getCreatedAt())
                 .updatedAt(entity.getUpdatedAt())
-                .photoId(entity.getPhotoId().getId())
+                .photo(entity.getPhotoId() != null ? ImageUrlDTO.toDTO(entity.getPhotoId()) : null) // ✅ PhotoDTO 변환
                 .intro(entity.getIntro())
                 .isMarketed(entity.getIsMarketed())
                 .userStatus(entity.getUserStatus())

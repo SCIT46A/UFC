@@ -12,4 +12,9 @@ public class ProductController {
     public String create() {
         return "product/allProduct";
     }
+
+    @GetMapping("/regist")
+    public String regist() {
+        return "product/regist-product";
+    }
 }

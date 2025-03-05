@@ -16,4 +16,5 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
     List<CreatorEntity> findByCreatorStatusFalseWithUser();
 
     CreatorEntity findByOwnUser(UserEntity ownUser);
+
 }

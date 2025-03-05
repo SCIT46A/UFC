@@ -34,7 +34,11 @@ document.addEventListener("DOMContentLoaded", function () {
     function loadFragment(url) {
         console.log(`🔄 [FRAGMENT] ${url} 로드 시작...`);
 
-        fetch(url)
+        // ✅ `creatorId`를 유지
+        const creatorId = document.getElementById("creatorId")?.value || "";
+        const fullUrl = creatorId ? `${url}?creatorId=${creatorId}` : url;
+
+        fetch(fullUrl)
             .then(response => {
                 if (!response.ok) throw new Error(`❌ [ERROR] HTTP 오류: ${response.status}`);
                 return response.text();
@@ -42,22 +46,32 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(html => {
                 console.log(`✅ [FRAGMENT] ${url} 로드 완료!`);
                 contentWrapper.innerHTML = html;
-                executePageScripts(url); // ✅ 해당 fragment의 JS 실행
+
+                // ✅ `creatorId` hidden input 유지
+                if (creatorId) {
+                    const input = document.createElement("input");
+                    input.type = "hidden";
+                    input.id = "creatorId";
+                    input.value = creatorId;
+                    contentWrapper.appendChild(input);
+                }
+
+                executePageScripts(url, creatorId); // ✅ 해당 fragment의 JS 실행
             })
             .catch(error => console.error("❌ [ERROR] 페이지 로딩 오류:", error));
     }
 
-    function executePageScripts(url) {
+    function executePageScripts(url, creatorId) {
         const scriptMapping = {
-            "/dashboard/delivery": { script: "/js/dashboard/delivery.js", init: "initDeliveryManagement" },
-            "/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
-            "/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
-            "/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
-            "/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
-            "/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
-            "/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
-            "/dashboard/campaigns/donation/management": { script: "/js/dashboard/donation-management.js", init: "initDonationManagement" },
-            "/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
+            "/creator/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/creator/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
+            "/creator/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
+            "/creator/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
+            "/creator/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/creator/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
+            "/creator/dashboard/campaigns/donation/orders": { script: "/js/dashboard/donation-orders.js", init: "initDonationOrders" },
+            "/creator/dashboard/campaigns/reward/delivery": { script: "/js/dashboard/reward-delivery.js", init: "initRewardDeliveryManagement" },
+            "/creator/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
         };
 
         // 기존 동적 스크립트 태그 제거
@@ -76,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(`✅ [SCRIPT LOADED] ${script} 실행 완료`);
                 if (typeof window[init] === "function") {
                     console.log(`⚡ [INIT CALL] ${init} 실행`);
-                    window[init](); // ✅ JS 파일에서 선언된 초기화 함수 실행
+                    window[init](creatorId); // ✅ creatorId 전달
                 } else {
                     console.warn(`⚠️ [WARNING] ${init} 함수가 정의되지 않음.`);
                 }

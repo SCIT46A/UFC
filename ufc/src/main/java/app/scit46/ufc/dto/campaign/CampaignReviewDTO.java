@@ -2,6 +2,7 @@ package app.scit46.ufc.dto.campaign;
 
 import java.time.LocalDateTime;
 
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,8 +22,9 @@ public class CampaignReviewDTO {
     private String content;
     private LocalDateTime createdDate;
     private Double rated;
-    private Long reviewedById;
-    private Long campaignedById;
+    private UserDTO reviewedBy; // ✅ UserDTO 포함
+    private CampaignDTO campaignedBy; // ✅ CampaignDTO 포함
+    private Boolean status;
 
     public static CampaignReviewDTO toDTO(CampaignReviewEntity entity) {
         return CampaignReviewDTO.builder()
@@ -30,8 +32,9 @@ public class CampaignReviewDTO {
                 .content(entity.getContent())
                 .createdDate(entity.getCreatedDate())
                 .rated(entity.getRated())
-                .reviewedById(entity.getReviewedBy() != null ? entity.getReviewedBy().getUserId() : null)
-                .campaignedById(entity.getCampaignedBy() != null ? entity.getCampaignedBy().getCampaignId() : null)
+                .reviewedBy(entity.getReviewedBy() != null ? UserDTO.toDTO(entity.getReviewedBy()) : null) // ✅ UserDTO 변환
+                .campaignedBy(entity.getCampaignedBy() != null ? CampaignDTO.toDTO(entity.getCampaignedBy()) : null) // ✅ CampaignDTO 변환
+                .status(entity.getStatus() !=null ? entity.getStatus() : false)
                 .build();
     }
 }

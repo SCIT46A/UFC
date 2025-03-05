@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!-- ✅ th:fragment 추가 -->
+    <div th:fragment="donation-orders">
+        <div class="donation-orders-container">
+            <div class="content-wrapper">
+                <section class="card-container">
+                    <div class="status-grid">
+                        <div class="status-card">
+                            <span>기부 진행 중</span>
+                            <span class="counts" id="processingDonationCount"></span>
+                        </div>
+                        <div class="status-card">
+                            <span>기부 검수 대기</span>
+                            <span class="counts" id="pendingDonationCount"></span>
+                        </div>
+                        <div class="status-card">
+                            <span>기부 반려</span>
+                            <span class="counts" id="rejectedDonationCount"></span>
+                        </div>
+                        <div class="status-card warning">
+                            <span>기부 승인</span>
+                            <span class="counts" id="approvedDonationCount"></span>
+                        </div>
+                    </div>
+                </section>
+                <!-- Search Section -->
+                <div class="search-section">
+                    <div class="search-row">
+                        <label>캠페인 제목/기부자</label>
+                        <input type="text" class="search-input" placeholder="캠페인 제목/기부자를 입력하세요">
+                    </div>
+                    <div class="search-row">
+                        <label>기부 상태</label>
+                        <select class="search-input">
+                            <option value="">전체</option>
+                            <option value="processing">기부 진행 중</option>
+                            <option value="pending">기부 검수 대기</option>
+                            <option value="rejected">기부 반려</option>
+                            <option value="approved">기부 승인</option>
+                        </select>
+                    </div>
+                    <div class="search-row">
+                        <label>기부 기간</label>
+                        <div class="date-range">
+                            <input type="date" class="search-input">
+                            <span>~</span>
+                            <input type="date" class="search-input">
+                            <div class="period-buttons">
+                                <button class="active">오늘</button>
+                                <button>1주일</button>
+                                <button>1개월</button>
+                                <button>3개월</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="search-actions">
+                        <button class="btn btn-primary">검색</button>
+                        <button class="btn btn-secondary">초기화</button>
+                    </div>
+                </div>
+
+                <!-- Donation Table -->
+                <div class="table-header">
+                    <div class="left-section">
+                        <span>목록 (총 [[${donationCounts}]]개)</span>
+                        <select id="sortOrder">
+                            <option value="latest">최신 기부순</option>
+                            <option value="oldest">오래된 기부순</option>
+                            <option value="campaignTitleAsc">캠페인명 오름차순</option>
+                            <option value="campaignTitleDesc">캠페인명 내림차순</option>
+                        </select>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn btn-secondary">전체 승인</button>
+                        <button class="btn btn-info data-refresh-btn">
+                            데이터 갱신 <span class="refresh-icon">&#x21bb;</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="donation-table">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll"></th>
+
+                                <th>캠페인 제목</th>
+                                <th>기부일자</th>
+                                <th>기부자</th>
+                                <th>기부품목</th>
+                                <th>기부수량</th>
+                                <th>택배사</th>
+                                <th>송장번호</th>
+                                <th>배송 상태</th>
+                                <th>검수 상태</th>
+                                <th>검수 처리</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="table-footer">
+                    <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>
+                    <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
+                    <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script th:src="@{/js/dashboard/donation-orders.js}" async></script>
+</body>
+
+</html>

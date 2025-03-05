@@ -1,6 +1,7 @@
 package app.scit46.ufc.repository.tag;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,8 @@ public interface TagRepository extends JpaRepository<TagEntity, Long> {
 
   @Query("SELECT s FROM TagEntity s WHERE LOWER(REPLACE(s.content, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
   List<TagEntity> tagByKeyword(@Param("keyword") String keyword);
+
+  Optional<TagEntity> findByContent(String content);
+
+  
 }
