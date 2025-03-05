@@ -3,6 +3,8 @@ package app.scit46.ufc.entity;
 import app.scit46.ufc.dto.NoticeDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class NoticeEntity {
     @Column(name = "content", nullable = false, unique = true, length = 200)
     private String content;
 
+    @CreationTimestamp
     @Column(name = "noticed_date", nullable = false)
     private LocalDateTime noticedDate;
 

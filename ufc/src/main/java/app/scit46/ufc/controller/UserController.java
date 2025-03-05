@@ -19,7 +19,7 @@ import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.CampaignReviewService;
+import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
@@ -96,8 +96,9 @@ public class UserController {
         return "user/mypage-like";
     }
 
+
     @GetMapping("/review")
-public String review(HttpServletRequest request,
+    public String review(HttpServletRequest request,
                      Model model,
                      @RequestParam(value = "page", defaultValue = "0") int page,
                      @RequestParam(value = "size", defaultValue = "5") int size) {

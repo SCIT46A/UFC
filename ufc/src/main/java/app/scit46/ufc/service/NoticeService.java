@@ -5,6 +5,7 @@ import app.scit46.ufc.entity.NoticeEntity;
 import app.scit46.ufc.repository.NoticeRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,7 +29,7 @@ public class NoticeService {
         NoticeEntity noticeEntity = new NoticeEntity();
         noticeEntity.setTitle(noticeDTO.getTitle());
         noticeEntity.setContent(noticeDTO.getContent());
-        noticeEntity.setNoticedDate(noticeDTO.getNoticedDate());
+        noticeEntity.setNoticedDate(LocalDateTime.now());
 
         NoticeEntity savedNotice = noticeRepository.save(noticeEntity);
         return NoticeDTO.toDTO(savedNotice);
