@@ -27,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/image")
-@Slf4j
 public class ApiImageController {
 
     // cloudflare 이미지 제어 서비스

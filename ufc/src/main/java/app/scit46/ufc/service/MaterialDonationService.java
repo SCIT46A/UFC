@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
@@ -27,8 +29,14 @@ public class MaterialDonationService {
     private final MaterialDonationRepository materialDonationRepository;
     private final CourierService courierService;
     private final DeliveryService deliveryService;
-    private final CampaignService campaignService;
 
+    private CampaignService campaignService;
+
+
+    @Autowired
+    public void setCampaignService(@Lazy CampaignService campaignService) {
+        this.campaignService = campaignService;
+    }
 
 
 

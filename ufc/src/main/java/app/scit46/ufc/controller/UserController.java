@@ -20,7 +20,7 @@ import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.CampaignReviewService;
+import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserService;
@@ -74,30 +74,10 @@ public class UserController {
         return "user/mypage-profile";
     }
 
-    @GetMapping("/like")
-    public String like(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false);
-        Long userId = null;
-        if (session != null) {
-            try {
-                userId = (Long) session.getAttribute("loginUserId");
-                UserDTO user = userService.readUserById(userId);
-                List<CampaignDTO> likedCampaigns = new ArrayList<>();
-                 String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" 
-                         + user.getPhoto().getImageId() + "/public";
-                likedCampaigns = campaignService.getCampaignsLikedByUser(userId);
-                model.addAttribute("userImageId", userImageId);
-                model.addAttribute("likedCampaigns", likedCampaigns);
-                model.addAttribute("user", user);
-            } catch (DBNotFoundException e) {
-                model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-            }
-        }
-        return "user/mypage-like";
-    }
+
 
     @GetMapping("/review")
-public String review(HttpServletRequest request,
+    public String review(HttpServletRequest request,
                      Model model,
                      @RequestParam(value = "page", defaultValue = "0") int page,
                      @RequestParam(value = "size", defaultValue = "5") int size) {
