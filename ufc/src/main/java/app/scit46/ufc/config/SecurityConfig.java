@@ -25,8 +25,8 @@ public class SecurityConfig {
         private final OAuthSessionFilter oAuthSessionFilter;
         private final AuthenticationFailureHandler authenticationFailureHandler;
 
-        @Bean
-        @Primary
+       @Bean
+       @Primary
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
                 http.authorizeHttpRequests(auth -> auth

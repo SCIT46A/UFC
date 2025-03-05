@@ -48,13 +48,13 @@ public class ProductDeliveryEntity {
     @JoinColumn(name = "pay_id")
     private ProductPaymentEntity pay;
 
-    public static ProductDeliveryEntity toEntity(ProductDeliveryDTO dto, ProductDTO product, ProductPaymentDTO pay) {
+    public static ProductDeliveryEntity toEntity(ProductDeliveryDTO dto) {
         return ProductDeliveryEntity.builder()
                 .pDeliveryId(dto.getPDeliveryId())
                 .invoice(dto.getInvoice())
                 .status(dto.getStatus())
-                .product(ProductEntity.builder().productId(product.getProductId()).build())
-                .pay(ProductPaymentEntity.builder().payId(pay.getPayId()).build())
+                .product(ProductEntity.builder().productId(dto.getProduct().getProductId()).build())
+                .pay(ProductPaymentEntity.builder().payId(dto.getPay().getPayId()).build())
                 .build();
     }
 }

@@ -296,7 +296,7 @@ $(function () {
                         const highlightedName = highlightText(data.name, keyword);
                         if(data.type !== "Tag"){
                             $(".modal-re-search-box-bo-box-in-se").append(`
-                    <a href="/${data.type}/detail/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
+                    <a href="/${data.type}/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
                         <div>
                             <svg viewBox="0 0 48 48">
                                 <path fill-rule="evenodd" clip-rule="evenodd"

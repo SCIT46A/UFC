@@ -24,6 +24,7 @@ public class CampaignReviewDTO {
     private Double rated;
     private UserDTO reviewedBy; // ✅ UserDTO 포함
     private CampaignDTO campaignedBy; // ✅ CampaignDTO 포함
+    private Boolean status;
 
     public static CampaignReviewDTO toDTO(CampaignReviewEntity entity) {
         return CampaignReviewDTO.builder()
@@ -33,6 +34,7 @@ public class CampaignReviewDTO {
                 .rated(entity.getRated())
                 .reviewedBy(entity.getReviewedBy() != null ? UserDTO.toDTO(entity.getReviewedBy()) : null) // ✅ UserDTO 변환
                 .campaignedBy(entity.getCampaignedBy() != null ? CampaignDTO.toDTO(entity.getCampaignedBy()) : null) // ✅ CampaignDTO 변환
+                .status(entity.getStatus() !=null ? entity.getStatus() : false)
                 .build();
     }
 }

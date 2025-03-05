@@ -279,3 +279,28 @@ button {
 button:hover {
     opacity: 0.8;
 }
+
+.tab-container {
+    display: flex;
+    justify-content: left;
+    margin-bottom: 10px;
+}
+
+.tab-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #f1f1f1;
+    cursor: pointer;
+    font-size: 16px;
+    margin-right: 5px;
+}
+
+.tab-button.active {
+    background-color: #CE201B;
+    color: white;
+    font-weight: bold;
+}
+
+.tab-button:hover {
+    background-color: #e0e0e0;
+}

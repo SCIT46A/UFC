@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -48,6 +49,7 @@ public class ImageService {
     private final ImageUrlService imageUrlService; // 사진Url DB 수정시 사용
 
     // 이미지 업로드 // MultipartFile을 Byte[]로 직렬화하는 중 IOException 발생 가능
+
     public String uploadImage(MultipartFile file, Long userId) throws IOException {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환
@@ -72,6 +74,7 @@ public class ImageService {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         // 요청할 내용에 파일 첨부(구성)
         body.add("file", new ByteArrayResource(file.getBytes()) {
+
             @Override
             public String getFilename() {
                 return originalFilename;
@@ -143,6 +146,7 @@ public class ImageService {
             return null;
         // imageID가 UUID 형식인지 검사
         if (!UUID.fromString(imageId).toString().equals(imageId)) {
+
             log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
             return null;
         }

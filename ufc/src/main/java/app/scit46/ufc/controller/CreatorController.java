@@ -1,9 +1,16 @@
 package app.scit46.ufc.controller;
 
+
 import java.net.http.HttpRequest;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +29,8 @@ import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+
+
 
 @Controller
 @RequestMapping("/creator") // 🔹 모든 URL이 "/creator"로 시작하도록 설정
@@ -134,6 +143,7 @@ public class CreatorController {
         return "creator/creator-campaign";
     }
 
+
     /** 🔹 [GET] 기존 데이터 불러오기 */
     @GetMapping("/edit/data")
     @ResponseBody
@@ -141,6 +151,12 @@ public class CreatorController {
         String OAuthId = httpServletRequest.getUserPrincipal().getName();
         CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
         return ResponseEntity.ok(creator);
+
+    @PostMapping("/update")
+    public String updateProfile(@ModelAttribute CreatorDTO creator) {
+//        creatorService.updateCreator(creator);
+        return "redirect:/creator/profile/" + creator.getCreatorId();
+
     }
 
 }

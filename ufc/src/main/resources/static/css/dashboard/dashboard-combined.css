@@ -71,9 +71,8 @@ body {
 }
 
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
+    max-width: 100%;
+    padding: 1rem;
 }
 
 /* Main Content Area */
@@ -241,7 +240,7 @@ body {
 }
 
 .search-row label {
-    min-width: 120px;
+    min-width: 150px;
     color: var(--gray-700);
 }
 
@@ -254,11 +253,16 @@ body {
 }
 
 .search-input {
-    flex: 1;
     padding: 0.5rem;
     border: var(--border-light);
     border-radius: var(--border-radius-sm);
     font-size: var(--font-size-sm);
+    width: 300px;
+}
+
+/* 날짜 선택 input 조정 */
+input[type="date"].search-input {
+    width: 200px;
 }
 
 /* ====================================================================== */
@@ -267,12 +271,14 @@ body {
 /* TABLE STYLES */
 .table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 1.5rem;
+    min-width: 800px;
 }
 
 th,
@@ -403,14 +409,17 @@ input[type="number"] {
 .table-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .left-section {
     display: flex;
     align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 /* STATUS CARDS & GRID */
@@ -431,6 +440,8 @@ input[type="number"] {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    min-width: 0;
+    word-wrap: break-word;
 }
 
 .status-card h3 {
@@ -452,7 +463,7 @@ input[type="number"] {
 }
 
 .status-card .count {
-    font-size: 1.5rem;
+    font-size: clamp(1rem, 2vw, 1.5rem);
     font-weight: 600;
 }
 
@@ -564,12 +575,14 @@ input[type="number"] {
 
 .modal-content {
     background-color: var(--white);
-    margin: 15% auto;
+    margin: 20px auto;
     padding: 2rem;
     border: var(--border-medium);
     border-radius: var(--border-radius-md);
-    width: 80%;
+    width: 95%;
     max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-header {
@@ -636,21 +649,25 @@ input[type="number"] {
     align-items: center;
     gap: 10px;
     flex: 1;
-}
-
-.period-select {
-    width: 120px;
+    flex-wrap: wrap;
 }
 
 .date-inputs {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-wrap: wrap;
+    min-width: 250px;
+}
+
+.period-select {
+    width: 120px;
 }
 
 .period-buttons {
     display: flex;
     gap: 5px;
+    flex-wrap: wrap;
 }
 
 .period-buttons button {
@@ -659,6 +676,9 @@ input[type="number"] {
     background: var(--white);
     border-radius: var(--border-radius-sm);
     cursor: pointer;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 60px;
 }
 
 .period-buttons button.active {
@@ -908,31 +928,138 @@ input[type="number"] {
     font-size: 0.875rem;
 }
 
+@media (max-width: 1024px) {
+    .layout {
+        grid-template-columns: 200px 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .batch-actions {
+        gap: 0.25rem;
+    }
+
+    .search-section {
+        padding: 0.75rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .page-container {
+    .layout {
+        grid-template-areas:
+            "header"
+            "main";
         grid-template-columns: 1fr;
     }
 
-    .chat-container {
+    .sidebar {
         display: none;
     }
 
-    .chat-container.active {
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        z-index: 1000;
+    .main-content {
+        padding: 10px;
     }
 
-    .chat-header {
-        padding-right: 1rem;
+    .search-section {
+        padding: 0.5rem;
     }
 
-    .chat-header .back-button {
-        display: block;
+    .search-row {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+    }
+
+    .search-row label {
+        min-width: auto;
+        margin-bottom: 0.25rem;
+    }
+
+    .date-range {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .date-inputs {
+        flex-direction: row;
+        justify-content: space-between;
+        min-width: 100%;
+    }
+
+    .date-inputs input[type="date"] {
+        width: calc(50% - 10px);
+    }
+
+    .period-buttons {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        width: 100%;
+    }
+
+    .period-buttons button {
+        width: 100%;
+        min-width: 0;
+        padding: 8px;
+    }
+
+    .table-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .left-section {
+        flex-direction: column;
+        align-items: stretch;
+        width: 100%;
+    }
+
+    .left-section>* {
+        width: 100%;
+    }
+
+    .table-header .btn-secondary {
+        width: 100%;
+        text-align: center;
+        margin-top: 0.5rem;
+    }
+
+    .table-container {
+        margin: 0 -10px;
+        padding: 0 10px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        font-size: 0.875rem;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+
+    .status-card {
+        padding: 1rem;
+    }
+
+    .batch-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+    }
+
+    .search-input,
+    input[type="date"].search-input {
+        width: 100%;
     }
 }
 
@@ -1117,7 +1244,7 @@ input[type="number"] {
         padding: 1rem;
     }
 
-    .filters {
+    .batch-actions {
         flex-direction: column;
     }
 
@@ -1134,7 +1261,7 @@ input[type="number"] {
 /*                      DONATION MANAGEMENT STYLES                        */
 /* ====================================================================== */
 /* DONATION MANAGEMENT */
-.donation-management {
+.donation-orders {
     background-color: var(--white);
     border-radius: 8px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -1146,7 +1273,7 @@ input[type="number"] {
         padding: 1rem;
     }
 
-    .donation-management {
+    .donation-orders {
         padding: 1rem;
     }
 
@@ -1156,5 +1283,32 @@ input[type="number"] {
 
     table {
         font-size: 0.875rem;
+    }
+}
+
+/* 중간 크기 화면에서의 스타일 */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .date-range {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .period-buttons {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+    }
+
+    .period-buttons button {
+        flex: 0 1 auto;
+    }
+
+    .table-header {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .left-section {
+        flex: 1;
+        min-width: 60%;
     }
 }

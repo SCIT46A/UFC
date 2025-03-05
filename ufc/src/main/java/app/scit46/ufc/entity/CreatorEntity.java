@@ -86,23 +86,20 @@ public class CreatorEntity {
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<LikeEntity> likes;
 
-    public static CreatorEntity toEntity(CreatorDTO dto,
-            ImageUrlDTO businessCert,
-            ImageUrlDTO backImgUrl,
-            ImageUrlDTO proImgUrl,
-            UserDTO ownUser) {
+
+    public static CreatorEntity toEntity(CreatorDTO dto) {
         return CreatorEntity.builder()
                 // .creatorId(dto.getCreatorId()) // 기본값 자동 생성이므로 주석처리
                 .intro(dto.getIntro())
-                .businessCert(ImageUrlEntity.toEntity(businessCert))
+                .businessCert(ImageUrlEntity.toEntity(dto.getBusinessCert()))
                 .bRegistNumber(dto.getBRegistNumber())
                 .bName(dto.getBName())
                 .companyName(dto.getCompanyName())
                 .address(dto.getAddress())
-                .creatorStatus(dto.getCreatorStatus() == null ? false : dto.getCreatorStatus())
-                .backImgUrl(ImageUrlEntity.toEntity(backImgUrl))
-                .proImgUrl(ImageUrlEntity.toEntity(proImgUrl))
-                .ownUser(UserEntity.toEntity(ownUser, null)) // photoId는 여기서 필요 없을 듯 ㅎㅎ;;
+                .creatorStatus(dto.getCreatorStatus())
+                .backImgUrl(ImageUrlEntity.toEntity(dto.getBackImgUrl()))
+                .proImgUrl(ImageUrlEntity.toEntity(dto.getProImgUrl()))
+                .ownUser(UserEntity.toEntity(dto.getOwnUser()))
                 .build();
     }
 }
