@@ -109,10 +109,12 @@ public class CampaignService {
             campaignRepository.save(campaign);
         }
         return campaign;
+
     }
 
     public void deleteCampaign(Long campaignId) {
         campaignRepository.deleteById(campaignId);
+
     }
 
     // 캠페인 생성
@@ -284,17 +286,43 @@ public class CampaignService {
         for (CampaignEntity campaign : campaigns) {
             campaign.setCampaignStatus(true);
         }
-
         campaignRepository.saveAll(campaigns);
     }
 
-    // ✅ 전체 캠페인 조회 (N+1 문제 해결)
+    // ✅ 전체 캠페인 조회
     @Transactional(readOnly = true)
     public List<CampaignDTO> getAllCampaigns() {
         return campaignRepository.findAll().stream()
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+    // 사진 빼고 캠페인 조회
+    @Transactional(readOnly = true)
+    public List<CampaignDTO> getAllCampaignsWithoutPhoto() {
+        List<CampaignEntity> campaigns = campaignRepository.findAllWithCreator(); // ✅ createdBy 강제 로딩
+
+        if (campaigns == null || campaigns.isEmpty()) {
+            return List.of();
+        }
+
+        return campaigns.stream()
+                .map(campaign -> CampaignDTO.builder()
+                        .campaignId(campaign.getCampaignId())
+                        .title(campaign.getTitle())
+                        .description(campaign.getDescription() != null ? campaign.getDescription() : "설명이 없습니다.")
+                        .startDate(campaign.getStartDate())
+                        .endDate(campaign.getEndDate())
+                        .campaignStatus(campaign.getCampaignStatus())
+                        .createdBy(campaign.getCreatedBy() != null ? CreatorDTO.toDTO(campaign.getCreatedBy()) : null)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
 
     // ✅ 캠페인 목표 조회 (CampaignGoalEntity → CampaignGoalDTO 변환)
     @Transactional(readOnly = true)
