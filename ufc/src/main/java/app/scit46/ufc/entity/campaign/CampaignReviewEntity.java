@@ -40,6 +40,11 @@ public class CampaignReviewEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaigned_by", nullable = false)
     private CampaignEntity campaignedBy;
+  
+    @Column(name = "status", nullable = false)
+    private Boolean status;
+
+
 
     public static CampaignReviewEntity toEntity(CampaignReviewDTO dto) {
         return CampaignReviewEntity.builder()
@@ -47,6 +52,7 @@ public class CampaignReviewEntity {
                 .content(dto.getContent())
                 .createdDate(dto.getCreatedDate())
                 .rated(dto.getRated())
+                .status(dto.getStatus() != null ? dto.getStatus() : false)
                 .reviewedBy(UserEntity.builder().userId(dto.getReviewedBy().getUserId()).build())
                 .campaignedBy(CampaignEntity.builder().campaignId(dto.getCampaignedBy().getCampaignId()).build())
                 .build();

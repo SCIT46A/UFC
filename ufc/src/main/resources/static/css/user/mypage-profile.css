@@ -15,6 +15,7 @@ body {
   box-sizing: inherit;
 }
 
+
 main {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -169,7 +170,7 @@ main {
   background-color: white;
   border: 1px solid rgb(235, 75, 56);
   color: rgb(235, 75, 56);
-  -webkit-appearance: button;
+  appearance: button;
   cursor: pointer;
   text-transform: none;
   overflow: visible;
@@ -352,7 +353,7 @@ main {
   display: flex;
   margin: 0px 0px 12px;
   color: rgba(175, 175, 175, 0.8);
-  text-decoration: underline;
+  /* text-decoration: underline; */
   align-items: center;
   justify-content: center;
 }
@@ -399,7 +400,7 @@ main {
   color: rgb(61, 61, 61);
   font-size: 12px !important;
   line-height: 20px !important;
-  -webkit-appearance: button;
+  appearance: button;
   cursor: pointer;
   text-transform: none;
 }
@@ -603,15 +604,15 @@ main {
   padding: 0px 16px;
   background-color: rgb(61, 61, 61);
   color: white;
-  -webkit-appearance: button;
+  appearance: button;
 }
 
 .name-in {
   width: 328px;
 }
 
-.name-in-span {
-  /* border: 1px solid rgb(228, 228, 228);
+/*.name-in-span {
+   border: 1px solid rgb(228, 228, 228);
   color: rgb(13, 13, 13);
   background: white;
   padding: 0px 12px;
@@ -623,8 +624,8 @@ main {
   letter-spacing: -0.015em;
   -webkit-box-align: center;
   align-items: center;
-  border-radius: 1px; */
-}
+  border-radius: 1px; 
+}*/
 
 /* .name-in-span input {
   width: 100%;
@@ -667,7 +668,7 @@ main {
   padding: 0px 16px;
   background-color: rgb(61, 61, 61);
   color: white;
-  -webkit-appearance: button;
+  appearance: button;
 }
 
 
@@ -677,8 +678,8 @@ main {
   box-sizing: border-box;
   border: 1px solid rgb(228, 228, 228);
   border-radius: 1px;
-  /* padding: 12px; */
-} */
+  padding: 12px; 
+}*/
 
 .edit-ri {
   margin: 0px;

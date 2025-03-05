@@ -8,8 +8,8 @@ import java.util.stream.Collectors;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.stereotype.Service;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
-import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,21 +29,29 @@ public class MaterialDonationService {
     private final DeliveryService deliveryService;
     private final CampaignService campaignService;
 
-    public MaterialDonationEntity findByUserId(Long userId) {
-        return materialDonationRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Material Donation not found"));
-    }
 
-    public List<MaterialDonationEntity> donationFindByUserId(Long userId) {
-        UserEntity user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        List<MaterialDonationEntity> donations = materialDonationRepository.findByUser(user);
-        if (donations.isEmpty()) {
+
+    public List<MaterialDonationDTO> donationFindByUserId(Long userId) {
+        List<MaterialDonationEntity> materialDonationEntities = materialDonationRepository.findAllByUser_UserId(userId);
+        if (materialDonationEntities.isEmpty()) {
             throw new RuntimeException("Material Donation not found");
         }
-        return donations;
+        return materialDonationEntities.stream()
+                .map(MaterialDonationDTO::toDTO)
+                .toList();
     }
+    
+    public List<MaterialDonationDTO> getMaterialDonationsByUserId(Long userId) {
+        List<MaterialDonationEntity> temp = materialDonationRepository.findAllByUser_UserId(userId);
+        if (temp.isEmpty()) {
+            throw new RuntimeException("Material Donation not found");
+        }
+        return temp.stream()
+                .map(MaterialDonationDTO::toDTO)
+                .toList();
+    }
+
 
     public List<MaterialDonationDTO> findDonationByCampaign(Long campaignId) {
         return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)

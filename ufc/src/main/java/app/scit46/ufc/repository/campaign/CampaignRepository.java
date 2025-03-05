@@ -13,6 +13,7 @@ import app.scit46.ufc.entity.campaign.CampaignEntity;
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
 
     List<CampaignEntity> findByCampaignId(Long campaignId);
+    List<CampaignEntity> findByCampaignIdIn(List<Long> campaignId);
 
     // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
     @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = false")
@@ -25,6 +26,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> searchCampaignByTitleIgnoreSpace(@Param("normalizedKeyword") String normalizedKeyword);
 
     List<CampaignEntity> findByTitleContaining(String title);
+
 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
     List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
@@ -57,5 +59,6 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "GROUP BY c.campaign_id, cg.goal_id " +
             "ORDER BY donationPercentage ASC ", nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
+
 
 }
