@@ -457,7 +457,7 @@ body {
 }
 
 .profile-th{
-    background-image: url(https://assets.tumblbug.com/profile/default_avatar.png);
+    /*background-image: url();*/
     margin: 0px;
     padding: 0px;
     border-radius: 50%;
@@ -1515,4 +1515,8 @@ body {
     width: 1em;
     height: 1em;
     overflow: hidden;
+}
+
+.target-img{
+    border-radius: 999px;
 }

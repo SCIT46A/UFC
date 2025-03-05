@@ -993,9 +993,9 @@ $(document).ready(function () {
                 <div class="main-resent-pe">
                     <div class="main-resent-pe-all">
                         <div class="main-resent-pe-all-in">
-                            <div class="main-resent-pe-all-in-img">
+                            <a class="main-resent-pe-all-in-img" href="/campaign/${data.campaignId}">
                                 <img alt="" src="/api/image/${data.imageId}" class="main-resent-pe-all-in-img-in">
-                            </div>
+                            </a>
                             <div></div>
                             <div class="main-resent-pe-all-content">
                                 <div class="main-resent-content-box">

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +24,7 @@ public class CreatorDTO {
     private String bName;
     private String companyName;
     private String address;
+    private LocalDateTime bRegistDate;
     private ImageUrlDTO backImgUrl; // ✅ PhotoDTO 포함
     private ImageUrlDTO proImgUrl; // ✅ PhotoDTO 포함
     private UserDTO ownUser; // ✅ UserDTO 포함
@@ -36,6 +39,7 @@ public class CreatorDTO {
                 .bName(entity.getBName())
                 .companyName(entity.getCompanyName())
                 .address(entity.getAddress())
+                .bRegistDate(entity.getBRegistDate())
                 .backImgUrl(entity.getBackImgUrl() != null ? ImageUrlDTO.toDTO(entity.getBackImgUrl()) : null) // ✅ PhotoDTO 변환
                 .proImgUrl(entity.getProImgUrl() != null ? ImageUrlDTO.toDTO(entity.getProImgUrl()) : null) // ✅ PhotoDTO 변환
                 .ownUser(entity.getOwnUser() != null ? UserDTO.toDTO(entity.getOwnUser()) : null) // ✅ UserDTO 변환
