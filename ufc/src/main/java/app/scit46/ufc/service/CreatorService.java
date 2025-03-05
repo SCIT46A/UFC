@@ -110,17 +110,12 @@ public class CreatorService {
         creatorRepository.save(creator);
     }
 
-    // ✅ 사업자 등록번호 검증 API 호출
-    // ✅ 사업자 등록번호 검증 API 호출
-    public void verifyCreatorBusiness(CreatorApprovalDTO dto) {
+    //api 호출, 검증
+    public ResponseEntity<String> callBusinessValidationAPI(CreatorApprovalDTO dto) {
         try {
-            System.out.println("✅ 사업자 등록번호 검증 시작...");
+            String finalUrl = "http://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=" + apiKey;
+            URI uri = new URI(finalUrl);
 
-            if (dto == null) {
-                throw new IllegalArgumentException("🚨 CreatorApprovalDTO가 null입니다.");
-            }
-
-            // ✅ 요청 데이터 생성
             Map<String, Object> requestData = new HashMap<>();
             List<Map<String, Object>> businesses = new ArrayList<>();
 
@@ -128,50 +123,29 @@ public class CreatorService {
             businessInfo.put("b_no", dto.getBRegistNumber() != null ? dto.getBRegistNumber() : "");
             businessInfo.put("p_nm", dto.getBName() != null ? dto.getBName() : "");
             businessInfo.put("start_dt", "20231128");
-            businessInfo.put("p_nm2", "");
-            businessInfo.put("b_nm", "");
-            businessInfo.put("corp_no", "");
-            businessInfo.put("b_sector", "");
-            businessInfo.put("b_type", "");
-            businessInfo.put("b_adr", "");
-
             businesses.add(businessInfo);
             requestData.put("businesses", businesses);
 
-            // ✅ HTTP 요청 헤더 설정
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36");
-            headers.set("Connection", "keep-alive");
 
-            // ✅ HTTP 요청 엔티티 생성
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestData, headers);
 
-            // ✅ 최종 URL 확인 (API Key가 URL에 포함됨)
-            String finalUrl = apiUrl;
-            URI uri = new URI(finalUrl);
-            System.out.println("📌 [최종 요청 URL]: " + finalUrl);
 
-            // ✅ 최종 요청 바디 확인
-            String requestBody = new ObjectMapper().writeValueAsString(requestData);
-            System.out.println("📌 [최종 요청 바디]: " + requestBody);
-
-            // ✅ API 호출 (POST)
             ResponseEntity<String> response = restTemplate.postForEntity(uri, requestEntity, String.class);
 
-            // ✅ 응답 데이터 로그 확인
-            System.out.println("✅ API 응답 상태 코드: " + response.getStatusCode());
-            System.out.println("✅ API 응답 본문: " + response.getBody());
+            return response;
 
-        } catch (IllegalArgumentException e) {
-            System.err.println("🚨 잘못된 입력 값: " + e.getMessage());
-            e.printStackTrace();
         } catch (Exception e) {
-            System.err.println("🚨 사업자 검증 API 호출 실패: " + e.getMessage());
-            e.printStackTrace();
-            throw new RuntimeException("🚨 사업자 등록번호 검증 중 오류 발생: " + e.getMessage(), e);
-        }
-
+            throw new RuntimeException("🚨 사업자 검증 API 호출 실패: " + e.getMessage(), e);
         }
     }
+
+    // ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
+    public CreatorEntity saveCreator(CreatorEntity creator) {
+        return creatorRepository.save(creator); // JPA를 이용한 저장
+    }
+
+}
+
 

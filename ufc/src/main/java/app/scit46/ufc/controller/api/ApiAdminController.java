@@ -9,6 +9,7 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 
 
 import app.scit46.ufc.entity.CreatorEntity;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -191,45 +192,61 @@ public class ApiAdminController {
         return ResponseEntity.ok(noticeService.createNotice(noticeDTO));
     }
 
-
-    // ✅ 창작자 사업자 등록 검증 API 엔드포인트
+    // 창작자 사업자 등록 검증 API 엔드포인트
     @PostMapping("/verify/{creatorId}")
-    public ResponseEntity<String> verifyCreator(@PathVariable Long creatorId) {
+    public ResponseEntity<Map<String, Object>> verifyCreator(@PathVariable Long creatorId) {
         // 🔹 DB에서 창작자 정보 가져오기
         CreatorEntity creator = creatorService.getCreatorById(creatorId);
         if (creator == null) {
-            return ResponseEntity.badRequest().body("🚨 창작자를 찾을 수 없습니다. (creatorId=" + creatorId + ")");
+            return ResponseEntity.badRequest().body(Map.of("error", "🚨 창작자를 찾을 수 없습니다."));
         }
 
         // 🔹 DTO 생성
         CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
                 .bRegistNumber(creator.getBRegistNumber())
                 .bName(creator.getBName())
-                .startDt("20231111")  // 개업일자 기본값 설정
+                .startDt("20231128")  // 개업일자 기본값 설정
                 .build();
 
-        // 🔹 API 호출 (검증 실행)
-        creatorService.verifyCreatorBusiness(dto);
-
-        return ResponseEntity.ok("✅ 사업자 등록번호 검증 요청 완료");
-    }
-
-
-    // ✅ 2. 창작자 승인 (검증 없이 승인만 처리)
-    @PutMapping("/creator/{creatorId}/approve")
-    public ResponseEntity<Map<String, String>> approveCreator(@PathVariable Long creatorId) {
-        Map<String, String> response = new HashMap<>();
+        ResponseEntity<String> response = creatorService.callBusinessValidationAPI(dto);
 
         try {
-            // ✅ 승인 상태 변경
-            creatorService.approveCreator(creatorId);
-            response.put("message", "창작자 승인 완료!");
-            return ResponseEntity.ok(response);
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String, Object> responseData = objectMapper.readValue(response.getBody(), Map.class);
+
+            return ResponseEntity.ok(responseData); // JSON 그대로 반환
+
         } catch (Exception e) {
-            response.put("message", "🚨 창작자 승인 중 오류 발생: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "🚨 검증 결과 처리 중 오류 발생"));
         }
     }
+
+
+
+    @PutMapping("/{creatorId}/approve")
+    public ResponseEntity<Map<String, Object>> approveCreator(@PathVariable Long creatorId) {
+        try {
+            // 🔹 1. 해당 창작자 정보 가져오기
+            CreatorEntity creator = creatorService.getCreatorById(creatorId);
+            if (creator == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "🚨 창작자를 찾을 수 없습니다."));
+            }
+
+            // 🔹 2. 승인 처리 (creatorStatus = true 로 변경)
+            creator.setCreatorStatus(true);
+            creatorService.saveCreator(creator);
+
+            // 🔹 3. JSON 응답 반환 (프론트엔드에서 JSON 파싱할 수 있도록)
+            return ResponseEntity.ok(Map.of("message", "✅ 승인 완료", "creatorId", creatorId));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "🚨 승인 처리 중 오류 발생: " + e.getMessage()));
+        }
+    }
+
 
     // ✅ 3. 창작자 승인 대기 목록 조회 API
     @GetMapping("/creator-approval")

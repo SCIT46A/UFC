@@ -618,29 +618,32 @@ function fetchCreatorApproval() {
     fetch("/api/admin/creator-approval")
         .then(res => res.json())
         .then(creators => {
-            console.log("📢 창작자 목록 응답 데이터:", creators);
+            console.log("📢 창작자 목록 응답 데이터:", creators); // ✅ API 응답 확인
 
-            // ✅ API 요청 URL이 정확한지 확인!
             const verificationPromises = creators.map(creator =>
                 fetch(`/api/admin/verify/${creator.creatorId}`, {
-                    method: "POST",  // ✅ GET 대신 POST 사용
+                    method: "POST",
                     headers: { "Content-Type": "application/json" }
                 })
-                    .then(res => {
-                        if (!res.ok) {
-                            throw new Error(`HTTP error! Status: ${res.status}`);
-                        }
-                        return res.json();
-                    })
+                    .then(res => res.json())
                     .then(verification => {
-                        creator.verificationStatus = verification.businessValidationStatus;
+                        console.log(`📢 창작자 ${creator.creatorId} 검증 응답 데이터:`, verification);
+
+                        // ✅ valid 값 추출 (API 응답에서 올바르게 가져오는지 확인)
+                        const valid = verification.data?.[0]?.valid;
+                        console.log(`📢 창작자 ${creator.creatorId} valid 값:`, valid);
+
+                        // ✅ valid 값이 "01"이면 "⭕", "02"이면 "❌" 설정
+                        creator.verificationStatus = (valid === "01") ? "⭕" : "❌";
+                        console.log(`✅ 최종 verificationStatus: ${creator.verificationStatus}`);
                     })
                     .catch(error => {
                         console.error(`❌ 창작자 ${creator.creatorId} 검증 오류:`, error);
-                        creator.verificationStatus = "확인 불가능";
+                        creator.verificationStatus = "❌";
                     })
             );
 
+            // ✅ Promise.all()이 끝난 후 테이블 업데이트
             Promise.all(verificationPromises).then(() => {
                 document.getElementById("content").innerHTML = generateCreatorApprovalTable(creators);
             });
@@ -651,13 +654,26 @@ function fetchCreatorApproval() {
         });
 }
 
+
+
+// ✅ 창작자 승인 대기 테이블 생성
+// ✅ 창작자 승인 대기 테이블 생성
 function generateCreatorApprovalTable(creators) {
-    if (!creators || creators.length === 0) {
-        return `<h2>창작자 승인 대기</h2><p>승인 대기 중인 창작자가 없습니다.</p>`;
+    console.log("📢 테이블 렌더링 시작. 현재 creators 데이터:", creators);
+
+    let tabHTML = `
+        <h2>창작자 승인 관리</h2>
+        <p>창작자 승인 상태를 확인하세요.</p>
+    `;
+
+    // ✅ 승인 대기 중인 창작자만 필터링
+    let filteredCreators = creators.filter(creator => !creator.creatorStatus);
+
+    if (filteredCreators.length === 0) {
+        return tabHTML + "<p class='no-report'>✅ 현재 승인 대기 중인 창작자가 없습니다.</p>";
     }
 
     let tableHTML = `
-        <h2>창작자 승인 대기</h2>
         <div class="table-container">
             <table>
                 <thead>
@@ -667,54 +683,74 @@ function generateCreatorApprovalTable(creators) {
                         <th>상호</th>
                         <th>사업자 등록번호</th>
                         <th>진위 여부</th> 
-                        <th>승인여부</th>
                         <th>승인</th>
                     </tr>
                 </thead>
                 <tbody>
     `;
 
-    creators.forEach(creator => {
-        const creatorStatus = creator.creatorStatus ? "승인됨" : "대기 중";
-        const verificationStatus = creator.verificationStatus || "확인 중...";  // 기본값을 "확인 중..."으로 변경
+    filteredCreators.forEach(creator => {
 
-        // ✅ "확인됨"인 경우에만 승인 버튼 활성화
-        const approveButton = verificationStatus === "확인됨"
-            ? `<button onclick="approveCreator(${creator.creatorId})">승인</button>`
+        let approveButton = creator.verificationStatus === "⭕"
+            ? `<button id="approve-btn-${creator.creatorId}" onclick="approveCreator(${creator.creatorId})">승인</button>`
             : `<button disabled>승인</button>`;
 
         tableHTML += `
             <tr>
                 <td>${creator.creatorId}</td>
-                <td>${creator.bName || "N/A"}</td>
+                <td>${creator.bname || "N/A"}</td>
                 <td>${creator.companyName || "N/A"}</td>
-                <td>${creator.bRegistNumber || "N/A"}</td>
-                <td>${verificationStatus}</td> 
-                <td>${creatorStatus}</td>
+                <td>${creator.bregistNumber || "N/A"}</td>
+                <td>${creator.verificationStatus}</td> 
                 <td>${approveButton}</td>
             </tr>
         `;
     });
 
     tableHTML += `</tbody></table></div>`;
-    return tableHTML;
+
+    return tabHTML + tableHTML;
 }
 
 
-// ✅ 창작자 승인 요청
-function approveCreator(creatorId) {
-    fetch(`/api/admin/${creatorId}/approve`, { method: "PUT" })
+function renderCreatorTab(tab) {
+    fetch("/api/admin/creator-approval")
         .then(res => res.json())
-        .then(response => {
-            alert(response.message);
-            fetchCreatorApproval(); // ✅ 승인 후 목록 갱신
+        .then(creators => {
+            console.log(`📢 현재 선택된 탭: ${tab}`);
+            console.log("📢 업데이트된 창작자 목록:", creators);
+
+            document.getElementById("content").innerHTML = generateCreatorApprovalTable(creators, tab);
         })
         .catch(error => {
-            console.error("❌ 승인 요청 오류:", error);
-            alert("승인 요청 중 오류가 발생했습니다.");
+            console.error("❌ 창작자 승인 대기 목록 로드 오류:", error);
+            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
         });
 }
 
+
+// ✅ 창작자 승인 처리
+function approveCreator(creatorId) {
+    fetch(`/api/admin/${creatorId}/approve`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(res => {
+            if (!res.ok) {
+                throw new Error(`HTTP error! Status: ${res.status}`);
+            }
+            return res.json();
+        })
+        .then(data => {
+            console.log("✅ 승인 완료:", data);
+
+            // ✅ 승인 완료 후 페이지 새로고침
+            window.location.reload();
+        })
+        .catch(error => {
+            console.error(`❌ 승인 요청 오류:`, error);
+        });
+}
 
 //5. 유저 신고 관리
 
