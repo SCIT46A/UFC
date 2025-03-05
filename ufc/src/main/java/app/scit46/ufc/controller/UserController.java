@@ -2,6 +2,7 @@ package app.scit46.ufc.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import app.scit46.ufc.dto.BadgeDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.campaign.CampaignReviewService;
+import app.scit46.ufc.service.BadgeService;
+import app.scit46.ufc.service.CampaignReviewService;
 import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.UserBadgeService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
@@ -43,6 +48,8 @@ public class UserController {
     private final LikeService likeService;
     private final ImageService imageService;
     private final MaterialDonationService materialDonationService;
+    private final BadgeService badgeService;
+    private final UserBadgeService userBadgeService;
 
     // 유저 기본페이지 조회
     @GetMapping({"/",""})
@@ -240,9 +247,34 @@ public String postMethodName(
 
 
     @GetMapping("/badge")
-    public String badge( ) {
-        return "user/mypage-badge";
+public String badge(HttpServletRequest request, Model model) {
+    HttpSession session = request.getSession(false);
+    Long userId = (Long) session.getAttribute("loginUserId");
+    if (userId != null) {
+        try {
+            UserDTO user = userService.readUserById(userId);
+            List<BadgeDTO> badges = badgeService.getBadges();
+            List<UserBadgeDTO> userBadges = userBadgeService.getUserBadge(userId);
+
+            // userBadges에서 보유한 뱃지들의 badgeId만 추출
+            List<Long> userBadgeIds = userBadges.stream()
+                    .map(ub -> ub.getBadge().getBadgeId())
+                    .collect(Collectors.toList());
+
+            String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
+                    + user.getPhoto().getImageId() + "/public";
+
+            model.addAttribute("userBadgeIds", userBadgeIds);
+            model.addAttribute("userBadges", userBadges); // 필요하면 그대로 추가
+            model.addAttribute("badges", badges);
+            model.addAttribute("userImageId", userImageId);
+            model.addAttribute("user", user);
+        } catch (DBNotFoundException e) {
+            model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+        }
     }
+    return "user/mypage-badge";
+}
 
 
 

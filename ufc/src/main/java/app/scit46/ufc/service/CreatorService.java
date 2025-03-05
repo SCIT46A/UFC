@@ -1,30 +1,29 @@
 package app.scit46.ufc.service;
 
 import java.net.URI;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.CreatorApprovalDTO;
-import app.scit46.ufc.dto.ImageUrlDTO;
-import app.scit46.ufc.dto.UserDTO;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.scit46.ufc.dto.CreatorApprovalDTO;
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;
-import org.springframework.web.client.RestTemplate;
+import jakarta.annotation.PostConstruct;
 
 
 @Service
