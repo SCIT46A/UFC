@@ -6,8 +6,6 @@ import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
-import app.scit46.ufc.dto.cloudflare.Image;
-import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
