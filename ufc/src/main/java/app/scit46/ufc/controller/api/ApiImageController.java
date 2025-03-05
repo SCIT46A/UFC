@@ -67,10 +67,17 @@ public class ApiImageController {
 
     // 이미지 ID를 통해 이미지 URL 반환
     @GetMapping("/{imageId}")
-    public ResponseEntity<String> getImageUrl(@PathVariable String imageId) {
+
+    public ResponseEntity<String> getImageUrl(@PathVariable("imageId") String imageId) {
         String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
     }
+
+    // 이미지 URL 변환
+
+
+
+
 
     // 이미지 ID를 통해 이미지 삭제
     // UserDetails 검토 필요
@@ -86,3 +93,4 @@ public class ApiImageController {
         return ResponseEntity.ok(result);
     }
 }
+

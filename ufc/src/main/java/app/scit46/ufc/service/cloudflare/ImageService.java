@@ -5,6 +5,11 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,6 +49,7 @@ public class ImageService {
     private final ImageUrlService imageUrlService;    //사진Url DB 수정시 사용
 
     // 이미지 업로드 // MultipartFile을 Byte[]로 직렬화하는 중 IOException 발생 가능
+
     public String uploadImage(MultipartFile file, Long userId) throws IOException {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환

@@ -20,12 +20,23 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.campaign.CampaignTagDTO;
 import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
+import app.scit46.ufc.entity.LikeEntity;
+import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.dto.custom.RewardListDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.dto.reward.RewardMaterialDTO;
+
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
+import app.scit46.ufc.repository.CampaignGoalRepository;
+import app.scit46.ufc.repository.CreatorRepository;
+import app.scit46.ufc.repository.LikeRepository;
+import app.scit46.ufc.repository.MaterialDonationRepository;
+import app.scit46.ufc.repository.UserRepository;
+import app.scit46.ufc.repository.campaign.CampaignRepository;
+import app.scit46.ufc.repository.tag.CampaignTagRepository;
+import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.entity.reward.RewardEntity;
 import app.scit46.ufc.entity.reward.RewardItemEntity;
 import app.scit46.ufc.entity.reward.RewardMaterialEntity;
@@ -57,6 +68,8 @@ public class CampaignService {
     private final CampaignGoalRepository campaignGoalRepository;
     private final MaterialService materialService;
     private final MaterialDonationRepository materialDonationRepository;
+    private final MaterialDonationService materialDonationService;
+    private final LikeRepository likeRepository;
     private final ImageUrlService imageService;
     private final RewardService rewardService;
     private final RewardDeliveryRepository rewardDeliveryRepository;
@@ -96,10 +109,12 @@ public class CampaignService {
             campaignRepository.save(campaign);
         }
         return campaign;
+
     }
 
     public void deleteCampaign(Long campaignId) {
         campaignRepository.deleteById(campaignId);
+
     }
 
     // 캠페인 생성
@@ -271,17 +286,43 @@ public class CampaignService {
         for (CampaignEntity campaign : campaigns) {
             campaign.setCampaignStatus(true);
         }
-
         campaignRepository.saveAll(campaigns);
     }
 
-    // ✅ 전체 캠페인 조회 (N+1 문제 해결)
+    // ✅ 전체 캠페인 조회
     @Transactional(readOnly = true)
     public List<CampaignDTO> getAllCampaigns() {
         return campaignRepository.findAll().stream()
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+    // 사진 빼고 캠페인 조회
+    @Transactional(readOnly = true)
+    public List<CampaignDTO> getAllCampaignsWithoutPhoto() {
+        List<CampaignEntity> campaigns = campaignRepository.findAllWithCreator(); // ✅ createdBy 강제 로딩
+
+        if (campaigns == null || campaigns.isEmpty()) {
+            return List.of();
+        }
+
+        return campaigns.stream()
+                .map(campaign -> CampaignDTO.builder()
+                        .campaignId(campaign.getCampaignId())
+                        .title(campaign.getTitle())
+                        .description(campaign.getDescription() != null ? campaign.getDescription() : "설명이 없습니다.")
+                        .startDate(campaign.getStartDate())
+                        .endDate(campaign.getEndDate())
+                        .campaignStatus(campaign.getCampaignStatus())
+                        .createdBy(campaign.getCreatedBy() != null ? CreatorDTO.toDTO(campaign.getCreatedBy()) : null)
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+
+
+
+
 
     // ✅ 캠페인 목표 조회 (CampaignGoalEntity → CampaignGoalDTO 변환)
     @Transactional(readOnly = true)
@@ -299,11 +340,36 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
+
+
+
+
+
+    // 캠페인 기부한 내역 조회
+    public List<CampaignDTO> getCampaignsByUserId(List<Long> campaignId) {
+        return campaignRepository.findByCampaignIdIn(campaignId)
+                .stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
     public List<CampaignDTO> getCampaignsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
                 .map(CampaignDTO::toDTO)
                 .collect(Collectors.toList());
     }
+
+
+//        // 리뷰-캠페인 조회
+//        public CampaignDTO getCampaignById(Long campaigned_by) {
+//            List<CampaignEntity> campaigns = campaignRepository.findByCampaignId(campaigned_by);
+//            return campaigns.stream()
+//                    .findFirst() // 첫 번째 캠페인 엔티티를 선택
+//                    .map(CampaignDTO::toDTO)
+//                    .orElse(null);
+//        }
+
+
 
     public List<Long> getCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()

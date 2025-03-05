@@ -1,7 +1,11 @@
 package app.scit46.ufc.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.service.CreatorService;
 import lombok.RequiredArgsConstructor;
+
+
 
 @Controller
 @RequestMapping("/creator")
@@ -53,7 +59,8 @@ public class CreatorController {
 
     @PostMapping("/update")
     public String updateProfile(@ModelAttribute CreatorDTO creator) {
-        creatorService.updateCreator(creator);
+//        creatorService.updateCreator(creator);
         return "redirect:/creator/profile/" + creator.getCreatorId();
     }
+
 }

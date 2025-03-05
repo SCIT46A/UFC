@@ -98,5 +98,145 @@ document.querySelector('.pro-edit-btn-save').addEventListener('click', () => {
   const totalAddress = document.querySelector('.total-add');
 
   totalAddress.value =
-    (addressInput.value || '') + (addressDetailInput.value || '');
+    (addressInput.value || '') + '#' + (addressDetailInput.value || '');
 });
+
+const imageInput = document.getElementById('ch-img-btn');
+// const imageUploader = new CloudflareImageUploader();
+let sendData = {};
+
+document.getElementById('ch-img-btn').addEventListener('change', uploadImage);
+
+// async function uploadImage() {
+//   const imageFile = imageInput.files[0];
+//   try {
+//       const formData = new FormData();
+//     formData.append('file', imageFile);
+    
+//     for (let [key, value] of formData.entries()) {
+//       console.log(key, value);
+//     }
+//       const response = await fetch('/api/image/upload', {
+//         method: 'POST',
+//         body: formData,
+//         headers: {
+//             'Accept': 'application/json',
+//           }
+//       })
+//     const imageId = await response.text();
+//     console.log(imageId);
+
+//     sendData.imageId = imageId;
+//     console.log(sendData.imageId);
+
+//     $(".main-in-content-in-pe-content-in-img").attr("src", imageUrl);
+
+//       if (!response.ok) {
+//           throw new Error('이미지 업로드에 실패했습니다.');
+//       }
+
+
+
+//   } catch (error) {
+//       console.error('Error:', error);
+//       throw error;
+//   }
+// }
+
+async function uploadImage() {
+  const imageFile = imageInput.files[0];
+  try {
+    const formData = new FormData();
+    formData.append('file', imageFile);
+    
+    // 파일 업로드 요청 (이미지 업로드 후 imageId 반환)
+    const uploadResponse = await fetch('/api/image/upload', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!uploadResponse.ok) {
+      throw new Error('이미지 업로드에 실패했습니다.');
+    }
+    
+    // 서버에서 반환한 imageId (UUID 문자열)
+    const imageId = await uploadResponse.text();
+    console.log("업로드된 imageId:", imageId);
+    
+    // hidden input에 imageId 저장 (네스티드 바인딩: photo.imageId)
+    document.getElementById('imageInputField-add').value = imageId;
+    
+    // 기본 URL을 설정하여 이미지 태그에 할당
+    const basicUrl = "/api/image/" + imageId;
+    $("#target-img").attr("src", basicUrl);
+    $("#imageIdField").val(""); // photo.id는 서버에서 설정할 것이므로 비워두거나 생략
+    sendData.imageId = imageId;
+    console.log("전송할 imageId:", sendData.imageId);
+    
+    // 기본 URL로 최종 이미지 URL 요청 (서버가 최종 URL을 반환)
+    const urlResponse = await fetch(basicUrl, {
+      credentials: "include",
+      headers: { "Accept": "text/plain" }
+    });
+    if (!urlResponse.ok) {
+      throw new Error("이미지 URL 요청 실패");
+    }
+    const finalImageUrl = await urlResponse.text();
+    console.log("업로드된 최종 이미지 URL:", finalImageUrl);
+    
+    // 화면에 최종 이미지 URL 적용
+    $(".main-in-content-in-pe-content-in-img").attr("src", finalImageUrl);
+    
+    // (선택) 모든 대상 이미지 업데이트 (예전 방식)
+    $("img.target-img").each(function() {
+      const $img = $(this);
+      const endpoint = $img.attr("src", basicUrl).attr("src");
+      $.ajax({
+        url: endpoint,
+        method: "GET",
+        headers: { "Accept": "text/plain" },
+        success: function(resultUrl) {
+          console.log("AJAX 응답 최종 이미지 URL:", resultUrl);
+          if (resultUrl) {
+            $img.attr("src", resultUrl);
+          }
+        },
+        error: function(err) {
+          console.error("이미지 URL 요청 오류:", err);
+        }
+      });
+    });
+    
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+$(document).on('change', '#campaignImageInput', function() {
+        const previewImage = document.getElementById('previewImage');
+        const file = this.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+                document.querySelector('.cam-img-re').style.display = 'flex';
+                document.querySelector('.cam-img-re-box-sh span').style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+        
+        checkInfoPageInput();
+    });

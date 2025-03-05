@@ -1,5 +1,6 @@
 package app.scit46.ufc.service;
 
+
 import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.LikeEntity;
@@ -119,6 +120,7 @@ public class LikeService {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
     }
+
 
 
 
