@@ -314,7 +314,7 @@ public class CampaignService {
                         .startDate(campaign.getStartDate())
                         .endDate(campaign.getEndDate())
                         .campaignStatus(campaign.getCampaignStatus())
-                        .createdById(campaign.getCreatedBy() != null ? campaign.getCreatedBy().getCreatorId() : null) // ✅ 수정된 부분!
+                        .createdBy(campaign.getCreatedBy() != null ? CreatorDTO.toDTO(campaign.getCreatedBy()) : null)
                         .build())
                 .collect(Collectors.toList());
     }

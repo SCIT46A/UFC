@@ -18,6 +18,8 @@ import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.service.CreatorService;
 import lombok.RequiredArgsConstructor;
 
+
+
 @Controller
 @RequestMapping("/creator")
 @RequiredArgsConstructor
@@ -57,7 +59,7 @@ public class CreatorController {
 
     @PostMapping("/update")
     public String updateProfile(@ModelAttribute CreatorDTO creator) {
-        creatorService.updateCreator(creator);
+//        creatorService.updateCreator(creator);
         return "redirect:/creator/profile/" + creator.getCreatorId();
     }
 
