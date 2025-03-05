@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -48,14 +49,15 @@ public class ImageService {
     private final ImageUrlService imageUrlService;    //사진Url DB 수정시 사용
 
     // 이미지 업로드 // MultipartFile을 Byte[]로 직렬화하는 중 IOException 발생 가능
-    public String uploadImage(MultipartFile file, Long userId) throws IOException{
+
+    public String uploadImage(MultipartFile file, Long userId) throws IOException {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환
         //if(file == null || userId == null) return null;
 
         // 원본 파일 이름 가져오기
         String originalFilename = file.getOriginalFilename(); // 원본 파일 이름
-        
+
         // Cloudflare IMAGE Upload API URL
         String url = "https://api.cloudflare.com/client/v4/accounts/" + accountId + "/images/v1";
 
@@ -97,11 +99,11 @@ public class ImageService {
         // TODO: 이미지ID, 원본이름 db에 저장로직 추가
         // 이미지 업로드 성공 후 반환된 이미지ID, 원본이름, 업로드 사용자 정보 저장
         imageUrlService.save(
-            ImageUrlDTO.builder()
-            .imageId(response.getBody().getResult().getId())
-            .filename(response.getBody().getResult().getFilename())
-            .uploadedBy(userId)
-            .build());
+                ImageUrlDTO.builder()
+                        .imageId(response.getBody().getResult().getId())
+                        .filename(response.getBody().getResult().getFilename())
+                        .uploadedBy(userId)
+                        .build());
         return response.getBody().getResult().getId(); // ImageId
     }
 
@@ -136,10 +138,7 @@ public class ImageService {
 
     // 이미지 URL 변환
     public String getImageUrl(String imageId) {
-        // 유효성 검사
-        // imageId가 null 경우 null 반환
         if(imageId == null) return null;
-        // imageID가 UUID 형식인지 검사
         if(!UUID.fromString(imageId).toString().equals(imageId)){
             log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
             return null;

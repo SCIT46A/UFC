@@ -10,6 +10,7 @@ import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 
 @Service
@@ -55,6 +56,11 @@ public class CreatorService {
 //                UserDTO.builder().userId(creator.getOwnUser()).build()));
     }
 
-    
-
+    public CreatorEntity findByOwnUser(UserEntity user) {
+        CreatorEntity creator = creatorRepository.findByOwnUser(user);
+        if (creator == null) {
+            throw new RuntimeException("창작자를 찾을 수 없습니다.");
+        }
+        return creator;
+    }
 }

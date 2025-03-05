@@ -31,10 +31,10 @@ public class UserAlertEntity {
     @OneToMany(mappedBy = "userAlert", fetch = FetchType.LAZY)
     private List<AlertTargetEntity> alertTargets;
 
-    public static UserAlertEntity toEntity(UserAlertDTO dto, UserEntity user) {
+    public static UserAlertEntity toEntity(UserAlertDTO dto) {
         return UserAlertEntity.builder()
                 .userAlertId(dto.getUserAlertId())
-                .user(user)
+                .user(UserEntity.builder().userId(dto.getUser().getUserId()).build())
                 .isRead(dto.getIsRead())
                 .build();
     }

@@ -4,16 +4,12 @@
 <body>
 
     <!-- ✅ th:fragment 추가 -->
-    <div th:fragment="delivery">
+    <div th:fragment="reward-delivery">
         <div class="content-wrapper">
             <!-- Delivery Tracking Status -->
             <section class="card-container">
-                <!-- <div class="tracking-header">
-                        <span class="text-red">배송지 확인해주세요!</span>
-                        <span class="text-green">발송처리를 진행해주세요</span>
-                    </div> -->
-
                 <div class="tracking-grid">
+                    <!-- 발송기한 초과 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper gray">
@@ -26,8 +22,10 @@
                             </div>
                             <span>발송기한 초과</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="overdueCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 자동처리 예정 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper gray">
@@ -39,8 +37,10 @@
                             </div>
                             <span>자동처리 예정</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="autoProcessCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 신규주문/발주 -->
                     <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper green">
@@ -54,20 +54,24 @@
                             </div>
                             <span>신규주문/발주 건</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="newOrdersCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 배송 준비 완료 (추가된 상태) -->
                     <div class="tracking-card">
                         <div class="card-content">
-                            <div class="icon-wrapper gray">
+                            <div class="icon-wrapper blue">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                                     stroke-width="2">
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
                             </div>
-                            <span>신규주문/발주 처리</span>
+                            <span>배송 준비 완료</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="readyToShipCount">0<span>건</span></div>
                     </div>
+
+                    <!-- 발송처리 D-1 -->
                     <div class="tracking-card orange">
                         <div class="card-content">
                             <div class="icon-wrapper">
@@ -81,8 +85,10 @@
                             </div>
                             <span>발송처리 D-1</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="shipmentD1Count">0<span>건</span></div>
                     </div>
+
+                    <!-- 발송마감 D-day -->
                     <div class="tracking-card orange">
                         <div class="card-content">
                             <div class="icon-wrapper">
@@ -94,15 +100,22 @@
                             </div>
                             <span>발송마감 D-day</span>
                         </div>
-                        <div class="count">0<span>건</span></div>
+                        <div class="count" id="shipmentDdayCount">0<span>건</span></div>
                     </div>
                 </div>
             </section>
 
+            <!-- Batch Actions -->
+            <div class="batch-actions">
+                <button class="btn btn-secondary" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
+                <button class="btn btn-secondary" onclick="processSelectedDonations()">선택 기부 처리</button>
+                <button class="btn btn-warning">기부 취소 요청 처리</button>
+            </div>
+
             <!-- Search Section -->
             <section class="search-section">
                 <div class="search-row">
-                    <label>판매아이디</label>
+                    <label>캠페인아이디</label>
                     <select class="full-width">
                         <option>전체</option>
                     </select>
@@ -150,47 +163,23 @@
                             <th>
                                 <input type="checkbox" id="selectAll" />
                             </th>
-                            <th>판매아이디</th>
-                            <th>주문번호</th>
-                            <th>주문상태</th>
-                            <th>상품번호</th>
-                            <th>상품명</th>
+                            <th>캠페인 제목</th>
+                            <th>기부번호</th>
+                            <th>기부자명</th>
+                            <th>기부자연락처</th>
+                            <th>기부자주소</th>
+                            <th>리워드 내역</th>
                             <th>발송마감일</th>
-                            <th>택배사명(발송방법)</th>
+                            <th>택배사</th>
                             <th>송장번호</th>
-                            <th>발송정책</th>
+                            <th>발송처리</th>
+                            <th>배송상태</th>
                         </tr>
                     </thead>
-                    <tbody> <!-- 데이터가 있을 경우 -->
-                        <tr th:each="product : ${products}" th:if="${not #lists.isEmpty(products)}">
-                            <td><input type="checkbox" th:value="${product.id}"></td>
-                            <td th:text="${product.sellerId}">판매자ID</td>
-                            <td th:text="${product.orderNumber}">주문번호</td>
-                            <td th:text="${product.orderStatus}">주문상태</td>
-                            <td th:text="${product.productId}">상품번호</td>
-                            <td th:text="${product.productName}">상품명</td>
-                            <td th:text="${#temporals.format(product.dueDate, 'yyyy-MM-dd')}">발송마감일</td>
-                            <td th:text="${product.deliveryCompany}">택배사명(발송방법)</td>
-                            <td th:text="${product.trackingNumber != null ? product.trackingNumber : '-'}">송장번호</td>
-                            <td th:text="${product.deliveryPolicy}">발송정책</td>
-                        </tr>
-
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${#lists.isEmpty(products)}">
-                            <td colspan="10">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="delivery-table-body">
+                        <!-- JS에서 동적으로 데이터 삽입 -->
                     </tbody>
+
                 </table>
             </div>
             <div class="table-footer">
@@ -200,10 +189,40 @@
             </div>
     </div>
     </div>
+    <!-- Batch Invoice Modal -->
+    <div id="batchInvoiceModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>송장번호 일괄등록</h3>
+                <button class="btn" onclick="closeBatchInvoiceModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="search-row">
+                    <label>택배사</label>
+                    <select class="search-input">
+                        <option value="">택배사 선택</option>
+                        <option value="kr.cjlogistics">CJ대한통운</option>
+                        <option value="kr.epost">우체국택배</option>
+                        <option value="kr.hanjin">한진택배</option>
+                        <option value="kr.cupost">CU편의점택배</option>
+                        <option value="kr.cvsnet">GS Postbox</option>
+                    </select>
+                </div>
+                <div class="search-row">
+                    <label>송장번호</label>
+                    <textarea class="search-input" rows="4" placeholder="송장번호를 입력하세요 (여러 개인 경우 줄바꿈으로 구분)"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="processBatchInvoice()">일괄등록</button>
+                <button class="btn" onclick="closeBatchInvoiceModal()">취소</button>
+            </div>
+        </div>
+    </div>
     </section>
     </div>
 
-    <script th:src="@{/js/dashboard/delivery.js}" async></script>
+    <script th:src="@{/js/dashboard/reward-delivery.js}" async></script>
 </body>
 
 </html>

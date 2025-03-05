@@ -1,6 +1,8 @@
 package app.scit46.ufc.controller.api;
 
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/image")
 @Slf4j
 public class ApiImageController {
@@ -65,6 +68,7 @@ public class ApiImageController {
 
     // 이미지 ID를 통해 이미지 URL 반환
     @GetMapping("/{imageId}")
+
     public ResponseEntity<String> getImageUrl(@PathVariable("imageId") String imageId) {
         String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
@@ -79,8 +83,9 @@ public class ApiImageController {
     // 이미지 ID를 통해 이미지 삭제
     // UserDetails 검토 필요
     @DeleteMapping("/delete/{imageId}")
-    public ResponseEntity<Boolean> deleteImage(@PathVariable String imageId, @AuthenticationPrincipal UserDetails userDetails) {
-        Long userId = userService.findUserIdByUserName(userDetails.getUsername());
+    public ResponseEntity<Boolean> deleteImage(@PathVariable String imageId, HttpServletRequest request) {
+        String oauthId = request.getUserPrincipal().getName(); // OAuth 식별자
+        Long userId = userService.findUserByIdentity(oauthId).getUserId();
         // 이미지 삭제 권한 검사
         if(userId != imageUrlService.getUploadedBy(imageId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(false);

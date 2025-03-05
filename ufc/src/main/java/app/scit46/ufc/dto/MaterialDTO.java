@@ -15,10 +15,12 @@ public class MaterialDTO {
     private ImageUrlDTO photo; // ✅ PhotoDTO 포함
 
     public static MaterialDTO toDTO(MaterialEntity entity) {
+        if (entity == null) return null;
+        
         return MaterialDTO.builder()
-                .materialId(entity.getMaterialId())
-                .name(entity.getName())
-                .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
-                .build();
+            .materialId(entity.getMaterialId())
+            .name(entity.getName())
+            .photo(entity.getPhoto() != null ? ImageUrlDTO.toDTO(entity.getPhoto()) : null) // ✅ PhotoDTO 변환
+            .build();
     }
 }

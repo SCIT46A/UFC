@@ -22,11 +22,21 @@ public class RewardMaterialDTO {
     private Integer quantityRequired;
 
     public static RewardMaterialDTO toDTO(RewardMaterialEntity entity) {
+        if (entity == null) return null;
+        
         return RewardMaterialDTO.builder()
-                .reMaterId(entity.getReMaterId())
-                .reward(entity.getReward() != null ? RewardDTO.toDTO(entity.getReward()) : null) // ✅ RewardDTO 변환
-                .material(entity.getMaterial() != null ? MaterialDTO.toDTO(entity.getMaterial()) : null) // ✅ MaterialDTO 변환
-                .quantityRequired(entity.getQuantityRequired())
-                .build();
+            .reMaterId(entity.getReMaterId())
+            // 리워드는 ID만 포함
+            .reward(entity.getReward() != null ? 
+                RewardDTO.builder().rewardId(entity.getReward().getRewardId()).build() : null)
+            // 재료는 기본 정보만 포함 (컬렉션 필드 제외)
+            .material(entity.getMaterial() != null ? 
+                MaterialDTO.builder()
+                    .materialId(entity.getMaterial().getMaterialId())
+                    .name(entity.getMaterial().getName())
+                    // 중요: rewardMaterials 컬렉션 제외
+                    .build() : null)
+            .quantityRequired(entity.getQuantityRequired())
+            .build();
     }
 }
