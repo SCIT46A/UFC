@@ -1,12 +1,30 @@
 package app.scit46.ufc.entity;
 
-import app.scit46.ufc.dto.UserDTO;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.product.ProductPaymentEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -54,7 +72,7 @@ public class UserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PrivatePhotoEntity photoId;
+    private ImageUrlEntity photoId;
 
     @Column(name = "intro")
     private String intro;
@@ -66,7 +84,7 @@ public class UserEntity {
     private int userStatus;
 
     @Column(name = "status_reason")
-    private int statusReason;
+    private String statusReason;
 
     // OneToMany: Creators.own_user 참조
     @OneToMany(mappedBy = "ownUser", fetch = FetchType.LAZY)
@@ -96,7 +114,7 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 
-    public static UserEntity toEntity(UserDTO userDTO, PrivatePhotoEntity photoId) {
+    public static UserEntity toEntity(UserDTO userDTO, ImageUrlDTO photoId) {
         return UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .oauthId(userDTO.getOauthId())
@@ -108,7 +126,7 @@ public class UserEntity {
                 .roles(userDTO.getRoles())
                 .createdAt(userDTO.getCreatedAt())
                 .updatedAt(userDTO.getUpdatedAt())
-                .photoId(photoId)
+                .photoId(ImageUrlEntity.toEntity(photoId))
                 .intro(userDTO.getIntro())
                 .isMarketed(userDTO.getIsMarketed())
                 .userStatus(userDTO.getUserStatus())

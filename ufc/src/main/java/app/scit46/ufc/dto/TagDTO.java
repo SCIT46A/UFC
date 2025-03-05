@@ -1,7 +1,12 @@
 package app.scit46.ufc.dto;
 
 import app.scit46.ufc.entity.TagEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

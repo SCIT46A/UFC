@@ -32,22 +32,22 @@ main{
 
 .main-top{
     background-color: rgb(255, 255, 255);
-    border-bottom: 1px solid rgb(240, 240, 240);
     width: 100%;
 }
 
 .main-top-in{
     position: relative;
-    width: 1160px;
+    width: 1200px;
     height: auto;
     margin: 0px auto;
     padding: 0px;
+    border-bottom: 1px solid rgb(240, 240, 240);
 }
 
 .main-top-in-box{
     display: flex;
     flex-wrap: wrap;
-    width: 80%;
+    width: 90%;
     padding-bottom: 3rem;
     margin: 0px auto;
 }
@@ -84,12 +84,16 @@ main{
 }
 
 .main-top-in-box-title-in-tag-title{
+    display: flex;
+    justify-content: center; /* 가로 가운데 정렬 */
+    align-items: center; /* 세로 가운데 정렬 */
     margin-bottom: 0em;
     font-size: 1.6rem;
     line-height: 1.5;
     margin: 1.2rem 0px;
-    word-break: break-all;
+    word-break: break-word; /* break-all 대신 break-word 추천 */
     text-align: center;
+    width: 100%;
 }
 
 .main-top-in-box-img{
@@ -135,9 +139,11 @@ main{
     flex: 1 1 0px;
     margin: 0px 0px 0px 86px;
     width: 100%;
+    
 }
 
 .main-top-in-box-content-fund{
+    margin-top: 75px;
     width: 100%;
     order: 4;
     display: block;
@@ -363,7 +369,7 @@ main{
 }
 
 .main-funding-bo-in-box{
-    width: 1040px;
+    width: 1200px;
     flex-wrap: nowrap;
     -webkit-box-pack: justify;
     justify-content: space-between;
@@ -526,7 +532,7 @@ main{
 
 .content-box-in{
     margin-top: 0;
-    max-width: 620px;
+    max-width: 648px;
     margin: 0 auto;
     padding: 1rem 0;
     overflow-x: hidden;
@@ -678,19 +684,22 @@ main{
     line-height: 120%;
 }
 
-.reward{
-    display: block;
+.reward {
+    position: relative; /* 부모 컨테이너 설정 */
     flex: 0 1 352px;
     max-width: 352px;
     padding-top: 25px;
     order: 2;
     width: 100%;
     margin: 0px;
+    height: auto; /* 부모 컨테이너의 높이를 자동으로 조정 */
 }
 
-.reward-in{
+.reward-in {
     width: 100%;
     min-height: 500px;
+    position: sticky;
+    top: 20px; /* 상단에서 20px 떨어진 상태로 고정 */
 }
 
 .reward-in-se{
@@ -703,6 +712,8 @@ main{
 
 .reward-in-se-in{
     padding: 20px;
+    border: 1px solid rgb(228, 228, 228);
+    border-radius: 4px;
 }
 
 .reward-in-se-in p{
@@ -722,6 +733,10 @@ main{
 
 .reward-in-se-in-img-a{
     background: transparent;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: space-between;
 }
 
 .reward-in-se-in-img-a-box{
@@ -871,8 +886,8 @@ main{
     font-weight: normal;
     line-height: 120%;
     background-color: white;
-    border: 1px solid rgb(235, 75, 56);
-    color: rgb(235, 75, 56);
+    border: 1px solid #16a34a ;
+    color: #16a34a ;
     -webkit-appearance: button;
     cursor: pointer;
     text-transform: none;
@@ -885,7 +900,7 @@ main{
     overflow: hidden;
     width: 16px;
     height: 16px;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
     font-size: 14px;
     font-weight: normal;
     line-height: 120%;
@@ -900,10 +915,12 @@ main{
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+    
 
 }
 
 .reward-info-in{
+    
     font-size: 14px;
     line-height: 24px;
     letter-spacing: -0.015em;
@@ -1053,6 +1070,7 @@ main{
 }
 
 .main-bo{
+    width: 1200px;
     border-top: 1px solid rgb(230, 230, 230);
     position: relative;
     z-index: 2;
@@ -1075,8 +1093,7 @@ main{
 
 .main-bo-in-box{
     padding: 0px;
-    max-width: 1080px;
-    margin: 0px auto;
+    max-width: 1200px;
     width: 100%;
 }
 
@@ -1103,7 +1120,7 @@ main{
     padding: 0px;
     z-index: 2;
     position: relative;
-    max-width: 1080px;
+    max-width: 1200px;
     margin: 0px auto;
 }
 
@@ -1144,7 +1161,7 @@ main{
 }
 
 .main-bo-add-in-pe{
-    width: 194.4px;
+    width: 228px;
     margin-right: 15px;
     flex-shrink: 0;
     height: 100%;
@@ -1241,7 +1258,7 @@ main{
 }
 
 .main-bo-add-in-pe-box-a-content-box-se-in{
-    font-size: 11px;
+    font-size: 13px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(84, 84, 84);
@@ -1262,7 +1279,7 @@ main{
 }
 
 .main-bo-add-in-pe-box-a-content-box-content-in{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(28, 28, 28);
@@ -1280,10 +1297,10 @@ main{
     display: flex;
     align-items: flex-end;
     margin-bottom: 6px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     line-height: 120%;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
 }
 
 .main-bo-add-in-pe-box-a-content-box-tag{
@@ -1302,7 +1319,7 @@ main{
     background-color: rgb(248, 248, 248);
     height: 18px;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     display: flex;
     -webkit-box-align: center;
@@ -1340,9 +1357,6 @@ main{
     line-height: 24px !important;
 }
 
-.hiddenen {
-    display: none; /* 숨김 클래스 */
-}
 
 .report{
     font-size: 14px;
@@ -1789,7 +1803,7 @@ main{
 
 .reward-choice-pri{
     font: 700 16px / 24px Pretendard, sans-serif;
-    color: rgb(248, 100, 83);
+    color: #16a34a ;
 }
 
 .reward-choice-close{
@@ -1845,7 +1859,7 @@ main{
     border: 0px;
     box-sizing: border-box;
     padding: 0px 24px;
-    background-color: rgb(248, 100, 83);
+    background-color: #16a34a ;
     color: white;
     -webkit-appearance: button;
     text-transform: none;
@@ -1854,4 +1868,173 @@ main{
 
 .reward-btn-in span b{
     font: 700 16px / 24px Pretendard, sans-serif;
+}
+
+.main-mi-na{
+    height: 56px;
+    padding: 0px 1rem;
+    box-sizing: border-box;
+    width: 1200px;
+    background-color: rgb(255, 255, 255);
+    /* box-shadow: rgba(0, 0, 0, 0.08) 0px 2px 4px; */
+    display: flex;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    position: relative;
+    z-index: 10;
+    border-bottom: 1px solid rgb(240, 240, 240);
+}
+
+.main-mi-na-in{
+    width: 1280px;
+    height: 100%;
+    margin: 0px auto;
+    padding: 0px;
+    overflow: hidden;
+}
+
+.main-mi-na-in-box{
+    width: auto;
+    margin: 0px 1rem;
+    height: 100%;
+    display: flex;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    white-space: nowrap;
+    -webkit-box-align: stretch;
+    align-items: stretch;
+    float: left;
+    overflow: auto;
+}
+
+.main-mi-na-in-box-pe{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    padding: 0.5rem 0px;
+    font: 700 14px / 22px Pretendard, sans-serif;
+    color: rgb(158, 158, 158);
+    margin-right: 25px;
+    cursor: pointer;
+}
+
+.check{
+    color: rgb(13, 13, 13);
+    border-bottom: 3px solid rgb(13, 13, 13);
+    padding-bottom: calc(-3px + 0.5rem);
+}
+
+.main-board{
+    border-top: 1px solid rgb(239, 239, 239);
+}
+
+.main-board-total{
+    color: rgb(28, 28, 28);
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 120%;
+}
+
+.main-board-pe{
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.main-board-pe-box{
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.main-board-pe-in{
+    text-decoration: none;
+    cursor: pointer;
+    color: inherit;
+    margin: 0;
+    border: 0;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.main-board-pe-in{
+    box-shadow: 0 1px rgba(0, 0, 0, .1);
+    padding: 16px 0;
+}
+
+.main-board-pe-in-title{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    display: -webkit-box;
+    margin: 4px 0;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: normal;
+    color: #212529;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+}
+
+.main-board-pe-in-date{
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+}
+
+.main-board-back{
+    border: 0;
+    border-color: rgba(0, 0, 0, 0);
+    padding: 0;
+    height: auto;
+    margin-top: 8px;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+    position: relative;
+    transition-property: background-color, border-color, color, opacity;
+    transition-duration: .15s;
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0);
+    vertical-align: middle;
+    text-decoration: none;
+    white-space: nowrap;
+    -webkit-appearance: none;
+}
+
+.main-board-back svg{
+    margin-right: 6px;
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    transform: scale(1);
+    transition: transform .3s ease-out;
+    fill: currentColor;
+}
+
+
+.main-board-back-in{
+    padding-top: 3px;
+    vertical-align: top;
+    display: inline-flex;
+    align-items: center;
+}
+
+.content-board-box{
+    width: 100%;
 }

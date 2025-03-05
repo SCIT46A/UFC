@@ -1,0 +1,263 @@
+/* Delivery Tracking Styles */
+.delivery-tracking {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+}
+
+.tracking-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.text-red {
+    color: #ef4444;
+}
+
+.text-green {
+    color: var(--primary);
+}
+
+.tracking-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+/* 기존 카드 스타일 */
+/* 기존 카드 스타일 */
+.tracking-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #ffffff; /* ✅ var(--gray-100) 대신 기본 회색 적용 */
+    border: 1px solid #d1d5db; /* ✅ var(--gray-300) 대신 기본 회색 적용 */
+    border-radius: 8px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ 선택된 카드 스타일 (빨간색 테두리 추가) */
+.tracking-card.selected-card {
+    border: 2px solid #CE201B !important; /* 빨간색 테두리 */
+}
+
+
+<!--여기서 부터 -->
+.tracking-card:hover, .tracking-card.active {
+    transform: scale(1.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tracking-card .icon-wrapper {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    fill: #CE201B;
+}
+
+.tracking-card:hover .icon-wrapper {
+    fill: white;  /* ✅ hover 시 아이콘 색상 변경 */
+}
+
+.tracking-card span {
+    display: block;
+    font-weight: bold;
+    color: #CE201B;
+}
+
+.tracking-card .count {
+    margin-top: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #CE201B;
+}
+
+/* ✅ 반응형: 화면이 작아질 때 2열 또는 1열로 변경 */
+@media (max-width: 1024px) {
+    .tracking-grid {
+        grid-template-columns: repeat(2, 1fr); /* 태블릿에서는 2열 */
+    }
+}
+
+@media (max-width: 600px) {
+    .tracking-grid {
+        grid-template-columns: repeat(1, 1fr); /* 모바일에서는 1열 */
+    }
+}
+
+<!--여기까지 -->
+
+.tracking-card.orange {
+    background: #fff7ed;
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.icon-wrapper.gray {
+    color: var(--gray-600);
+}
+
+.icon-wrapper.green {
+    color: var(--primary);
+}
+
+.count {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.count span {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-left: 2px;
+}
+
+/* ✅ 표 스타일 */
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+thead {
+    background: #CE201B;
+    color: white;
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {
+    background: rgba(0, 123, 255, 0.1);
+    transition: all 0.3s ease-in-out;
+}
+
+/* ✅ 반응형 디자인 */
+@media (max-width: 768px) {
+    .tracking-grid {
+        flex-direction: column;
+    }
+
+    th, td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}
+
+/* ✅ 진행 중인 캠페인 테이블 스타일 */
+.ongoing-campaign-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+}
+
+.ongoing-campaign-table th,
+.ongoing-campaign-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+/* ✅ 작은 컬럼 (ID, 생성자) */
+.small-col {
+    width: 10%;
+}
+
+/* ✅ 날짜 컬럼 */
+.date-col {
+    width: 15%;
+}
+
+/* ✅ 제목 컬럼 (가장 넓게) */
+.large-col {
+    width: 25%;
+}
+
+.pending-text {
+    font-weight: bold;
+    color: #CE201B; /* 주황색 */
+}
+
+/* ✅ 펀딩 진행률 컬럼 */
+.progress-col {
+    width: 25%;
+}
+
+/* ✅ 펀딩 진행률 바 스타일 */
+.progress-bar-container {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    height: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%; /* JavaScript에서 동적으로 변경 */
+    background-color: #CE201B !important; /* ✅ 빨간색 적용 */
+    transition: width 0.5s ease-in-out;
+    border-radius: 8px;
+}
+
+.progress-text {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    font-weight: bold;
+    font-size: 14px;
+    color: white;
+}
+
+.pending-text {
+    font-weight: bold;
+    color: #CE201B;
+}
+
+/* 표의 상단 (승인 버튼) 정렬 */
+.table-header {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+    margin-bottom: 0.5rem;
+}
+
+/* 승인 버튼 스타일 */
+.bulk-approve-btn {
+    background-color: #CE201B;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.bulk-approve-btn:hover {
+    background-color: #CE201B;
+}
