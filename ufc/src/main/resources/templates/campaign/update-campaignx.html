@@ -12,8 +12,10 @@
         <!-- timepicker 시작 -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" />
         <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
         <!-- editer 시작 -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -29,9 +31,29 @@
         <link rel="stylesheet" th:href="@{/css/fix/footer.css}" />
 
         <script th:src="@{/js/campaign/update-campaign.js}" defer></script>
-
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script th:src="@{/js/fix/footer.js}" defer></script>
+
+        <style>
+            /* 항상 하단 컨트롤러 표시 */
+            .cam-la-in-box-bottom {
+                display: flex !important;
+                position: relative;
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #eee;
+            }
+            
+            .cam-la-in-box-bottom-in {
+                display: flex !important;
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .cam-la-in-box-bottom-in-end-btn {
+                display: inline-block !important;
+            }
+        </style>
 
     </head>
 
@@ -267,7 +289,7 @@
                                                                         <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-start-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${#temporals.format(campaign.startDate, 'yyyy-MM-dd')}" />
+                                                                        autocomplete="off" th:value="${campaign.startDate}" />
                                                                     <!-- 시작 일자 옆에 동적으로 메시지를 표시 -->
                                                                     <span id="start-date-message" class="default-date-message"></span>
                                                                         </div>
@@ -294,7 +316,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-end-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${#temporals.format(campaign.endDate, 'yyyy-MM-dd')}" />
+                                                                        autocomplete="off" th:value="${campaign.endDate}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -315,7 +337,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-send-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${#temporals.format(campaign.sendDate, 'yyyy-MM-dd')}" />
+                                                                        autocomplete="off" th:value="${campaign.sendDate}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -393,8 +415,45 @@
                                                                         </div>
                                                     <ul class="cam-gi-box-le-in-bo">
                                                         <!-- 각각의 리워드 표시 영역 -->
-                                                        </ul>
-                                                    </div>
+                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="reward : ${rewards}">
+                                                            <div>
+                                                                <button class="cam-gi-box-le-in-bo-pe-content">
+                                                                    <strong th:each="fundingItem : ${reward.funding}">[[${fundingItem.name}]] [[${fundingItem.amount}]]개+</strong>
+                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${rewardTitle}"></p>
+                                                                    <ul th:each>
+                                                                        <li>${rewardTargetName} ${rewardTargetAmount}개</li>
+                                                                    </ul>
+                                                                    <span>예상 발송 시작일: <em>${rewardSendDate}</em></span>
+                                                                    <div class="cam-gi-box-le-in-bo-pe-content-div">
+                                                                        <em class="cam-gi-em">
+                                                                            <div class="cam-gi-em-in">
+                                                                                <svg viewBox="0 0 48 48">
+                                                                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                                        d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z"
+                                                                                        fill="#6D6D6D"></path>
+                                                                                </svg>
+                                                                            </div>
+                                                                            <span class="cam-gi-em-in">${rewardSelectedCount}</span>명이 선택
+                                                                        </em>
+                                                                        <div class="cam-gi-em-box">
+                                                                            <em>${rewardLeftAmount}개 남음</em>
+                                                                        </div>
+                                                                    </div>
+                                                                </button>
+                                                            </div>
+                                                            <!-- 삭제버튼 -->
+                                                            <button class="cam-gi-de">
+                                                                <div class="cam-gi-de-in">
+                                                                    <svg viewBox="0 0 48 48">
+                                                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                                                            d="M38.814 42.172C38.814 42.946 38.064 43.574 37.144 43.574H10.856C9.936 43.574 9.186 42.946 9.186 42.172V12.218H38.814V42.172ZM17.564 4.426L30.542 4.524V9.794H17.462L17.564 4.426ZM44.786 9.794H32.968V4.524C32.968 3.13 31.832 2 30.436 2H17.564C16.168 2 15.03 3.13 15.03 4.524V9.794H3.212C2.542 9.794 2 10.336 2 11.006C2 11.676 2.542 12.218 3.212 12.218H6.76V42.172C6.76 44.284 8.598 46 10.856 46H37.144C39.402 46 41.24 44.284 41.24 42.172V12.218H44.786C45.456 12.218 46 11.676 46 11.006C46 10.336 45.456 9.794 44.786 9.794ZM18.857 36.9338C19.527 36.9338 20.069 36.3918 20.069 35.7218V20.0738C20.069 19.4038 19.527 18.8618 18.857 18.8618C18.187 18.8618 17.645 19.4038 17.645 20.0738V35.7218C17.645 36.3918 18.187 36.9338 18.857 36.9338ZM30.3542 35.7218C30.3542 36.3918 29.8122 36.9338 29.1422 36.9338C28.4722 36.9338 27.9302 36.3918 27.9302 35.7218V20.0738C27.9302 19.4038 28.4722 18.8618 29.1422 18.8618C29.8122 18.8618 30.3542 19.4038 30.3542 20.0738V35.7218Z">
+                                                                        </path>
+                                                                    </svg>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                    </ul>
+                                                </div>
                                                 </div>
                                                 <!-- 오른쪽 내용 -->
                                                 <div class="cam-gi-box-ri">
@@ -526,6 +585,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
 
                                 <!-- 4. 최종 확인 -->
                                 <div class="cam-la-in-box-bo final hidden">
@@ -586,11 +646,11 @@
                                                         <tbody id="totalFundingList">
                                                         </tbody>
                                                     </table>
-                                        </div>
-                                    </div>
-                                                    </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 
                                 <!-- 아래 버튼 뷰 컨트롤러 -->
                                 <div class="cam-la-in-box-bottom">
@@ -601,14 +661,13 @@
                                                     <path fill-rule="evenodd" clip-rule="evenodd"
                                                         d="M43.7014 21.7189L10.1221 21.7189L25.2128 7.06878C26.1112 6.15946 26.2122 4.64393 25.3127 3.73461C24.4133 2.82529 22.9142 2.72425 22.0148 3.63357L2.72663 22.4262C1.82719 23.3355 1.72725 24.75 2.62669 25.7604H2.72663L22.0148 44.4519C22.9142 45.2602 24.4133 45.1592 25.2128 44.2499C26.0123 43.3405 26.0123 41.926 25.1119 41.0167L10.0221 26.4676L43.7014 26.4676C45.0006 26.4676 46 25.4572 46 24.1438C46 22.8303 45.0006 21.7189 43.7014 21.7189Z">
                                                     </path>
-                                                                        </svg>
-                                                                    </div>
+                                                </svg>
+                                            </div>
                                         </button>
                                         <div class="cam-la-in-box-bottom-in-end">
                                             <button class="cam-la-in-box-bottom-in-end-btn">
-                                                <span class="cam-la-in-box-bottom-in-end-btn-span"></span>
-                                                                </button>
-                                                            </div>
+                                                <span class="cam-la-in-box-bottom-in-end-btn-span">다음</span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

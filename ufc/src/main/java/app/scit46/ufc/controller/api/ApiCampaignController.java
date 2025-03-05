@@ -38,12 +38,8 @@ public class ApiCampaignController {
 
     @PostMapping("/campaign/create")
     public ResponseEntity<Long> createCampaign(@RequestBody GenerateCampaignDTO campaign) {
-        Long campaignId = null;
-        try{
-            campaignId = campaignService.createCampaign(campaign);
-        }catch(Exception e){
-            return ResponseEntity.badRequest().body(null);
-        }
+        
+        Long campaignId = campaignService.createCampaign(campaign);
 
         return ResponseEntity.ok(campaignId);
     }

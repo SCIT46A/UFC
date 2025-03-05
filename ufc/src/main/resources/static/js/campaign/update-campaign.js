@@ -182,55 +182,63 @@ $(document).ready(function () {
     // 리워드 섹션의 종료일자 input 요소
     const rewardEndDate = document.querySelectorAll('#funding-end-datetime')[1];
 
-    // 오늘 날짜 구하기 (시작시간은 다음 시간으로 설정)
+    // 오늘 날짜 구하기
     const today = new Date();
     
-    // 21시 이후인 경우 모레부터 선택 가능하도록 설정
+    // min 날짜 설정 (내일부터 선택 가능)
     const minDate = new Date(today);
-    if (today.getHours() >= 21) {
-        minDate.setDate(today.getDate() + 2);
-    } else {
-        minDate.setDate(today.getDate() + 1);
-    }
+    minDate.setDate(today.getDate() + 1);
     minDate.setHours(0, 0, 0, 0);
     
-    // KST로 변환 (UTC+9)
-    const kstOffset = 9 * 60 * 60 * 1000; // 9시간을 밀리초로 변환
-    const todayKST = new Date(today.getTime() + kstOffset);
-    
-    // KST 시간대로 문자열 변환
-    function toKSTString(date) {
+    // 날짜 형식 변환 함수 (YYYY-MM-DD)
+    function formatDate(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}T00:00`;
+        return `${year}-${month}-${day}`;
     }
     
-    const minDateTime = toKSTString(minDate);
+    // 기존 날짜 값 유지 함수
+    function initDateFields() {
+        // 각 입력 필드에 이미 값이 있는지 확인
+        if (fundingStartDate && fundingStartDate.value) {
+            console.log("시작일 값 있음:", fundingStartDate.value);
+            const startDate = new Date(fundingStartDate.value);
+            
+            // 종료일과 발송일이 유효한지 확인
+            if (fundingEndDate && fundingEndDate.value) {
+                const endDate = new Date(fundingEndDate.value);
+                calculateFundingPeriod();
+                
+                // 발송일이 있으면 계산
+                if (fundingSendDate && fundingSendDate.value) {
+                    calculatePreparePeriod();
+                }
+            }
+        } else {
+            // 값이 없으면 최소 날짜 설정
+            const minDateStr = formatDate(minDate);
+            fundingStartDate.setAttribute('min', minDateStr);
+            
+            // 기본값 (선택사항)
+            // fundingStartDate.value = minDateStr;
+        }
+        
+        // 입력 필드에 이벤트 리스너 추가
+        $(document).on('change', '#funding-start-datetime, #funding-end-datetime, #funding-send-datetime', checkFundingPageInput);
+    }
     
-    // 종료일 (시작일 + 30일) 계산
-    const defaultEndDate = new Date(minDate);
-    defaultEndDate.setDate(minDate.getDate() + 30);
-    
-    // 발송일 (종료일 + 7일) 계산
-    const defaultSendDate = new Date(defaultEndDate);
-    defaultSendDate.setDate(defaultEndDate.getDate() + 7);
-    
-    // 시작일 제한 설정 (오늘 이후로만 설정 가능)
-    fundingStartDate.setAttribute('min', minDateTime);
-    
-    // 기본값 설정
-    fundingStartDate.value = toKSTString(minDate);
-    fundingEndDate.value = toKSTString(defaultEndDate);
-    fundingSendDate.value = toKSTString(defaultSendDate);
-    
-    // 초기 기간 표시 업데이트
-    fundingPeriod.textContent = '최대 60일';
-    preparePeriod.textContent = '최대 60일';
+    // 페이지 로드 시 초기화
+    window.addEventListener('DOMContentLoaded', function() {
+        initDateFields();
+        
+        // 디버그 정보 출력
+        console.log("시작일:", fundingStartDate ? fundingStartDate.value : "없음");
+        console.log("종료일:", fundingEndDate ? fundingEndDate.value : "없음");
+        console.log("발송일:", fundingSendDate ? fundingSendDate.value : "없음");
+    });
     
     // 펀딩 일정 페이지 입력 감지
-    $(document).on('change', '#funding-start-datetime, #funding-end-datetime, #funding-send-datetime', checkFundingPageInput);
-    
     function checkFundingPageInput() {
         const currentPage = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
         if(currentPage !== 'funding') return;
@@ -281,7 +289,7 @@ $(document).ready(function () {
             showAlert('펀딩 기간은 최대 60일을 초과할 수 없습니다.');
             const maxEndDate = new Date(startDate);
             maxEndDate.setDate(startDate.getDate() + 60);
-            fundingEndDate.value = maxEndDate.toISOString().split('T')[0];
+            fundingEndDate.value = formatDate(maxEndDate);
             fundingPeriod.textContent = '60일';
         } else {
             fundingPeriod.textContent = diffDays + '일';
@@ -301,7 +309,7 @@ $(document).ready(function () {
             showAlert('리워드 준비 기간은 최대 60일을 초과할 수 없습니다.');
             const maxSendDate = new Date(endDate);
             maxSendDate.setDate(endDate.getDate() + 60);
-            fundingSendDate.value = maxSendDate.toISOString().split('T')[0];
+            fundingSendDate.value = formatDate(maxSendDate);
             preparePeriod.textContent = '60일';
         } else {
             preparePeriod.textContent = diffDays + '일';
@@ -312,12 +320,9 @@ $(document).ready(function () {
     fundingStartDate.addEventListener('change', function() {
         const startDate = new Date(this.value);
         
-        // 과거 날짜 체크
-        if (startDate < minDate) {
-            const alertMsg = today.getHours() >= 21 ? 
-                '내일 시작은 오후 9시 이전까지만 가능합니다. 모레로 설정해주세요.' : 
-                '시작일은 내일 이후로 설정해야 합니다.';
-            showAlert(alertMsg);
+        // 과거 날짜 체크 (새 값이 설정될 때만)
+        if (this.value && startDate < minDate) {
+            showAlert('시작일은 내일 이후로 설정해야 합니다.');
             this.value = '';
             $('.date-from-today').text('');
             checkFundingPageInput();
@@ -325,26 +330,30 @@ $(document).ready(function () {
         }
         
         // 오늘로부터 몇 일 후인지 계산
-        const calcToday = new Date();
-        calcToday.setHours(0, 0, 0, 0);
-        const diffTime = startDate - calcToday;
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) - 1;
-        
-        if (diffDays === 0) {
-            $('.date-from-today').text('내일부터');
-        } else {
-            $('.date-from-today').text(`오늘로부터 ${diffDays}일 후`);
-        }
-        
-        // 종료일 제한 업데이트
-        if (fundingEndDate) {
-            const minEndDate = new Date(startDate);
-            minEndDate.setDate(startDate.getDate() + 1);
-            fundingEndDate.min = minEndDate.toISOString().split('T')[0];
+        if (this.value) {
+            const calcToday = new Date();
+            calcToday.setHours(0, 0, 0, 0);
+            const diffTime = startDate - calcToday;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             
-            if (new Date(fundingEndDate.value) < startDate) {
-                fundingEndDate.value = '';
-                checkFundingPageInput();
+            if (diffDays === 1) {
+                $('.date-from-today').text('내일부터');
+            } else {
+                $('.date-from-today').text(`오늘로부터 ${diffDays}일 후`);
+            }
+            
+            // 종료일 제한 업데이트
+            if (fundingEndDate) {
+                const minEndDate = new Date(startDate);
+                minEndDate.setDate(startDate.getDate() + 1);
+                const minEndDateStr = formatDate(minEndDate);
+                fundingEndDate.setAttribute('min', minEndDateStr);
+                
+                // 종료일이 시작일보다 빠르면 리셋
+                if (fundingEndDate.value && new Date(fundingEndDate.value) <= startDate) {
+                    fundingEndDate.value = '';
+                    checkFundingPageInput();
+                }
             }
         }
         
@@ -353,11 +362,13 @@ $(document).ready(function () {
     });
     
     fundingEndDate.addEventListener('change', function() {
+        if (!this.value) return;
+        
         const endDate = new Date(this.value);
-        const startDate = new Date(fundingStartDate.value);
+        const startDate = fundingStartDate.value ? new Date(fundingStartDate.value) : null;
         
         // 시작일이 설정되지 않은 경우
-        if (!fundingStartDate.value) {
+        if (!startDate) {
             showAlert('먼저 시작일을 설정해주세요.');
             this.value = '';
             checkFundingPageInput();
@@ -365,7 +376,7 @@ $(document).ready(function () {
         }
         
         // 시작일 이전으로 설정한 경우
-        if (endDate < startDate) {
+        if (endDate <= startDate) {
             showAlert('종료일은 시작일 이후로 설정해야 합니다.');
             this.value = '';
             checkFundingPageInput();
@@ -377,25 +388,30 @@ $(document).ready(function () {
         
         // 발송일 제한 업데이트
         if (fundingSendDate) {
-            fundingSendDate.setAttribute('min', this.value);
+            const minSendDate = new Date(endDate);
+            minSendDate.setDate(endDate.getDate() + 1);
+            fundingSendDate.setAttribute('min', formatDate(minSendDate));
             
-            if (new Date(fundingSendDate.value) < endDate) {
+            // 발송일이 종료일보다 빠르면 리셋
+            if (fundingSendDate.value && new Date(fundingSendDate.value) <= endDate) {
                 fundingSendDate.value = '';
                 preparePeriod.textContent = '최대 60일';
                 checkFundingPageInput();
+            } else if (fundingSendDate.value) {
+                // 리워드 준비 기간 재계산
+                calculatePreparePeriod();
             }
         }
-        
-        // 리워드 준비 기간 재계산
-        calculatePreparePeriod();
     });
     
     fundingSendDate.addEventListener('change', function() {
+        if (!this.value) return;
+        
         const sendDate = new Date(this.value);
-        const endDate = new Date(fundingEndDate.value);
+        const endDate = fundingEndDate.value ? new Date(fundingEndDate.value) : null;
         
         // 종료일이 설정되지 않은 경우
-        if (!fundingEndDate.value) {
+        if (!endDate) {
             showAlert('먼저 종료일을 설정해주세요.');
             this.value = '';
             checkFundingPageInput();
@@ -403,7 +419,7 @@ $(document).ready(function () {
         }
         
         // 종료일 이전으로 설정한 경우
-        if (sendDate < endDate) {
+        if (sendDate <= endDate) {
             showAlert('발송일은 종료일 이후로 설정해야 합니다.');
             this.value = '';
             checkFundingPageInput();
@@ -412,8 +428,6 @@ $(document).ready(function () {
         
         // 리워드 준비 기간 재계산
         calculatePreparePeriod();
-        
-        checkFundingPageInput();
     });
 // 2. 펀딩 일자 END
 
@@ -820,7 +834,7 @@ $(document).ready(function () {
     });
     // 캠페인 생성 버튼 클릭 이벤트
     $('.cam-la-in-box-bottom-in-end-btn').on('click', function() {
-        if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 생성') {
+        if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 수정') {
             submitCampaign();
         }
     });
@@ -831,8 +845,7 @@ $(document).ready(function () {
         const navTarget = $('.cam-la-in-box-top-in-na-all-ul-li.check');
         let navName = navTarget.attr('data-target');
         if(navName == 'info'){    
-            $('.cam-ag-box').removeClass('hidden'); // 약관 동의 페이지
-            $('.cam-la').addClass('hidden');
+            //$('.cam-la').addClass('hidden');
         }else if(navName == 'funding'){
             navTarget.removeClass('check');
             navTarget.prev().addClass('check');
@@ -859,7 +872,7 @@ $(document).ready(function () {
     // 기본 정보 페이지 입력 감지
     $(document).on('input', 'input[name="title"]', checkInfoPageInput);
     $(document).on('input', '.cam-la-in-box-bo-all-de-div-box-textarea', checkInfoPageInput);
-   //$(document).on('click', checkInfoPageInput);
+    $(document).on('click', checkInfoPageInput);
     $(document).on('keydown', checkInfoPageInput);
     $(document).on('change', '#campaignImageInput', function() {
         const previewImage = document.getElementById('previewImage');
