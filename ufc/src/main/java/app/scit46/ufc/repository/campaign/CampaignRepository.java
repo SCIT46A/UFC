@@ -19,13 +19,15 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = false")
     List<CampaignEntity> findByPendingApproval();
 
+    @Query("SELECT c FROM CampaignEntity c LEFT JOIN FETCH c.createdBy")
+    List<CampaignEntity> findAllWithCreator();
+
+
     // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
     List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Boolean campaignStatus, LocalDateTime startDate);
 
-    @Query("SELECT c FROM CampaignEntity c WHERE REPLACE(c.title, ' ', '') LIKE %:normalizedKeyword%")
-    List<CampaignEntity> searchCampaignByTitleIgnoreSpace(@Param("normalizedKeyword") String normalizedKeyword);
-
     List<CampaignEntity> findByTitleContaining(String title);
+
 
 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
@@ -59,6 +61,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "GROUP BY c.campaign_id, cg.goal_id " +
             "ORDER BY donationPercentage ASC ", nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
+
 
 
 }
