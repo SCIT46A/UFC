@@ -1,7 +1,6 @@
 package app.scit46.ufc.repository;
 
 import app.scit46.ufc.dto.SearchResultDTO;
-import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.entity.SearchEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +15,6 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
     @Query("SELECT s FROM SearchEntity s WHERE LOWER(REPLACE(s.name, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
     List<SearchEntity> searchByKeyword(@Param("keyword") String keyword);
 
-    // 전체 검색 (캠페인 + 제품) 쿼리 예시
     @Query(value = "SELECT * FROM ( " +
             "  SELECT " +
             "    CAST(c.campaign_id AS SIGNED) AS originalId, " +
@@ -39,6 +37,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "         WHERE l.campaign_id = c.campaign_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "  FROM Campaigns c " +
             "  WHERE c.title LIKE CONCAT('%', :keyword, '%') " +
+            "    AND c.campaign_status = 1 " + // 캠페인 상태 필터 추가
             "  UNION " +
             "  SELECT " +
             "    CAST(p.product_id AS SIGNED) AS originalId, " +
@@ -61,13 +60,12 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  FROM Products p " +
             "  INNER JOIN Items i ON i.item_id = p.item_id " +
             "  WHERE i.name LIKE CONCAT('%', :keyword, '%') " +
+            "    AND p.status = 0 " + // 제품 상태 필터 추가
             ") AS results",
             nativeQuery = true)
     List<SearchResultDTO> findSearchResults(@Param("keyword") String keyword, @Param("userLoginId") Long userLoginId);
 
-
-
-    // ② 진행 중인 캠페인: 검색어 없이 전체 데이터를 불러옴 (좋아요 여부 추가)
+    // ② 진행 중인 캠페인 (campaign_status = 1)
     @Query(value = "SELECT " +
             "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
             "  'campaign' AS type, " +
@@ -89,11 +87,12 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "         WHERE l.campaign_id = c.campaign_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Campaigns c " +
             "WHERE c.start_date <= CURRENT_DATE " +
-            "  AND c.end_date >= CURRENT_DATE",
+            "  AND c.end_date >= CURRENT_DATE " +
+            "  AND c.campaign_status = 1", // 캠페인 상태 필터 추가
             nativeQuery = true)
     List<SearchResultDTO> findOngoingCampaigns(@Param("userLoginId") Long userLoginId);
 
-    // ③ 진행 예정인 캠페인: 검색어 없이 전체 데이터를 불러옴 (좋아요 여부 추가)
+    // ③ 진행 예정인 캠페인 (campaign_status = 1)
     @Query(value = "SELECT " +
             "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
             "  'campaign' AS type, " +
@@ -114,11 +113,12 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  (CASE WHEN :userLoginId IS NULL THEN 0 ELSE (EXISTS (SELECT 1 FROM Likes l " +
             "         WHERE l.campaign_id = c.campaign_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Campaigns c " +
-            "WHERE c.start_date > CURRENT_DATE",
+            "WHERE c.start_date > CURRENT_DATE " +
+            "  AND c.campaign_status = 1", // 캠페인 상태 필터 추가
             nativeQuery = true)
     List<SearchResultDTO> findUpcomingCampaigns(@Param("userLoginId") Long userLoginId);
 
-    // ④ 판매 (제품) 조회: 검색어 없이 전체 데이터를 불러옴 (좋아요 여부 추가)
+    // ④ 판매(제품) 조회 (status = 0)
     @Query(value = "SELECT " +
             "  CAST(p.product_id AS SIGNED) AS originalId, " +
             "  'product' AS type, " +
@@ -130,7 +130,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  NULL AS remainingDays, " +
             "  NULL AS donatedQuantity, " +
             "  NULL AS donationPercentage, " +
-            "  NULL AS createdDate, " +  // 제품에는 createdDate 없음
+            "  NULL AS createdDate, " +
             "  CAST((SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) AS SIGNED) AS likes, " +
             "  (SELECT GROUP_CONCAT(t.content) FROM ProductTags pt " +
             "         JOIN Tags t ON pt.tag_id = t.tag_id " +
@@ -138,12 +138,13 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  (CASE WHEN :userLoginId IS NULL THEN 0 ELSE (EXISTS (SELECT 1 FROM Likes l " +
             "         WHERE l.product_id = p.product_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Products p " +
-            "INNER JOIN Items i ON i.item_id = p.item_id",
+            "INNER JOIN Items i ON i.item_id = p.item_id " +
+            "WHERE p.status = 0", // 제품 상태 필터 추가
             nativeQuery = true)
     List<SearchResultDTO> findSales(@Param("userLoginId") Long userLoginId);
 
     /**
-     * 캠페인 좋아요 많은 순 상위 10개 조회 (좋아요 여부 추가)
+     * 캠페인 좋아요 많은 순 상위 10개 조회 (campaign_status = 1)
      */
     @Query(value = "SELECT " +
             "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
@@ -165,13 +166,14 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  (CASE WHEN :userLoginId IS NULL THEN 0 ELSE (EXISTS (SELECT 1 FROM Likes l " +
             "         WHERE l.campaign_id = c.campaign_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Campaigns c " +
+            "WHERE c.campaign_status = 1 " + // 캠페인 상태 필터 추가
             "ORDER BY (SELECT COUNT(*) FROM Likes l WHERE l.campaign_id = c.campaign_id) DESC " +
             "LIMIT 10",
             nativeQuery = true)
     List<SearchResultDTO> findTop10CampaignsByLikes(@Param("userLoginId") Long userLoginId);
 
     /**
-     * 제품 좋아요 많은 순 상위 10개 조회 (좋아요 여부 추가)
+     * 제품 좋아요 많은 순 상위 10개 조회 (status = 0)
      */
     @Query(value = "SELECT " +
             "  CAST(p.product_id AS SIGNED) AS originalId, " +
@@ -193,16 +195,9 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "         WHERE l.product_id = p.product_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Products p " +
             "INNER JOIN Items i ON i.item_id = p.item_id " +
+            "WHERE p.status = 0 " + // 제품 상태 필터 추가
             "ORDER BY (SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) DESC " +
             "LIMIT 10",
             nativeQuery = true)
     List<SearchResultDTO> findTop10ProductsByLikes(@Param("userLoginId") Long userLoginId);
-
-
-
-
-
-
-
-
 }

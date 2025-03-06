@@ -33,6 +33,7 @@ $(function () {
         method: "GET",
         success: function (response) {
             // 일반유저
+            console.log(response)
             if (response.roles === "ROLE_USER") {
                 $(".header-box-top-pe").append(`
                     <div class="header-box-top-pe-my">
@@ -40,14 +41,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                    ? `/api/image/${response.photo.imageId}`
+                                    : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -68,14 +65,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                            ? `/api/image/${response.photo.imageId}`
+                                            : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -95,14 +88,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                        ? `/api/image/${response.photo.imageId}`
+                                        : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -131,6 +120,22 @@ $(function () {
                 );
                 initializeEventListeners();
             }
+            $(".header-box-top-pe").find("img.target-img").each(function() {
+                const $img = $(this);
+                const endpoint = $img.attr("src");
+                $.ajax({
+                    url: endpoint,
+                    method: "GET",
+                    success: function(resultUrl) {
+                        if (resultUrl) {
+                            $img.attr("src", resultUrl);
+                        }
+                    },
+                    error: function(err) {
+                        console.error("이미지 URL 요청 오류:", err);
+                    }
+                });
+            });
         },
     });
 

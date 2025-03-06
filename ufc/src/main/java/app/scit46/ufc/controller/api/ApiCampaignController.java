@@ -125,22 +125,27 @@ public class ApiCampaignController {
 //  댓글 작성
 
     @PostMapping("/replys/add")
-    public ResponseEntity<CampaignBoardReplyDTO> createReply(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
+    public ResponseEntity<?> createReply(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
 
+        // 로그인 여부 체크
+        if (loginUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인을 해주세요");
+        }
+
         try {
-            // 클라이언트에서 boardId와 content를 보낸다고 가정
             Long boardId = Long.valueOf(payload.get("boardId").toString());
             String content = payload.get("content").toString();
 
-            CampaignBoardReplyDTO createdReply = campaignBoardReplyService.createReply(boardId,content ,loginUserId);
+            CampaignBoardReplyDTO createdReply = campaignBoardReplyService.createReply(boardId, content, loginUserId);
             return ResponseEntity.ok(createdReply);
         } catch (Exception e) {
             System.err.println("댓글 생성 에러: " + e.getMessage());
             return ResponseEntity.status(500).build();
         }
     }
+
 
 // 리뷰 불러오기
 
@@ -158,25 +163,32 @@ public class ApiCampaignController {
 //  리뷰 작성하기
 
     @PostMapping("/review/add")
-    public ResponseEntity<CampaignReviewDTO> addReview(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
+    public ResponseEntity<?> addReview(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
 
+        // 로그인 여부 체크
+        if (loginUserId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인을 해주세요");
+        }
+
         try {
-            // 클라이언트에서 boardId와 content를 보낸다고 가정
             Long campaignId = Long.valueOf(payload.get("campaignId").toString());
             String content = payload.get("reviewContent").toString();
             String rating = payload.get("rating").toString();
 
             CampaignReviewDTO campaignReviewDTO = campaignReviewService.createReview(campaignId, content, rating, loginUserId);
             return ResponseEntity.ok(campaignReviewDTO);
+        } catch (IllegalArgumentException e) {
+            // 이미 리뷰가 존재하는 경우
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
         } catch (Exception e) {
             System.err.println("댓글 생성 에러: " + e.getMessage());
             return ResponseEntity.status(500).build();
-
         }
-
     }
+
+
 
 //  리워드 목록 가져오기
 

@@ -1,5 +1,6 @@
 package app.scit46.ufc.entity;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import app.scit46.ufc.dto.CreatorDTO;
@@ -50,6 +51,9 @@ public class CreatorEntity {
     @Column(name = "b_regist_number", nullable = false, length = 30)
     private String bRegistNumber;
 
+    @Column(name = "b_regist_date", nullable = false)
+    private LocalDateTime bRegistDate;
+
     @Column(name = "b_name", nullable = false, length = 20)
     private String bName;
 
@@ -93,6 +97,7 @@ public class CreatorEntity {
                 .intro(dto.getIntro())
                 .businessCert(ImageUrlEntity.toEntity(dto.getBusinessCert()))
                 .bRegistNumber(dto.getBRegistNumber())
+                .bRegistDate(dto.getBRegistDate())
                 .bName(dto.getBName())
                 .companyName(dto.getCompanyName())
                 .address(dto.getAddress())

@@ -63,8 +63,27 @@ public class CampaignController {
 
     @GetMapping("/{id}")
     public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long loginUserId = null; // 기본값 설정
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+        }
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
+        // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
+        Long creatorId = campaign.getCreatedBy().getOwnUser().getUserId();
+        boolean status = campaign.getCampaignStatus();
+        if (!status) {
+            if (loginUserId == null || !loginUserId.equals(creatorId)) {
+                return "redirect:/";
+            }
+        }
+        if (loginUserId == null || !loginUserId.equals(creatorId)) {
+            model.addAttribute("status", true);
+        } else {
+            model.addAttribute("status", false);
+        }
+
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
@@ -90,11 +109,7 @@ public class CampaignController {
                 .mapToInt(MaterialDonationDTO::getQuantity)
                 .sum();
 
-        HttpSession session = request.getSession(false); // 세션 가져오기
-        Long loginUserId = null; // 기본값 설정
-        if (session != null) {
-            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-        }
+
         boolean campaignLike = likeService.likeCheck(campaign.getCampaignId(), loginUserId, "campaign");
         boolean creatorLike = likeService.likeCheck(campaign.getCreatedBy().getCreatorId(), loginUserId, "creator");
         model.addAttribute("campaignLike", campaignLike);

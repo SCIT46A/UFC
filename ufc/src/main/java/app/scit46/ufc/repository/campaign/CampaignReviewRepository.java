@@ -1,5 +1,7 @@
 package app.scit46.ufc.repository.campaign;
 
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CampaignReviewRepository extends JpaRepository<CampaignReviewEntity, Long> {
@@ -22,4 +25,6 @@ public interface CampaignReviewRepository extends JpaRepository<CampaignReviewEn
     List<CampaignReviewEntity> findByContentLike(String content);
     Page<CampaignReviewEntity> findAll(Pageable pageable);
     Page<CampaignReviewEntity> findByReviewedBy_UserId(Long userId, Pageable pageable);
+
+    Optional<CampaignReviewEntity> findByCampaignedByAndReviewedBy(CampaignEntity campaign, UserEntity user);
 }

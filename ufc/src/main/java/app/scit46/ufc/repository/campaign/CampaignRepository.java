@@ -50,14 +50,13 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "  IFNULL(SUM(md.quantity), 0) AS donatedQuantity, " +
             "  IFNULL(SUM(md.quantity) * 100.0 / NULLIF(cg.quantity_required, 0), 0) AS donationPercentage, " +
             "  COUNT(DISTINCT md.user_id) AS totalDonors, " +
-            // 캠페인 전체 후원자 수 (중복 없이)
-            "  (SELECT COUNT(DISTINCT md2.user_id) FROM MaterialsDonations md2 WHERE md2.campaign_id = c.campaign_id) AS campaignDonors "
-            +
+            "  (SELECT COUNT(DISTINCT md2.user_id) FROM MaterialsDonations md2 WHERE md2.campaign_id = c.campaign_id) AS campaignDonors " +
             "FROM Campaigns c " +
             "LEFT JOIN CampaignGoals cg ON c.campaign_id = cg.campaign_id " +
             "LEFT JOIN MaterialsDonations md ON md.campaign_id = c.campaign_id AND md.material_id = cg.material_id " +
             "WHERE c.start_date <= CURRENT_DATE " +
             "  AND c.end_date >= CURRENT_DATE " +
+            "  AND c.campaign_status = 1 " +
             "GROUP BY c.campaign_id, cg.goal_id " +
             "ORDER BY donationPercentage ASC ", nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
