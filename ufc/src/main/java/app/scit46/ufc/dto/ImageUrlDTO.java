@@ -12,7 +12,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ImageUrlDTO {
-
         private Long id;
         private String imageId;
         private String filename;
@@ -30,4 +29,5 @@ public class ImageUrlDTO {
                                 .uploadedBy(entity.getUploadedBy().getUserId())
                                 .build();
         }
+
 }

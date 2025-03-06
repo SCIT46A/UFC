@@ -2,6 +2,7 @@ package app.scit46.ufc.service;
 
 import java.util.Optional;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final ImageUrlService imageUrlService;
 
-// ------------------ CRUD ------------------
-
+    // ------------------ CRUD ------------------
 
     // 유저조회(회원정보조회)
     public UserDTO readUserById(Long userId) throws DBNotFoundException {
-        UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new DBNotFoundException("User not found for Read"));
+        UserEntity userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new DBNotFoundException("User not found for Read"));
         return UserDTO.toDTO(userEntity);
     }
 
@@ -50,9 +51,24 @@ public class UserService {
         entity.setPhotoId(imageUrlService.findByImageId(userDTO.getPhoto().getImageId()));
         userRepository.save(entity);
     }
+
+    // 일반 회원에서 판매자 전환
+    @Transactional
+    public boolean convertToSeller(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다!"));
+        if ("SELLER".equals(user.getRoles())) {
+            throw new IllegalStateException("이미 판매자로 전환된 유저입니다!");
+        }
+
+        user.setRoles("SELLER"); // 유저의 역할 변경
+        userRepository.save(user); // DB에 반영
+        return true;
+    }
+
     // ------------------ CRUD ------------------ //End
 
-    //유저가 기부한 정보 조회
+    // 유저가 기부한 정보 조회
 
     // 유저 이름으로 유저 조회 -> 유저 아이디 반환
     public Long findUserIdByUserName(String userName) {
@@ -101,13 +117,9 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
+
     public UserDTO findByIdDTO(Long userId) {
         return userRepository.findById(userId).map(UserDTO::toDTO).orElse(null);
     }
-
-
-
-
-
 
 }

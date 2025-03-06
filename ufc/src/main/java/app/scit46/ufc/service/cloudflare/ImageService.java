@@ -46,14 +46,14 @@ public class ImageService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    private final ImageUrlService imageUrlService;    //사진Url DB 수정시 사용
+    private final ImageUrlService imageUrlService; // 사진Url DB 수정시 사용
 
     // 이미지 업로드 // MultipartFile을 Byte[]로 직렬화하는 중 IOException 발생 가능
 
     public String uploadImage(MultipartFile file, Long userId) throws IOException {
         // 유효성 검사
         // 파일이 없거나 사용자 ID가 없는 경우 null 반환
-        //if(file == null || userId == null) return null;
+        // if(file == null || userId == null) return null;
 
         // 원본 파일 이름 가져오기
         String originalFilename = file.getOriginalFilename(); // 원본 파일 이름
@@ -73,7 +73,8 @@ public class ImageService {
         // LinkedMultiValueMap : 여러 값을 가질 수 있는 맵, 파일 업로드(multipart/form-data) 형식 지원
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         // 요청할 내용에 파일 첨부(구성)
-        body.add("file", new ByteArrayResource(file.getBytes()){
+        body.add("file", new ByteArrayResource(file.getBytes()) {
+
             @Override
             public String getFilename() {
                 return originalFilename;
@@ -84,11 +85,11 @@ public class ImageService {
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
         // 요청 결과 변수 선언
         ResponseEntity<ApiResponse> response = null;
-        try{
+        try {
             // 요청 결과 반환
             response = restTemplate.exchange(url, HttpMethod.POST, requestEntity, ApiResponse.class);
             log.info("=== Success - cloudflare API response : {}", response);
-        }catch(Exception e){
+        } catch (Exception e) {
             // 오류 발생시 오류 로그 출력
             log.error("imgsrv.UPL - Cloudflare API 호출 오류", e);
             // 오류 출력
@@ -111,9 +112,10 @@ public class ImageService {
     public boolean deleteImage(String imageId) {
         // 유효성 검사
         // imageId가 null 경우 false 반환
-        if(imageId == null) return false;
+        if (imageId == null)
+            return false;
         // imageID가 UUID 형식인지 검사
-        if (!UUID.fromString(imageId).toString().equals(imageId)){
+        if (!UUID.fromString(imageId).toString().equals(imageId)) {
             log.error("imgsrv.DEL - 이미지 ID가 유효하지 않습니다.");
             return false;
         }
@@ -126,9 +128,9 @@ public class ImageService {
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(headers);
 
-        try{
+        try {
             restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, ApiResponse.class);
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error("Cloudflare API 호출 오류", e);
             e.printStackTrace();
             return false;
@@ -138,8 +140,13 @@ public class ImageService {
 
     // 이미지 URL 변환
     public String getImageUrl(String imageId) {
-        if(imageId == null) return null;
-        if(!UUID.fromString(imageId).toString().equals(imageId)){
+        // 유효성 검사
+        // imageId가 null 경우 null 반환
+        if (imageId == null)
+            return null;
+        // imageID가 UUID 형식인지 검사
+        if (!UUID.fromString(imageId).toString().equals(imageId)) {
+
             log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
             return null;
         }

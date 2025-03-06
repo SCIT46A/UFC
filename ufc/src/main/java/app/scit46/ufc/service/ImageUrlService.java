@@ -13,27 +13,32 @@ public class ImageUrlService {
 
     private final ImageUrlRepository imageUrlRepository;
 
-    public Long getId(String imageId){
+    public Long getId(String imageId) {
         return imageUrlRepository.findIdByImageId(imageId);
     }
 
-    // CRD 
-    public void save(ImageUrlDTO imageUrlDTO){
+    // CRD
+    public void save(ImageUrlDTO imageUrlDTO) {
         imageUrlRepository.save(ImageUrlEntity.toEntity(imageUrlDTO));
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         imageUrlRepository.deleteById(id);
     }
 
     public String findImage(Long id) {
-        ImageUrlEntity imageUrlEntity = imageUrlRepository.findById(id).orElseThrow(() -> new RuntimeException("Image not found"));
+        ImageUrlEntity imageUrlEntity = imageUrlRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Image not found"));
         return imageUrlEntity.getImageId();
     }
 
     // 이미지에 대한 업로드 사용자ID 조회
     public Long getUploadedBy(String imageId) {
-        return imageUrlRepository.findIdByImageId(imageId); 
+        return imageUrlRepository.findIdByImageId(imageId);
+    }
+
+    public ImageUrlEntity findByImageId(String imageId) {
+        return imageUrlRepository.findByImageId(imageId);
     }
 
     public ImageUrlEntity findByImageId(String imageId) {

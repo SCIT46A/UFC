@@ -975,6 +975,7 @@ input::placeholder {
 
 .cover-delete-hover {
     display: none;
+    background-color: gray;
 }
 
 .profile-delete-wrap {
@@ -993,6 +994,7 @@ input::placeholder {
 
 .profile-delete-hover {
     display: none;
+    background-color: gray;
 }
 
 

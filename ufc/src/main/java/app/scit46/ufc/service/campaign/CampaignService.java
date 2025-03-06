@@ -130,6 +130,7 @@ public class CampaignService {
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
 
+
     // GenerateCampaign = 프론트에서 보낸 데이터를 받아줄 커스텀 DTO -> 파싱하여 적절히 처리하는 로직
     // Entity를 그대로 사용한 것은 영속성 문제로 인해 캠페인 생성에 필요한 세부 요소들의 연계에 오류가 발생하기 때문
     @Transactional
@@ -232,6 +233,7 @@ public class CampaignService {
         updateCampaign(campaign);
     }
 
+
     // 캠페인에 할당되어 있는 태그 조회
     public List<String> getCampaignTags(Long campaignId) {
         List<CampaignTagEntity> campaignTag = campaignTagRepository
@@ -247,6 +249,7 @@ public class CampaignService {
     public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
         return campaignRepository.findByCampaignId(campaignId);
     }
+
 
     // 펀딩 대기 중인 캠페인 조회
     public List<CampaignDTO> getFundingWaitingCampaigns() {
