@@ -505,9 +505,11 @@ $(document).ready(function () {
             
             // 임시 리워드 목록에 추가
             tmpRewardList.push(rewardData);
+            //rewardList.push(rewardData);
         });
         
         console.log('초기화된 리워드 목록:', tmpRewardList);
+        console.log('전송할 데이터:', rewardList);
         
         // 초기 리워드 개수 업데이트
         updateRewardCount();
@@ -534,13 +536,13 @@ $(document).ready(function () {
                     updateRewardCount();
                 });
                 
-                // 리워드 데이터를 rewardList에 복사
-                rewardList = {
-                    name: rewardData.name,
-                    amount: rewardData.amount,
-                    funding: [...rewardData.funding],
-                    reward: [...rewardData.reward]
-                };
+                // // 리워드 데이터를 rewardList에 복사
+                // rewardList = {
+                //     name: rewardData.name,
+                //     amount: rewardData.amount,
+                //     funding: [...rewardData.funding],
+                //     reward: [...rewardData.reward]
+                // };
             }
         });
     }
@@ -549,8 +551,8 @@ $(document).ready(function () {
     function loadRewardToForm(rewardData) {
         // 리워드 이름과 수량 설정
         $('.gi-se-input-va[placeholder="멋진 이름을 붙여주세요!"]').val(rewardData.name);
-        $('.gi-se-input-va[placeholder="0"]').val(rewardData.amount);
-        
+        // $('.gi-se-input-va[placeholder="0"]').val(rewardData.amount);
+        $('#productionAmount').val(rewardData.amount);
         // 기존 재료 항목 초기화
         $('.funding-item-container').empty();
         
@@ -579,27 +581,43 @@ $(document).ready(function () {
     // 재료 항목 추가 함수
     function addFundingItem(name, amount) {
         const fundingItemTemplate = `
-            <div class="gi-se-input-box funding-item">
-                <input type="text" class="gi-se-input-va" placeholder="ex: 손코팅 엽서" value="${name || ''}" />
-                <input type="number" class="gi-se-input-va" placeholder="0" value="${amount || ''}" />
-                <button class="gi-se-del">삭제</button>
+           <div class="cam-la-pay-box-pe">
+                <div class="cam-la-pay-box-pe-fname">${name}</div>
+                <div class="cam-la-pay-box-pe-famount">${amount}</div>
+                <button class="cam-tag-sh-pe-btn">
+                    <svg viewBox="0 0 40 40" focusable="false" role="presentation" class="withIcon_icon__1YH1P" aria-hidden="true">
+                        <path d="M33.4 8L32 6.6l-12 12-12-12L6.6 8l12 12-12 12L8 33.4l12-12 12 12 1.4-1.4-12-12 12-12z"></path>
+                    </svg>
+                </button>
             </div>
         `;
-        
-        $('.funding-item-container').append(fundingItemTemplate);
+        rewardList.funding.push({name: name, amount: amount});
+        $('.cam-la-pay-box-total.funding').parent().append(fundingItemTemplate);
+        $(this).closest('div').find('.fundingItemInput').val('');
+        $(this).closest('div').find('.fundingAmountInput').val('');
+        $('.cam-la-pay-btn.funding').removeClass('isActive');
+        $('.cam-la-pay-btn.funding').attr('disabled', true);
     }
     
     // 리워드 항목 추가 함수
     function addRewardItem(name, amount) {
         const rewardItemTemplate = `
-            <div class="gi-se-input-box reward-item">
-                <input type="text" class="gi-se-input-va" placeholder="ex: 뱃지" value="${name || ''}" />
-                <input type="number" class="gi-se-input-va" placeholder="0" value="${amount || ''}" />
-                <button class="gi-se-del">삭제</button>
+            <div class="cam-la-pay-box-pe">
+                <div class="cam-la-pay-box-pe-fname">${name}</div>
+                <div class="cam-la-pay-box-pe-famount">${amount}</div>
+                <button class="cam-tag-sh-pe-btn">
+                    <svg viewBox="0 0 40 40" focusable="false" role="presentation" class="withIcon_icon__1YH1P" aria-hidden="true">
+                        <path d="M33.4 8L32 6.6l-12 12-12-12L6.6 8l12 12-12 12L8 33.4l12-12 12 12 1.4-1.4-12-12 12-12z"></path>
+                    </svg>
+                </button>
             </div>
         `;
-        
-        $('.reward-item-container').append(rewardItemTemplate);
+        rewardList.reward.push({name: name, amount: amount});
+        $(this).closest('div').find('.rewardItemInput').val('');
+        $(this).closest('div').find('.rewardAmountInput').val('');
+        $('.cam-la-pay-btn.reward').removeClass('isActive');
+        $('.cam-la-pay-btn.reward').attr('disabled', true);
+        $('.cam-la-pay-box-total.reward').parent().after(rewardItemTemplate);
     }
 // 3. 리워드 구성 END
 
