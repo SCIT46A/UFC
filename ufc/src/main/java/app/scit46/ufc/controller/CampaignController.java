@@ -78,6 +78,11 @@ public class CampaignController {
                 return "redirect:/";
             }
         }
+        if (loginUserId == null || !loginUserId.equals(creatorId)) {
+            model.addAttribute("status", true);
+        } else {
+            model.addAttribute("status", false);
+        }
 
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);

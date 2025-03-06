@@ -549,8 +549,8 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" th:value="${campaign.campaignStatus}" id="campaign-status">
-                                            <button class="summer-btn " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'">작성하기</button>
-                                            <button class="summer-btn-edit " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'" >수정하기</button>
+                                            <button class="summer-btn " th:classappend="${campaign.campaignStatus == true} ? 'hidden'">작성하기</button>
+                                            <button class="summer-btn-edit " th:classappend="${campaign.campaignStatus == true} ? 'hidden'" >수정하기</button>
                                             <button class="summer-btn-edit-save hidden">수정하기</button>
                                         </div>
                                         <!-- 게시글 -->
@@ -565,7 +565,7 @@
                                                     게시글
                                                     <strong class="board-count-target">0</strong>
                                                 </div>
-                                                <button class="main-board-add-btn">등록하기</button>
+                                                <button class="main-board-add-btn" th:classappend="${status == false} ? 'hidden-important'">등록하기</button>
 
                                             </div>
                                             <!-- 게시글 눌렀을때 뒤로가기 버튼 -->
@@ -598,10 +598,10 @@
                                                                 >
                                                             </span>
                                                     </button>
-                                                    <button class="main-board-add-btn-save hidden">작성하기</button>
-                                                    <button class="main-board-detail-delete-btn hidden">삭제</button>
-                                                    <button class="main-board-add-btn-edit hidden">수정하기</button>
-                                                    <button class="main-board-add-btn-edit-save hidden">수정적용</button>
+                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == false} ? 'hidden-important'">작성하기</button>
+                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == false} ? 'hidden-important'">삭제</button>
+                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == false} ? 'hidden-important'">수정하기</button>
+                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == false} ? 'hidden-important'">수정적용</button>
                                                 </div>
                                                 <div
                                                         class="main-board-pe-box"

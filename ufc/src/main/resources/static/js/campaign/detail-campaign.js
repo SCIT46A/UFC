@@ -570,11 +570,19 @@ $(document).ready(function () {
                     replay(boardId);
                 },
                 error: function(err) {
-                    console.error("댓글 작성 실패:", err);
+                    if (err.status === 401) {
+                        alert("로그인을 해주세요");
+                        // 현재 페이지 URL을 쿼리 파라미터로 전달
+                        window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(window.location.href);
+                    } else {
+                        console.error("댓글 작성 실패:", err);
+                    }
                 }
             });
         }
     });
+
+
 
     function reviews(campaignId) {
         $.ajax({
@@ -706,11 +714,20 @@ $(document).ready(function () {
                     reviews(campaignId);
                 },
                 error: function(err) {
-                    console.error("리뷰 등록 실패:", err);
+                    if (err.status === 409) {
+                        alert("이미 별점을 주셨습니다");
+                    } else if (err.status === 401) {
+                        alert("로그인을 해주세요");
+                        window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(window.location.href);
+                    } else {
+                        console.error("리뷰 등록 실패:", err);
+                    }
                 }
             });
         }
     });
+
+
 
     // 오른쪽에 뜨는 리워드 나오게
     // 공통: 리워드 선택(추가) 함수 (중복 체크 및 최대수량 데이터 포함)
@@ -1173,13 +1190,20 @@ $(document).ready(function () {
                 }
             },
             error: function(err) {
-                console.error("좋아요 토글 AJAX 오류:", err);
+                if (err.status === 401) {
+                    alert("로그인이 필요합니다.");
+                    // 현재 페이지 URL을 쿼리 파라미터로 전달하여 로그인 페이지로 이동
+                    window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(window.location.href);
+                } else {
+                    console.error("좋아요 토글 AJAX 오류:", err);
+                }
             },
             complete: function() {
                 $btn.removeData("ajaxInProgress");
             }
         });
     });
+
 
     $(document).on("click", ".main-funding-in-box-le-in-in-like", function(event) {
         event.preventDefault();
@@ -1219,7 +1243,13 @@ $(document).ready(function () {
                 }
             },
             error: function(err) {
-                console.error("좋아요 토글 AJAX 오류:", err);
+                if (err.status === 401) {
+                    alert("로그인이 필요합니다.");
+                    // 현재 페이지 URL을 쿼리 파라미터로 전달하여 로그인 페이지로 이동
+                    window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(window.location.href);
+                } else {
+                    console.error("좋아요 토글 AJAX 오류:", err);
+                }
             },
             complete: function() {
                 $btn.removeData("ajaxInProgress");

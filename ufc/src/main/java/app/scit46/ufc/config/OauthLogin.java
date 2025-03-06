@@ -66,6 +66,22 @@ public class OauthLogin implements AuthenticationSuccessHandler {
             // 이미 존재하는 회원 -> 세션에 정보 저장 후 루트 페이지로 이동
             request.getSession().setAttribute("loginUserId", existingUser.getUserId());
 
+            // 쿼리 파라미터로 전달된 redirectUrl 우선 사용
+            String redirectUrl = request.getParameter("redirectUrl");
+            if (redirectUrl == null || redirectUrl.isEmpty()) {
+                // 세션에 저장된 값이 있으면 사용
+                redirectUrl = (String) request.getSession().getAttribute("redirectUrl");
+            } else {
+                // 쿼리 파라미터로 넘어온 경우 세션에도 저장
+                request.getSession().setAttribute("redirectUrl", redirectUrl);
+            }
+            if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                request.getSession().removeAttribute("redirectUrl");
+                response.sendRedirect(redirectUrl);
+                return;
+            }
+
+
             //관리자 여부 확인
             boolean isAdmin = "ADMIN".equals(existingUser.getRoles());
 

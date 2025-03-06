@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,37 +39,39 @@ public class CampaignReviewService {
     }
 
     @Transactional
-    public CampaignReviewDTO createReview(Long campaignId,String content,String rating ,Long loginUserId){
-
-
+    public CampaignReviewDTO createReview(Long campaignId, String content, String rating, Long loginUserId) {
         CampaignEntity campaignEntity = campaignService.findCampaignById(campaignId);
-        if(campaignEntity == null) {
-            throw new RuntimeException("게시글을 찾을 수 없습니다. boardId: " + campaignId);
+        if (campaignEntity == null) {
+            throw new RuntimeException("게시글을 찾을 수 없습니다. campaignId: " + campaignId);
         }
 
         UserEntity user = userService.findById(loginUserId);
-        if(user == null) {
-            throw new RuntimeException("사용자를 찾을 수 없습니다. userId: " + loginUserId);
+        if (user == null) {
+            throw new RuntimeException("로그인을 해주세요. userId: " + loginUserId);
         }
 
-        // rating이 String 타입으로 넘어온 경우
-        Double ratingValue = Double.parseDouble((String) rating);  // String을 Double로 변환
-        ratingValue = ratingValue *5;
+        // 중복 리뷰 체크
+        Optional<CampaignReviewEntity> existingReview = campaignReviewRepository.findByCampaignedByAndReviewedBy(campaignEntity, user);
+        if (existingReview.isPresent()) {
+            throw new IllegalArgumentException("이미 별점을 주셨습니다");
+        }
 
+        // rating이 String 타입으로 넘어온 경우 처리
+        Double ratingValue = Double.parseDouble(rating);
+        ratingValue = ratingValue * 5;
 
-
-        // 새 댓글 엔티티 생성 (기본키는 자동 생성되므로 설정하지 않습니다)
+        // 새 리뷰 엔티티 생성
         CampaignReviewEntity reviewEntity = new CampaignReviewEntity();
         reviewEntity.setContent(content);
         reviewEntity.setRated(ratingValue);
         reviewEntity.setCampaignedBy(campaignEntity);
         reviewEntity.setReviewedBy(user);
 
-        // 저장
         CampaignReviewEntity savedEntity = campaignReviewRepository.save(reviewEntity);
 
         return CampaignReviewDTO.toDTO(savedEntity);
     }
+
 
 //    @Transactional
 //    public CampaignBoardReplyDTO createReply(Long boardId, String text, Long userId) {
