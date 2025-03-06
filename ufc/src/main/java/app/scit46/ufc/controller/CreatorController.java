@@ -152,11 +152,6 @@ public class CreatorController {
         CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
         return ResponseEntity.ok(creator);
 
-    @PostMapping("/update")
-    public String updateProfile(@ModelAttribute CreatorDTO creator) {
-//        creatorService.updateCreator(creator);
-        return "redirect:/creator/profile/" + creator.getCreatorId();
-
-    }
+}
 
 }

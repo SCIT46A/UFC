@@ -41,7 +41,5 @@ public class ImageUrlService {
         return imageUrlRepository.findByImageId(imageId);
     }
 
-    public ImageUrlEntity findByImageId(String imageId) {
-        return imageUrlRepository.findByImageId(imageId);
-    }
+
 }

@@ -54,10 +54,7 @@ public class CreatorService {
 
     private String apiUrl;
 
-    public CreatorService(CreatorRepository creatorRepository, ObjectMapper objectMapper) {
-        this.creatorRepository = creatorRepository;
-        this.objectMapper = objectMapper;
-    }
+
 
     @PostConstruct
     public void setupApiUrl() {
@@ -117,17 +114,7 @@ public class CreatorService {
     }
 
     // 검토 필요
-    //창작자 정보 업데이트 - 수정필요 - cho
-//    public void updateCreator(CreatorDTO creator) {
-//        creatorRepository.save(CreatorEntity.toEntity(
-//                creator,
-//                creator.getBusinessCert() != null ? creator.getBusinessCert().getId() : null,
-//                creator.getBackImgUrl() != null ? creator.getBackImgUrl().getId() : null,
-//                creator.getProImgUrl() != null ? creator.getProImgUrl().getId() : null,
-//                creator.getOwnUser() != null ? creator.getOwnUser().getUserId() : null
-//                UserDTO.builder().userId(creator.getOwnUser()).build()
-//        ));
-//    }
+
 
 
     // 특정 창작자 정보 조회
@@ -203,25 +190,21 @@ public class CreatorService {
         if (creatorEntity == null) {
             return null;
         }
+//      임의로 추가해두었습니다 필요시 수정해주세요~ -cho
+        return CreatorDTO.toDTO(creatorEntity);
+    }
 
 
+//   하단부분에 사용하는거 없어서 일단 주석해두었습니다 궁금하신점은 문의주세요~ -cho
 
-    // ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
+
+//     ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
     public CreatorEntity saveCreator(CreatorEntity creator) {
         return creatorRepository.save(creator); // JPA를 이용한 저장
     }
 
 
 
-    // 검토 필요
-//    public void updateCreator(CreatorDTO creator) {
-//        테스트하는데 문제생겨서 주석했습니다 필요 시 문의주세요 - cho
-//        creatorRepository.save(CreatorEntity.toEntity(creator,
-//                ImageUrlDTO.builder().id(creator.getBusinessCert()).build(),
-//                ImageUrlDTO.builder().id(creator.getBackImgUrl()).build(),
-//                ImageUrlDTO.builder().id(creator.getProImgUrl()).build(),
-//                UserDTO.builder().userId(creator.getOwnUser()).build()));
-//    }
 
     public CreatorEntity findByOwnUser(UserEntity user) {
         CreatorEntity creator = creatorRepository.findByOwnUser(user);
@@ -231,8 +214,6 @@ public class CreatorService {
         return creator;
     }
 
-        return CreatorDTO.toDTO(creatorEntity);
-    }
 
     // 기존 getCreator 메서드 삭제 - 중복 메서드 해결
     @Transactional
