@@ -32,6 +32,27 @@
 
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script th:src="@{/js/fix/footer.js}" defer></script>
+        <style>
+
+            .cam-gi-box-le-in-bo-pe-content-funding{
+                display: block;
+                font-weight: 700;
+                color: rgb(61, 61, 61);
+                margin: 0px 0px 8px;
+                max-width: 222px;
+                font-size: 20px !important;
+                line-height: 28px !important;
+            }
+            .cam-gi-box-le-in-bo-pe-content-reward{
+                display: block;
+                font-weight: 300;
+                color: rgb(61, 61, 61);
+                margin: 0px 0px 8px;
+                max-width: 222px;
+                font-size: 14px !important;
+                line-height: 20px !important;
+            }
+        </style>
 
     </head>
 
@@ -393,17 +414,23 @@
                                                     </div>
                                                     <ul class="cam-gi-box-le-in-bo">
                                                         <!-- 각각의 리워드 표시 영역 -->
-                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="reward : ${rewards}">
+                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="rewardTmp, rewardStat : ${rewards}" th:data-reward-id="${'reward-' + rewardStat.index}">
                                                             <div>
                                                                 <button class="cam-gi-box-le-in-bo-pe-content">
-                                                                    <strong th:each="funding : ${reward.funding}"
-                                                                        th:text="${funding.name} + ' ' + ${funding.amount} + '개+'"></strong>
+                                                                    <div th:each="funding : ${rewardTmp.funding}" class="cam-gi-box-le-in-bo-pe-content-funding">
+                                                                        <b th:text="${funding.name}"></b>
+                                                                        <b th:text="${funding.amount}"></b>
+                                                                        <b>개+</b>
+                                                                    </div>
                                                                     <!-- 여기 수정: ${} -> th:text 사용 -->
-                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${reward.name}"></p>
-                                                                    <ul>
-                                                                        <!-- 여기 수정: 변수명 reward->rewardItem 변경 (변수 충돌 방지) -->
-                                                                        <li th:each="rewardItem : ${reward.reward}"
-                                                                            th:text="${rewardItem.name} + ' ' + ${rewardItem.amount} + '개'"></li>
+                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${rewardTmp.name}"></p>
+                                                                    <ul th:each="rewardItem : ${rewardTmp.reward}">
+                                                                    <!-- 여기 수정: 변수명 reward->rewardItem 변경 (변수 충돌 방지) -->
+                                                                        <li class="cam-gi-box-le-in-bo-pe-content-reward">
+                                                                            <span th:text="${rewardItem.name}"></span>
+                                                                            <span th:text="${rewardItem.amount}"></span>
+                                                                            <span>개</span>
+                                                                        </li>
                                                                     </ul>
                                                                     <span>예상 발송 시작일: <em
                                                                             th:text="${campaign.sendDate != null ? #temporals.format(campaign.sendDate, 'yyyy-MM-dd') : ''}"></em></span>
@@ -420,7 +447,7 @@
                                                                         </em>
                                                                         <div class="cam-gi-em-box">
                                                                             <!-- 여기 수정: 문자열 결합 방식 변경 -->
-                                                                            <em th:text="${reward.amount} + '개 남음'"></em>
+                                                                            <em th:text="${rewardTmp.amount} + '개 남음'"></em>
                                                                         </div>
                                                                     </div>
                                                                 </button>

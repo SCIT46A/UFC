@@ -2,55 +2,48 @@ package app.scit46.ufc.service.campaign;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.*;
-import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
-import app.scit46.ufc.entity.*;
-import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import app.scit46.ufc.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.MaterialDTO;
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
-import app.scit46.ufc.dto.campaign.CampaignTagDTO;
-import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
-import app.scit46.ufc.entity.LikeEntity;
-import app.scit46.ufc.entity.TagEntity;
+import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
-import app.scit46.ufc.dto.reward.RewardMaterialDTO;
-
+import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
+import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.ImageUrlEntity;
+import app.scit46.ufc.entity.MaterialDonationEntity;
+import app.scit46.ufc.entity.MaterialEntity;
+import app.scit46.ufc.entity.TagEntity;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
+import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import app.scit46.ufc.entity.reward.RewardEntity;
+import app.scit46.ufc.entity.reward.RewardMaterialEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
-import app.scit46.ufc.repository.CreatorRepository;
 import app.scit46.ufc.repository.LikeRepository;
 import app.scit46.ufc.repository.MaterialDonationRepository;
-import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
-import app.scit46.ufc.repository.tag.CampaignTagRepository;
-import app.scit46.ufc.service.MaterialDonationService;
-import app.scit46.ufc.entity.reward.RewardEntity;
-import app.scit46.ufc.entity.reward.RewardItemEntity;
-import app.scit46.ufc.entity.reward.RewardMaterialEntity;
-import app.scit46.ufc.repository.campaign.CampaignRepository;
-import app.scit46.ufc.repository.tag.CampaignTagRepository;
 import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
+import app.scit46.ufc.repository.tag.CampaignTagRepository;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
-import app.scit46.ufc.service.ItemService;
+import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.RewardService;
 import app.scit46.ufc.service.UserService;
-import app.scit46.ufc.service.cloudflare.ImageService;
 import app.scit46.ufc.service.material.MaterialService;
-import app.scit46.ufc.service.material.RewardMaterialService;
 import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -138,10 +131,7 @@ public class CampaignService {
         // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
         // UserEntity.userId -> CreatorEntity.creatorId)
         UserEntity user = userService.findUserByUserName(ccDTO.getUserName().trim());
-        // UserEntity user = userRepository.findByUserName(
-        // ccDTO.getUserName().trim()).orElseThrow(() -> new RuntimeException("창작자를 찾을 수
-        // 없습니다.") // Optional // 처리
-        // );
+        
         CreatorEntity creator = creatorService.findByOwnUser(user);
         // log.info("창작자 아이디 : {}", creatorId);
 
@@ -189,30 +179,6 @@ public class CampaignService {
             RewardEntity reward = rewardService.addReward(receivedRewardDTO, campaignEntity.getCampaignId());
             rewardList.add(reward);
 
-            // // 제공할 리워드 아이템 등록 reward
-            // for(RewardFundingDTO rewardDTO : receivedRewardDTO.getReward()) {
-
-            // RewardItemEntity rewardItemEntity =
-            // rewardService.addRewardItem(receivedRewardDTO, rewardDTO, campaignId);
-            // }
-
-            // // 리워드 아이템에 필요한 재료 등록 funding
-            // for(RewardFundingDTO funding : receivedRewardDTO.getFunding()) {
-            // MaterialEntity material = materialService.addMaterial(funding.getName());
-
-            // RewardMaterialEntity rewardMaterial =
-            // rewardMaterialService.addRewardMaterial(RewardMaterialEntity.builder()
-            // .reward(reward)
-            // .material(material)
-            // .quantityRequired(funding.getAmount())
-            // .build());
-            // }
-
-            // RewardDTO rewardDTO = RewardDTO.builder()
-            // .name(rewardName)
-            // .amount(rewardAmount)
-            // .build();
-            // rewardList.add(rewardDTO);
         }
 
         return campaignEntity.getCampaignId();
@@ -319,11 +285,6 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
     // ✅ 캠페인 목표 조회 (CampaignGoalEntity → CampaignGoalDTO 변환)
     @Transactional(readOnly = true)
     public List<CampaignGoalDTO> getAllCampaignGoals() {
@@ -409,10 +370,21 @@ public class CampaignService {
                         .build();
                 fundingList.add(funding);
             }
+            List<RewardFundingDTO> rewardItemList = new ArrayList<>();
+            for (RewardMaterialEntity rewardMaterial : reward.getRewardMaterials()) {
+                String materialName = rewardMaterial.getMaterial().getName();
+                Integer quantityRequired = rewardMaterial.getQuantityRequired();
+                RewardFundingDTO rewardItem = RewardFundingDTO.builder()
+                        .name(materialName)
+                        .amount(quantityRequired)
+                        .build();
+                rewardItemList.add(rewardItem);
+            }
             RewardListDTO rewardListDTO = RewardListDTO.builder()
                     .name(name)
                     .amount(amount)
                     .funding(fundingList)
+                    .reward(rewardItemList)
                     .build();
             rewardList.add(rewardListDTO);
         }
