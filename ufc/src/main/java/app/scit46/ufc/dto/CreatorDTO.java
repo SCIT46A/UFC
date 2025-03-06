@@ -34,7 +34,7 @@ public class CreatorDTO {
         return CreatorDTO.builder()
                 .creatorId(entity.getCreatorId())
                 .intro(entity.getIntro())
-                .businessCert(entity.getBusinessCert() != null ? ImageUrlDTO.toDTO(entity.getBusinessCert()) : null) // ✅ PhotoDTO 변환
+                .businessCert(entity.getBusinessCert() != null ? ImageUrlDTO.toDTO(entity.getBusinessCert()) : null) // ✅                                                                                       // 변환
                 .bRegistNumber(entity.getBRegistNumber())
                 .bName(entity.getBName())
                 .companyName(entity.getCompanyName())

@@ -265,24 +265,148 @@ dragDropBox.addEventListener("drop", (e) => {
     // 서버 작업은 여기에 fetch로 작성한 후 썸네일을 받아와 화면에 표시합니다.
 });
 
-// 창작가 개설 완료 버튼 클릭 시 창작가 페이지로 이동하기 --> 해당 내용이 DB에 저장될 수 있도록 해야됨
-document.addEventListener("DOMContentLoaded", function() {
-    let btn1 = document.querySelector(".img-form-button");
-            btn1.addEventListener("click", function() {
-            window.location.href="/ufc/src/main/resources/templates/index.html";
-        });
+document.getElementById("seller_regist_date").addEventListener("keydown", function (event) {
+    let value = this.value;
+    let parts = value.split("-");
+
+    if (parts.length > 0 && parts[0].length >= 4 && event.key !== "Backspace" && event.key !== "Tab") {
+        event.preventDefault(); // 4자리 이상 입력 시 입력 방지
+    }
 });
 
-// 창작가 프로필 설정하지 않고 취소하기 할 시 창작가 개설하기 패이지로 리다이렉트
-document.addEventListener("DOMContentLoaded", function() {
-    let skip = document.querySelector(".img-form-skip");
-        skip.addEventListener("click", function() {
-            let cancel_check = confirm ("작성된 내용이 사라집니다. 정말로 취소하시겠습니까?");
-             if (!cancel_check) {
-                return;
-             }
-            window.location.href="/ufc/src/main/resources/templates/index.html";
+document.querySelector(".img-form-button").addEventListener("click", function () {
+    Swal.fire({
+        title: "창작가 개설을 진행하시겠습니까?",
+        text: "새로운 창작의 세계로 나아갈 준비가 되셨나요?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "네, 개설합니다!",
+        cancelButtonText: "아니요, 다시 생각해볼게요",
+        reverseButtons: true
+    }).then(result => {
+        let profileImageInput = document.getElementById('profile-image');    // 이미지 입력
+        let backImageInput = document.getElementById('background-image');    // 이미지 입력
+
+        const intro = document.getElementById("seller_intro");
+        const bRegistNumber = document.getElementById("seller_regist_number");
+        const bName = document.getElementById("seller_regist_person");
+        const companyName = document.getElementById("seller_regist_name");
+        const address = document.getElementById("seller_regist_location");
+
+        // 값 초기화
+        // ✅ 입력값이 없으면 기본값 설정
+        const creatorData = {
+            intro: intro ? intro.value : "소개 없음",
+            registNumber: bRegistNumber ? bRegistNumber.value : "000-00-00000",
+            bizName: bName ? bName.value : "대표자 없음",
+            companyName: companyName ? companyName.value : "회사 없음",
+            address: address ? address.value : "주소 없음" // ✅ 주소가 null이면 기본값 설정
+        };
+        
+        // 이미지 파일 가져오기
+        Promise.all([
+            uploadImage(profileImageInput.files[0]), // 프로필 이미지 업로드
+            uploadImage(backImageInput.files[0])      // 배경 이미지 업로드
+        ]).then(images => {
+            creatorData.profileImg = images[0]; // 프로필 이미지 URL
+            creatorData.backImg = images[1];    // 배경 이미지 URL
+        
+            console.log("🔹이미지 업로드 후 전송할 데이터:", creatorData);  // ✅ 데이터 확인
+        
+            if (result.isConfirmed) {
+                fetch("/creator/create", {
+                    method: "POST",
+                    headers: { 
+                        "Content-Type": "application/json" // JSON 형식으로 설정
+                    },
+                    body: JSON.stringify(creatorData) // JSON 데이터 전송
+                })
+                .then(response => {
+                    console.log("✅ 서버 응답:", response);
+                    Swal.fire("개설 완료!", "창작가 개설 신청이 성공적으로 완료되었습니다.", "success").then(() => {
+                        window.location.href = "/";
+                    });
+                    return response.text();
+                })
+                // .then(data => {
+                //     console.log("✅ 서버 응답:", data);
+                //     Swal.fire("개설 완료!", "창작가 개설 신청이 성공적으로 완료되었습니다.", "success").then(() => {
+                //         window.location.href = "/";
+                //     });
+                // })
+                .catch(error => {
+                    console.error("❌ 오류 발생:", error);
+                    Swal.fire("오류 발생!", `서버에서 오류가 발생했습니다: ${error.message}`, "error");
+                });
+            } else {
+                Swal.fire("취소되었습니다.", "언제든 다시 돌아와 주세요!", "info");
+            }
+        }).catch(error => {
+            console.error("❌ 이미지 업로드 오류:", error);
+            Swal.fire("오류 발생!", `이미지 업로드 중 오류가 발생했습니다: ${error.message}`, "error");
         });
+    });
+});
+
+async function uploadImage(imageFile){
+    if (!imageFile) {
+        alert('이미지가 등록되지 않았습니다.');
+        return;
+    }else{
+        try {
+            let formData = new FormData();
+            formData.append('file', imageFile);
+
+            const response = await fetch('/api/image/upload', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('이미지 업로드에 실패했습니다.');
+            }
+
+            return response.text();
+            
+        } catch (error) {
+            console.error('Error:', error);
+            throw error;
+        }
+        
+    }
+    
+}
+
+// 취소하기 버튼 클릭 시 메인 홈페이지로 이동
+document.querySelector(".img-form-skip").addEventListener("click", function() {
+    Swal.fire({
+        title: '정말 취소하시겠습니까?',
+        text: '지금까지 작성한 내용이 사라질 수 있습니다.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',  // 취소 버튼은 빨간색 느낌으로
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: '네, 취소할게요',
+        cancelButtonText: '아니요, 계속 작성할래요',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // ✅ 취소 확정 시 실행할 코드
+            Swal.fire({
+                title: '취소되었습니다.',
+                text: '작성이 취소되었습니다.',
+                icon: 'info',
+                timer: 2000,  // 2초 후 자동 닫힘
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = "/"; // ✅ 취소 후 홈으로 이동 (경로 변경 가능)
+            });
+        } else {
+            Swal.fire('계속 작성해주세요!', '취소되지 않았습니다.', 'info');
+        }
+    });
 });
 
 function creator_nickname() {
