@@ -41,5 +41,9 @@ public class ImageUrlService {
         return imageUrlRepository.findByImageId(imageId);
     }
 
+    public ImageUrlEntity findImageById(Long id) {
+        return imageUrlRepository.findById(id).orElseThrow(() -> new RuntimeException("Image not found"));
+    }
+
 
 }

@@ -50,8 +50,7 @@ public class ProductService {
         
         // ImageUrlEntity image = entityManager.getReference(ImageUrlEntity.class, cpDTO.getImageId());
         ImageUrlEntity image = imageUrlService.findByImageId(cpDTO.getImageId());
-        Long id = image.getId();
-        image = imageUrlService.findImage(id);
+        image = imageUrlService.findImageById(image.getId());
 
         ItemEntity item = new ItemEntity();
         item.setName(cpDTO.getTitle());
