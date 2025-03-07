@@ -270,6 +270,7 @@ public class ApiAdminController {
             creatorMap.put("creatorId", creator.getCreatorId());
             creatorMap.put("bname", creator.getBName());
             creatorMap.put("companyName", creator.getCompanyName());
+            creatorMap.put("creatorStatus", creator.getCreatorStatus());
             return creatorMap;
         }).collect(Collectors.toList());
 

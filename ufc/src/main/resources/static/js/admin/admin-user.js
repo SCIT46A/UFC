@@ -75,7 +75,7 @@ function updateCampaignCounts() {
     const ongoingCountElem = document.getElementById("ongoing-count");
     const pendingCountElem = document.getElementById("pending-count");
     const completedCountElem = document.getElementById("completed-count");
-    const preparedCountElem = document.getElementById("prepared-count"); // 🔥 추가된 카드
+    const preparedCountElem = document.getElementById("prepared-count");
 
     if (!ongoingCountElem || !pendingCountElem || !completedCountElem || !preparedCountElem) {
         console.error("⛔ 캠페인 카운트 요소를 찾을 수 없습니다.");
@@ -86,10 +86,11 @@ function updateCampaignCounts() {
     let ongoingCount = 0, pendingCount = 0, completedCount = 0, preparedCount = 0;
 
     allCampaigns.forEach(campaign => {
+
         const startDate = new Date(campaign.startDate).getTime();
         const endDate = new Date(campaign.endDate).getTime();
 
-        if (campaign.campaignStatus === 0) {
+        if (campaign.campaignStatus === false) {
             pendingCount++; // 승인 대기
         } else if (startDate > now) {
             preparedCount++; // 펀딩 대기
@@ -136,7 +137,7 @@ function filterCampaigns(type) {
     resetFilterUI();
 
     if (type === "pending") {
-        filteredCampaigns = allCampaigns.filter(campaign => campaign.campaignStatus === 0);
+        filteredCampaigns = allCampaigns.filter(campaign => campaign.campaignStatus === false);
         document.getElementById("table-container").innerHTML = generatePendingCampaignTable(filteredCampaigns);
         return;
     }
@@ -145,17 +146,17 @@ function filterCampaigns(type) {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const startDate = new Date(campaign.startDate);
             const endDate = new Date(campaign.endDate);
-            return campaign.campaignStatus === 1 && startDate <= now && now <= endDate;
+            return campaign.campaignStatus === true && startDate <= now && now <= endDate;
         });
     } else if (type === "completed") {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const endDate = new Date(campaign.endDate);
-            return campaign.campaignStatus === 1 && endDate < now;
+            return campaign.campaignStatus === true && endDate < now;
         });
     } else if (type === "prepared") {
         filteredCampaigns = allCampaigns.filter(campaign => {
             const startDate = new Date(campaign.startDate);
-            return campaign.campaignStatus === 1 && startDate > now;
+            return campaign.campaignStatus === true && startDate > now;
         });
     }
 
@@ -249,6 +250,7 @@ function generateFilterUI() {
     `;
 }
 
+
 function filterCampaignsByDate() {
     const selectedYear = parseInt(document.getElementById("year-select").value);
     const selectedQuarter = parseInt(document.getElementById("quarter-select").value);
@@ -264,11 +266,6 @@ function filterCampaignsByDate() {
     console.log(`🔍 검색 범위: ${quarterStartDate.toISOString()} ~ ${quarterEndDate.toISOString()}`);
     console.log(`📌 현재 선택된 필터: ${currentFilter}`);
 
-    // 첫 검색 시에는 기본 필터를 all로 설정, 하지만 카드 클릭 후에는 유지
-    if (currentFilter === "ongoing" && !document.querySelector(".tracking-card.active")) {
-        currentFilter = "all";
-    }
-
 
     let filteredCampaigns = allCampaigns.filter(campaign => {
         const startDate = new Date(campaign.startDate);
@@ -279,16 +276,24 @@ function filterCampaignsByDate() {
         if (currentFilter === "ongoing") {
             matchesFilter = (startDate <= new Date() && endDate >= new Date());
         } else if (currentFilter === "pending") {
-            matchesFilter = !campaign.campaignStatus; // ✅ 승인 대기 캠페인 필터
+            matchesFilter = !campaign.campaignStatus;
         } else if (currentFilter === "completed") {
             matchesFilter = (endDate < new Date());
         } else if (currentFilter === "prepared") {
-            matchesFilter = (campaign.campaignStatus === 1 && startDate > new Date());
+            matchesFilter = (campaign.campaignStatus === true && startDate > new Date());
         }
 
-        let matchesDate = (startDate.getFullYear() === selectedYear &&
-            startDate.getMonth() + 1 >= quarterStartMonth + 1 &&
-            startDate.getMonth() + 1 <= quarterEndMonth + 1);
+        // ✅ 날짜 필터링을 진행 중인 캠페인에도 정확히 적용
+        let matchesDate = (
+            startDate.getFullYear() === selectedYear &&
+            startDate >= quarterStartDate &&
+            startDate <= quarterEndDate
+        );
+
+        // 🛠 "ongoing" 캠페인의 경우에도 날짜 필터를 적용
+        if (currentFilter === "ongoing") {
+            return matchesFilter && matchesDate;
+        }
 
         return matchesFilter && matchesDate;
     });
@@ -300,7 +305,7 @@ function filterCampaignsByDate() {
         document.getElementById("table-container").innerHTML = generateCampaignTable(filteredCampaigns, allCampaignGoals, allMaterialDonations);
     }
 
-    console.log(`최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
+    console.log(`✅ 최종 필터링 결과: ${filteredCampaigns.length}개 캠페인 (연도: ${selectedYear}, 분기: ${selectedQuarter}, 필터: ${currentFilter})`);
 }
 
 
@@ -322,8 +327,13 @@ function resetFilterUI() {
 
 function generateCampaignTable(campaigns) {
     if (campaigns.length === 0) {
+        console.log("📢 캠페인이 존재하지 않음.");
         return `<div class="empty-message"><p>🚫 등록된 캠페인이 없습니다.</p></div>`;
     }
+
+    console.log("📢 전체 캠페인 목록:", campaigns);
+    console.log("📢 전체 캠페인 목표 목록:", allCampaignGoals);
+    console.log("📢 전체 기부 데이터 목록:", allMaterialDonations);
 
     let tableHTML = `
         <div class="table-container">
@@ -342,13 +352,25 @@ function generateCampaignTable(campaigns) {
     `;
 
     campaigns.forEach(campaign => {
-        const goal = allCampaignGoals.find(goal => goal.campaignId === campaign.campaignId);
+        console.log(`🔍 처리 중인 캠페인:`, campaign);
+
+        // 안전한 검색을 위해 필터링 후 find 사용
+        const goal = allCampaignGoals.find(goal => Number(goal?.campaign?.campaignId) === Number(campaign.campaignId));
+
+
+        console.log(`🎯 찾은 목표(goal) 정보 (campaignId=${campaign.campaignId}):`, goal);
+
+        // 승인된 기부 데이터 필터링 및 합산
         const donations = allMaterialDonations
-            .filter(donation => donation.campaignId === campaign.campaignId)
+            .filter(donation => donation.campaign && donation.campaign.campaignId === Number(campaign.campaignId) && donation.status === "approved")
             .reduce((sum, donation) => sum + donation.quantity, 0);
+
+        console.log(`💰 승인된 기부 총량 (campaignId=${campaign.campaignId}):`, donations);
 
         const goalQuantity = goal ? goal.quantityRequired : 0;
         const fundingPercentage = goalQuantity > 0 ? Math.min(100, (donations / goalQuantity) * 100) : 0;
+
+        console.log(`📊 펀딩 목표량: ${goalQuantity}, 현재 기부량: ${donations}, 펀딩 퍼센트: ${fundingPercentage}%`);
 
         let fundingStatusHTML = `
             <div class="progress-bar-container">
@@ -365,10 +387,14 @@ function generateCampaignTable(campaigns) {
         tableHTML += `
             <tr>
                 <td>${campaign.campaignId}</td>
-                <td>${campaign.title}</td>
+                <td>
+                    <a href="/campaign/${campaign.campaignId}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: blue;">
+                        ${campaign.title}
+                    </a>
+                </td>
                 <td>${new Date(campaign.startDate).toLocaleDateString()}</td>
                 <td>${new Date(campaign.endDate).toLocaleDateString()}</td>
-                <td>${campaign.createdById ? campaign.createdById : "정보 없음"}</td>
+                <td>${campaign.createdBy ? campaign.createdBy.creatorId : "정보 없음"}</td>
                 <td>${fundingStatusHTML}</td>
             </tr>
         `;
@@ -377,6 +403,7 @@ function generateCampaignTable(campaigns) {
     tableHTML += `</tbody></table></div>`;
     return tableHTML;
 }
+
 
 function generatePendingCampaignTable(campaigns) {
     if (campaigns.length === 0) {
@@ -408,11 +435,15 @@ function generatePendingCampaignTable(campaigns) {
             <tr id="campaign-row-${campaign.campaignId}">
                 <td><input type="checkbox" class="campaign-checkbox" value="${campaign.campaignId}"></td>
                 <td>${campaign.campaignId}</td>
-                <td>${campaign.title}</td>
+              <td>
+                    <a href="/campaign/${campaign.campaignId}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: blue;">
+                        ${campaign.title}
+                    </a>
+                </td>      
                 <td>${new Date(campaign.startDate).toLocaleDateString()}</td>
                 <td>${new Date(campaign.endDate).toLocaleDateString()}</td>
-                <td>${campaign.createdById || "정보 없음"}</td>
-                <td><button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button></td>
+                <td>${campaign.createdBy ? campaign.createdBy.creatorId : "정보 없음"}</td>
+                <td><button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button></td>   
             </tr>
         `;
     });
@@ -761,14 +792,20 @@ function fetchCreatorStatus() {
     fetch("/api/admin/creator-status")
         .then(res => res.json())
         .then(creators => {
-            console.log("📢 창작자 현황 데이터:", creators);
-            document.getElementById("content").innerHTML = generateCreatorStatusTable(creators);
+            console.log("📢 전체 창작자 현황 데이터:", creators);
+
+            // ✅ campaignStatus가 1인 항목만 필터링
+            const approvedCreators = creators.filter(creator => creator.creatorStatus === true);
+
+            console.log("✅ 승인된 창작자 목록:", approvedCreators);
+            document.getElementById("content").innerHTML = generateCreatorStatusTable(approvedCreators);
         })
         .catch(error => {
             console.error("❌ 창작자 현황 데이터 로드 오류:", error);
             document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
         });
 }
+
 // ✅ 창작자 현황 테이블 생성
 function generateCreatorStatusTable(creators) {
     if (!creators || creators.length === 0) {
@@ -915,10 +952,10 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
         tableHTML += `
         <tr>
             <td>${report.reportId}</td>
-            <td>${report.userId} (${banCount}회 정지됨)</td>  
+            <td>${report.user.userId} (${banCount}회 정지됨)</td>  
             <td>${report.reason}</td>
             <td>${new Date(report.reportedDate).toLocaleDateString()}</td>
-            <td>${report.reportedById}</td>
+            <td>${report.reportedBy.userId}</td>
             <td>${accountStatus}</td>
             <td>${actionColumn}</td>
             <td>${saveButtonColumn}</td>
