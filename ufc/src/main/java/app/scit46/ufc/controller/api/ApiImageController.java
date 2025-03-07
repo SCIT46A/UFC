@@ -1,6 +1,5 @@
 package app.scit46.ufc.controller.api;
 
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -54,8 +53,8 @@ public class ApiImageController {
             // 파일과 업로드한 유저의 ID를 파라미터로 전달하여 이미지 업로드/DB 저장 후 이미지ID 반환
             log.info("image upload start");
 
-            String result = imageService.uploadImage(file, userId);   //Image Id
-            //String imageUrl = ImageService.getImageUrl(result);
+            String result = imageService.uploadImage(file, userId); // Image Id
+            // String imageUrl = ImageService.getImageUrl(result);
             log.info("image upload success");
             return ResponseEntity.ok(result);
         } catch (Exception e) {
@@ -69,7 +68,6 @@ public class ApiImageController {
     // 이미지 ID를 통해 이미지 URL 반환
     @GetMapping("/{imageId}")
 
-
     public ResponseEntity<String> getImageUrl(@PathVariable("imageId") String imageId) {
         String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
@@ -77,14 +75,10 @@ public class ApiImageController {
 
     // 이미지 URL 변환
 
-
-
-
-
     // 이미지 ID를 통해 이미지 삭제
     // UserDetails 검토 필요
     @DeleteMapping("/delete/{imageId}")
-    public ResponseEntity<Boolean> deleteImage(@PathVariable String imageId, HttpServletRequest request) {
+    public ResponseEntity<Boolean> deleteImage(@PathVariable("imageId") String imageId, HttpServletRequest request) {
         String oauthId = request.getUserPrincipal().getName(); // OAuth 식별자
         Long userId = userService.findUserByIdentity(oauthId).getUserId();
         // 이미지 삭제 권한 검사
@@ -95,4 +89,3 @@ public class ApiImageController {
         return ResponseEntity.ok(result);
     }
 }
-

@@ -1,6 +1,5 @@
 package app.scit46.ufc.controller;
 
-
 import java.net.http.HttpRequest;
 
 import org.apache.catalina.connector.Response;
@@ -29,8 +28,6 @@ import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
-
 
 @Controller
 @RequestMapping("/creator") // 🔹 모든 URL이 "/creator"로 시작하도록 설정
@@ -128,7 +125,7 @@ public class CreatorController {
 
     /** 🔹 [GET] 캠페인 페이지 */
     @GetMapping("/campaign/{id}")
-    public String getCreatorCampaignPage(@PathVariable Long id, Model model) {
+    public String getCreatorCampaignPage(@PathVariable("id") Long id, Model model) {
         CreatorDTO creator = creatorService.getCreator(id);
 
         if (creator == null) {
@@ -143,7 +140,6 @@ public class CreatorController {
         return "creator/creator-campaign";
     }
 
-
     /** 🔹 [GET] 기존 데이터 불러오기 */
     @GetMapping("/edit/data")
     @ResponseBody
@@ -152,6 +148,6 @@ public class CreatorController {
         CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
         return ResponseEntity.ok(creator);
 
-}
+    }
 
 }
