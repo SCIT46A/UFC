@@ -1,5 +1,7 @@
 package app.scit46.ufc.dto;
 
+import java.time.LocalDateTime;
+
 import app.scit46.ufc.entity.CreatorEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +23,7 @@ public class CreatorDTO {
     private String intro;
     private ImageUrlDTO businessCert; // ✅ PhotoDTO 포함
     private String bRegistNumber;
+    private LocalDateTime bRegistDate;
     private String bName;
     private String companyName;
     private String address;
@@ -36,6 +39,7 @@ public class CreatorDTO {
                 .intro(entity.getIntro())
                 .businessCert(entity.getBusinessCert() != null ? ImageUrlDTO.toDTO(entity.getBusinessCert()) : null) // ✅                                                                                       // 변환
                 .bRegistNumber(entity.getBRegistNumber())
+                .bRegistDate(entity.getBRegistDate())
                 .bName(entity.getBName())
                 .companyName(entity.getCompanyName())
                 .address(entity.getAddress())
