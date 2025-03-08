@@ -3,6 +3,7 @@ package app.scit46.ufc.repository.campaign;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -60,7 +61,5 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "GROUP BY c.campaign_id, cg.goal_id " +
             "ORDER BY donationPercentage ASC ", nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
-
-
 
 }

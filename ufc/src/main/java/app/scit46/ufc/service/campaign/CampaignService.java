@@ -112,11 +112,6 @@ public class CampaignService {
 
     }
 
-    public void deleteCampaign(Long campaignId) {
-        campaignRepository.deleteById(campaignId);
-
-    }
-
     // 캠페인 생성
     public CampaignEntity createCampaign(CampaignDTO campaignDTO, CreatorEntity creator, ImageUrlEntity image) {
         // 캠페인 엔티티 생성(변환로직은 CampaignEntity.toEntity() 참조)

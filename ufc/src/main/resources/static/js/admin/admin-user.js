@@ -425,6 +425,7 @@ function generatePendingCampaignTable(campaigns) {
                         <th>종료일</th>
                         <th>생성자</th>
                         <th>승인</th>
+                        <th>거부</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -443,7 +444,8 @@ function generatePendingCampaignTable(campaigns) {
                 <td>${new Date(campaign.startDate).toLocaleDateString()}</td>
                 <td>${new Date(campaign.endDate).toLocaleDateString()}</td>
                 <td>${campaign.createdBy ? campaign.createdBy.creatorId : "정보 없음"}</td>
-                <td><button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button></td>   
+                <td><button class="approve-btn" onclick="approveCampaign(${campaign.campaignId})">승인</button></td> 
+                <td><button class="reject-btn" onclick="openPopup()">거부</button></td>
             </tr>
         `;
     });
@@ -452,8 +454,52 @@ function generatePendingCampaignTable(campaigns) {
 
     return tableHTML;
 }
+// 거부 팝업창 열기 (캠페인 ID 전달)
+function openPopup(campaignId) {
+    let popup = document.getElementById('popup');
+
+    if (!popup) {
+        document.body.insertAdjacentHTML("beforeend", `
+            <div class="popup-overlay" id="popupOverlay" onclick="closePopup()"></div>
+            <div class="popup" id="popup">
+                <p>거부 사유 입력:</p>
+                <input type="text" id="reasonInput" placeholder="거부 사유">
+                <div class="popup-buttons">
+                    <button onclick="saveReason(${campaignId})">확인</button>
+                    <button onclick="closePopup()">취소</button>
+                </div>
+            </div>
+        `);
+    }
+
+    document.getElementById('popup').dataset.campaignId = campaignId;
+    document.getElementById('popup').style.display = 'block';
+    document.getElementById('popupOverlay').style.display = 'block';
+}
 
 
+// 팝업 닫기
+function closePopup() {
+    document.getElementById('popup').style.display = 'none';
+    document.getElementById('popupOverlay').style.display = 'none';
+}
+
+// 거부 사유 저장
+function saveReason() {
+    let reason = document.getElementById('reasonInput').value.trim();
+    let campaignId = document.getElementById('popup').dataset.campaignId;
+
+    if (!reason) return alert("거부 사유를 입력하세요.");
+
+    console.log(`캠페인 ${campaignId} 거부 사유:`, reason);
+
+    // 여기서 서버로 데이터 전송하는 로직 추가 가능 (예: fetch API)
+
+    alert(`캠페인 ${campaignId} 거부 사유가 저장되었습니다.`);
+    closePopup();
+}
+
+//토글 박스 다 체크
 function toggleAllCheckboxes(selectAllCheckbox) {
     const checkboxes = document.querySelectorAll(".campaign-checkbox");
     checkboxes.forEach(checkbox => checkbox.checked = selectAllCheckbox.checked);

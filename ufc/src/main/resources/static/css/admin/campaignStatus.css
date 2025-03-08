@@ -248,16 +248,68 @@ tbody tr:hover {
     margin-bottom: 0.5rem;
 }
 
-/* 승인 버튼 스타일 */
-.bulk-approve-btn {
+/* 모든 버튼 공통 스타일 */
+.approve-btn, .reject-btn {
+    font-size: 14px;  /* 동일한 폰트 크기 */
+    padding: 8px 12px; /* 동일한 내부 여백 */
+    width: 60px; /* 버튼의 너비를 고정 */
+    height: 36px; /* 버튼의 높이를 고정 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     background-color: #CE201B;
     color: white;
     border: none;
-    padding: 8px 12px;
     border-radius: 4px;
     cursor: pointer;
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 }
 
-.bulk-approve-btn:hover {
-    background-color: #CE201B;
+/* 호버 효과 */
+.approve-btn:hover, .reject-btn:hover {
+    background-color: #B31C17;
+    transform: scale(1.05);
 }
+
+/* 팝업 스타일 */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    z-index: 1000;
+    width: 350px; /* 가로 길이 조정 */
+    text-align: center;
+}
+
+/* 입력 필드 스타일 */
+.popup input {
+    width: 90%; /* 가로 길이 늘리기 */
+    padding: 8px;
+    margin-top: 10px; /* 제목과 간격 */
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 버튼 컨테이너 스타일 */
+.popup-buttons {
+    margin-top: 15px; /* 입력 필드와 버튼 사이 간격 */
+    display: flex;
+    justify-content: center;
+    gap: 10px; /* 버튼 사이 간격 */
+}
+
+/* 버튼 스타일 */
+.popup-buttons button {
+    padding: 8px 16px;
+    cursor: pointer;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
