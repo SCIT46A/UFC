@@ -113,6 +113,18 @@ public class ApiAdminController {
         return ResponseEntity.ok(response);
     }
 
+//    @PostMapping("/rejected-reasons")
+//    public ResponseEntity<?> saveRejectedReason(@RequestBody Map<String, String> request) {
+//        Long campaignId = Long.parseLong(request.get("campaignId"));
+//        String reason = request.get("reason");
+//
+//        // 캠페인의 거부 사유를 업데이트
+//        campaignService.saveRejectedReason(campaignId, reason);
+//
+//        return ResponseEntity.ok().build();
+//    }
+
+
 
     // 캠페인 신고 현황
     @GetMapping("/campaign-report")

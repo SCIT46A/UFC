@@ -318,7 +318,11 @@ public class CampaignService {
     }
 
 
-
+//    //캠페인 거부 사유 저장
+//    @Transactional
+//    public void saveRejectedReason(Long campaignId, String reason) {
+//        campaignRepository.updateRejectedReason(campaignId, reason);
+//    }
 
 
 

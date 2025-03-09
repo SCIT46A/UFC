@@ -283,6 +283,20 @@ function filterCampaignsByDate() {
             matchesFilter = (campaign.campaignStatus === true && startDate > new Date());
         }
 
+        //campaignStatus 수정 시
+        // if (currentFilter === "ongoing") { //진행 중
+        //     matchesFilter = (campaign.campaignStatus==="ok"&&startDate <= new Date() && endDate >= new Date());
+        // } else if (currentFilter === "pending") {  // 승인 대기
+        //     matchesFilter = (campaign.campaignStatus==="registed");
+        // } else if (currentFilter === "prepared") { // 펀딩 대기
+        //     matchesFilter = (campaign.campaignStatus === "ok" && startDate > new Date());
+        // } else if (currentFilter === "completed") { //종료
+        //     matchesFilter = (endDate < new Date());
+        // } else if(currentFilter==="rejected") { //거부
+        //     matchesFilter = (campaign.campaignStatus==="rejected");
+        // }
+
+
         // ✅ 날짜 필터링을 진행 중인 캠페인에도 정확히 적용
         let matchesDate = (
             startDate.getFullYear() === selectedYear &&
@@ -491,13 +505,44 @@ function saveReason() {
 
     if (!reason) return alert("거부 사유를 입력하세요.");
 
-    console.log(`캠페인 ${campaignId} 거부 사유:`, reason);
-
-    // 여기서 서버로 데이터 전송하는 로직 추가 가능 (예: fetch API)
+    //서버로 데이터 전송하는 로직 fetch API
 
     alert(`캠페인 ${campaignId} 거부 사유가 저장되었습니다.`);
     closePopup();
 }
+
+// 거부 사유를 저장할 객체 (DB에 바로 넣을 수 있도록 JSON 구조)
+// let rejectedReasons = {};
+//
+// async function saveReason() {
+//     let reason = document.getElementById('reasonInput').value.trim();
+//     let campaignId = document.getElementById('popup').dataset.campaignId;
+//
+//     if (!reason) return alert("거부 사유를 입력하세요.");
+//
+//     // 거부 사유를 객체에 저장
+//     rejectedReasons[campaignId] = reason;
+//
+//     try {
+//         // 서버에 거부 사유를 저장 (나중에 API 연동 시 사용)
+//         let response = await fetch('/api/admin/rejected-reasons', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ campaignId, reason })
+//         });
+//
+//         if (!response.ok) throw new Error('서버 오류');
+//
+//         alert(`캠페인 ${campaignId} 거부 사유가 저장되었습니다.`);
+//         closePopup();
+//     } catch (error) {
+//         console.error("거부 사유 저장 실패:", error);
+//         alert("거부 사유 저장 중 오류가 발생했습니다.");
+//     }
+// }
+
 
 //토글 박스 다 체크
 function toggleAllCheckboxes(selectAllCheckbox) {
@@ -536,7 +581,7 @@ function approveSelectedCampaigns() {
     })
         .then(response => response.json())
         .then(() => {
-            alert("✅ 승인처리 되었습니다.");  // ✅ 여러 개 승인 후 alert 한 번만 실행
+            alert("✅ 승인처리 되었습니다.");
             return fetchCampaignStatus();
         })
         .then(fetchPendingCampaigns);

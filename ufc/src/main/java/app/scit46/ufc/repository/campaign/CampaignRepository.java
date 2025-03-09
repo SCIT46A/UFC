@@ -6,10 +6,12 @@ import java.util.List;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import app.scit46.ufc.entity.campaign.CampaignEntity;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
 
@@ -30,6 +32,11 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findByTitleContaining(String title);
 
 
+//    // 캠페인 거부 사유 저장
+//    @Transactional
+//    @Modifying
+//    @Query("UPDATE CampaignEntity c SET c.rejectedReason = :reason WHERE c.id = :campaignId")
+//    void updateRejectedReason(Long campaignId, String reason);
 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
     List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
