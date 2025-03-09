@@ -217,19 +217,19 @@
                                         <div class="like-bo-box">
                                             <div class="like-bo-box-in">
                                                 <!-- 각각의div   -->
-                                                <div class="like-bo-box-in-pe">
+                                                <div class="like-bo-box-in-pe" th:each="campaign, iterStatus : ${campaigns}">
                                                     <div
                                                         class="like-bo-box-in-pe-in"
                                                     >
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/campaign/{campaignId}(campaignId=${campaign.campaignId})}"
                                                             class="like-bo-box-in-pe-in-a"
                                                         >
                                                             <div
                                                                 class="like-bo-box-in-pe-in-a-img"
                                                             >
                                                                 <img
-                                                                    th:src="${likedCampaigns.photo.imageId}"
+                                                                    th:src="${imageUrls[iterStatus.index]}"
                                                                     src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
                                                                     alt=""
                                                                 />
@@ -268,7 +268,7 @@
                                                                     >
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-top-text"
-                                                                            th:text="${likedCampaigns.created_by.b_name}"
+                                                                                th:text="${campaign.createdBy.companyName}"
                                                                         >
                                                                             TEAM
                                                                             GURO
@@ -280,7 +280,7 @@
                                                                     >
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-top"
-                                                                            th:text="${likedCampaigns.title}"
+                                                                                th:text="${campaign.title}"
                                                                         >
                                                                             귀여움이
                                                                             가득한
@@ -290,7 +290,7 @@
                                                                         </div>
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                            th:text="${likedCampaigns.description}" 
+                                                                                th:text="${campaign.description}" 
                                                                         >
                                                                             고요의
                                                                             정원에서
@@ -327,7 +327,8 @@
                                                                             >
                                                                         </div>
                                                                         <em
-                                                                            >2일
+                                                                                th:text="${campaign.endDate}"
+                                                                                >2일
                                                                             남음</em
                                                                         >
                                                                     </div>

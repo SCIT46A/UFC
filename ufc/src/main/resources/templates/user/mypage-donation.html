@@ -57,7 +57,7 @@
                                     <div class="main-in-box-pro-le">
                                         <div class="main-in-box-pro-le-in">
                                             <img
-                                                src="https://assets.tumblbug.com/profile/default_avatar.png"
+                                                th:src="${userImageId}"
                                                 alt=""
                                                 class="main-in-box-pro-le-in-img"
                                             />
@@ -209,16 +209,16 @@
                                             </div>
                                         </div>
                                         <!-- 각각의 후원내역 나옴 -->
-                                        <div class="sup-content-main" th:each="materialDonations, status : ${materialDonations}">
+                                        <div class="sup-content-main" th:each="donation, iterStatus : ${materialDonations}">
                                             <div class="sup-content-main-box">
                                                 <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
                                                     <div>
                                                         <div class="sup-content-main-box-in-img">
                                                             <!-- 이미지는 campaigns에서 매칭되는 캠페인의 이미지를 사용 -->
-                                                             <a th:href="@{/campaign/{campaignId}(campaignId=${materialDonations.campaign.campaignId})}">
+                                                             <a th:href="@{/campaign/{campaignId}(campaignId=${donation.campaign.campaignId})}">
 
-                                                                <img th:src="${imageUrls[status.index]}"
+                                                                <img th:src="${imageUrls[iterStatus.index]}"
                                                                  alt="캠페인 이미지"/>
                                                                 </a>
                                                             </div>
@@ -228,32 +228,33 @@
                                                         <!-- 후원일 -->
                                                         <div class="sup-content-main-box-in-content-date">
                                                             <span>후원일: </span>
-                                                            <span th:text="${#temporals.format(materialDonations.donatedDate, 'yyyy.MM.dd')}"></span>
+                                                            <span th:text="${#temporals.format(donation.donatedDate, 'yyyy.MM.dd')}"></span>
                                                         </div>
                                                         <!-- 제목 -->
                                                         <a th:href="@{/user/donation/detail}" class="sup-content-main-box-in-content-title">
                                                             <!-- campaigns 리스트에서 현재 donation의 campaignId와 매칭되는 캠페인 찾기 -->
-                                                            <span th:text="${materialDonations.campaign.title}">캠페인 제목</span>
+                                                            <span th:text="${donation.campaign.title}">캠페인 제목</span>
                                                         </a>
                                                         <!-- 구성 -->
                                                         <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                <span th:text="${materialDonations.campaign.rewards.item.name}">구성품</span>
+                                                                <span th:if="${#lists.size(donationRewardSelections) > iterStatus.index}"
+      th:text="${donationRewardSelections[iterStatus.index].reward.rewardName}">구성품</span>
                                                             </li>
                                                         </ul>
                                                         <!-- 비용 -->
                                                         <div class="sup-content-main-box-in-content-pr">
                                                             <p class="sup-content-main-box-in-content-pr-le">
-                                                                <span th:text="${materialDonations.amount}">후원 금액</span>
+                                                                <span th:text="${donation.amount}">후원 금액</span>
                                                             </p>
                                                             <p class="sup-content-main-box-in-content-pr-ri">
-                                                                <span th:text="${#temporals.format(materialDonations.sendDate, 'yyyy.MM.dd')}"></span> 배송 예정
+                                                                <span th:text="${#temporals.format(donation.sendDate, 'yyyy.MM.dd')}"></span> 배송 예정
                                                             </p>
                                                         </div>
                                                     </div>
                                                     <!-- 결과 이미지 -->
                                                     <div class="sup-content-main-box-in-result-img">
-                                                        <img th:src="@{/images/} + ${materialDonations.isSuccess ? 'achieve.png' : 'fail.png'}" alt="결과 이미지" />
+                                                        <img th:src="@{/images/} + ${donation.isSuccess ? 'achieve.png' : 'fail.png'}" alt="결과 이미지" />
                                                     </div>
                                                 </div>
                                             </div>

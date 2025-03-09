@@ -1,7 +1,17 @@
 package app.scit46.ufc.service;
 
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import app.scit46.ufc.dto.LikeDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.LikeEntity;
 import app.scit46.ufc.entity.UserEntity;
@@ -14,7 +24,6 @@ import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -60,7 +69,7 @@ public class LikeService {
 
 
 
-
+    //
     public boolean toggleLike(Long itemId, String type, boolean currentState, Long loginUserId) {
         // 로그인한 사용자의 존재 여부 확인
         UserEntity user = userRepository.findById(loginUserId)
@@ -115,14 +124,42 @@ public class LikeService {
                 likeRepository.save(newLike);
                 return true;
             }
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Invalid type: " + type);
         }
     }
 
+    public List<LikeDTO> getLikesByUserId(Long userId) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+        return user.getLikes().stream()
+                .map(LikeDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public Page<LikeDTO> getListByUserId(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
+        return likeRepository.findByUser_UserId(userId, pageable).map(LikeDTO::toDTO);
+    }
+
+    public Page<CampaignDTO> getLikedCampaignsByUserId(Long userId, int page, int size) {
+    // 좋아요한 캠페인을 조회하는 JPQL 또는 QueryDSL 쿼리를 사용합니다.
+    // 예시: LIKE 엔티티와 Campaign 엔티티를 조인하여 userId에 해당하는 캠페인만 반환
+    return campaignRepository.findLikedCampaignsByUserId(userId, PageRequest.of(page, size)).map(CampaignDTO::toDTO);
+}
 
 
 
+public List<LikeDTO> getLikeByUserUserId(Long userId) {
+    return likeRepository.findByUser_UserId(userId).stream()
+            .map(LikeDTO::toDTO)    
+            .collect(Collectors.toList());
+}
+
+public List<LikeDTO> getLikeByCampaignId(Long campaignId) {
+    return likeRepository.findByCampaign_CampaignId(campaignId).stream()
+            .map(LikeDTO::toDTO)
+            .collect(Collectors.toList());
+}
 
 }

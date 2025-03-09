@@ -1,38 +1,40 @@
 package app.scit46.ufc.controller;
 
 
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import app.scit46.ufc.dto.BadgeDTO;
+import app.scit46.ufc.dto.DonationRewardSelectionDTO;
 import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
-import app.scit46.ufc.service.campaign.CampaignReviewService;
+import app.scit46.ufc.service.BadgeService;
 import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.UserBadgeService;
 import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.campaign.CampaignGoalService;
+import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
+import app.scit46.ufc.service.reward.DonationRewardSelectionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +52,10 @@ public class UserController {
     private final LikeService likeService;
     private final ImageService imageService;
     private final MaterialDonationService materialDonationService;
+    private final BadgeService badgeService;
+    private final UserBadgeService userBadgeService;
+    private final CampaignGoalService campaignGoalService;
+    private final DonationRewardSelectionService donationRewardSelectionService;
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -167,37 +173,61 @@ public class UserController {
         }
 
         @GetMapping("/donation")
-        public String donation (HttpServletRequest request, Model model){
+        public String donation(
+                HttpServletRequest request
+                , Model model
+                ,@RequestParam(value = "page", defaultValue = "0") int page
+                ,@RequestParam(value = "size", defaultValue = "5") int size
+                ){
             HttpSession session = request.getSession(false);
-            Long loginUserId = null;
+            Long userId = null;
 
             if (session != null) {
-                loginUserId = (Long) session.getAttribute("loginUserId");
-                if (loginUserId != null) {
+                userId = (Long) session.getAttribute("loginUserId");
+                if (userId != null) {
                     try {
-                        UserDTO user = userService.readUserById(loginUserId);
+                        UserDTO user = userService.readUserById(userId);
+
+                        Page<MaterialDonationDTO> paging = materialDonationService.getListByUser(userId, page, size);
+                        List<MaterialDonationDTO> materialDonationsList = paging.getContent();
+
                         List<MaterialDonationDTO> materialDonations = materialDonationService
-                                .getMaterialDonationsByUserId(loginUserId);
-                        System.out.println("후원 내역 개수: " + materialDonations.size());
-                        //문제없음 5개로 나옴
+                                .getMaterialDonationsByUserId(userId);
+
                         List<CampaignDTO> campaigns = new ArrayList<>();
                         List<String> imageUrls = new ArrayList<>();
-                        // List<RewardDTO> rewards = new ArrayList<>();
+                        List<DonationRewardSelectionDTO> donationRewardSelections = donationRewardSelectionService.getDonationRewardSelectionsByUserId(userId);
+
                         for (MaterialDonationDTO materialDonation : materialDonations) {
                             CampaignDTO campaign = materialDonation.getCampaign();
                             if (campaign != null && campaign.getPhoto() != null) {
                                 campaigns.add(campaign);
                                 imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
-                                // rewards.add(materialDonation.getCampaign().getRewards());
-                            } else {
-                                System.out.println("⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕🚨 캠페인 정보 없음: " + materialDonation.getDonationId()); // 로그 추가
                             }
-                        }
+                        }   
+                        System.out.println("후원 내역 개수: " + materialDonations.size());
+                        //문제없음 5개로 나옴
+                        
+                        // List<RewardDTO> rewards = new ArrayList<>();
+                        String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
+                                + user.getPhoto().getImageId() + "/public";
+                            
+                        
+
+                        //후원 리워드 가져오기
+                        model.addAttribute("donationRewardSelections", donationRewardSelections);
+                        //캠페인 이미지
                         model.addAttribute("imageUrls", imageUrls);
+                        //캠페인 정보
                         model.addAttribute("campaigns", campaigns);
+                        //유저 후원 개수
                         model.addAttribute("donationCount", materialDonations.size());
+                        //유저 후원 내역
                         model.addAttribute("materialDonations", materialDonations);
+                        //유저 정보
                         model.addAttribute("user", user);
+                        //유저 프로필 이미지
+                        model.addAttribute("userImageId", userImageId);
                     } catch (DBNotFoundException e) {
                         model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                     }
@@ -247,15 +277,88 @@ public class UserController {
 
 
         @GetMapping("/badge")
-        public String badge () {
-            return "user/mypage-badge";
+        public String badge(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("loginUserId");
+        if (userId != null) {
+        try {
+            UserDTO user = userService.readUserById(userId);
+            List<BadgeDTO> badges = badgeService.getBadges();
+            List<UserBadgeDTO> userBadges = userBadgeService.getUserBadge(userId);
+
+            // userBadges에서 보유한 뱃지들의 badgeId만 추출
+            List<Long> userBadgeIds = userBadges.stream()
+                    .map(ub -> ub.getBadge().getBadgeId())
+                    .collect(Collectors.toList());
+
+            String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
+                    + user.getPhoto().getImageId() + "/public";
+
+            model.addAttribute("userBadgeIds", userBadgeIds);
+            model.addAttribute("userBadges", userBadges); // 필요하면 그대로 추가
+            model.addAttribute("badges", badges);
+            model.addAttribute("userImageId", userImageId);
+            model.addAttribute("user", user);
+        } catch (DBNotFoundException e) {
+            model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
         }
+    }
+    return "user/mypage-badge";
+}
 
 
         @GetMapping("/donation/detail")
-        public String alarmDetail () {
+        public String alarmDetail() {
             return "user/mypage-donation-detail";
         }
+
+
+        
+        @GetMapping("/like")
+        public String like(
+        HttpServletRequest request, 
+        Model model,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "6") int size
+        ){
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("loginUserId");
+        if (userId != null) {
+            try {
+
+                UserDTO user = userService.readUserById(userId);
+                List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                // 좋아요한 캠페인만 페이징 처리
+                Page<CampaignDTO> paging = likeService.getLikedCampaignsByUserId(userId, page, size);
+                List<CampaignDTO> campaigns = paging.getContent();
+
+                List<String> imageUrls = new ArrayList<>();
+                String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
+                        + user.getPhoto().getImageId() + "/public";
+                
+                // 각 캠페인의 이미지 URL 추출 (캠페인에 photo가 있는 경우 100%있음)
+                for (CampaignDTO campaign : campaigns) {
+                    if (campaign != null && campaign.getPhoto() != null) {
+                        imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
+                    } else {
+                        imageUrls.add(null);
+                    }
+                }
+                
+                model.addAttribute("likes", likes);
+                model.addAttribute("user", user);
+                model.addAttribute("userImageId", userImageId);
+                model.addAttribute("campaigns", campaigns);
+                model.addAttribute("imageUrls", imageUrls);
+                model.addAttribute("campaignCount", paging.getTotalElements());
+                model.addAttribute("paging", paging);
+
+            } catch (DBNotFoundException e) {
+                model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+            }
+        }
+        return "user/mypage-like";
+    }
 
 
 
