@@ -31,6 +31,7 @@ import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 import app.scit46.ufc.entity.campaign.CampaignTagEntity;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
+import app.scit46.ufc.entity.reward.RewardItemEntity;
 import app.scit46.ufc.entity.reward.RewardMaterialEntity;
 import app.scit46.ufc.repository.CampaignGoalRepository;
 import app.scit46.ufc.repository.LikeRepository;
@@ -374,14 +375,12 @@ public class CampaignService {
                 fundingList.add(funding);
             }
             List<RewardFundingDTO> rewardItemList = new ArrayList<>();
-            for (RewardMaterialEntity rewardMaterial : reward.getRewardMaterials()) {
-                String materialName = rewardMaterial.getMaterial().getName();
-                Integer quantityRequired = rewardMaterial.getQuantityRequired();
-                RewardFundingDTO rewardItem = RewardFundingDTO.builder()
-                        .name(materialName)
-                        .amount(quantityRequired)
-                        .build();
-                rewardItemList.add(rewardItem);
+            for (RewardItemEntity rewardItem : reward.getRewardItems()) {
+              RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
+                      .name(rewardItem.getItem().getName())
+                      .amount(rewardItem.getQuantity())
+                      .build();
+              rewardItemList.add(rewardItemTmp);
             }
             RewardListDTO rewardListDTO = RewardListDTO.builder()
                     .name(name)
