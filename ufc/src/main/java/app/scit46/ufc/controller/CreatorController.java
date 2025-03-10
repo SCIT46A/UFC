@@ -1,7 +1,8 @@
 package app.scit46.ufc.controller;
 
-
 import java.net.http.HttpRequest;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,11 +28,11 @@ import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
+import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping("/creator") // 🔹 모든 URL이 "/creator"로 시작하도록 설정
@@ -52,11 +54,23 @@ public class CreatorController {
     @ResponseBody
     public ResponseEntity<String> createCreator(@RequestBody CreatorCreateDTO creatorCreateDTO,
             HttpServletRequest httpServletRequest) {
-        // System.out.println("📥 입력 데이터: " + creatorCreateDTO);
-        // TODO: DB에 창작자 등록하는 로직 Service에 작성
-        // creatorService.registCreator();
         String OAuthId = httpServletRequest.getUserPrincipal().getName();
-        creatorService.createCreator(creatorCreateDTO, OAuthId);
+
+        // 값 확인
+        System.out.println("📥 받은 요청 데이터: " + creatorCreateDTO);
+        System.out.println("받은 bRegistDate: " + creatorCreateDTO.getBRegistDate());
+
+        // 주소 기본값 설정
+        if (creatorCreateDTO.getAddress() == null || creatorCreateDTO.getAddress().isEmpty()) {
+            creatorCreateDTO.setAddress("주소 없음");
+        }
+
+        // 사업자 등록일 기본값 설정
+        if (creatorCreateDTO.getBRegistDate() == null) {
+            creatorCreateDTO.setBRegistDate(LocalDate.now());
+        }
+        // creatorService.createCreator(creatorCreateDTO, OAuthId);
+        creatorService.createCreator(creatorCreateDTO, httpServletRequest.getUserPrincipal().getName());
         return ResponseEntity.ok("창작가가 성공적으로 저장되었습니다!");
     }
 
@@ -105,19 +119,23 @@ public class CreatorController {
     }
 
     /** 🔹 [POST] 창작가 프로필 수정 */
-    @PostMapping("/update")
+    @PatchMapping("/update") // 부분 업데이트는 PATCH가 더 적절하다고 함
     @ResponseBody
-    public ResponseEntity<String> updateCreator(@RequestBody CreatorDTO creatorDTO) {
+    public ResponseEntity<String> updateCreator(@RequestBody CreatorCreateDTO creatorDTO,
+            HttpServletRequest httpServletRequest) {
         try {
+            // 유저 ID를 이용하여 Creator 조회
+            CreatorDTO creator = creatorService.findCreatorByUser(httpServletRequest.getUserPrincipal().getName());
+            // creator.setCreatorId(creator.getCreatorId());
             System.out.println("📥 수정 데이터 수신: " + creatorDTO.toString());
-
+            // creatorDTO의 필드 중 null로 넘어오는 것이 db에도 반영이 되면 안됨
+            // 만약 반영이 되면 creatorId에 creatorDTO의 null이 아닌 필드의 내용을 set으로 대체하는게 좋을 것으로 판단됨
             // 서비스에서 업데이트 실행
-            boolean isUpdated = creatorService.updateCreator(creatorDTO);
+            boolean isUpdated = creatorService.updateCreator(creator, creatorDTO);
 
             if (!isUpdated) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("업데이트 실패: 존재하지 않는 사용자");
             }
-
             return ResponseEntity.ok("프로필이 성공적으로 수정되었습니다!");
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +161,6 @@ public class CreatorController {
         return "creator/creator-campaign";
     }
 
-
     /** 🔹 [GET] 기존 데이터 불러오기 */
     @GetMapping("/edit/data")
     @ResponseBody
@@ -152,6 +169,6 @@ public class CreatorController {
         CreatorDTO creator = creatorService.findCreatorByUser(OAuthId);
         return ResponseEntity.ok(creator);
 
-}
+    }
 
 }

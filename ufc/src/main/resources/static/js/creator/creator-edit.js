@@ -291,47 +291,65 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
             const updateName = document.getElementById('update-name').value || "창작가 없음";
             const updateCompanyName = document.getElementById('update-company').value || "회사 없음";
 
+            // ✅ 변경된 데이터만 전송 (입력 안 한 값은 `undefined`로 설정)
+            const updateData = {};
+            if (updateIntro) updateData.intro = updateIntro;
+            if (updateName) updateData.bName = updateName;
+            if (updateCompanyName) updateData.companyName = updateCompanyName;
+
             // 2️⃣ 이미지 업로드 후 서버에 데이터 전송
             Promise.all([
-                uploadImage(profileImageFile),  // 프로필 이미지 업로드
-                uploadImage(backgroundImageFile) // 커버 이미지 업로드
-            ]).then(images => {
-                console.log("📌 프로필 이미지 URL:", images[0]);
-                console.log("📌 커버 이미지 URL:", images[1]);
+                profileImageFile ? uploadImage(profileImageFile) : Promise.resolve(null),  // 프로필 이미지 업로드
+                backgroundImageFile ? uploadImage(backgroundImageFile) : Promise.resolve(null), // 커버 이미지 업로드
+            ]).then((images) => {
+                if (images[0]) updateData.profileImg = { imageId: images[0] };
+                if (images[1]) updateData.backImg = { imageId: images[1] };
+                // console.log("📌 프로필 이미지 URL:", images[0]);
+                // console.log("📌 커버 이미지 URL:", images[1]);
 
-                const updateData = {
-                    intro: updateIntro,
-                    bName: updateName,
-                    companyName: updateCompanyName,
-                    profileImgUrl: images[0] || null, // 프로필 이미지 URL (없으면 null)
-                    backImgUrl: images[1] || null // 커버 이미지 URL (없으면 null)
-                };
+                // const updateData = {
+                //     intro: updateIntro,
+                //     bizName: updateName,
+                //     companyName: updateCompanyName,
+                //     profileImg: images[0], // 객체 형태로 변경
+                //     backImg: images[1] // 객체 형태로 변경!
+                // };
 
                 console.log("📌 최종 전송 데이터:", updateData);
 
                 return fetch("/creator/update", {
-                    method: "POST",
+                    method: "PATCH",    // POST에서 PATCH로 변경; 일부 데이터만 변경할 경우 PATCH가 더 적절하다고 함
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(updateData),
-                    credentials: "include"
+                    // credentials: "include"
                 });
             })
-            .then(response => {
-                if (!response.ok) throw new Error("서버 오류 발생!");
+            .then(async (response) => {
+                if (!response.ok) {
+                    let errorMessage = `서버 오류 발생! 상태 코드: ${response.status}`;
+                    try {
+                        const errorData = await response.json();  // 서버가 에러 메시지를 반환하는 경우
+                        errorMessage += ` - ${errorData.message || JSON.stringify(errorData)}`;
+                    } catch (e) {
+                        console.warn("서버에서 JSON이 아닌 응답을 보냈음!");
+                    }
+                    throw new Error(errorMessage);
+                }
                 return response.text();
             })
-            .then(data => {
+            .then((data) => {
                 Swal.fire('수정 완료!', '프로필이 성공적으로 수정되었습니다.', 'success').then(() => {
                     window.location.href = "/creator/campaign"; // ✅ 수정 완료 후 캠페인 페이지로 이동
                 });
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error("❌ 오류 발생:", error);
                 Swal.fire('수정 실패!', '서버에 문제가 있습니다.', 'error');
             });
         }
     });
 });
+
 
 async function uploadImage(imgFile) {
     if (!imgFile) {
