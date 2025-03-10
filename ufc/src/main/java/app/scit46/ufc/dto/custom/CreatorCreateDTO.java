@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import app.scit46.ufc.dto.ImageUrlDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,4 +32,5 @@ public class CreatorCreateDTO {
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate bRegistDate; // 추가된 필드
+
 }

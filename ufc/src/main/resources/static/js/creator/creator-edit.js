@@ -292,28 +292,30 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
             const updateCompanyName = document.getElementById('update-company').value || "회사 없음";
 
             // ✅ 변경된 데이터만 전송 (입력 안 한 값은 `undefined`로 설정)
-            const updateData = {};
-            if (updateIntro) updateData.intro = updateIntro;
-            if (updateName) updateData.bName = updateName;
-            if (updateCompanyName) updateData.companyName = updateCompanyName;
+            // const updateData = {};
+            // if (updateIntro) updateData.intro = updateIntro;
+            // if (updateName) updateData.bName = updateName;
+            // if (updateCompanyName) updateData.companyName = updateCompanyName;
 
             // 2️⃣ 이미지 업로드 후 서버에 데이터 전송
             Promise.all([
                 profileImageFile ? uploadImage(profileImageFile) : Promise.resolve(null),  // 프로필 이미지 업로드
                 backgroundImageFile ? uploadImage(backgroundImageFile) : Promise.resolve(null), // 커버 이미지 업로드
             ]).then((images) => {
-                if (images[0]) updateData.profileImg = { imageId: images[0] };
-                if (images[1]) updateData.backImg = { imageId: images[1] };
+
+                const updateData = {
+                    creatorStatus: true,
+                    intro: updateIntro,
+                    bizName: updateName,
+                    companyName: updateCompanyName,
+                    profileImg: images[0], // 객체 형태로 변경
+                    backImg: images[1] // 객체 형태로 변경!
+                };
+
+                if (images[0]) updateData.profileImg = images[0];
+                if (images[1]) updateData.backImg = images[1];
                 // console.log("📌 프로필 이미지 URL:", images[0]);
                 // console.log("📌 커버 이미지 URL:", images[1]);
-
-                // const updateData = {
-                //     intro: updateIntro,
-                //     bizName: updateName,
-                //     companyName: updateCompanyName,
-                //     profileImg: images[0], // 객체 형태로 변경
-                //     backImg: images[1] // 객체 형태로 변경!
-                // };
 
                 console.log("📌 최종 전송 데이터:", updateData);
 
@@ -321,7 +323,7 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
                     method: "PATCH",    // POST에서 PATCH로 변경; 일부 데이터만 변경할 경우 PATCH가 더 적절하다고 함
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(updateData),
-                    // credentials: "include"
+                    credentials: "include"
                 });
             })
             .then(async (response) => {
@@ -350,6 +352,77 @@ document.querySelector(".img-form-button").addEventListener("click", function() 
     });
 });
 
+
+// document.querySelector(".img-form-button").addEventListener("click", function () {
+//     Swal.fire({
+//         title: '프로필을 수정하시겠습니까?',
+//         text: '변경된 정보가 저장됩니다!',
+//         icon: 'warning',
+//         showCancelButton: true,
+//         confirmButtonColor: '#3085d6',
+//         cancelButtonColor: '#d33',
+//         confirmButtonText: '네, 수정할게요!',
+//         cancelButtonText: '아니요, 취소할게요'
+//     }).then(result => {
+//         if (result.isConfirmed) {
+//             // 1️⃣ 수정할 데이터 가져오기
+//             let profileImageFile = document.getElementById('profile-image').files[0];  // 프로필 이미지
+//             let backgroundImageFile = document.getElementById('background-image').files[0];  // 배경 이미지
+
+//             const updateIntro = document.getElementById('update-intro').value || "소개 없음";
+//             const updateName = document.getElementById('update-name').value || "창작가 없음";
+//             const updateCompanyName = document.getElementById('update-company').value || "회사 없음";
+
+//             // 2️⃣ 이미지 업로드 후 서버에 데이터 전송
+//             Promise.all([
+//                 profileImageFile ? uploadImage(profileImageFile) : Promise.resolve(null),  // 프로필 이미지 업로드
+//                 backgroundImageFile ? uploadImage(backgroundImageFile) : Promise.resolve(null)  // 배경 이미지 업로드
+//             ])
+//             .then((images) => {
+//                 // ✅ 수정 가능한 데이터만 객체로 구성
+//                 const updateData = {
+//                     intro: updateIntro,
+//                     bizName: updateName,
+//                     companyName: updateCompanyName
+//                 };
+
+//                 // ✅ 이미지가 있는 경우에만 추가
+//                 if (images[0]) updateData.profileImg = { imageId: images[0] };
+//                 if (images[1]) updateData.backImg = { imageId: images[1] };
+
+//                 console.log("📌 최종 전송 데이터:", updateData);
+
+//                 return fetch("/creator/update", {
+//                     method: "PATCH",
+//                     headers: { "Content-Type": "application/json" },
+//                     body: JSON.stringify(updateData)
+//                 });
+//             })
+//             .then(async (response) => {
+//                 if (!response.ok) {
+//                     let errorMessage = `서버 오류 발생! 상태 코드: ${response.status}`;
+//                     try {
+//                         const errorData = await response.json();  // 서버가 에러 메시지를 반환하는 경우
+//                         errorMessage += ` - ${errorData.message || JSON.stringify(errorData)}`;
+//                     } catch (e) {
+//                         console.warn("서버에서 JSON이 아닌 응답을 보냈음!");
+//                     }
+//                     throw new Error(errorMessage);
+//                 }
+//                 return response.text();
+//             })
+//             .then((data) => {
+//                 Swal.fire('수정 완료!', '프로필이 성공적으로 수정되었습니다.', 'success').then(() => {
+//                     window.location.href = "/creator/campaign";  // ✅ 수정 완료 후 캠페인 페이지로 이동
+//                 });
+//             })
+//             .catch((error) => {
+//                 console.error("❌ 오류 발생:", error);
+//                 Swal.fire('수정 실패!', '서버에 문제가 있습니다.', 'error');
+//             });
+//         }
+//     });
+// });
 
 async function uploadImage(imgFile) {
     if (!imgFile) {

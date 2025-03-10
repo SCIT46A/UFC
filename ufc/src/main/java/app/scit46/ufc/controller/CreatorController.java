@@ -131,6 +131,7 @@ public class CreatorController {
             // creatorDTO의 필드 중 null로 넘어오는 것이 db에도 반영이 되면 안됨
             // 만약 반영이 되면 creatorId에 creatorDTO의 null이 아닌 필드의 내용을 set으로 대체하는게 좋을 것으로 판단됨
             // 서비스에서 업데이트 실행
+            creatorDTO.setId(creator.getCreatorId());
             boolean isUpdated = creatorService.updateCreator(creator, creatorDTO);
 
             if (!isUpdated) {

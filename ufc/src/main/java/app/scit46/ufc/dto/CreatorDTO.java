@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
 @Setter
@@ -30,6 +31,8 @@ public class CreatorDTO {
     private ImageUrlDTO backImgUrl; // ✅ PhotoDTO 포함
     private ImageUrlDTO proImgUrl; // ✅ PhotoDTO 포함
     private UserDTO ownUser; // ✅ UserDTO 포함
+
+    @JsonProperty
     private Boolean creatorStatus;
 
     @JsonFormat(pattern = "yyyy-MM-dd")

@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +35,7 @@ import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;
+import app.scit46.ufc.repository.ImageUrlRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import app.scit46.ufc.entity.CreatorEntity;
@@ -49,7 +51,7 @@ public class CreatorService {
     private final CreatorRepository creatorRepository;
     private final ImageUrlService imageUrlService;
     private final UserService userService;
-    private final ObjectMapper objectMapper;
+    private final EntityManager entityManager;
     private static final RestTemplate restTemplate = new RestTemplate();
 
     @Value("${opendata.enc-key}")
@@ -222,13 +224,77 @@ public class CreatorService {
     }
 
     // 창작가 정보 업데이트
+    @Transactional
+    public boolean updateCreator(CreatorDTO creator, CreatorCreateDTO creatorDTO) {
+        try {
+            CreatorEntity user = creatorRepository.findById(creatorDTO.getId())
+                    .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다."));
+            // creator.setIntro(creatorDTO.getIntro());
+            // creator.setBName(creatorDTO.getBizName());
+            // creator.setCompanyName(creatorDTO.getCompanyName()); // 사업자 회사명이므로 나중에 수정불가처리
+            // log.info("==={}, ==={}", creator.getProImgUrl(), creator.getBackImgUrl());
+
+            // 수정 가능한 필드만 업데이트
+            if (creatorDTO.getBizName() != null) {
+                user.setBName(creatorDTO.getBizName());
+            }
+            if (creatorDTO.getIntro() != null) {
+                user.setIntro(creatorDTO.getIntro());
+            }
+            if (creatorDTO.getCompanyName() != null) {
+                user.setCompanyName(creatorDTO.getCompanyName());
+            }
+
+            // ✅ 2️⃣ 이미지 변경이 있을 경우에만 업데이트
+            // if (creator.getProImgUrl() != null) {
+            // ImageUrlEntity proImageUrlEntity =
+            // imageUrlService.findByImageId(creator.getProImgUrl());
+            // creator.setProImgUrl(proImageUrlEntity);
+            // }
+            // if (creator.getBackImgUrl() != null) {
+            // ImageUrlEntity backImageUrlEntity =
+            // ImageUrlEntity.toEntity(creator.getBackImgUrl());
+            // creator.setBackImgUrl(backImageUrlEntity);
+            // }
+            log.info("DB에 유저 수정내용 저장 진행중...");
+            // 프로필 이미지와 커버 이미지 ID가 유효한지 확인
+            ImageUrlEntity proImg = imageUrlService.findByImageId(creatorDTO.getProfileImg());
+            if (proImg == null) {
+                throw new RuntimeException("Profile image not found");
+            }
+
+            ImageUrlEntity backImg = imageUrlService.findByImageId(creatorDTO.getBackImg());
+            if (backImg == null) {
+                throw new RuntimeException("Back image not found");
+            }
+
+            // 영속성 컨텍스트에 추가
+            entityManager.merge(proImg);
+            entityManager.merge(backImg);
+
+            // CreatorEntity에 이미지 설정
+            user.setProImgUrl(proImg);
+            user.setBackImgUrl(backImg);
+
+            // CreatorEntity 저장
+            user = creatorRepository.save(user);
+
+            return true;
+        } catch (Exception e) {
+            System.out.println("❌ 업데이트 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // @Transactional
     // public boolean updateCreator(CreatorCreateDTO creatorDTO) {
     // try {
-    // // ✅ 기존 Creator 조회 (ID 필요)
+    // // ✅ 기존 Creator 조회
     // CreatorEntity creator = creatorRepository.findById(creatorDTO.getId())
     // .orElseThrow(() -> new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!"));
 
-    // // ✅ 변경된 값만 업데이트 (null이면 기존 값 유지)
+    // // ✅ 수정 가능한 필드만 업데이트
     // if (creatorDTO.getIntro() != null) {
     // creator.setIntro(creatorDTO.getIntro());
     // }
@@ -236,36 +302,31 @@ public class CreatorService {
     // creator.setBName(creatorDTO.getBizName());
     // }
     // if (creatorDTO.getCompanyName() != null) {
-    // log.info("회사명 수정은 불가능합니다."); // ✅ 회사명은 수정 불가
-    // }
-    // if (creatorDTO.getBRegistDate() != null) {
-    // creator.setBRegistDate(creatorDTO.getBRegistDate());
+    // creator.setCompanyName(creatorDTO.getCompanyName());
     // }
 
-    // // ✅ 프로필 이미지 업데이트 (새로운 이미지가 있을 경우만 변경)
-    // if (creatorDTO.getProfileImg() != null &&
-    // creatorDTO.getProfileImg().getImageId() != null) {
-    // ImageUrlEntity profileImage =
-    // imageUrlService.findByImageId(creatorDTO.getProfileImg().getImageId());
-    // if (profileImage != null) {
-    // creator.setProImgUrl(ImageUrlDTO.toDTO(profileImage));
-    // }
-    // }
-
-    // // ✅ 배경 이미지 업데이트 (새로운 이미지가 있을 경우만 변경)
-    // if (creatorDTO.getBackImg() != null && creatorDTO.getBackImg().getImageId()
-    // != null) {
-    // ImageUrlEntity backImage =
-    // imageUrlService.findByImageId(creatorDTO.getBackImg().getImageId());
-    // if (backImage != null) {
-    // creator.setBackImgUrl(ImageUrlDTO.toDTO(backImage));
-    // }
+    // // ✅ 프로필 이미지 업데이트
+    // if (creatorDTO.getProfileImg() != null) {
+    // ImageUrlDTO image =
+    // ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getProfileImg()));
+    // image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
+    // // log.info("==={}", image);
+    // creator.setProImgUrl(image);
     // }
 
+    // // ✅ 배경 이미지 업데이트
+    // if (creatorDTO.getBackImg() != null) {
+    // ImageUrlDTO image =
+    // ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getBackImg()));
+    // image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
+    // // log.info("==={}", image);
+    // creator.setBackImgUrl(image);
+    // }
+
+    // // ✅ 수정 불가능한 필드는 그대로 유지
     // log.info("📌 DB에 수정된 유저 정보 저장 중...");
     // creatorRepository.save(creator);
     // log.info("✅ 업데이트 완료!");
-
     // return true;
     // } catch (Exception e) {
     // log.error("❌ 업데이트 중 오류 발생: {}", e.getMessage());
@@ -273,49 +334,4 @@ public class CreatorService {
     // return false;
     // }
     // }
-
-    public boolean updateCreator(CreatorDTO creator, CreatorCreateDTO creatorDTO) {
-        try {
-            // ✅ 변경된 값만 업데이트 (null이면 기존 값 유지)
-            if (creatorDTO.getIntro() != null) {
-                creator.setIntro(creatorDTO.getIntro());
-            }
-            if (creatorDTO.getBizName() != null) {
-                creator.setBName(creatorDTO.getBizName());
-            }
-            if (creatorDTO.getCompanyName() != null) {
-                // ✅ 사업자 회사명은 수정 불가 (기존 코드 유지)
-                log.info("회사명 수정은 불가능합니다.");
-            }
-            if (creatorDTO.getBRegistDate() != null) {
-                creator.setBRegistDate(creatorDTO.getBRegistDate());
-            }
-
-            // ✅ 프로필 이미지 업데이트 (새로운 이미지가 있을 경우만 변경)
-            if (creatorDTO.getProfileImg() != null) {
-                ImageUrlDTO image = ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getProfileImg()));
-                if (image != null && image.getId() != null) {
-                    creator.setProImgUrl(image);
-                }
-            }
-
-            // ✅ 배경 이미지 업데이트 (새로운 이미지가 있을 경우만 변경)
-            if (creatorDTO.getBackImg() != null) {
-                ImageUrlDTO image = ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getBackImg()));
-                if (image != null && image.getId() != null) {
-                    creator.setBackImgUrl(image);
-                }
-            }
-
-            log.info("📌 DB에 수정된 유저 정보 저장 중...");
-            creatorRepository.save(CreatorEntity.toEntity(creator)); // ✅ `CreatorEntity`
-            log.info("✅ 업데이트 완료!");
-
-            return true;
-        } catch (Exception e) {
-            log.error("❌ 업데이트 중 오류 발생: {}", e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-    }
 }
