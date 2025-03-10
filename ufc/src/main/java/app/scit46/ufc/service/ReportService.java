@@ -46,6 +46,7 @@ public class ReportService {
                     Long reportedBy = (Long) obj[4];
                     LocalDateTime reportedDate = (LocalDateTime) obj[5];
                     String status = (String) obj[6];
+                    Long creatorId = (Long) obj[7]; // ✅ 추가된 creatorId
 
                     // ✅ JSON으로 변환할 수 있도록 Map으로 변환
                     Map<String, Object> response = new HashMap<>();
@@ -56,11 +57,13 @@ public class ReportService {
                     response.put("reportedBy", reportedBy);
                     response.put("reportedDate", reportedDate);
                     response.put("status", status);
+                    response.put("creatorId", creatorId); // ✅ creatorId 추가
 
                     return response;
                 })
                 .collect(Collectors.toList());
     }
+
 
     //캠페인 신고 처리
     @Transactional

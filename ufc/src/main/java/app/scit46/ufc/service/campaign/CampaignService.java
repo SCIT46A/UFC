@@ -287,6 +287,7 @@ public class CampaignService {
         campaignRepository.saveAll(campaigns);
     }
 
+
     // ✅ 전체 캠페인 조회
     @Transactional(readOnly = true)
     public List<CampaignDTO> getAllCampaigns() {
@@ -341,10 +342,6 @@ public class CampaignService {
                 .map(MaterialDonationDTO::toDTO) // Entity → DTO 변환
                 .collect(Collectors.toList());
     }
-
-
-
-
 
 
     // 캠페인 기부한 내역 조회
@@ -551,4 +548,16 @@ public class CampaignService {
         }
     }
 
+    @Transactional
+    public void saveRejectedReason(Long campaignId, String reason) {
+        // 캠페인 조회
+        CampaignEntity campaign = campaignRepository.findById(campaignId)
+                .orElseThrow(() -> new RuntimeException("해당 캠페인을 찾을 수 없습니다."));
+
+        // 거부 사유 저장 & 상태 변경
+        campaign.setRejectedReason(reason);
+        campaign.setCampaignStatus(2); // ✅ 거부 상태 (2)로 변경
+
+        campaignRepository.save(campaign);
+    }
 }

@@ -112,19 +112,36 @@ public class ApiAdminController {
         response.put("message", "승인처리 되었습니다.");
         return ResponseEntity.ok(response);
     }
+    @PostMapping("/rejected-reasons")
+    public ResponseEntity<?> saveRejectedReason(@RequestBody Map<String, String> request) {
+        try {
+            if (!request.containsKey("campaignId") || !request.containsKey("reason")) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "필수 값이 누락되었습니다."));
+            }
 
-//    @PostMapping("/rejected-reasons")
-//    public ResponseEntity<?> saveRejectedReason(@RequestBody Map<String, String> request) {
-//        Long campaignId = Long.parseLong(request.get("campaignId"));
-//        String reason = request.get("reason");
-//
-//        // 캠페인의 거부 사유를 업데이트
-//        campaignService.saveRejectedReason(campaignId, reason);
-//
-//        return ResponseEntity.ok().build();
-//    }
+            Long campaignId;
+            try {
+                campaignId = Long.parseLong(request.get("campaignId"));
+            } catch (NumberFormatException e) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "잘못된 캠페인 ID 형식"));
+            }
 
+            String reason = request.get("reason").trim();
 
+            if (reason.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("success", false, "message", "거부 사유를 입력해야 합니다."));
+            }
+
+            campaignService.saveRejectedReason(campaignId, reason);
+
+            System.out.println("✅ API 성공: 캠페인 " + campaignId + " 거부됨, 사유: " + reason);
+            return ResponseEntity.ok(Map.of("success", true, "message", "거부 사유가 저장되었습니다."));
+        } catch (Exception e) {
+            System.out.println("❌ API 실패: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", "거부 사유 저장 중 오류 발생"));
+        }
+    }
 
     // 캠페인 신고 현황
     @GetMapping("/campaign-report")

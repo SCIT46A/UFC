@@ -18,7 +18,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findByCampaignId(Long campaignId);
     List<CampaignEntity> findByCampaignIdIn(List<Long> campaignId);
 
-    // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
+    // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = 0)
     @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = 0")
     List<CampaignEntity> findByPendingApproval();
 
@@ -27,16 +27,9 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
 
 
     // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
-    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Integer  campaignStatus, LocalDateTime startDate);
+    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Integer campaignStatus, LocalDateTime startDate);
 
     List<CampaignEntity> findByTitleContaining(String title);
-
-
-//    // 캠페인 거부 사유 저장
-//    @Transactional
-//    @Modifying
-//    @Query("UPDATE CampaignEntity c SET c.rejectedReason = :reason WHERE c.id = :campaignId")
-//    void updateRejectedReason(Long campaignId, String reason);
 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
     List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
