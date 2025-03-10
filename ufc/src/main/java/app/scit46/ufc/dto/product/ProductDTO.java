@@ -33,6 +33,7 @@ public class ProductDTO {
         return ProductDTO.builder()
                 .productId(entity.getProductId())
                 .item(entity.getItem() != null ? ItemDTO.toDTO(entity.getItem()) : null) // ✅ ItemDTO 변환
+                .price(entity.getPrice())
                 .stockQuantity(entity.getStockQuantity())
                 .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅ CreatorDTO 변환
                 .build();
