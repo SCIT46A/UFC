@@ -5,6 +5,7 @@ import app.scit46.ufc.dto.campaign.CampaignBoardReplyDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
+import app.scit46.ufc.dto.custom.UpdateCampaignDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.service.RewardService;
 import app.scit46.ufc.service.campaign.CampaignBoardReplyService;
@@ -48,12 +49,12 @@ public class ApiCampaignController {
         return ResponseEntity.ok(campaignId);
     }
 
-    @PostMapping("/update/{id}")
-    public ResponseEntity<Long> updateCampaign(@PathVariable("id") Long id, @RequestBody GenerateCampaignDTO campaign) {
+    @PostMapping("/campaign/update")
+    public ResponseEntity<Long> updateCampaign(@RequestBody UpdateCampaignDTO campaign) {
 
-        campaignService.editCampaign(campaignService.getCampaignById(id), campaign);
+        campaignService.editCampaign(campaign);
 
-        return ResponseEntity.ok(id);
+        return ResponseEntity.ok(campaign.getCampaignId());
     }
 
     // board 신규 저장

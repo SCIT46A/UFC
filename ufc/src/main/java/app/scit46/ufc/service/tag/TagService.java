@@ -58,6 +58,9 @@ public class TagService {
         // 지정된 태그를 먼저 저장/조회 후 태그 아이디 리스트 반환
         List<Integer> tagIds = saveAndFindTagIds(tagList);
 
+        // 기존에 캠페인에 연결되어 있는 tag 삭제
+        campaignTagRepository.deleteByCampaign(campaignEntity);
+
         // 태그 아이디와 캠페인 아이디를 CampaignTagEntity(태그 아이디와 캠페인 아이디를 연결하는 엔티티)에 저장
         for (Integer tagId : tagIds) {
             CampaignTagEntity campaignTag = CampaignTagEntity.builder()

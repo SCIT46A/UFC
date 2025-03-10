@@ -18,6 +18,7 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
 import app.scit46.ufc.dto.custom.RewardFundingDTO;
 import app.scit46.ufc.dto.custom.RewardListDTO;
+import app.scit46.ufc.dto.custom.UpdateCampaignDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.CreatorEntity;
@@ -187,17 +188,76 @@ public class CampaignService {
     }
 
     // 캠페인 수정(캠페인 생성 로직 + 대상 캠페인 아이디로 다시저장하는 로직)
-    public void editCampaign(CampaignDTO campaignDTO, GenerateCampaignDTO ccDTO) {
-        CampaignDTO campaign = CampaignDTO.builder()
-                .campaignId(campaignDTO.getCampaignId())
-                .title(ccDTO.getTitle())
-                .description(ccDTO.getDescription())
-                .startDate(ccDTO.getStartDate())
-                .endDate(ccDTO.getEndDate())
-                .sendDate(ccDTO.getSendDate())
+    @Transactional
+    public void editCampaign(UpdateCampaignDTO ucDTO) {
+        CampaignEntity campaign = campaignRepository.findById(ucDTO.getCampaignId()).orElse(null);
+
+        // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
+        // UserEntity.userId -> CreatorEntity.creatorId)
+        UserEntity user = userService.findUserByUserName(ucDTO.getUserName().trim());
+
+        CreatorEntity creator = creatorService.findByOwnUser(user);
+
+        if(campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()){
+            throw new RuntimeException("캠페인 수정 권한이 없습니다.");
+        }
+
+        ImageUrlEntity image = null;
+        // 이미지가 변동이 있을 때만 이미지 업데이트
+        if(ucDTO.getImageId() != null){
+            // 이미 저장처리된 이미지 아이디 조회
+            image = imageService.findByImageId(ucDTO.getImageId());
+        }
+        else{
+            image = imageService.findByImageId(campaign.getPhoto().getImageId());
+        }
+
+        // 캠페인 엔티티 수정
+        CampaignEntity campaignEntity = CampaignEntity.builder()
+                .campaignId(campaign.getCampaignId())
+                .title(ucDTO.getTitle())
+                .description(ucDTO.getDescription())
+                .startDate(ucDTO.getStartDate())
+                .endDate(ucDTO.getEndDate())
+                .sendDate(ucDTO.getSendDate())
+                .campaignStatus(false)
+                .isSuccess(false)
                 .build();
 
-        updateCampaign(campaign);
+        // 캠페인 엔티티 저장(업데이트)
+        createCampaign(CampaignDTO.toDTO(campaignEntity), creator, image);
+
+        // 태그 저장(검색) 후 캠페인과 연결
+        tagService.linkCampaignTags(ucDTO.getTagList(), campaignEntity);
+
+        // 캠페인 총 목표 재료, 수량정보 저장
+        ucDTO.getFundingItems().forEach(funding -> {
+            // 재료 등록
+            MaterialEntity material = materialService.addMaterial(MaterialDTO.builder()
+                    .name(funding.getName())
+                    .build());
+            // 기존 재료 삭제
+            campaignGoalRepository.deleteByCampaignAndMaterial(campaignEntity, material);
+            // 캠페인 총 목표 재료, 수량정보 저장
+            campaignGoalRepository.save(CampaignGoalEntity.builder()
+                    .campaign(campaignEntity)
+                    .material(material)
+                    .quantityRequired(funding.getAmount())
+                    .build());
+        });
+
+        // 리워드 리스트
+        List<RewardEntity> rewardList = new ArrayList<>();
+        // 기존 리워드 삭제
+        rewardService.deleteReward(campaignEntity);
+        // 리워드 생성 [{"name": "리워드 제목", "amount": 0 , "funding" : [{"name" : "", "amount"
+        // : 0 },...],"reward" : [{"name" : "", "amount" : 0 },...]},...]
+        for (RewardListDTO receivedRewardDTO : ucDTO.getRewardList()) {
+
+            // 리워드 아이템, 재료 등록
+            RewardEntity reward = rewardService.addReward(receivedRewardDTO, campaignEntity.getCampaignId());
+            rewardList.add(reward);
+        }
     }
 
 

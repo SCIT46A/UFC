@@ -935,9 +935,9 @@ $(document).ready(function () {
     // 이미지 업로드 후 캠페인 데이터 전송
     async function submitCampaign() {
         try {
-            // 캠페인 생성 완료 시 AJAX로 데이터 전송
+            // 캠페인 수정 완료 시 AJAX로 데이터 전송
             let sendData = {};
-
+            sendData.campaignId = document.querySelector("#campaignId").value;
             sendData.tagList = tagList;     // 캠페인 태그 리스트
             sendData.title = campaignTitle.value;   // 캠페인 제목
             sendData.description = campaignDescription.value;    // 캠페인 설명
@@ -957,8 +957,8 @@ $(document).ready(function () {
             const imageFile = imageInput.files[0];
             
             if (!imageFile) {
-                alert('캠페인 이미지가 등록되지 않았습니다.');
-                return;
+                console.log('이미지 파일 변동 없음');
+                sendData.imageId = null;
             }else{
                 try {
                     const formData = new FormData();
@@ -985,7 +985,7 @@ $(document).ready(function () {
             
             // 서버로 캠페인 데이터 전송
             const response = await $.ajax({
-                url: '/api/campaign/create',
+                url: '/api/campaign/update',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify(sendData)
@@ -993,10 +993,10 @@ $(document).ready(function () {
             
             // 성공 시 처리
             if (!response.success) {
-                alert('캠페인이 성공적으로 등록되었습니다.');
-                window.location.href = '/campaign/' + response.campaignId;
+                alert('캠페인이 성공적으로 수정되었습니다.');
+                window.location.href = '/campaign/' + response;
             } else {
-                throw new Error(response.message || '캠페인 등록에 실패했습니다.');
+                throw new Error(response.message || '캠페인 수정에 실패했습니다.');
             }
             
         } catch (error) {
@@ -1054,7 +1054,7 @@ $(document).ready(function () {
             navTarget.next().addClass('check');
             $('.cam-la-in-box-bo.reward').addClass('hidden');
             $('.cam-la-in-box-bo.final').removeClass('hidden');
-            $(".cam-la-in-box-bottom-in-end-btn-span").text('캠페인 생성');
+            $(".cam-la-in-box-bottom-in-end-btn-span").text('캠페인 수정');
             checkCurrentPageInputs('final');
             console.log('Calling updateFinalSummary...');
             updateFinalSummary();
@@ -1062,7 +1062,7 @@ $(document).ready(function () {
         pageStatus = $('.cam-la-in-box-top-in-na-all-ul-li.check').attr('data-target');
         console.log(pageStatus);
     });
-    // 캠페인 생성 버튼 클릭 이벤트
+    // 캠페인 수정 버튼 클릭 이벤트
     $('.cam-la-in-box-bottom-in-end-btn').on('click', function() {
         if ($(this).find('.cam-la-in-box-bottom-in-end-btn-span').text() === '캠페인 수정') {
             submitCampaign();

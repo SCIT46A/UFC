@@ -26,5 +26,7 @@ public interface CampaignTagRepository extends JpaRepository<CampaignTagEntity, 
             "WHERE c.campaignId = :campaignId")
     List<CampaignTagEntity> findTagsByCampaignId(@Param("campaignId") Long campaignId);
 
+    void deleteByCampaign(CampaignEntity campaignEntity);
+
 
 }
