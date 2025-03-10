@@ -12,14 +12,7 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import app.scit46.ufc.service.CreatorService;
@@ -36,15 +29,13 @@ public class ApiAdminController {
     private final ReportService reportService;
     private final CampaignService campaignService;
     private final CreatorService creatorService;
-    private final ReportService.UserUnbanScheduler userUnbanScheduler;
 
 
-    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService, ReportService.UserUnbanScheduler userUnbanScheduler) {
+    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService) {
         this.noticeService = noticeService;
         this.reportService = reportService;
         this.campaignService = campaignService;
         this.creatorService = creatorService;
-        this.userUnbanScheduler = userUnbanScheduler;
     }
 
     // 캠페인 전체 조회
@@ -202,13 +193,19 @@ public class ApiAdminController {
         }
     }
 
-    //정지 해제 즉시 실행
-    @PostMapping("/unban-check")
-    public ResponseEntity<String> unbanCheck() {
-        userUnbanScheduler.unbanExpiredUsers();
-        return ResponseEntity.ok("정지 해제 체크 실행 완료");
+    // ✅ 관리자가 직접 정지 해제 실행
+    @PostMapping("/user-unban")
+    public ResponseEntity<?> unbanUsersManually() {
+        int unbannedCount = reportService.unbanExpiredUsers();
+        return ResponseEntity.ok(Map.of("success", true, "message", unbannedCount + "명 정지 해제됨"));
     }
 
+    // ✅ 특정 유저 정지
+    @PostMapping("/user-ban")
+    public ResponseEntity<?> banUser(@RequestParam Long userId, @RequestParam int days, @RequestParam String reason) {
+        reportService.suspendUser(userId, days, reason);
+        return ResponseEntity.ok(Map.of("success", true, "message", "유저 정지 완료: " + days + "일"));
+    }
 
     //공지사항 목록 조회
     @GetMapping("/notices")
@@ -225,13 +222,11 @@ public class ApiAdminController {
     // 창작자 사업자 등록 검증 API 엔드포인트
     @PostMapping("/verify/{creatorId}")
     public ResponseEntity<Map<String, Object>> verifyCreator(@PathVariable Long creatorId) {
-        // 🔹 DB에서 창작자 정보 가져오기
         CreatorEntity creator = creatorService.getCreatorById(creatorId);
         if (creator == null) {
             return ResponseEntity.badRequest().body(Map.of("error", "🚨 창작자를 찾을 수 없습니다."));
         }
 
-        // 🔹 DTO 생성
         CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
                 .bRegistNumber(creator.getBRegistNumber())
                 .bName(creator.getBName())
@@ -252,29 +247,40 @@ public class ApiAdminController {
         }
     }
 
-
-
+    //창작자 승인
     @PutMapping("/{creatorId}/approve")
     public ResponseEntity<Map<String, Object>> approveCreator(@PathVariable Long creatorId) {
         try {
-            // 🔹 1. 해당 창작자 정보 가져오기
+
             CreatorEntity creator = creatorService.getCreatorById(creatorId);
             if (creator == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("error", "🚨 창작자를 찾을 수 없습니다."));
             }
 
-            // 🔹 2. 승인 처리 (creatorStatus = true 로 변경)
             creator.setCreatorStatus(true);
             creatorService.saveCreator(creator);
 
-            // 🔹 3. JSON 응답 반환 (프론트엔드에서 JSON 파싱할 수 있도록)
             return ResponseEntity.ok(Map.of("message", "✅ 승인 완료", "creatorId", creatorId));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "🚨 승인 처리 중 오류 발생: " + e.getMessage()));
         }
+    }
+
+    //창작자 여러명 승인
+    // ✅ 여러 창작자 승인
+    @PatchMapping("/creators-approve")
+    public ResponseEntity<?> approveMultipleCreators(@RequestBody Map<String, List<Long>> requestBody) {
+        List<Long> creatorIds = requestBody.get("creatorIds");
+
+        if (creatorIds == null || creatorIds.isEmpty()) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("message", "창작자 ID 목록이 비어있습니다."));
+        }
+
+        int updatedCount = creatorService.approveMultipleCreators(creatorIds);
+        return ResponseEntity.ok(Collections.singletonMap("message", updatedCount + "명의 창작자가 승인되었습니다."));
     }
 
 
@@ -305,6 +311,5 @@ public class ApiAdminController {
 
         return ResponseEntity.ok(responseList);
     }
-
 
 }

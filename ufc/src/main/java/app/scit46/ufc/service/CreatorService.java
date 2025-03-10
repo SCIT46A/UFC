@@ -149,17 +149,9 @@ public class CreatorService {
     }
 
 
-    // ✅ 창작자 승인 처리
     @Transactional
-    public void approveCreator(Long creatorId) {
-        CreatorEntity creator = getCreatorById(creatorId);
-
-        if (creator.getBRegistNumber() == null || creator.getBRegistNumber().isEmpty()) {
-            throw new RuntimeException("🚨 승인 실패: 사업자 등록번호가 없습니다. (creatorId=" + creatorId + ")");
-        }
-
-        creator.setCreatorStatus(true);
-        creatorRepository.save(creator);
+    public int approveMultipleCreators(List<Long> creatorIds) {
+        return creatorRepository.updateCreatorStatusByIds(creatorIds);
     }
 
     // 해당 내용 추가됨

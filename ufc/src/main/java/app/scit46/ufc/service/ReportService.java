@@ -7,14 +7,13 @@ import app.scit46.ufc.repository.ReportRepository;
 import app.scit46.ufc.repository.UserRepository;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,41 +114,42 @@ public class ReportService {
         reportRepository.save(report);
         userRepository.save(user);
     }
+    // ✅ 유저 정지 처리 (기간과 사유를 UserEntity에 저장)
+    @Transactional
+    public void suspendUser(Long userId, int banDays, String reason) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("유저를 찾을 수 없습니다. ID: " + userId));
 
-
-    // ✅ 유저 정지 해제 기능 (매일 00시 실행)
-    @Component
-    @EnableScheduling // ✅ 스케줄러 활성화 (필수!)
-    public class UserUnbanScheduler {
-
-        private final UserRepository userRepository;
-
-        public UserUnbanScheduler(UserRepository userRepository) {
-            this.userRepository = userRepository;
-        }
-
-        // ✅ 유저 정지 해제 기능 (매분 실행 테스트)
-        @Scheduled(fixedRate = 60000) // 1분마다 실행
-        @Transactional
-        public void unbanExpiredUsers() {
-            System.out.println("🕒 정지 해제 체크 실행됨: " + LocalDateTime.now()); // ✅ 실행 로그 추가
-
-            List<UserEntity> bannedUsers = userRepository.findAllByUserStatus(0); // ✅ 정지된 유저 찾기
-
-            for (UserEntity user : bannedUsers) {
-                if (user.getUpdatedAt() != null && !user.getUpdatedAt().isAfter(LocalDateTime.now())) {
-                    user.setUserStatus(1);  // ✅ 정지 해제
-                    user.setUpdatedAt(null); // ✅ 정지 해제 날짜 초기화
-                    user.setStatusReason(null); // ✅ 신고 사유 초기화
-
-                    userRepository.save(user); // ✅ 변경 사항 저장
-
-                    // ✅ 로그 추가 (정지 해제된 유저 확인)
-                    System.out.println("✅ 유저 정지 해제됨 - User ID: " + user.getUserId());
-                }
-            }
-        }
+        user.setUserStatus(0); // ✅ 정지 상태로 변경
+        user.setUpdatedAt(LocalDateTime.now().plusDays(banDays)); // ✅ 정지 해제 예정 날짜 저장
+        user.setStatusReason(reason); // ✅ 정지 사유 저장
+        userRepository.save(user);
     }
 
+    // ✅ 정지 해제 처리 (새벽 4시에 실행)
+    @Transactional
+    public int unbanExpiredUsers() {
+        List<UserEntity> bannedUsers = userRepository.findAllByUserStatus(0);
+        LocalDateTime now = LocalDateTime.now();
+        int unbannedCount = 0;
 
+        for (UserEntity user : bannedUsers) {
+            if (user.getUpdatedAt() != null && user.getUpdatedAt().isBefore(now)) {
+                user.setUserStatus(1); // ✅ 정지 해제
+                user.setUpdatedAt(null); // ✅ 날짜 초기화
+                user.setStatusReason(null); // ✅ 정지 사유 초기화
+                userRepository.save(user);
+                unbannedCount++;
+                System.out.println("✅ 정지 해제됨 - User ID: " + user.getUserId());
+            }
+        }
+        return unbannedCount;
+    }
+
+    // ✅ 새벽 4시 자동 실행 (별도 파일 X)
+    @Scheduled(cron = "0 0 4 * * ?")
+    public void autoUnbanUsers() {
+        int unbannedCount = unbanExpiredUsers();
+        System.out.println("🚀 자동 정지 해제 완료: " + unbannedCount + "명 해제됨");
+    }
 }

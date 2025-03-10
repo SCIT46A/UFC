@@ -736,13 +736,12 @@ function renderCampaignTab(tabType) {
 
 
 // 4. 창작자 승인 대기
-
 // ✅ 창작자 승인 대기 목록 조회
 function fetchCreatorApproval() {
-    return fetch("/api/admin/creator-approval")  // 🔥 `return` 추가하여 Promise 반환
+    return fetch("/api/admin/creator-approval")
         .then(res => res.json())
         .then(creators => {
-            console.log("📢 창작자 목록 응답 데이터:", creators); // ✅ API 응답 확인
+            console.log("📢 창작자 목록 응답 데이터:", creators);
 
             const verificationPromises = creators.map(creator =>
                 fetch(`/api/admin/verify/${creator.creatorId}`, {
@@ -752,14 +751,8 @@ function fetchCreatorApproval() {
                     .then(res => res.json())
                     .then(verification => {
                         console.log(`📢 창작자 ${creator.creatorId} 검증 응답 데이터:`, verification);
-
-                        // ✅ valid 값 추출 (API 응답에서 올바르게 가져오는지 확인)
                         const valid = verification.data?.[0]?.valid;
-                        console.log(`📢 창작자 ${creator.creatorId} valid 값:`, valid);
-
-                        // ✅ valid 값이 "01"이면 "⭕", "02"이면 "❌" 설정
                         creator.verificationStatus = (valid === "01") ? "⭕" : "❌";
-                        console.log(`✅ 최종 verificationStatus: ${creator.verificationStatus}`);
                     })
                     .catch(error => {
                         console.error(`❌ 창작자 ${creator.creatorId} 검증 오류:`, error);
@@ -767,7 +760,6 @@ function fetchCreatorApproval() {
                     })
             );
 
-            // ✅ Promise.all()을 반환하여 `.finally()`를 사용할 수 있도록 함
             return Promise.all(verificationPromises).then(() => {
                 document.getElementById("content").innerHTML = generateCreatorApprovalTable(creators);
             });
@@ -778,16 +770,16 @@ function fetchCreatorApproval() {
         });
 }
 
-// 창작자 승인 대기 테이블 생성
+// ✅ 창작자 승인 대기 테이블 생성 (여러 개 선택 승인 추가)
 function generateCreatorApprovalTable(creators) {
     console.log("📢 테이블 렌더링 시작. 현재 creators 데이터:", creators);
 
     let tabHTML = `
         <h2>창작자 승인 관리</h2>
         <p>창작자 승인 상태를 확인하세요.</p>
+        <button onclick="approveSelectedCreators()" class="bulk-approve-btn">선택된 창작자 승인</button>
     `;
 
-    // ✅ 승인 대기 중인 창작자만 필터링
     let filteredCreators = creators.filter(creator => !creator.creatorStatus);
 
     if (filteredCreators.length === 0) {
@@ -799,6 +791,7 @@ function generateCreatorApprovalTable(creators) {
             <table>
                 <thead>
                     <tr>
+                        <th><input type="checkbox" id="select-all" onclick="toggleAllCreatorCheckboxes(this)"></th>
                         <th>창작자 번호</th>
                         <th>사업자 이름</th>
                         <th>상호</th>
@@ -811,19 +804,17 @@ function generateCreatorApprovalTable(creators) {
     `;
 
     filteredCreators.forEach(creator => {
-
-        let approveButton = creator.verificationStatus === "⭕"
-            ? `<button id="approve-btn-${creator.creatorId}" onclick="approveCreator(${creator.creatorId})">승인</button>`
-            : `<button disabled>승인</button>`;
+        let isVerified = creator.verificationStatus === "⭕";
 
         tableHTML += `
             <tr>
+                <td><input type="checkbox" class="creator-checkbox" value="${creator.creatorId}" ${isVerified ? "" : "disabled"}></td>
                 <td>${creator.creatorId}</td>
                 <td>${creator.bname || "N/A"}</td>
                 <td>${creator.companyName || "N/A"}</td>
                 <td>${creator.bregistNumber || "N/A"}</td>
                 <td>${creator.verificationStatus}</td> 
-                <td>${approveButton}</td>
+                <td><button ${isVerified ? "" : "disabled"} onclick="approveCreator(${creator.creatorId})">승인</button></td>
             </tr>
         `;
     });
@@ -834,23 +825,7 @@ function generateCreatorApprovalTable(creators) {
 }
 
 
-function renderCreatorTab(tab) {
-    fetch("/api/admin/creator-approval")
-        .then(res => res.json())
-        .then(creators => {
-            console.log(`📢 현재 선택된 탭: ${tab}`);
-            console.log("📢 업데이트된 창작자 목록:", creators);
-
-            document.getElementById("content").innerHTML = generateCreatorApprovalTable(creators, tab);
-        })
-        .catch(error => {
-            console.error("❌ 창작자 승인 대기 목록 로드 오류:", error);
-            document.getElementById("content").innerHTML = `<h2>오류 발생</h2><p>${error.message}</p>`;
-        });
-}
-
-
-// ✅ 창작자 승인 처리
+// ✅ 창작자 승인 처리 (단일 승인)
 function approveCreator(creatorId) {
     fetch(`/api/admin/${creatorId}/approve`, {
         method: "PUT",
@@ -864,15 +839,47 @@ function approveCreator(creatorId) {
         })
         .then(data => {
             console.log("✅ 승인 완료:", data);
-
-            // ✅ 승인 완료 후 페이지 새로고침
-            window.location.reload();
+            fetchCreatorApproval(); // ✅ 승인 후 목록 갱신
         })
         .catch(error => {
             console.error(`❌ 승인 요청 오류:`, error);
         });
 }
 
+// ✅ 여러 창작자 한 번에 승인
+function approveSelectedCreators() {
+    const selectedCheckboxes = document.querySelectorAll(".creator-checkbox:checked");
+    if (selectedCheckboxes.length === 0) {
+        alert("승인할 창작자를 선택하세요.");
+        return;
+    }
+
+    const creatorIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+
+    fetch(`/api/admin/creators-approve`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ creatorIds })
+    })
+        .then(res => res.json())
+        .then(() => {
+            alert("✅ 선택된 창작자가 승인되었습니다.");
+            fetchCreatorApproval(); // ✅ 승인 후 목록 갱신
+        })
+        .catch(error => {
+            console.error("❌ 다중 승인 오류:", error);
+        });
+}
+
+function toggleAllCreatorCheckboxes(source) {
+    const checkboxes = document.querySelectorAll(".creator-checkbox");
+
+    checkboxes.forEach(checkbox => {
+        if (!checkbox.disabled) { // ❌ 비활성화된 항목 제외
+            checkbox.checked = source.checked;
+        }
+    });
+}
 // 창작자 현황 리스트
 function fetchCreatorStatus() {
     return fetch("/api/admin/creator-status")  // 🔥 `return` 추가하여 Promise 반환
@@ -933,9 +940,9 @@ function generateCreatorStatusTable(creators) {
 }
 
 //5. 유저 신고 관리
-
 // 유저 신고 관리
 let allUserReports = [];
+
 function fetchUserReport() {
     return fetch("/api/admin/user-reports")  // 🔥 `return` 추가하여 Promise 반환
         .then(response => response.json())
@@ -946,6 +953,46 @@ function fetchUserReport() {
         .catch(error => {
             console.error("❌ 유저 신고 목록 로드 오류:", error);
         });
+}
+
+// ✅ 새벽 4시에 자동으로 정지 해제하는 함수
+function clearUserSuspensions() {
+    console.log("🚀 새벽 4시: 정지된 유저 상태 확인 중...");
+
+    fetch("/api/admin/user-unban")
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("✅ 정지된 유저가 해제되었습니다.");
+            } else {
+                console.warn("⚠️ 정지 해제 중 문제가 발생했습니다:", data.message);
+            }
+        })
+        .catch(error => {
+            console.error("❌ 유저 정지 해제 API 호출 오류:", error);
+        });
+}
+
+// ✅ 매일 새벽 4시에 `clearUserSuspensions()` 실행
+function scheduleUnbanTask() {
+    const now = new Date();
+    const targetTime = new Date();
+
+    targetTime.setHours(4, 0, 0, 0); // 새벽 4시 설정
+
+    if (now > targetTime) {
+        // 현재 시간이 이미 4시 이후라면 다음 날 실행하도록 설정
+        targetTime.setDate(targetTime.getDate() + 1);
+    }
+
+    const timeUntilExecution = targetTime - now;
+
+    console.log(`⏳ 다음 유저 정지 해제 실행 시간: ${targetTime}`);
+
+    setTimeout(() => {
+        clearUserSuspensions(); // 처음 실행
+        setInterval(clearUserSuspensions, 24 * 60 * 60 * 1000); // 매 24시간마다 실행
+    }, timeUntilExecution);
 }
 
 // 유저 신고 관리 페이지 테이블 동적 생성
@@ -1055,6 +1102,10 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
 }
 
 
+// ✅ 페이지가 로드되면 자동으로 실행
+document.addEventListener("DOMContentLoaded", function () {
+    scheduleUnbanTask();
+});
 
 function renderTab(tabType) {
     if (!allUserReports.length) {
@@ -1075,14 +1126,13 @@ function renderTab(tabType) {
 }
 
 
-
 // ✅ 신고 처리 요청 (저장 버튼 클릭 시 실행)
 function processUserReport(reportId) {
-    const action = document.getElementById(`action-${reportId}`).value;
+    const banDays = document.getElementById(`action-${reportId}`).value; // 정지 기간 선택값
     const reason = document.getElementById(`reason-${reportId}`).value.trim();
 
-    if (!action || action === "rejected") {
-        alert("조치를 선택해주세요.");
+    if (!banDays || banDays === "rejected") {
+        alert("정지 기간을 선택해주세요.");
         return;
     }
 
@@ -1091,22 +1141,22 @@ function processUserReport(reportId) {
         return;
     }
 
-
-    fetch("/api/admin/user-reports/action", {
+    fetch("/api/admin/user-suspend", {  // ✅ 정지 API 호출
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportId, action, reason }) // ✅ reason 포함
+        body: JSON.stringify({ userId: reportId, banDays, reason }) // ✅ 정지 기간과 이유 포함
     })
         .then(response => response.json())
         .then(data => {
             if (!data.success) throw new Error(data.message);
-            alert(data.message);
+            alert("✅ 유저 정지 완료");
             fetchUserReport(); // ✅ 신고 목록 갱신
         })
         .catch(error => {
-            alert("신고 처리 중 오류가 발생했습니다.");
+            alert("❌ 유저 정지 처리 중 오류가 발생했습니다.");
         });
 }
+
 
 // ✅ 버튼 클릭 시 실행될 함수들
 function updateReportStatus(userId, action) {
