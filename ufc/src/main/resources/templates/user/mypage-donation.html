@@ -199,30 +199,26 @@
                             <div class="sup">
                                 <div class="sup-content">
                                     <div class="sup-content-in">
-                                        <!-- 위에 몇개인지 나오고 -->
+                                        <!-- 후원 내역 개수 출력 -->
                                         <div class="sup-content-in-title">
-                                            <div
-                                                class="sup-content-in-title-text"
-                                            >
-                                                <span th:text="${donationCount}">1</span>건의 후원내역이
-                                                있습니다
+                                            <div class="sup-content-in-title-text">
+                                                <span th:text="${donationCount}">1</span>건의 후원내역이 있습니다
                                             </div>
                                         </div>
-                                        <!-- 각각의 후원내역 나옴 -->
+
+                                        <!-- 각각의 후원 내역 출력 -->
                                         <div class="sup-content-main" th:each="donation, iterStatus : ${materialDonations}">
                                             <div class="sup-content-main-box">
                                                 <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
                                                     <div>
                                                         <div class="sup-content-main-box-in-img">
-                                                            <!-- 이미지는 campaigns에서 매칭되는 캠페인의 이미지를 사용 -->
-                                                             <a th:href="@{/campaign/{campaignId}(campaignId=${donation.campaign.campaignId})}">
-
-                                                                <img th:src="${imageUrls[iterStatus.index]}"
-                                                                 alt="캠페인 이미지"/>
-                                                                </a>
-                                                            </div>
+                                                            <a th:href="@{/campaign/{campaignId}(campaignId=${donation.campaign.campaignId})}">
+                                                                <img th:src="${imageUrls[iterStatus.index]}" alt="캠페인 이미지"/>
+                                                            </a>
+                                                        </div>
                                                     </div>
+                                                    
                                                     <!-- 내용 -->
                                                     <div class="sup-content-main-box-in-content">
                                                         <!-- 후원일 -->
@@ -230,18 +226,19 @@
                                                             <span>후원일: </span>
                                                             <span th:text="${#temporals.format(donation.donatedDate, 'yyyy.MM.dd')}"></span>
                                                         </div>
+                                                        
                                                         <!-- 제목 -->
                                                         <a th:href="@{/user/donation/detail}" class="sup-content-main-box-in-content-title">
-                                                            <!-- campaigns 리스트에서 현재 donation의 campaignId와 매칭되는 캠페인 찾기 -->
                                                             <span th:text="${donation.campaign.title}">캠페인 제목</span>
                                                         </a>
+                                                        
                                                         <!-- 구성 -->
                                                         <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                <span th:if="${#lists.size(donationRewardSelections) > iterStatus.index}"
-      th:text="${donationRewardSelections[iterStatus.index].reward.rewardName}">구성품</span>
+                                                                <span>구성품</span>
                                                             </li>
                                                         </ul>
+                                                        
                                                         <!-- 비용 -->
                                                         <div class="sup-content-main-box-in-content-pr">
                                                             <p class="sup-content-main-box-in-content-pr-le">
@@ -252,13 +249,38 @@
                                                             </p>
                                                         </div>
                                                     </div>
+                                                    
                                                     <!-- 결과 이미지 -->
                                                     <div class="sup-content-main-box-in-result-img">
-                                                        <img th:src="@{/images/} + ${donation.isSuccess ? 'achieve.png' : 'fail.png'}" alt="결과 이미지" />
+                                                        <img th:src="@{/images/} + ${donation.isSuccess ? 'achieve.png' : 'fail.png'}" alt="결과 이미지"/>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
+                                        <!-- 페이지네이션 -->
+                                        <div class="pagination-container">
+                                            <ul class="pagination">
+                                                <!-- 이전 페이지 버튼 -->
+                                                <li th:if="${currentPage > 0}">
+                                                    <a th:href="@{/donation(page=${currentPage - 1}, size=5)}" class="pagination-link">이전</a>
+                                                </li>
+
+                                                <!-- 페이지 번호 -->
+                                                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
+                                                    <a th:href="@{/donation(page=${i}, size=5)}"
+                                                    th:text="${i + 1}"
+                                                    th:classappend="${i == currentPage} ? 'active' : ''"
+                                                    class="pagination-link"></a>
+                                                </li>
+
+                                                <!-- 다음 페이지 버튼 -->
+                                                <li th:if="${currentPage + 1 < totalPages}">
+                                                    <a th:href="@{/donation(page=${currentPage + 1}, size=5)}" class="pagination-link">다음</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

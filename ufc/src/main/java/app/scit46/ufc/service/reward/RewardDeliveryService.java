@@ -1,16 +1,20 @@
 package app.scit46.ufc.service.reward;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
 import java.util.Optional;
-import app.scit46.ufc.repository.RewardRepository;
-import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
-import java.util.HashMap;
+import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import app.scit46.ufc.repository.RewardRepository;
+import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +67,10 @@ public class RewardDeliveryService {
         return Map.of(
                 "rewardDeliveries", deliveryDTOs,
                 "deliveryCounts", deliveryCounts);
+    }
+
+    public Page<Object[]> getRewardDeliveriesByUser(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return rewardDeliveryRepository.findRewardDeliveriesByUserId(userId, pageable);
     }
 }

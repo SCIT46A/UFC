@@ -68,5 +68,6 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     Page<CampaignEntity> findLikedCampaignsByUserId(@Param("userId") Long userId, Pageable pageable);   
 
     Page<CampaignEntity> findByCampaignId(Long campaignId, Pageable pageable);
+    
 
 }

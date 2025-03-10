@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import app.scit46.ufc.dto.BadgeDTO;
-import app.scit46.ufc.dto.DonationRewardSelectionDTO;
 import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
@@ -34,7 +34,7 @@ import app.scit46.ufc.service.campaign.CampaignGoalService;
 import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
-import app.scit46.ufc.service.reward.DonationRewardSelectionService;
+import app.scit46.ufc.service.reward.RewardDeliveryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,8 @@ public class UserController {
     private final BadgeService badgeService;
     private final UserBadgeService userBadgeService;
     private final CampaignGoalService campaignGoalService;
-    private final DonationRewardSelectionService donationRewardSelectionService;
+    private final RewardDeliveryService rewardDeliveryService;
+
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -174,11 +175,11 @@ public class UserController {
 
         @GetMapping("/donation")
         public String donation(
-                HttpServletRequest request
-                , Model model
-                ,@RequestParam(value = "page", defaultValue = "0") int page
-                ,@RequestParam(value = "size", defaultValue = "5") int size
-                ){
+                HttpServletRequest request,
+                Model model,
+                @RequestParam(value = "page", defaultValue = "0") int page,
+                @RequestParam(value = "size", defaultValue = "5") int size) {
+
             HttpSession session = request.getSession(false);
             Long userId = null;
 
@@ -188,46 +189,21 @@ public class UserController {
                     try {
                         UserDTO user = userService.readUserById(userId);
 
+                        // 유저 기부 내역 페이징 조회
                         Page<MaterialDonationDTO> paging = materialDonationService.getListByUser(userId, page, size);
                         List<MaterialDonationDTO> materialDonationsList = paging.getContent();
 
-                        List<MaterialDonationDTO> materialDonations = materialDonationService
-                                .getMaterialDonationsByUserId(userId);
-
-                        List<CampaignDTO> campaigns = new ArrayList<>();
-                        List<String> imageUrls = new ArrayList<>();
-                        List<DonationRewardSelectionDTO> donationRewardSelections = donationRewardSelectionService.getDonationRewardSelectionsByUserId(userId);
-
-                        for (MaterialDonationDTO materialDonation : materialDonations) {
-                            CampaignDTO campaign = materialDonation.getCampaign();
-                            if (campaign != null && campaign.getPhoto() != null) {
-                                campaigns.add(campaign);
-                                imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
-                            }
-                        }   
-                        System.out.println("후원 내역 개수: " + materialDonations.size());
-                        //문제없음 5개로 나옴
+                        // 유저 리워드 배송 내역 페이징 조회
+                        Page<Object[]> rewardDeliveries = rewardDeliveryService.getRewardDeliveriesByUser(userId, page, size);
                         
-                        // List<RewardDTO> rewards = new ArrayList<>();
-                        String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                                + user.getPhoto().getImageId() + "/public";
-                            
-                        
-
-                        //후원 리워드 가져오기
-                        model.addAttribute("donationRewardSelections", donationRewardSelections);
-                        //캠페인 이미지
-                        model.addAttribute("imageUrls", imageUrls);
-                        //캠페인 정보
-                        model.addAttribute("campaigns", campaigns);
-                        //유저 후원 개수
-                        model.addAttribute("donationCount", materialDonations.size());
-                        //유저 후원 내역
-                        model.addAttribute("materialDonations", materialDonations);
-                        //유저 정보
+                        // Model에 데이터 추가
+                        model.addAttribute("rewardDeliveries", rewardDeliveries.getContent());
+                        model.addAttribute("donationCount", materialDonationsList.size());
+                        model.addAttribute("materialDonations", materialDonationsList);
                         model.addAttribute("user", user);
-                        //유저 프로필 이미지
-                        model.addAttribute("userImageId", userImageId);
+                        model.addAttribute("currentPage", page);
+                        model.addAttribute("totalPages", rewardDeliveries.getTotalPages());
+
                     } catch (DBNotFoundException e) {
                         model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                     }
@@ -236,6 +212,7 @@ public class UserController {
 
             return "user/mypage-donation";
         }
+
 
 
         // 회원탈퇴(status 1로 변경)
