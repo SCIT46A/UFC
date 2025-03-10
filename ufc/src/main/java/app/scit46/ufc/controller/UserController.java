@@ -344,13 +344,13 @@ public class UserController {
         // 로그인 관련
 
         @GetMapping("/login")
-        public String loginPage (@RequestParam(value = "redirectUrl", required = false) String redirectUrl, HttpSession
-        session, Model model){
+        public String loginPage(@RequestParam(value = "redirectUrl", required = false) String redirectUrl, HttpSession session, Model model) {
             if (redirectUrl != null && !redirectUrl.isEmpty()) {
                 session.setAttribute("redirectUrl", redirectUrl);
             }
             return "login/login";
         }
+
 
         @GetMapping("/join")
         public String joinDetailPage (HttpServletRequest request, Model model){

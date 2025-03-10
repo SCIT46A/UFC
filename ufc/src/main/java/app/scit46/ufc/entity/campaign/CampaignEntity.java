@@ -53,7 +53,7 @@ public class CampaignEntity {
   private LocalDateTime createdDate;
 
   @Column(name = "campaign_status", nullable = false)
-  private Boolean campaignStatus;
+  private Integer campaignStatus;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JsonIgnore // 순환 참조 방지
@@ -105,13 +105,14 @@ public class CampaignEntity {
         .isSuccess(dto.getIsSuccess() == null ? false : dto.getIsSuccess())
         // .photo(ImageUrlEntity.builder().imageId(photo).build()) // 영속성 문제로 인한 이미지 아이디
         // 자체 설정
-        .campaignStatus(dto.getCampaignStatus() == null ? false : dto.getCampaignStatus())
+        .campaignStatus(dto.getCampaignStatus() == null ? 0 : dto.getCampaignStatus())
+
         .rewards(dto.getRewards() != null ? dto.getRewards().stream()
-            .map(RewardEntity::toEntity)
-            .collect(Collectors.toList()) : null)
-        .campaignTags(dto.getCampaignTags() != null ? dto.getCampaignTags().stream()
-            .map(CampaignTagEntity::toEntity)
-            .collect(Collectors.toList()) : null)
+        .map(RewardEntity::toEntity)
+        .collect(Collectors.toList()) : null)
+    .campaignTags(dto.getCampaignTags() != null ? dto.getCampaignTags().stream()
+        .map(CampaignTagEntity::toEntity)
+        .collect(Collectors.toList()) : null)
         .build();
   }
 }

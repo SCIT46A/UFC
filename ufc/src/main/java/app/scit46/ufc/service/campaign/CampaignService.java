@@ -156,7 +156,7 @@ public class CampaignService {
                 .startDate(ccDTO.getStartDate())
                 .endDate(ccDTO.getEndDate())
                 .sendDate(ccDTO.getSendDate())
-                .campaignStatus(false)
+                .campaignStatus(0)
                 .isSuccess(false)
                 .build();
 
@@ -254,7 +254,7 @@ public class CampaignService {
     // 펀딩 대기 중인 캠페인 조회
     public List<CampaignDTO> getFundingWaitingCampaigns() {
         LocalDateTime now = LocalDateTime.now();
-        return campaignRepository.findByCampaignStatusAndStartDateAfter(true, now)
+        return campaignRepository.findByCampaignStatusAndStartDateAfter(1, now)
                 .stream()
                 .map(CampaignDTO::toDTO) // ✅ modelMapper 대신 직접 변환
                 .collect(Collectors.toList());
@@ -273,7 +273,7 @@ public class CampaignService {
     public void approveCampaign(Long campaignId) {
         CampaignEntity campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new RuntimeException("캠페인을 찾을 수 없습니다."));
-        campaign.setCampaignStatus(true);
+        campaign.setCampaignStatus(1);
         campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
     }
 
@@ -287,7 +287,7 @@ public class CampaignService {
         }
 
         for (CampaignEntity campaign : campaigns) {
-            campaign.setCampaignStatus(true);
+            campaign.setCampaignStatus(1);
         }
         campaignRepository.saveAll(campaigns);
     }
