@@ -32,7 +32,8 @@ public class CampaignDTO {
     private CreatorDTO createdBy; // ✅ CreatorDTO 포함
     private Boolean isSuccess;
     private ImageUrlDTO photo; // ✅ PhotoDTO 포함
-    private Boolean campaignStatus;
+    private Integer campaignStatus;
+    private String rejectedReason;
     private List<CampaignTagDTO> campaignTags;
     private List<RewardDTO> rewards;
 
@@ -46,6 +47,7 @@ public class CampaignDTO {
                 .sendDate(entity.getSendDate())
                 .createdDate(entity.getCreatedDate())
                 .isSuccess(entity.getIsSuccess())
+                .rejectedReason(entity.getRejectedReason())
                 .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅
                                                                                                            // CreatorDTO
                                                                                                            // 변환
