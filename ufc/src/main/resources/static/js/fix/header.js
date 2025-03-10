@@ -404,9 +404,13 @@ $(function () {
         }
 
         // Login Modal (AJAX 후 추가된 요소에 이벤트 바인딩)
-        $(document).on("click", ".header-box-top-pe-my", function () {
-            $(".modal-login").css("display", "flex");
+        $(document).on("click", ".header-box-top-pe-my", function (e) {
+            e.preventDefault();
+            var currentUrl = window.location.href;
+            // 현재 페이지 URL을 쿼리 파라미터로 포함하여 로그인 페이지로 이동
+            window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(currentUrl);
         });
+
 
         $(document).on("click", "#modal-controller", function () {
             $(".modal-login").css("display", "none");

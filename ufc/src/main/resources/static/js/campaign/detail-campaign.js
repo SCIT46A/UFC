@@ -1259,18 +1259,30 @@ $(document).ready(function () {
 
     $(document).on("click", ".reward-btn-in", function(event) {
         event.preventDefault();
-        // 기부 정보 텍스트(예: "a 10개, b 20개")를 가져옵니다.
+
+        // 기부 정보 텍스트(예: "a 10개, b 20개") 가져오기
         var donationDetails = $(".reward-btn-in p").text().trim();
-        // 추가적으로 전달할 값이 있다면 여기서 변수에 담거나 URL에 추가할 수 있습니다.
-        // 예를 들어, donationDetails가 비어있으면 기본값을 설정할 수 있습니다.
+
+        // 기부 항목이 선택되지 않았다면 경고
         if (!donationDetails) {
             alert("기부할 항목을 먼저 선택해 주세요.");
             return;
         }
-        // /pay 엔드포인트로 GET 방식 리다이렉트, donationDetails를 쿼리 파라미터로 전달합니다.
-        window.location.href = "/campaign/pay?donationDetails=" + encodeURIComponent(donationDetails);
 
+        // hidden input에서 loginUserId 값을 읽어 로그인 상태 확인
+        var loginUserId = $("#loginUserId").val();
+        if (!loginUserId) {
+            alert("로그인을 해주세요");
+            var currentUrl = window.location.href;
+            window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(currentUrl);
+            return;
+        }
+
+        // 로그인 상태라면 /campaign/pay 페이지로 이동하며 donationDetails 쿼리 파라미터 전달
+        window.location.href = "/campaign/pay?donationDetails=" + encodeURIComponent(donationDetails);
     });
+
+
 
 
 

@@ -16,7 +16,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findByCampaignIdIn(List<Long> campaignId);
 
     // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
-    @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = false")
+    @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = 0")
     List<CampaignEntity> findByPendingApproval();
 
     @Query("SELECT c FROM CampaignEntity c LEFT JOIN FETCH c.createdBy")
@@ -24,7 +24,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
 
 
     // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
-    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Boolean campaignStatus, LocalDateTime startDate);
+    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Integer  campaignStatus, LocalDateTime startDate);
 
     List<CampaignEntity> findByTitleContaining(String title);
 

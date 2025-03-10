@@ -49,7 +49,7 @@ public class ApiCampaignController {
     }
 
     @PostMapping("/update/{id}")
-    public ResponseEntity<Long> updateCampaign(@PathVariable Long id, @RequestBody GenerateCampaignDTO campaign){
+    public ResponseEntity<Long> updateCampaign(@PathVariable("id") Long id, @RequestBody GenerateCampaignDTO campaign){
 
         campaignService.editCampaign(campaignService.getCampaignById(id), campaign);
 
@@ -58,7 +58,7 @@ public class ApiCampaignController {
 
     // board 신규 저장
     @PostMapping("/{id}/board")
-    public ResponseEntity<Long> createBoard(@PathVariable Long id,
+    public ResponseEntity<Long> createBoard(@PathVariable("id") Long id,
                                             @RequestBody CampaignBoardDTO boardRequest,
                                             @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
@@ -68,15 +68,15 @@ public class ApiCampaignController {
 
     // 전체 board 불러오기
     @GetMapping("/campaign/board/{id}")
-    public ResponseEntity<List<CampaignBoardDTO>> getCampaignBoardList(@PathVariable Long id) {
+    public ResponseEntity<List<CampaignBoardDTO>> getCampaignBoardList(@PathVariable("id") Long id) {
         List<CampaignBoardDTO> boardList = campaignBoardService.getCampaignBoardList(id);
         return ResponseEntity.ok(boardList);
     }
 
     // board 수정하기
     @PostMapping("/{id}/board/{boardId}")
-    public ResponseEntity<Long> createBoardEdit(@PathVariable Long id,
-                                                @PathVariable Long boardId,
+    public ResponseEntity<Long> createBoardEdit(@PathVariable("id") Long id,
+                                                @PathVariable("boardId") Long boardId,
                                                 @RequestBody CampaignBoardDTO boardRequest,
                                                 @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
@@ -85,7 +85,7 @@ public class ApiCampaignController {
     }
 
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<CampaignBoardDTO> getCampaignBoard(@PathVariable Long boardId) {
+    public ResponseEntity<CampaignBoardDTO> getCampaignBoard(@PathVariable("boardId") Long boardId) {
         Optional<CampaignBoardDTO> board = campaignBoardService.getCampaignBoard(boardId);
 
         return board.map(ResponseEntity::ok)
@@ -93,7 +93,7 @@ public class ApiCampaignController {
     }
 
     @GetMapping("/board/delete/{boardId}")
-    public ResponseEntity<Boolean> deleteCampaignBoard(@PathVariable Long boardId) {
+    public ResponseEntity<Boolean> deleteCampaignBoard(@PathVariable("boardId") Long boardId) {
         try {
             boolean deleted = campaignBoardService.deleteBoard(boardId);
             if (deleted) {
@@ -112,7 +112,7 @@ public class ApiCampaignController {
 //  board 댓글 관련
 
     @GetMapping("/replys/{boardId}")
-    public ResponseEntity<List<CampaignBoardReplyDTO>> replylist(@PathVariable Long boardId) {
+    public ResponseEntity<List<CampaignBoardReplyDTO>> replylist(@PathVariable("boardId") Long boardId) {
         try {
             List<CampaignBoardReplyDTO> replies = campaignBoardReplyService.replylist(boardId);
             return ResponseEntity.ok(replies);

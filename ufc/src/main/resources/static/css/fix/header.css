@@ -644,6 +644,13 @@ body {
     vertical-align: middle;
 }
 
+.profile-th img{
+    width: 1.25rem;
+    height: 1.25rem;
+    display: block;
+    vertical-align: middle;
+}
+
 .profile-th-no{
     margin: 0px;
     padding: 0px;
