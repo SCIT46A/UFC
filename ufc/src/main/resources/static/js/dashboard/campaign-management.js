@@ -65,7 +65,6 @@ function updateDateRange(period) {
 }
 
 // ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
-// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
 function formatDate(date) {
     if (!date) return "-"; // ❗ 날짜 값이 없으면 '-' 반환
 
@@ -78,17 +77,17 @@ function formatDate(date) {
     return parsedDate.toISOString().split("T")[0]; // YYYY-MM-DD 포맷 반환
 }
 
-// ✅ 캠페인 등록 폼 제출 처리
-function handleCampaignFormSubmit(event) {
-    event.preventDefault();
-    console.log("캠페인 등록:", {
-        name: document.getElementById("campaignName").value,
-        startDate: document.getElementById("campaignStartDate").value,
-        endDate: document.getElementById("campaignEndDate").value,
-        description: document.getElementById("campaignDescription").value
-    });
-    closeCampaignModal();
-}
+// // ✅ 캠페인 등록 폼 제출 처리
+// function handleCampaignFormSubmit(event) {
+//     event.preventDefault();
+//     console.log("캠페인 등록:", {
+//         name: document.getElementById("campaignName").value,
+//         startDate: document.getElementById("campaignStartDate").value,
+//         endDate: document.getElementById("campaignEndDate").value,
+//         description: document.getElementById("campaignDescription").value
+//     });
+//     closeCampaignModal();
+// }
 
 // ✅ 캠페인 목록 가져오기
 async function fetchCampaigns() {
@@ -145,7 +144,7 @@ function renderCampaignList(campaigns) {
                     ${getStatusText(campaign)}
                 </span>
             </td>
-            <td>75%(수정 예정)</td>
+            <td>${campaign.donationPercentage ? `${campaign.donationPercentage.toFixed(1)}%` : '0%'}</td>
             <td>
                 <button class="btn btn-primary" onclick="viewCampaignDetails('${campaign.campaignId}')">상세 보기</button>
             </td>
@@ -157,32 +156,43 @@ function renderCampaignList(campaigns) {
     console.log("✅ 캠페인 목록 렌더링 완료!");
 }
 
-// ✅ 캠페인 상태에 따라 클래스 적용
+// ✅ 캠페인 상태에 따라 CSS 클래스 반환
 function getStatusClass(campaign) {
     if (campaign.campaignStatus === false) {
-        return "inspection"; // 승인 대기
+        return "inspection"; // ✅ 승인 대기
     }
     if (campaign.campaignStatus === true) {
-        if (new Date(campaign.startDate) > new Date()) {
-            return "scheduled"; // 대기 중
+        const today = new Date();
+        const startDate = new Date(campaign.startDate);
+        const endDate = new Date(campaign.endDate);
+        const donationRate = campaign.donationPercentage.toFixed(1);
+
+        if (startDate > today) {
+            return "scheduled"; // ✅ 대기 중
         }
-        if (new Date(campaign.endDate) < new Date()) {
-            return campaign.isSuccess ? "achieved" : "unachieved"; // 목표 달성 / 목표 미달성
+        if (endDate < today) {
+            return donationRate < 100 ? "unachieved" : "achieved"; // ✅ 종료된 경우 목표 달성 여부 체크
         }
-        return "in-progress"; // 진행 중
+        return donationRate < 100 ? "in-progress" : "in-progress-achieved"; // ✅ 진행 중인데 목표 달성
     }
     return "";
 }
 
-// ✅ 캠페인 상태 텍스트 변환
+// ✅ UI에서 보여줄 상태 텍스트 반환
 function getStatusText(campaign) {
     if (campaign.campaignStatus === false) return "승인 대기";
+
     if (campaign.campaignStatus === true) {
-        if (new Date(campaign.startDate) > new Date()) return "대기 중";
-        if (new Date(campaign.endDate) < new Date()) {
-            return campaign.isSuccess ? "종료: 목표 달성" : "종료: 목표 미달성";
+        const today = new Date();
+        const startDate = new Date(campaign.startDate);
+        const endDate = new Date(campaign.endDate);
+        const donationRate = campaign.donationPercentage.toFixed(1);
+
+        if (startDate > today) return "대기 중";
+        if (endDate < today) {
+            return donationRate < 100 ? "종료: 목표 미달성" : "종료: 목표 달성";
         }
-        return "진행 중";
+        return donationRate < 100 ? "진행 중" : "목표 달성 진행 중"; // ✅ 진행 중인데 목표 달성한 경우 추가
     }
     return "알 수 없음";
 }
@@ -190,17 +200,28 @@ function getStatusText(campaign) {
 // ✅ 상세보기 버튼 클릭 시 모달 열기
 function viewCampaignDetails(campaignId) {
     console.log("📌 캠페인 상세 보기:", campaignId);
-    document.getElementById("campaignDetails").innerHTML = `<p>캠페인 ID ${campaignId}의 상세 정보를 불러오는 중...</p>`;
-    document.getElementById("campaignModal").style.display = "block";
+    const url = window.location.origin + "/campaign/" + campaignId;
+    // 새 창(팝업) 설정 (너비 1200px, 높이 800px)
+    const popup = window.open(url, "_blank", "width=1200,height=800,scrollbars=yes,resizable=yes");
+    // 창이 차단되었을 경우 처리
+    if (!popup) {
+        alert("팝업이 차단되었습니다. 팝업 차단을 해제해주세요.");
+    }
 }
+
 
 // ✅ 모달 열기 및 닫기 함수
-function openCampaignModal() {
-    document.getElementById("campaignModal").style.display = "block";
-}
+// function openCampaignModal() {
+//     document.getElementById("campaignModal").style.display = "block";
+// }
 
-function closeCampaignModal() {
-    document.getElementById("campaignModal").style.display = "none";
+// function closeCampaignModal() {
+//     document.getElementById("campaignModal").style.display = "none";
+// }
+
+function openCampaignCreatePage() {
+    const url = window.location.origin + "/campaign/create";
+    window.open(url, "_blank");
 }
 
 // ✅ 캠페인 미리보기 함수

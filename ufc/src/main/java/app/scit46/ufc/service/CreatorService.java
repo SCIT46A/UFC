@@ -1,6 +1,5 @@
 package app.scit46.ufc.service;
 
-
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +37,6 @@ import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 import org.springframework.web.client.RestTemplate;
 
-
 @Service
 @Transactional // 추가됨 아마
 @RequiredArgsConstructor
@@ -54,8 +52,6 @@ public class CreatorService {
 
     private String apiUrl;
 
-
-
     @PostConstruct
     public void setupApiUrl() {
         try {
@@ -63,8 +59,8 @@ public class CreatorService {
 
             this.apiUrl = "http://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=" + apiKey;
 
-            System.out.println("🛠 원본 API Key: " + apiKey);
-            System.out.println("🚀 최종 API 호출 URL: " + this.apiUrl);
+            // System.out.println("🛠 원본 API Key: " + apiKey);
+            // System.out.println("🚀 최종 API 호출 URL: " + this.apiUrl);
 
         } catch (Exception e) {
             System.err.println("🚨 API URL 설정 중 오류 발생: " + e.getMessage());
@@ -72,7 +68,7 @@ public class CreatorService {
         }
     }
 
-    //api 호출, 검증
+    // api 호출, 검증
     public ResponseEntity<String> callBusinessValidationAPI(CreatorApprovalDTO dto) {
         try {
             String finalUrl = "http://api.odcloud.kr/api/nts-businessman/v1/validate?serviceKey=" + apiKey;
@@ -93,7 +89,6 @@ public class CreatorService {
 
             HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(requestData, headers);
 
-
             ResponseEntity<String> response = restTemplate.postForEntity(uri, requestEntity, String.class);
 
             return response;
@@ -103,10 +98,9 @@ public class CreatorService {
         }
     }
 
+    // ---------------------- api키-------------------------------------------
 
-//    ---------------------- api키-------------------------------------------
-
-    //모든 창작자 정보
+    // 모든 창작자 정보
     public List<CreatorDTO> getAllCreators() {
         return creatorRepository.findAll().stream()
                 .map(CreatorDTO::toDTO)
@@ -114,8 +108,6 @@ public class CreatorService {
     }
 
     // 검토 필요
-
-
 
     // 특정 창작자 정보 조회
     public CreatorDTO getCreator(Long id) {
@@ -137,7 +129,6 @@ public class CreatorService {
                 .collect(Collectors.toList());
     }
 
-
     public CreatorDTO getCreatorByUser(String oAuthId) {
         CreatorEntity creatorEntity = creatorRepository.findByOwnUser(userService.findUserByIdentity(oAuthId));
 
@@ -147,7 +138,6 @@ public class CreatorService {
 
         return CreatorDTO.toDTO(creatorEntity);
     }
-
 
     // ✅ 창작자 승인 처리
     @Transactional
@@ -190,21 +180,16 @@ public class CreatorService {
         if (creatorEntity == null) {
             return null;
         }
-//      임의로 추가해두었습니다 필요시 수정해주세요~ -cho
+        // 임의로 추가해두었습니다 필요시 수정해주세요~ -cho
         return CreatorDTO.toDTO(creatorEntity);
     }
 
+    // 하단부분에 사용하는거 없어서 일단 주석해두었습니다 궁금하신점은 문의주세요~ -cho
 
-//   하단부분에 사용하는거 없어서 일단 주석해두었습니다 궁금하신점은 문의주세요~ -cho
-
-
-//     ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
+    // ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
     public CreatorEntity saveCreator(CreatorEntity creator) {
         return creatorRepository.save(creator); // JPA를 이용한 저장
     }
-
-
-
 
     public CreatorEntity findByOwnUser(UserEntity user) {
         CreatorEntity creator = creatorRepository.findByOwnUser(user);
@@ -213,7 +198,6 @@ public class CreatorService {
         }
         return creator;
     }
-
 
     // 기존 getCreator 메서드 삭제 - 중복 메서드 해결
     @Transactional
@@ -236,5 +220,3 @@ public class CreatorService {
         return true;
     }
 }
-
-

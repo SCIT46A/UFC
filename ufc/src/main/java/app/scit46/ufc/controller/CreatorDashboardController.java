@@ -155,18 +155,4 @@ public class CreatorDashboardController {
         model.addAttribute("creatorId", creatorId);
         return view;
     }
-    // /**
-    // * 🔹 **세션 값 확인 API** (디버깅 용도)
-    // * - 현재 세션에 `creatorId`가 있는지 확인하는 API
-    // */
-    // @GetMapping("/session/creatorId")
-    // @ResponseBody
-    // public ResponseEntity<String> getSessionCreatorId(HttpSession session) {
-    // Long creatorId = (Long) session.getAttribute("creatorId");
-    // if (creatorId == null) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("❌ 세션에 creatorId
-    // 없음");
-    // }
-    // return ResponseEntity.ok("📌 현재 세션에 저장된 creatorId: " + creatorId);
-    // }
 }

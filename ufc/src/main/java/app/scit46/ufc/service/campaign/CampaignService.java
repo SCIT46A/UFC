@@ -53,7 +53,9 @@ import app.scit46.ufc.service.material.MaterialService;
 import app.scit46.ufc.service.material.RewardMaterialService;
 import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -129,7 +131,6 @@ public class CampaignService {
     }
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
-
 
     // GenerateCampaign = 프론트에서 보낸 데이터를 받아줄 커스텀 DTO -> 파싱하여 적절히 처리하는 로직
     // Entity를 그대로 사용한 것은 영속성 문제로 인해 캠페인 생성에 필요한 세부 요소들의 연계에 오류가 발생하기 때문
@@ -233,7 +234,6 @@ public class CampaignService {
         updateCampaign(campaign);
     }
 
-
     // 캠페인에 할당되어 있는 태그 조회
     public List<String> getCampaignTags(Long campaignId) {
         List<CampaignTagEntity> campaignTag = campaignTagRepository
@@ -249,7 +249,6 @@ public class CampaignService {
     public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
         return campaignRepository.findByCampaignId(campaignId);
     }
-
 
     // 펀딩 대기 중인 캠페인 조회
     public List<CampaignDTO> getFundingWaitingCampaigns() {
@@ -322,11 +321,6 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
     // ✅ 캠페인 목표 조회 (CampaignGoalEntity → CampaignGoalDTO 변환)
     @Transactional(readOnly = true)
     public List<CampaignGoalDTO> getAllCampaignGoals() {
@@ -343,11 +337,6 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
     // 캠페인 기부한 내역 조회
     public List<CampaignDTO> getCampaignsByUserId(List<Long> campaignId) {
         return campaignRepository.findByCampaignIdIn(campaignId)
@@ -356,23 +345,34 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-    public List<CampaignDTO> getCampaignsByCreator(Long creatorId) {
-        return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
-                .map(CampaignDTO::toDTO)
-                .collect(Collectors.toList());
+    public List<Map<String, Object>> getCampaignsByCreator(Long creatorId) {
+        List<Object[]> results = campaignRepository.findCampaignsWithAchievement(creatorId);
+
+        return results.stream().map(result -> {
+            Map<String, Object> campaignData = new HashMap<>();
+            campaignData.put("campaignId", (Long) result[0]);
+            campaignData.put("title", (String) result[1]);
+
+            // ✅ DATE 변환
+            campaignData.put("startDate", ((java.sql.Date) result[2]).toLocalDate());
+            campaignData.put("endDate", ((java.sql.Date) result[3]).toLocalDate());
+
+            campaignData.put("campaignStatus", result[4]); // ✅ 상태 추가
+            campaignData.put("donationPercentage", result[5] != null ? ((Number) result[5]).doubleValue() : 0.0);
+
+            return campaignData;
+        }).collect(Collectors.toList());
     }
 
-
-//        // 리뷰-캠페인 조회
-//        public CampaignDTO getCampaignById(Long campaigned_by) {
-//            List<CampaignEntity> campaigns = campaignRepository.findByCampaignId(campaigned_by);
-//            return campaigns.stream()
-//                    .findFirst() // 첫 번째 캠페인 엔티티를 선택
-//                    .map(CampaignDTO::toDTO)
-//                    .orElse(null);
-//        }
-
-
+    // // 리뷰-캠페인 조회
+    // public CampaignDTO getCampaignById(Long campaigned_by) {
+    // List<CampaignEntity> campaigns =
+    // campaignRepository.findByCampaignId(campaigned_by);
+    // return campaigns.stream()
+    // .findFirst() // 첫 번째 캠페인 엔티티를 선택
+    // .map(CampaignDTO::toDTO)
+    // .orElse(null);
+    // }
 
     public List<Long> getCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()

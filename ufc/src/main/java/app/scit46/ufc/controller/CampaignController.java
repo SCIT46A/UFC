@@ -136,7 +136,7 @@ public class CampaignController {
     }
 
     @GetMapping("/pay")
-    public String payCampaign(@RequestParam(required = false) String donationDetails,
+    public String payCampaign(@RequestParam(name = "donationDetails", required = false) String donationDetails,
             HttpServletRequest request, Model model) {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 

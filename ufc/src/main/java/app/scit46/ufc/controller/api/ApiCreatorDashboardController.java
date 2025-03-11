@@ -4,31 +4,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.http.ResponseEntity;
 import java.util.Map;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.HashMap;
 import java.util.Collections;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.reward.RewardDeliveryService;
-import app.scit46.ufc.service.delivery.DeliveryService;
 import app.scit46.ufc.service.product.ProductService;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.service.CourierService;
-import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestParam;
-import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import app.scit46.ufc.dto.reward.InvoiceUpdateRequest;
+import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -40,7 +29,6 @@ public class ApiCreatorDashboardController {
         private final MaterialDonationService materialDonationService;
         private final RewardDeliveryService rewardDeliveryService;
         private final ProductService productService;
-        private final Logger logger = LoggerFactory.getLogger(ApiCreatorDashboardController.class);
 
         /**
          * 
@@ -48,16 +36,14 @@ public class ApiCreatorDashboardController {
          * @return
          */
         @GetMapping("/campaigns/management")
-        public ResponseEntity<?> getCampaigns(HttpSession session) {
+        public ResponseEntity<List<Map<String, Object>>> getCampaigns(HttpSession session) {
                 Long creatorId = (Long) session.getAttribute("creatorId");
 
                 if (creatorId == null) {
-                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                                        .body(Collections.singletonMap("error", "세션에 creatorId가 없습니다."));
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
                 }
 
-                List<CampaignDTO> campaigns = campaignService.getCampaignsByCreator(creatorId);
-
+                List<Map<String, Object>> campaigns = campaignService.getCampaignsByCreator(creatorId);
                 return ResponseEntity.ok(campaigns);
         }
 
@@ -148,6 +134,41 @@ public class ApiCreatorDashboardController {
                 Map<String, Object> rewardDeliveryData = rewardDeliveryService.getRewardDeliveryData(campaignIds);
 
                 return ResponseEntity.ok(rewardDeliveryData);
+        }
+
+        @PostMapping("/reward/deliveries/{rdeliveryId}")
+        public ResponseEntity<?> updateInvoice(
+                        @PathVariable("rdeliveryId") Long rdeliveryId,
+                        @RequestBody Map<String, String> requestBody) {
+
+                try {
+                        // 🚀 1. 요청에서 courier(택배사)와 trackingNumber(송장번호) 가져오기
+                        String courier = requestBody.get("courier");
+                        String trackingNumber = requestBody.get("trackingNumber");
+
+                        // 🚨 필수 값 검증 (비어 있는 경우 오류 응답)
+                        if (courier == null || courier.isEmpty() || trackingNumber == null
+                                        || trackingNumber.isEmpty()) {
+                                return ResponseEntity.badRequest().body("🚨 택배사와 송장번호를 입력해야 합니다.");
+                        }
+
+                        // 🚀 2. 송장번호 업데이트 (DB 저장)
+                        rewardDeliveryService.updateInvoice(rdeliveryId, courier, trackingNumber);
+
+                        return ResponseEntity.ok("✅ 송장 정보 업데이트 성공");
+
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("🚨 " + e.getMessage());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("❌ 서버 오류: " + e.getMessage());
+                }
+        }
+
+        @PostMapping("/reward/deliveries/batch-update")
+        public ResponseEntity<?> updateInvoices(@RequestBody List<InvoiceUpdateRequest> updateRequests) {
+                rewardDeliveryService.updateInvoices(updateRequests);
+                return ResponseEntity.ok(Collections.singletonMap("message", "송장번호 업데이트 완료"));
         }
 
         /**

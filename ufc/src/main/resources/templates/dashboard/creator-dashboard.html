@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <head>
     <meta charset="UTF-8">
@@ -15,7 +16,7 @@
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-logo-text">
-                <a href="" class="header-logo">
+                <a href="/" class="header-logo">
                     <img class="header-logo-icon" th:src="@{/images/fix/logo.png}" alt="로고" />
                 </a>
                 <div class="header-slash">|</div>
@@ -71,10 +72,9 @@
 
             <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
         </main>
-    </div>
 
-    <!-- JavaScript -->
-    <script th:src="@{/js/dashboard/creator-dashboard.js}" defer></script>
+        <!-- JavaScript -->
+        <script th:src="@{/js/dashboard/creator-dashboard.js}" defer></script>
 </body>
 
 </html>

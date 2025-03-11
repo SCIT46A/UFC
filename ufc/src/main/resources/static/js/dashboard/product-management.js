@@ -184,5 +184,11 @@ function initProductManagement() {
     fetchProducts(); // 데이터 불러오기 실행
 }
 
+
+function openProductCreatePage() {
+    const url = window.location.origin + "/product/regist";
+    window.open(url, "_blank");
+}
+
 // 🚀 fragment가 변경될 때마다 JS를 다시 실행하도록 설정
 document.addEventListener("reapplyEventListeners", initProductManagement);

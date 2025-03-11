@@ -529,6 +529,11 @@ input[type="number"] {
     color: var(--white);
 }
 
+.status-badge.in-progress-achieved {
+    background-color: var(--success);
+    color: var(--white);
+}
+
 .status-badge.unachieved {
     background-color: var(--danger);
     color: var(--white);
