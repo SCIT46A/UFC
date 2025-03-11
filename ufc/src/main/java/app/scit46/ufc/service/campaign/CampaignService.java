@@ -220,7 +220,7 @@ public class CampaignService {
                 .startDate(ucDTO.getStartDate())
                 .endDate(ucDTO.getEndDate())
                 .sendDate(ucDTO.getSendDate())
-                .campaignStatus(false)
+                .campaignStatus(0)
                 .isSuccess(false)
                 .build();
 
