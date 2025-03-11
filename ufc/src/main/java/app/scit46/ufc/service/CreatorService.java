@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import app.scit46.ufc.dto.CreatorApprovalDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -286,6 +288,12 @@ public class CreatorService {
             return false;
         }
     }
+
+    // // 캠페인 정보를 프로필 부분에 출력하기 위한 로직
+    // public List<CampaignDTO> getCampaigns() {
+    // // 캠페인 정보를 가져오는 로직
+    // return campaignRepository.findAll();
+    // }
 
     // @Transactional
     // public boolean updateCreator(CreatorCreateDTO creatorDTO) {

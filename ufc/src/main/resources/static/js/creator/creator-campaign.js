@@ -17,22 +17,121 @@ document.getElementById("create_campaign").addEventListener("click", function ()
     window.location.href = "/campaign/intro"; // ✅ 서버 경로 기준으로 이동
 });
 
+// 누적캠페인 숫자 변경
+document.addEventListener("DOMContentLoaded", function () {
+    fetch()
+        .then(Response => Response.json())
+        .then(totalCount => {
+            const totalCampaignCountElement = document.getElementById("total-campaign-count");
+            totalCampaignCountElement.textContent = `누적 캠페인: ${totalCount}개`;
+        })
+        .catch(error => {
+            console.error("누적 캠페인 수 조회 실패:", error);
+        });
+});
+
+// 캠페인 데이터 불러오기
+document.addEventListener("DOMContentLoaded", function() {
+    fetch("/api/ApiCampaignsController")
+        .then(Response => Response.json())
+        .then(campaigns => {
+            const campaignContainer = document.getElementById("ongoing-campaigns");
+
+            if (campaigns.length === 0) {
+                campaignContainer.innerHTML = "<p>현재 진행 중인 캠페인이 없습니다.</p>";
+                return;
+            }
+
+            campaigns.forEach(campaign => {
+                const div = document.createElement("div");
+                div.classList.add("campaign-item");
+                div.innerHTML = `
+                
+                `;
+                campaignContainer.appendChild(div);
+            });
+        })
+        .catch(error => {
+            console.error("캠페인 불러오기 실패", error);
+        });
+});
+
 
 // 더보기 버튼 기능
-document.addEventListener("DOMContentLoaded", function() {
-    const showMoreBtn = document.querySelector(".show-more-btn");
-    const hiddenContent = document.querySelector(".hidden-content");
+let currentPage = 1;    // 현재 페이지 번호
+const itemsPerPage = 3; // 한번에 로드할 데이터 수
+let totalItems = 20;    // 전체 데이터 개수 (나중에 바꿀 예정)
 
-    showMoreBtn.addEventListener("click", function() {
-        if (hiddenContent.style.display === "none" || hiddenContent.style.display === ""){
-            hiddenContent.style.display = "block";
-            showMoreBtn.querySelector("div").textContent = "접기";
-        } else {
-            hiddenContent.style.display = "none";
-            showMoreBtn.querySelector("div").textContent = "더보기";
-        }
-    });
-});
+function loadMore() {
+    const itemContainer = document.getElementById("club-detail-active-container");
+
+    // 페이지에 해당하는 데이터 가져오기
+    const start = (currentPage -1) * itemsPerPage + 1;
+    const end = Math.min(start + itemsPerPage - 1, totalItems);
+
+    // 더보기 버튼 업데이트
+    const loadMoreBtn = document.getElementById("toggleBtn");
+    loadMoreBtn.textContent = `더보기 (${end}/${totalItems})`;
+
+    // 데이터 추가 표시
+    for (let i = start; i <= end; i++) {
+        const item = document.createElement("div");
+        item.textContent = `${i}`;
+        itemContainer.appendChild(item);
+    }
+
+    // 모든 데이터를 다 불러왔을 경우 버튼 숨기기
+    if (end >= totalItems) {
+        loadMoreBtn.style.display = "none";
+    }
+
+    currentPage++;
+}
+
+// 초기 데이터 로딩
+loadMore();
+
+
+
+
+
+// 실제로 데이터 받아오고 아래 로직으로 실행할 예정
+// fetch로 실제 데이터 연동해서 가져오기
+// let currentPage = 1;
+// const itemsPerPage = 3;
+
+// async function loadMore() {
+//     try {
+//         const response = await fetch(`/api/items?page=${currentPage}&size=${itemsPerPage}`);
+//         const data = await response.json();
+
+//         const itemContainer = document.getElementById("contentList");
+//         const loadMoreBtn = document.getElementById("toggleBtn");
+
+//         data.items.forEach((item, index) => {
+//             const div = document.createElement("div");
+//             div.textContent = `아이템 ${item.name} (${index + 1})`;
+//             itemContainer.appendChild(div);
+//         });
+
+//         loadMoreBtn.textContent = `더보기 (${itemContainer.childElementCount}/${data.totalItems})`;
+
+//         if (itemContainer.childElementCount >= data.totalItems) {
+//             loadMoreBtn.style.display = "none";
+//         }
+
+//         currentPage++;  // 페이지 증가
+//     } catch (error) {
+//         console.error("❌ 데이터 로드 실패:", error);
+//         alert("데이터를 가져오는 중 오류가 발생했습니다.");
+//     }
+// }
+
+// // 초기 데이터 로딩
+// loadMore();
+
+
+
 
 /*
 document.addEventListener("DOMContentLoaded", function() {

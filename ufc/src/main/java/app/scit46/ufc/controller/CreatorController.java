@@ -26,6 +26,7 @@ import org.springframework.web.client.RestTemplate;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
@@ -171,5 +172,13 @@ public class CreatorController {
         return ResponseEntity.ok(creator);
 
     }
+
+    // // 캠페인 데이터
+    // @GetMapping("/creator/campaigns")
+    // public String getCampaigns(Model model) {
+    // List<CampaignDTO> campaigns = creatorService.getCampaigns();
+    // model.addAttribute("campaigns", campaigns);
+    // return "creator/creator-campaign"; // HTML 템플릿 경로
+    // }
 
 }
