@@ -669,7 +669,8 @@ function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
                     <option value="rejected">보류</option>
                 </select>
             `;
-            saveButtonColumn = `<button onclick="processCampaignReport(${report.reportId})">저장</button>`;
+            saveButtonColumn = `<button onclick="processUserReport(${report.reportId}, ${report.user.userId})">저장</button>`;
+
         } else {
             actionColumn = `<span>${report.status === "ok" ? "게시 정지됨" : report.status === "rejected" ? "보류됨" : "처리 완료"}</span>`;
             saveButtonColumn = "-";
@@ -693,34 +694,6 @@ function generateCampaignReportTable(campaignReport, selectedTab = 'pending') {
 
     return tabHTML + tableHTML;
 }
-
-//  캠페인 신고 처리 (저장 버튼 클릭 시 실행)
-function processCampaignReport(reportId) {
-    const action = document.getElementById(`action-${reportId}`).value;
-
-    if (!action) {
-        alert("조치를 선택해주세요.");
-        return;
-    }
-
-    fetch("/api/admin/campaign-reports/action", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ reportId, action }) // ✅ 선택한 조치 전송
-    })
-        .then(response => response.json())
-        .then(data => {
-            console.log("✅ API 응답:", data);
-            if (!data.success) throw new Error(data.message);
-            alert(data.message);
-            fetchCampaignReport(); // ✅ 신고 목록 갱신
-        })
-        .catch(error => {
-            console.error("❌ 캠페인 신고 처리 오류:", error);
-            alert("신고 처리 중 오류가 발생했습니다.");
-        });
-}
-
 
 
 function renderCampaignTab(tabType) {
@@ -944,16 +917,17 @@ function generateCreatorStatusTable(creators) {
 let allUserReports = [];
 
 function fetchUserReport() {
-    return fetch("/api/admin/user-reports")  // 🔥 `return` 추가하여 Promise 반환
+    return fetch("/api/admin/user-reports")
         .then(response => response.json())
         .then(data => {
             allUserReports = data;
-            renderTab('pending');
+            renderTab('pending');  // ✅ 데이터가 로드된 후 실행
         })
         .catch(error => {
             console.error("❌ 유저 신고 목록 로드 오류:", error);
         });
 }
+
 
 // ✅ 새벽 4시에 자동으로 정지 해제하는 함수
 function clearUserSuspensions() {
@@ -1031,7 +1005,7 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
                         <th>신고 날짜</th>
                         <th>신고자 ID</th>
                         <th>계정 상태</th>
-                        <th>조치</th>
+                        <th>정지 기간</th>
                         <th>저장</th>
                     </tr>
                 </thead>
@@ -1062,7 +1036,8 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
                 <option value="rejected">보류</option>
             </select>
         `;
-            saveButtonColumn = `<button onclick="processUserReport(${report.reportId})">저장</button>`;
+            saveButtonColumn = `<button onclick="processUserReport(${report.reportId}, ${report.user?.userId})">저장</button>`;
+
 
         } else if (report.status === "ok") {
             accountStatus = `<span style="color: green;">✅ 조치 완료</span>`;
@@ -1102,6 +1077,7 @@ function generateUserReportTable(userReports, selectedTab = 'pending') {
 }
 
 
+
 // ✅ 페이지가 로드되면 자동으로 실행
 document.addEventListener("DOMContentLoaded", function () {
     scheduleUnbanTask();
@@ -1127,33 +1103,69 @@ function renderTab(tabType) {
 
 
 // ✅ 신고 처리 요청 (저장 버튼 클릭 시 실행)
-function processUserReport(reportId) {
-    const banDays = document.getElementById(`action-${reportId}`).value; // 정지 기간 선택값
-    const reason = document.getElementById(`reason-${reportId}`).value.trim();
+function processUserReport(reportId, userId) {
+    console.log(`📢 처리할 신고 ID: ${reportId}, 유저 ID: ${userId}`);
 
-    if (!banDays || banDays === "rejected") {
+    if (!userId) {
+        console.error(`❌ 오류: 신고 ID ${reportId}의 유저 ID가 없습니다.`);
+        alert("오류: 유저 ID가 없습니다.");
+        return;
+    }
+
+    const actionElement = document.getElementById(`action-${reportId}`);
+
+    if (!actionElement) {
+        console.error(`❌ 오류: 신고 ID ${reportId}에 대한 정지 기간 선택 요소를 찾을 수 없습니다.`);
+        alert("오류: 정지 기간 선택 필드를 찾을 수 없습니다.");
+        return;
+    }
+
+    const selectedValue = actionElement.value.trim();
+
+    if (!selectedValue) {
         alert("정지 기간을 선택해주세요.");
         return;
     }
 
-    if (!reason) {
-        alert("사유를 입력해주세요.");
-        return;
+    // 선택된 값에 따른 분기 처리
+    let isRejected = false;
+    let banDays = 0;
+
+    if (selectedValue === "rejected") {
+        isRejected = true;
+        // rejected인 경우 banDays는 서버에서 무시하도록 하거나 null/0로 전송
+    } else {
+        banDays = parseInt(selectedValue, 10);
     }
 
-    fetch("/api/admin/user-suspend", {  // ✅ 정지 API 호출
+    console.log(`✅ 유저 ${userId} 조치: ${isRejected ? "보류" : banDays + "일 정지"}`);
+
+    fetch("/api/admin/user-suspend", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId: reportId, banDays, reason }) // ✅ 정지 기간과 이유 포함
+        body: JSON.stringify({
+            userId,
+            banDays,
+            reportId,
+            isRejected
+        })
     })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                return response.text().then(errorText => {
+                    throw new Error(`서버 오류: ${errorText}`);
+                });
+            }
+            return response.json();
+        })
         .then(data => {
             if (!data.success) throw new Error(data.message);
             alert("✅ 유저 정지 완료");
-            fetchUserReport(); // ✅ 신고 목록 갱신
+            fetchUserReport();
         })
         .catch(error => {
-            alert("❌ 유저 정지 처리 중 오류가 발생했습니다.");
+            alert(`❌ 유저 정지 처리 중 오류 발생: ${error.message}`);
+            console.error(error);
         });
 }
 

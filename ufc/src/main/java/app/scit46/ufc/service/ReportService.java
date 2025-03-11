@@ -114,6 +114,8 @@ public class ReportService {
         reportRepository.save(report);
         userRepository.save(user);
     }
+
+
     // ✅ 유저 정지 처리 (기간과 사유를 UserEntity에 저장)
     @Transactional
     public void suspendUser(Long userId, int banDays, String reason) {

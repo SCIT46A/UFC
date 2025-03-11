@@ -10,7 +10,9 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 
 
 import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.catalina.User;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,13 +31,15 @@ public class ApiAdminController {
     private final ReportService reportService;
     private final CampaignService campaignService;
     private final CreatorService creatorService;
+    private final UserService userService;
 
 
-    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService) {
+    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService, UserService userService) {
         this.noticeService = noticeService;
         this.reportService = reportService;
         this.campaignService = campaignService;
         this.creatorService = creatorService;
+        this.userService = userService;
     }
 
     // 캠페인 전체 조회
@@ -192,6 +196,31 @@ public class ApiAdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
+    // 유저 정지
+    @PostMapping("/user-suspend")
+    public ResponseEntity<?> suspendUser(@RequestBody Map<String, Object> request) {
+        try {
+            Long userId = ((Number) request.get("userId")).longValue();
+            boolean isRejected = Boolean.parseBoolean(request.get("isRejected").toString());
+            Long reportId = ((Number) request.get("reportId")).longValue();
+            int banDays = 0;  // 초기값
+
+            if (!isRejected) {
+                // rejected가 아니라면, banDays를 파싱 (옵션이 3, 5, 100 중 하나일 것)
+                banDays = Integer.parseInt(request.get("banDays").toString());
+            }
+
+            userService.suspendUser(userId, banDays, reportId, isRejected);
+            return ResponseEntity.ok(Map.of("success", true, "message", "유저 정지 완료"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+
+
 
     // ✅ 관리자가 직접 정지 해제 실행
     @PostMapping("/user-unban")

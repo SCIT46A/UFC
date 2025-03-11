@@ -1,7 +1,10 @@
 package app.scit46.ufc.service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
+import app.scit46.ufc.entity.ReportEntity;
+import app.scit46.ufc.repository.ReportRepository;
 import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 public class UserService {
     private final UserRepository userRepository;
     private final ImageUrlService imageUrlService;
+    private final ReportRepository reportRepository;
 
     // ------------------ CRUD ------------------
 
@@ -116,6 +120,38 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    @Transactional
+    public void suspendUser(Long userId, int banDays, Long reportId, boolean isRejected) {
+        // 신고(Report) 엔티티 업데이트를 위해 ReportEntity 조회
+        ReportEntity report = reportRepository.findById(reportId)
+                .orElseThrow(() -> new IllegalArgumentException("신고를 찾을 수 없습니다. ID: " + reportId));
+
+        // 옵션이 rejected인 경우: User 테이블은 변경 없이 Report 상태만 업데이트
+        if (isRejected) {
+            report.setStatus("rejected");
+            reportRepository.save(report);
+            return;
+        }
+
+        // 옵션이 숫자인 경우: banDays가 100이면 10000일로 변경, 그렇지 않으면 그대로 사용
+        int effectiveBanDays = (banDays == 100) ? 10000 : banDays;
+
+        // User 엔티티 업데이트
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("유저를 찾을 수 없습니다. ID: " + userId));
+        LocalDateTime unbanDate = LocalDateTime.now().plusDays(effectiveBanDays);
+        user.setUpdatedAt(unbanDate);
+        user.setUserStatus(0);
+        userRepository.save(user);
+        userRepository.flush();
+
+        // 신고(Report) 상태 업데이트: 정지 옵션인 경우 "ok" 저장
+        report.setStatus("ok");
+        reportRepository.save(report);
+    }
+
+
 
 
     public UserDTO findByIdDTO(Long userId) {
