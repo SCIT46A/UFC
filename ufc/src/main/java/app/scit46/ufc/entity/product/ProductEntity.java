@@ -63,6 +63,7 @@ public class ProductEntity {
         return ProductEntity.builder()
                 .productId(dto.getProductId())
                 .item(ItemEntity.toEntity(dto.getItem()))
+                .price(dto.getPrice())
                 .stockQuantity(dto.getStockQuantity())
                 .createdBy(CreatorEntity.toEntity(dto.getCreatedBy()))
                 .build();

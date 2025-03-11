@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>진행중인 캠페인</title>
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script src="https://js.bootpay.co.kr/bootpay-5.0.2.min.js" type="application/javascript"></script>
     <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -17,8 +18,8 @@
     />
     <link
             rel="stylesheet"
-            th:href="@{/css/campaign/pay-campaign.css}"
-            href="../../static/css/campaign/pay-campaign.css"
+            th:href="@{/css/product/pay-product.css}"
+            href="../../static/css/product/pay-product.css"
     />
     <link
             rel="stylesheet"
@@ -31,9 +32,10 @@
             href="../../static/css/fix/footer.css"
     />
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-    <script src="../../static/js/campaign/pay-campaign.js" defer></script>
-    <script th:src="@{/js/campaign/pay-campaign.js}" defer></script>
+    <script src="../../static/js/product/pay-product.js" defer></script>
+    <script th:src="@{/js/product/pay-product.js}" defer></script>
     <script th:src="@{/js/fix/header.js}" defer></script>
+    <script th:src="@{/js/product/bootPay.js}" defer></script>
 </head>
 <body>
 <div th:replace="~{fix/header :: header}"></div>
@@ -43,7 +45,7 @@
             style="background-color: #ffffff; padding-bottom: 30px"
     >
         <!-- 주목할 만한 프로젝트 -->
-        <div id="rewardDataContainer" th:attr="data-reward=${donationRewardListJson}"></div>
+<!--        <div id="rewardDataContainer" th:attr="data-reward=${donationRewardListJson}"></div>-->
         <div class="container mx-auto px-4 target-project">
             <div class="main">
                 <div class="main-in">
@@ -65,7 +67,7 @@
                                     >
                                                 <span
                                                         class="main-in-box-section-in-content-top"
-                                                        th:text="${campaign.createdBy.bName}"
+                                                        th:text="${product.createdBy.bName}"
                                                 ></span
                                                 >
                                         <h3
@@ -73,7 +75,7 @@
                                         >
                                             <div
                                                     class="main-in-box-section-in-content-mi-title"
-                                                    th:text="${campaign.description}"
+                                                    th:text="${product.item.name}"
                                             >
                                                 겨울엔 붕어빵!코바늘로
                                                 뜨는 귀여운 손난로
@@ -82,17 +84,8 @@
                                         <div
                                                 class="main-in-box-section-in-content-bo"
                                         >
-                                            <strong
-                                                    class="main-in-box-section-in-content-bo-le"
-                                                    th:each="campaignGoalDTO : ${campaignGoalDTOS}"
-                                                    th:text="${campaignGoalDTO.material.name + ' ' + campaignGoalDTO.quantityRequired + '개'}">
-                                                >청바지 20개</strong
-                                            >
                                             <span class="main-in-box-section-in-content-bo-ri"
-                                                  th:text="${campaign.startDate != null and campaign.endDate != null
-                                                                    ? T(java.time.temporal.ChronoUnit).DAYS.between(campaign.startDate.toLocalDate(), campaign.endDate.toLocalDate()) + '일 남음'
-                                                                    : '기간 정보 없음'}">
-                                                    </span>
+                                                  th:text="${product.item.description}"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -110,7 +103,7 @@
                                             <p
                                                     class="inner-box-in-title-p"
                                             >
-                                                선물 정보
+                                                구매 정보
                                             </p>
                                         </div>
                                         <!-- 여기 내용 -->
@@ -130,69 +123,19 @@
                                                 >
                                                     <div
                                                             class="inner-box-in-contentr-in-ri-in-box"
-                                                    >
+                                                    > <span th:text="${product.item.name} + ' x ' + ${stock}"></span>
                                                         <div class="reward-target"></div>
                                                         <span
                                                                 class="inner-box-span-le"
-                                                        >예상
-                                                                    전달일</span
+                                                        >결제금액</span
                                                         >
-                                                        <span
-                                                                class="inner-box-span-ri"
-                                                                th:text="${#temporals.format(campaign.sendDate, 'yyyy.MM.dd')}"
-                                                        >2025.02.19</span
-                                                        >
+                                                        <span class="inner-box-span-ri" th:text="${stock * product.price} + '원'">2025.02.19</span>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <!-- 사실상 반복 -->
-                                    <div class="inner-box-in">
-                                        <!-- 제목 -->
-                                        <div class="inner-box-in-title">
-                                            <p
-                                                    class="inner-box-in-title-p"
-                                            >
-                                                참여자 기부품목
-                                            </p>
-                                        </div>
-                                        <!-- 여기 내용 -->
-                                        <div
-                                                class="inner-box-in-content"
-                                        >
-                                            <div
-                                                    class="inner-box-in-contentr-in"
-                                            >
-                                                <div
-                                                        class="inner-box-in-contentr-in-le"
-                                                >
-                                                    기부품 품목
-                                                </div>
-                                                <div
-                                                        class="inner-box-in-contentr-in-ri"
-                                                >
-                                                    <div
-                                                            class="inner-box-in-contentr-in-ri-in"
-                                                    >
-                                                        <!-- 상품 제목 -->
-                                                        <span
-                                                                class="inner-box-in-contentr-in-ri-in-title"
-                                                        >전체 품목</span
-                                                        >
-                                                        <!-- 상품 구성품 -->
-                                                        <ul class="inner-box-ul">
-                                                            <th:block th:each="entry : ${donationSummary}">
-                                                                <li>
-                                                                    <span th:text="${entry.key} + ' ' + ${entry.value.total} + '개'"></span>
-                                                                </li>
-                                                            </th:block>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
                                     <div class="inner-box-in">
                                         <!-- 제목 -->
                                         <div class="inner-box-in-title">
@@ -283,36 +226,7 @@
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <!-- 송장번호 -->
-                                                    <tr>
-                                                        <th>
-                                                            송장번호
-                                                        </th>
-                                                        <td>
-                                                            <div style="display:flex;">
-                                                                <select class="invoice-select-box">
-                                                                    <option
-                                                                            value=""
-                                                                    >
-                                                                        택배사를 선택해주세요
-                                                                    </option>
 
-                                                                </select>
-                                                                <input
-                                                                        type="text"
-                                                                        inputmode="numeric"
-                                                                        pattern="[0-9]*"
-                                                                        maxlength="20"
-                                                                        placeholder="송장번호를 입력해주세요."
-                                                                        autocapitalize="off"
-                                                                        autocomplete="off"
-                                                                        class="inner-box-input-box"
-                                                                        value=""
-                                                                />
-                                                                <input type="hidden" class="total-invoce">
-                                                            </div>
-                                                        </td>
-                                                    </tr>
                                                     </tbody>
                                                 </table>
                                                 <!-- 하단 설명 -->
@@ -352,10 +266,7 @@
                                                 최종 후원품목
                                             </div>
                                             <div class="inner-pay-in-total-in-ri">
-                                                <th:block th:each="entry, stat : ${donationSummary}">
-                                                    <span th:text="${entry.key} + ' ' + ${entry.value.total} + '개'"></span>
-                                                    <span th:if="${!stat.last}">, </span>
-                                                </th:block>
+                                                <span th:text="${stock * product.price} + '원'"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -467,14 +378,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- 결제버튼 -->
                                     <form action="/submitDonation" method="post" id="donationForm">
-                                        <th:block th:each="entry : ${donationSummary}">
-                                            <input type="hidden" name="donationItem"
-                                                   th:attr="data-donation-name=${entry.key},data-donation-total=${entry.value.total},data-donation-material-id=${entry.value.materialId},data-reward-id=${#strings.arrayJoin(entry.value.rewardId.toArray(), ',')}" />
-                                        </th:block>
-                                        <input type="hidden" class="campaign-id" th:value="${campaign.campaignId}">
-                                        <button type="button" class="reward-last-btn" disabled>기부하기</button>
+                                        <input type="hidden" class="product-id" th:value="${product.productId}">
+                                        <button type="button" class="reward-last-btn" disabled id="pay-button">결제하기</button>
                                     </form>
                                 </div>
                             </div>

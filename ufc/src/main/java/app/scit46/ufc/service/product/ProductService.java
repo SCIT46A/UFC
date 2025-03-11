@@ -1,5 +1,6 @@
 package app.scit46.ufc.service.product;
 
+import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.repository.ProductRepository;
 import java.util.Map;
 import java.util.HashMap;
@@ -58,6 +59,11 @@ public class ProductService {
             }
         }
         return "알 수 없음";
+    }
+
+
+    public ProductDTO findProductById(Long id) {
+        return productRepository.findById(id).stream().map(ProductDTO::toDTO).findFirst().orElse(null);
     }
 
 }
