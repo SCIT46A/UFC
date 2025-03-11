@@ -59,31 +59,31 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
-        HttpSession session = request.getSession(false); // 세션 가져오기
-        Long loginUserId = null; // 기본값 설정
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
         if (session != null) {
-            loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            loginUserId = (Long) session.getAttribute("loginUserId");
             model.addAttribute("loginUserId", loginUserId);
         }
-        // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
+
+        // 제품(캠페인) 조회
         ProductDTO product = productService.findProductById(id);
-//        // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
         Long creatorId = product.getCreatedBy().getOwnUser().getUserId();
         int status = product.getStatus();
-        if (status == 0) {
+        log.info("제품 상태: " + status);
+
+
+        // status가 0(예: 미승인)인 경우, 로그인한 사용자가 크리에이터와 동일해야 함
+        if (status != 1) {
             if (loginUserId == null || !loginUserId.equals(creatorId)) {
                 return "redirect:/";
             }
         }
 
-        if (loginUserId == null) {
-            model.addAttribute("status", false);
-        } else if(!loginUserId.equals(creatorId)){
-            model.addAttribute("status", false);
-        }
-        else {
-            model.addAttribute("status", true);
-        }
+        log.info("제품 상태: " + status);
+
+        // model에 status 값을 그대로 전달 (0,1,2 등)
+        model.addAttribute("status", status);
 
 
 
@@ -165,16 +165,15 @@ public class ProductController {
 
     @PostMapping("/pay")
     public ResponseEntity<?> verifyPayment(@RequestBody Map<String, Object> payload) {
-        String receiptId = (String) payload.get("receipt_id");
-
-        // 결제 검증 호출
         try {
-            payService.gopay(receiptId); // PayService에서 검증 실행
+            payService.gopay(payload); // 전체 payload를 넘김
             return ResponseEntity.ok(Map.of("success", true, "message", "결제 검증 성공"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("success", false, "message", "결제 검증 실패", "error", e.getMessage()));
         }
     }
+
+
 
 }
