@@ -1,12 +1,8 @@
 package app.scit46.ufc.entity;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.ItemDTO;
-import app.scit46.ufc.entity.product.ProductEntity;
-import app.scit46.ufc.entity.product.ProductItemEntity;
-import app.scit46.ufc.entity.reward.RewardEntity;
 import app.scit46.ufc.entity.reward.RewardItemEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,8 +49,8 @@ public class ItemEntity {
     private ImageUrlEntity photo;
 
     // OneToMany: Products.item 참조
-    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
-    private List<ProductItemEntity> productItems;
+//    @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)
+//    private List<ProductItemEntity> productItems;
 
     // OneToMany: Reward.items 참조
     @OneToMany(mappedBy = "item", fetch = FetchType.LAZY)

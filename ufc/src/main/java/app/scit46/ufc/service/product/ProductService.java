@@ -1,16 +1,8 @@
 package app.scit46.ufc.service.product;
 
-import org.springframework.stereotype.Service;
-
-import app.scit46.ufc.dto.ImageUrlDTO;
-import app.scit46.ufc.dto.ItemDTO;
-import app.scit46.ufc.dto.custom.GenerateProductDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
-import app.scit46.ufc.entity.CreatorEntity;
-import app.scit46.ufc.entity.ImageUrlEntity;
-import app.scit46.ufc.entity.ItemEntity;
+import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
-import app.scit46.ufc.repository.ItemRepository;
 import app.scit46.ufc.repository.ProductRepository;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
@@ -27,6 +19,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
+import app.scit46.ufc.dto.custom.GenerateProductDTO;
+import app.scit46.ufc.entity.ImageUrlEntity;
+import app.scit46.ufc.entity.ItemEntity;
+import app.scit46.ufc.repository.ItemRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -116,6 +115,35 @@ public class ProductService {
             }
         }
         return "알 수 없음";
+    }
+
+
+    public ProductDTO findProductById(Long id) {
+        return productRepository.findById(id).stream().map(ProductDTO::toDTO).findFirst().orElse(null);
+    }
+
+    public Long productBoardSave(Long productId, String content) {
+        // 기존 엔티티를 직접 조회
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+        // content 필드 업데이트
+        productEntity.setContent(content);
+        // 엔티티를 저장 (업데이트)
+        productRepository.save(productEntity);
+        return productEntity.getProductId();
+    }
+
+    @Transactional
+    public ProductDTO updateProductContent(Long productId, String content) {
+        // 기존 엔티티를 DB에서 조회
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다."));
+        // content 필드 업데이트
+        productEntity.setContent(content);
+        // 업데이트 후 저장 (업데이트가 트랜잭션 내에서 반영됨)
+        productRepository.save(productEntity);
+        // DTO 변환 후 반환
+        return ProductDTO.toDTO(productEntity);
     }
 
 }

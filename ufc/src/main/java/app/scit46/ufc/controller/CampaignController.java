@@ -67,22 +67,27 @@ public class CampaignController {
         Long loginUserId = null; // 기본값 설정
         if (session != null) {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            model.addAttribute("loginUserId", loginUserId);
         }
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
         // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
         Long creatorId = campaign.getCreatedBy().getOwnUser().getUserId();
-        boolean status = campaign.getCampaignStatus();
-        if (!status) {
+        int status = campaign.getCampaignStatus();
+        if (status == 0) {
             if (loginUserId == null || !loginUserId.equals(creatorId)) {
                 return "redirect:/";
             }
         }
-        if (loginUserId == null || !loginUserId.equals(creatorId)) {
-            model.addAttribute("status", true);
-        } else {
+        if (loginUserId == null) {
+            model.addAttribute("status", false);
+        } else if(!loginUserId.equals(creatorId)){
             model.addAttribute("status", false);
         }
+        else {
+            model.addAttribute("status", true);
+        }
+
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";

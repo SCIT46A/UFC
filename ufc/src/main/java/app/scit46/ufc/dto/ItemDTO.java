@@ -3,10 +3,14 @@ package app.scit46.ufc.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.product.ProductItemDTO;
 import app.scit46.ufc.dto.reward.RewardItemDTO;
 import app.scit46.ufc.entity.ItemEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -20,7 +24,7 @@ public class ItemDTO {
     private String description;
     private ImageUrlDTO photo; // ✅ PhotoDTO 포함
     private List<RewardItemDTO> rewardItems; // ✅ RewardItemDTO 포함
-    private List<ProductItemDTO> productItems; // ✅ ProductItemDTO 포함
+//    private List<ProductItemDTO> productItems; // ✅ ProductItemDTO 포함
 
     public static ItemDTO toDTO(ItemEntity entity) {
         return ItemDTO.builder()
@@ -31,9 +35,9 @@ public class ItemDTO {
                 .rewardItems(entity.getRewardItems().stream()
                         .map(RewardItemDTO::toDTO)
                         .collect(Collectors.toList())) // ✅ RewardItemDTO 변환
-                .productItems(entity.getProductItems().stream()
-                        .map(ProductItemDTO::toDTO)
-                        .collect(Collectors.toList())) // ✅ ProductItemDTO 변환
+//                .productItems(entity.getProductItems().stream()
+//                        .map(ProductItemDTO::toDTO)
+//                        .collect(Collectors.toList())) // ✅ ProductItemDTO 변환
                 .build();
     }
 }
