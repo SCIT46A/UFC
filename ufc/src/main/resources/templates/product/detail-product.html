@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>진행중인 캠페인</title>
+    <title>판매중인 상품</title>
 
     <!-- Tailwind CSS -->
     <link
@@ -322,14 +322,14 @@
                                 <div
                                         class="main-mi-na-in-box-pe campaign check"
                                 >
-                                    캠페인 소개
+                                    상품 소개
                                 </div>
-                                <div class="main-mi-na-in-box-pe board " th:classappend="${product.status == 0} ? 'hidden'">
-                                    새소식
-                                </div>
-                                <div class="main-mi-na-in-box-pe review" th:classappend="${product.status == 0} ? 'hidden'">
-                                    리뷰
-                                </div>
+<!--                                <div class="main-mi-na-in-box-pe board " th:classappend="${product.status == 0} ? 'hidden'">-->
+<!--                                    새소식-->
+<!--                                </div>-->
+<!--                                <div class="main-mi-na-in-box-pe review" th:classappend="${product.status == 0} ? 'hidden'">-->
+<!--                                    리뷰-->
+<!--                                </div>-->
                             </div>
                         </div>
                     </nav>
@@ -469,7 +469,7 @@
                                         <div class="content-box">
                                             <input type="hidden" th:value="${product.productId}" id="product-id">
                                             <div class="content-box-in">
-                                                <p style="color: gray"> ※ 게시글을 작성하셔야 관리자에게 캠페인을 승인받을 수 있습니다.</p>
+                                                <p style="color: gray"> ※ 게시글을 작성하셔야 관리자에게 승인받을 수 있습니다.</p>
                                                 <!--섬머노트 들어가는 곳입니다~-->
                                                 <div
                                                         class="cam-pro-bo-ri-in-content"
@@ -484,143 +484,143 @@
                                             </div>
                                             <input type="hidden" th:value="${product.status}" id="campaign-status">
                                             <button class="summer-btn " th:classappend="${product.status == 1} ? 'hidden'">작성하기</button>
-                                            <button class="summer-btn-edit " th:classappend="${product.status == 1} ? 'hidden'" >수정하기</button>
+                                            <button class="summer-btn-edit" th:classappend="${product.status == 1} ? 'hidden'" >수정하기</button>
                                             <button class="summer-btn-edit-save hidden">수정하기</button>
                                         </div>
                                         <!-- 게시글 -->
-                                        <div class="main-board hidden">
-                                            <div
-                                                    class="main-reply-top"
-                                            ></div>
-                                            <div class="main-board-top-table">
-                                                <div
-                                                        class="main-board-total"
-                                                >
-                                                    게시글
-                                                    <strong class="board-count-target">0</strong>
-                                                </div>
-                                                <button class="main-board-add-btn" th:classappend="${status == 0} ? 'hidden-important'">등록하기</button>
+<!--                                        <div class="main-board hidden">-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-top"-->
+<!--                                            ></div>-->
+<!--                                            <div class="main-board-top-table">-->
+<!--                                                <div-->
+<!--                                                        class="main-board-total"-->
+<!--                                                >-->
+<!--                                                    게시글-->
+<!--                                                    <strong class="board-count-target">0</strong>-->
+<!--                                                </div>-->
+<!--                                                <button class="main-board-add-btn" th:classappend="${status == 0} ? 'hidden-important'">등록하기</button>-->
 
-                                            </div>
-                                            <!-- 게시글 눌렀을때 뒤로가기 버튼 -->
-                                            <div
-                                                    class="main-board-back-div hidden"
-                                            >
-                                                <div class="main-board-add-btn-box">
-                                                    <button
-                                                            class="main-board-back"
-                                                    >
-                                                            <span>
-                                                                <svg
-                                                                        viewBox="0 0 24 24"
-                                                                        fill="none"
-                                                                        focusable="false"
-                                                                        role="presentation"
-                                                                        class="withIcon_icon__2nnc8 Button_icon__11zrq"
-                                                                        aria-hidden="true"
-                                                                >
-                                                                    <path
-                                                                            fill-rule="evenodd"
-                                                                            clip-rule="evenodd"
-                                                                            d="M16.076 2.576l.848.848L8.35 12l8.575 8.576-.848.848L6.65 12l9.425-9.424z"
-                                                                    ></path>
-                                                                </svg>
-                                                                <span
-                                                                        class="main-board-back-in"
-                                                                >목록으로
-                                                                    돌아가기</span
-                                                                >
-                                                            </span>
-                                                    </button>
-                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == 0} ? 'hidden-important'">작성하기</button>
-                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == 0} ? 'hidden-important'">삭제</button>
-                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == 0} ? 'hidden-important'">수정하기</button>
-                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == 0} ? 'hidden-important'">수정적용</button>
-                                                </div>
-                                                <div
-                                                        class="main-board-pe-box"
-                                                >
-                                                    <div
-                                                            class="main-board-pe-in"
-                                                    >
-                                                        <!-- 제목 -->
-                                                        <p
-                                                                class="main-board-pe-in-title"
-                                                        >
-                                                        <p
-                                                                class="main-board-pe-in-title-add"
-                                                        >
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 게시글 눌렀을때 뒤로가기 버튼 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="main-board-back-div hidden"-->
+<!--                                            >-->
+<!--                                                <div class="main-board-add-btn-box">-->
+<!--                                                    <button-->
+<!--                                                            class="main-board-back"-->
+<!--                                                    >-->
+<!--                                                            <span>-->
+<!--                                                                <svg-->
+<!--                                                                        viewBox="0 0 24 24"-->
+<!--                                                                        fill="none"-->
+<!--                                                                        focusable="false"-->
+<!--                                                                        role="presentation"-->
+<!--                                                                        class="withIcon_icon__2nnc8 Button_icon__11zrq"-->
+<!--                                                                        aria-hidden="true"-->
+<!--                                                                >-->
+<!--                                                                    <path-->
+<!--                                                                            fill-rule="evenodd"-->
+<!--                                                                            clip-rule="evenodd"-->
+<!--                                                                            d="M16.076 2.576l.848.848L8.35 12l8.575 8.576-.848.848L6.65 12l9.425-9.424z"-->
+<!--                                                                    ></path>-->
+<!--                                                                </svg>-->
+<!--                                                                <span-->
+<!--                                                                        class="main-board-back-in"-->
+<!--                                                                >목록으로-->
+<!--                                                                    돌아가기</span-->
+<!--                                                                >-->
+<!--                                                            </span>-->
+<!--                                                    </button>-->
+<!--                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == 0} ? 'hidden-important'">작성하기</button>-->
+<!--                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == 0} ? 'hidden-important'">삭제</button>-->
+<!--                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == 0} ? 'hidden-important'">수정하기</button>-->
+<!--                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == 0} ? 'hidden-important'">수정적용</button>-->
+<!--                                                </div>-->
+<!--                                                <div-->
+<!--                                                        class="main-board-pe-box"-->
+<!--                                                >-->
+<!--                                                    <div-->
+<!--                                                            class="main-board-pe-in"-->
+<!--                                                    >-->
+<!--                                                        &lt;!&ndash; 제목 &ndash;&gt;-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-title"-->
+<!--                                                        >-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-title-add"-->
+<!--                                                        >-->
 
-                                                        </p>
-                                                        <!-- 갱신? 날짜 -->
-                                                        <p
-                                                                class="main-board-pe-in-date"
-                                                        >
-                                                        <p
-                                                                class="main-board-pe-in-date-add"
-                                                        >
+<!--                                                        </p>-->
+<!--                                                        &lt;!&ndash; 갱신? 날짜 &ndash;&gt;-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-date"-->
+<!--                                                        >-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-date-add"-->
+<!--                                                        >-->
 
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
+<!--                                                        </p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
 
-                                            <!-- 각각의 댓글 나오는곳 -->
-                                            <div
-                                                    class="main-board-total-pe"
-                                            >
+<!--                                            &lt;!&ndash; 각각의 댓글 나오는곳 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="main-board-total-pe"-->
+<!--                                            >-->
 
-                                            </div>
-                                            <!-- 게시글 내용 보이는곳 -->
-                                            <div
-                                                    class="content-board-box hidden"
-                                            >
-                                                <div
-                                                        class="content-box-in-target"
-                                                >
-                                                </div>
-                                            </div>
-                                        </div>
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 게시글 내용 보이는곳 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="content-board-box hidden"-->
+<!--                                            >-->
+<!--                                                <div-->
+<!--                                                        class="content-box-in-target"-->
+<!--                                                >-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                         <!-- 댓글 -->
-                                        <div class="main-reply">
-                                            <div
-                                                    class="main-reply-top"
-                                            ></div>
-                                            <div
-                                                    class="main-reply-total"
-                                            >
-                                                댓글 <strong>1</strong>
-                                            </div>
-                                            <!-- 각각의 댓글 나오는곳 -->
-                                            <div id="reply-data-target">
-                                                <input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요">
-                                            </div>
+<!--                                        <div class="main-reply">-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-top"-->
+<!--                                            ></div>-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-total"-->
+<!--                                            >-->
+<!--                                                댓글 <strong>1</strong>-->
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 각각의 댓글 나오는곳 &ndash;&gt;-->
+<!--                                            <div id="reply-data-target">-->
+<!--                                                <input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요">-->
+<!--                                            </div>-->
 
-                                        </div>
-                                        <div class="main-review hidden">
-                                            <div
-                                                    class="main-review-top"
-                                            ></div>
-                                            <div
-                                                    class="main-review-total"
-                                            >
-                                                리뷰 <strong>1</strong>
-                                            </div>
-                                            <div>
-                                                <!--                                                        리뷰 입력하는곳-->
-                                                <div style="display: flex">
-                                                            <span class="star">
-                                                                <em></em>
-                                                            </span>
-                                                    <input type="text" class="main-review-input-box" placeholder="리뷰을 입력해주세요">
-                                                </div>
-                                                <!--                                                     사람들 리뷰 나오는곳-->
-                                                <div id="review-data-target">
-                                                    <!--                                                            여기서 각각의 리뷰-->
+<!--                                        </div>-->
+<!--                                        <div class="main-review hidden">-->
+<!--                                            <div-->
+<!--                                                    class="main-review-top"-->
+<!--                                            ></div>-->
+<!--                                            <div-->
+<!--                                                    class="main-review-total"-->
+<!--                                            >-->
+<!--                                                리뷰 <strong>1</strong>-->
+<!--                                            </div>-->
+<!--                                            <div>-->
+<!--                                                &lt;!&ndash;                                                        리뷰 입력하는곳&ndash;&gt;-->
+<!--                                                <div style="display: flex">-->
+<!--                                                            <span class="star">-->
+<!--                                                                <em></em>-->
+<!--                                                            </span>-->
+<!--                                                    <input type="text" class="main-review-input-box" placeholder="리뷰을 입력해주세요">-->
+<!--                                                </div>-->
+<!--                                                &lt;!&ndash;                                                     사람들 리뷰 나오는곳&ndash;&gt;-->
+<!--                                                <div id="review-data-target">-->
+<!--                                                    &lt;!&ndash;                                                            여기서 각각의 리뷰&ndash;&gt;-->
 
-                                                </div>
-                                            </div>
-                                        </div>
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                     </div>
                                 </div>
                             </div>

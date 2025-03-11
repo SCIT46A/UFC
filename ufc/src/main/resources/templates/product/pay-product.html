@@ -380,6 +380,10 @@
                                     </div>
                                     <form action="/submitDonation" method="post" id="donationForm">
                                         <input type="hidden" class="product-id" th:value="${product.productId}">
+                                        <input type="hidden" class="product-stock" th:value="${stock}">
+                                        <input type="hidden" class="total-pay" th:value="${product.price * stock}">
+                                        <input type="hidden" class="user-id" th:value="${user.userId}">
+                                        <input type="hidden" class="product-name" th:value="${product.item.name}">
                                         <button type="button" class="reward-last-btn" disabled id="pay-button">결제하기</button>
                                     </form>
                                 </div>

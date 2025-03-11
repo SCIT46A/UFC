@@ -47,6 +47,10 @@ public class ProductEntity {
     @CreationTimestamp
     private LocalDateTime createTime;
 
+    @Lob
+    @Column(name = "content", columnDefinition = "MEDIUMTEXT")
+    private String content;
+
     // OneToMany: ProductPayments.product 참조
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private List<ProductPaymentEntity> productPayments;
@@ -64,6 +68,8 @@ public class ProductEntity {
                 .productId(dto.getProductId())
                 .item(ItemEntity.toEntity(dto.getItem()))
                 .price(dto.getPrice())
+                .status(dto.getStatus())
+                .content(dto.getContent())
                 .stockQuantity(dto.getStockQuantity())
                 .createdBy(CreatorEntity.toEntity(dto.getCreatedBy()))
                 .build();
