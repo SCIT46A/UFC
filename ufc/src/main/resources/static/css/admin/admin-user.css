@@ -304,3 +304,16 @@ button:hover {
 .tab-button:hover {
     background-color: #e0e0e0;
 }
+
+.main-admin-return-button {
+    background-color: #CE201B;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: filter 0.3s ease;
+}
+
+.main-admin-return-button:hover {
+    filter: brightness(1.1);
+}
