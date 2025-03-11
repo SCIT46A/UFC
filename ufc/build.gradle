@@ -40,6 +40,8 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
   // 검색창 COS 유사도 계산 라이브러리
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+//	결제를 위한 부트페이
+	implementation 'io.github.bootpay:backend:+'
 }
 
 tasks.named('test') {
