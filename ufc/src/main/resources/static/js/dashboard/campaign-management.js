@@ -158,10 +158,10 @@ function renderCampaignList(campaigns) {
 
 // ✅ 캠페인 상태에 따라 CSS 클래스 반환
 function getStatusClass(campaign) {
-    if (campaign.campaignStatus === false) {
+    if (campaign.campaignStatus === 0) {
         return "inspection"; // ✅ 승인 대기
     }
-    if (campaign.campaignStatus === true) {
+    if (campaign.campaignStatus === 1) {
         const today = new Date();
         const startDate = new Date(campaign.startDate);
         const endDate = new Date(campaign.endDate);
@@ -180,9 +180,9 @@ function getStatusClass(campaign) {
 
 // ✅ UI에서 보여줄 상태 텍스트 반환
 function getStatusText(campaign) {
-    if (campaign.campaignStatus === false) return "승인 대기";
+    if (campaign.campaignStatus === 0) return "승인 대기";
 
-    if (campaign.campaignStatus === true) {
+    if (campaign.campaignStatus === 1) {
         const today = new Date();
         const startDate = new Date(campaign.startDate);
         const endDate = new Date(campaign.endDate);
