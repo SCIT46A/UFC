@@ -133,5 +133,12 @@ public class CampaignReviewService {
         return campaignReviewRepository.findAll(pageable);
     }
 
+    public List<CampaignReviewDTO> getListByReviewerId(Long reviewerId) {
+        return campaignReviewRepository.findByReviewedBy_UserId(reviewerId).stream()
+                .map(CampaignReviewDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+
 
 }

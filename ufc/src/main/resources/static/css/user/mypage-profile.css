@@ -78,6 +78,13 @@ main {
   border: 0;
 }
 
+.container{
+  max-width: 1200px !important;
+  padding: 0px 15px !important;
+  width: 100% !important;
+  margin: 0px auto !important;
+}
+
 .main-in-box-pro-le-in-box {
   display: flex;
   flex-direction: column;

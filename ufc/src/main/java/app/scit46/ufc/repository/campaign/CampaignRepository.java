@@ -69,5 +69,14 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
 
     Page<CampaignEntity> findByCampaignId(Long campaignId, Pageable pageable);
     
+    @Query(value = "SELECT " +
+        "CASE WHEN IFNULL(SUM(md.quantity) * 100.0 / NULLIF(cg.quantity_required, 0), 0) >= 100 " +
+        "THEN 1 ELSE 0 END AS isAchieved " +
+        "FROM Campaigns c " +
+        "LEFT JOIN CampaignGoals cg ON c.campaign_id = cg.campaign_id " +
+        "LEFT JOIN MaterialsDonations md ON md.campaign_id = c.campaign_id AND md.material_id = cg.material_id " +
+        "WHERE c.campaign_id = :campaignId " +
+        "GROUP BY c.campaign_id, cg.goal_id", nativeQuery = true)
+    Integer isCampaignAchieved(@Param("campaignId") Long campaignId);
 
 }

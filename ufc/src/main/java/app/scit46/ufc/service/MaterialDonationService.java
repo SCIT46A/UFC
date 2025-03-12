@@ -150,4 +150,21 @@ public class MaterialDonationService {
         Pageable pageable = PageRequest.of(page, size, Sort.by("donatedDate").descending());
         return materialDonationRepository.findByUser_UserId(userId, pageable).map(MaterialDonationDTO::toDTO);
     }
+
+    public List<MaterialDonationDTO> getMaterialDonationsByCampaignId(Long campaignId) {
+        return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public MaterialDonationDTO getDonation(Long donationId) {
+        return materialDonationRepository.findById(donationId)
+                .map(MaterialDonationDTO::toDTO)
+                .orElseThrow(() -> new RuntimeException("Material Donation not found"));
+    }
+
+    public MaterialDonationDTO getDonationByDonationId(Long donationId) {
+        return materialDonationRepository.findById(donationId)
+                .map(MaterialDonationDTO::toDTO)
+                .orElseThrow(() -> new RuntimeException("Material Donation not found"));
+    }
 }

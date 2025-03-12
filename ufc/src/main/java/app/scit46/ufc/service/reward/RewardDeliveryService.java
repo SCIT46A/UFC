@@ -73,4 +73,12 @@ public class RewardDeliveryService {
         Pageable pageable = PageRequest.of(page, size);
         return rewardDeliveryRepository.findRewardDeliveriesByUserId(userId, pageable);
     }
+
+    public String getRewardNameByDonationId(Long donationId) {
+        return rewardDeliveryRepository.findRewardNameByDonationId(donationId);
+    }
+
+    public RewardDeliveryDTO getRewardDeliveryByDonationId(Long donationId) {
+        return RewardDeliveryDTO.toDTO(rewardDeliveryRepository.findRewardDeliveryByDonationId(donationId));
+    }
 }

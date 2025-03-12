@@ -141,6 +141,12 @@ main {
   justify-content: center;
   gap: 4px;
 }
+.container{
+  max-width: 1200px !important;
+  padding: 0px 15px !important;
+  width: 100% !important;
+  margin: 0px auto !important;
+}
 
 .main-in-box-pro-le-in-box-title {
   display: flex;

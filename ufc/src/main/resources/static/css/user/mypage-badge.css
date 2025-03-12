@@ -36,24 +36,13 @@ body {
   transition: transform 0.2s;
 }
 
-/* .badge-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: space-between;
-  height: auto
+.container{
+  max-width: 1200px !important;
+  padding: 0px 15px !important;
+  width: 100% !important;
+  margin: 0px auto !important;
 }
-
-.badge-item {
-  flex: 0 0 calc(20% - 16px);
-  box-sizing: border-box;
-  background: #fff;
-  border-radius: 10px;
-  padding: 15px;
-  text-align: center;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
-} */
+ 
 
 .badge-item:hover {
   transform: translateY(-5px);

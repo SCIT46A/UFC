@@ -552,4 +552,8 @@ public class CampaignService {
         }
     }
 
+    public boolean isCampaignAchieved(Long campaignId) {
+        Integer result = campaignRepository.isCampaignAchieved(campaignId);
+        return result != null && result == 1;
+    }
 }

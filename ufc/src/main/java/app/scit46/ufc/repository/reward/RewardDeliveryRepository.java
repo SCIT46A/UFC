@@ -15,11 +15,16 @@ public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEn
     @Query("SELECT r FROM RewardDeliveryEntity r WHERE r.reward.campaign.campaignId IN :campaignIds")
     List<RewardDeliveryEntity> findByCampaignIdIn(@Param("campaignIds") List<Long> campaignIds);
 
-    @Query("SELECT rw.reward.name, md.donatedDate, c.title, md.quantity, c.photo.imageId, c.isSuccess " +
-           "FROM RewardDelivery rw " +
-           "JOIN rw.donation md " +
-           "JOIN md.campaign c " +
-           "JOIN md.user u " +
-           "WHERE u.userId = :userId")
-    Page<Object[]> findRewardDeliveriesByUserId(@Param("userId") Long userId, Pageable pageable);
+   @Query("SELECT rw.reward.rewardName, md.donatedDate, c.title, md.quantity, c.photo.imageId, c.isSuccess " +
+       "FROM RewardDeliveryEntity rw " +
+       "JOIN rw.donation md " +
+       "JOIN md.campaign c " +
+       "WHERE md.user.userId = :userId")
+   Page<Object[]> findRewardDeliveriesByUserId(@Param("userId") Long userId, Pageable pageable);
+
+   @Query("SELECT rw.reward.rewardName FROM RewardDeliveryEntity rw WHERE rw.donation.donationId = :donationId")
+   String findRewardNameByDonationId(@Param("donationId") Long donationId);
+
+   @Query("SELECT rw FROM RewardDeliveryEntity rw WHERE rw.donation.donationId = :donationId")
+   RewardDeliveryEntity findRewardDeliveryByDonationId(@Param("donationId") Long donationId);
 }
