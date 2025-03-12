@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Slf4j
 @Controller
@@ -20,7 +21,7 @@ public class MainController {
 
   // 메인페이지 라우터
   @GetMapping("/")
-  public String index(HttpServletRequest request, Model model) {
+  public String index(HttpServletRequest request, Model model, RedirectAttributes rttr) {
     HttpSession session = request.getSession(false); // 세션 가져오기
     Long loginUserId = null; // 기본값 설정
 
@@ -29,7 +30,9 @@ public class MainController {
     }
 
     model.addAttribute("loginUserId", loginUserId);
-    return "index";
+    rttr.addAttribute("loginUserId", loginUserId);
+    //return "index";
+    return "redirect:/user/login";
   }
 
   // 메인페이지에서 검색한 결과를 검색결과 페이지로 보여주기 위한 라우터

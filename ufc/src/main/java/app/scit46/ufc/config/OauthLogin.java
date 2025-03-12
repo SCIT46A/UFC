@@ -57,44 +57,27 @@ public class OauthLogin implements AuthenticationSuccessHandler {
             email = (String) responseAttributes.get("email");
             provider = "naver";
         }
-
+        log.info("-----------------2222222");
 
         // 사용자 정보 처리
         UserEntity existingUser = userService.findUserByIdentity(identity);
-
         if (existingUser != null) {
-            // 이미 존재하는 회원 -> 세션에 정보 저장 후 루트 페이지로 이동
             request.getSession().setAttribute("loginUserId", existingUser.getUserId());
 
-            // 쿼리 파라미터로 전달된 redirectUrl 우선 사용
-            String redirectUrl = request.getParameter("redirectUrl");
-            if (redirectUrl == null || redirectUrl.isEmpty()) {
-                // 세션에 저장된 값이 있으면 사용
-                redirectUrl = (String) request.getSession().getAttribute("redirectUrl");
-            } else {
-                // 쿼리 파라미터로 넘어온 경우 세션에도 저장
-                request.getSession().setAttribute("redirectUrl", redirectUrl);
-            }
-            if (redirectUrl != null && !redirectUrl.isEmpty()) {
-                request.getSession().removeAttribute("redirectUrl");
-                response.sendRedirect(redirectUrl);
-                return;
-            }
+            // 우선 redirectUrl 확인 (외부에서 전달된 redirectUrl이 있다면 우선 사용)
 
-
-            //관리자 여부 확인
-            boolean isAdmin = "ADMIN".equals(existingUser.getRoles());
-
-
-            // 관리자면 /admin, 일반 유저면 /
+            // redirectUrl 이 없으면 관리자 여부에 따라 리다이렉션
+            boolean isAdmin = "ROLE_ADMIN".equals(existingUser.getRoles());
             if (isAdmin) {
-                response.sendRedirect("/admin/adminPage");  // 관리자일 경우 `/admin`으로 이동
+                //log.info("111111");
+                response.sendRedirect("/admin/adminPage");
             } else {
-                response.sendRedirect("/");  // 일반 유저는 `/`으로 이동
+                //log.info("222222");
+                response.sendRedirect("/user/login?err=true");
             }
-
+            return;
         } else {
-            // 신규 회원 -> 세션에 제공자 정보 저장 후 가입 페이지로 이동
+            // 신규 회원 처리
             request.getSession().setAttribute("find", provider);
             request.getSession().setAttribute("identity", identity);
             request.getSession().setAttribute("nickname", nickname);
