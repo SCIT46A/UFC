@@ -46,7 +46,7 @@ jobs:
     - name: Append Secrets Settings
       working-directory: ./ufc
       run: |
-        echo "${{ secrets.APPLICATION_YML }}" >> ./src/main/resources/application.yml
+        echo "${{ secrets.ADMIN_APPLICATION_YML }}" >> ./src/main/resources/application.yml
       shell: bash
 
     # Gradle 빌드 및 테스트
