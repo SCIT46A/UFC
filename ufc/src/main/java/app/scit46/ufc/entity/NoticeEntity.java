@@ -1,6 +1,7 @@
 package app.scit46.ufc.entity;
 
 import app.scit46.ufc.dto.NoticeDTO;
+import app.scit46.ufc.entity.alert.AlertTargetEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

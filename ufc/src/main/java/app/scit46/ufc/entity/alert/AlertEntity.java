@@ -1,10 +1,11 @@
-package app.scit46.ufc.entity;
+package app.scit46.ufc.entity.alert;
 
-import app.scit46.ufc.dto.AlertDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import app.scit46.ufc.dto.alert.AlertDTO;
 
 @Getter
 @Setter

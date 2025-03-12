@@ -1,8 +1,9 @@
-package app.scit46.ufc.dto;
+package app.scit46.ufc.dto.alert;
 
-import app.scit46.ufc.entity.AlertEntity;
 import lombok.*;
 import java.time.LocalDateTime;
+
+import app.scit46.ufc.entity.alert.AlertEntity;
 
 @Getter
 @Setter

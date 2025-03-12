@@ -9,11 +9,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
-import app.scit46.ufc.entity.AlertTargetEntity;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.entity.alert.AlertTargetEntity;
 import app.scit46.ufc.entity.reward.RewardEntity;
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,11 +1,14 @@
-package app.scit46.ufc.entity;
+package app.scit46.ufc.entity.alert;
 
-import app.scit46.ufc.dto.AlertDTO;
-import app.scit46.ufc.dto.AlertTargetDTO;
 import app.scit46.ufc.dto.BadgeDTO;
 import app.scit46.ufc.dto.NoticeDTO;
+import app.scit46.ufc.dto.alert.AlertDTO;
+import app.scit46.ufc.dto.alert.AlertTargetDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
+import app.scit46.ufc.entity.BadgeEntity;
+import app.scit46.ufc.entity.NoticeEntity;
+import app.scit46.ufc.entity.UserAlertEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
 import jakarta.persistence.Column;

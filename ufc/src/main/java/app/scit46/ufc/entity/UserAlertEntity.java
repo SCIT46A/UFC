@@ -1,6 +1,7 @@
 package app.scit46.ufc.entity;
 
 import app.scit46.ufc.dto.UserAlertDTO;
+import app.scit46.ufc.entity.alert.AlertTargetEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;

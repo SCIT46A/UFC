@@ -1,8 +1,11 @@
-package app.scit46.ufc.dto;
+package app.scit46.ufc.dto.alert;
 
+import app.scit46.ufc.dto.BadgeDTO;
+import app.scit46.ufc.dto.NoticeDTO;
+import app.scit46.ufc.dto.UserAlertDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
-import app.scit46.ufc.entity.AlertTargetEntity;
+import app.scit46.ufc.entity.alert.AlertTargetEntity;
 import lombok.*;
 
 @Getter
