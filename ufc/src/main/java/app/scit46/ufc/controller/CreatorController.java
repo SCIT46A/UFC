@@ -1,10 +1,12 @@
 package app.scit46.ufc.controller;
 
 import java.net.http.HttpRequest;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.apache.catalina.connector.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
 import java.util.HashMap;
@@ -30,6 +32,7 @@ import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
+import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -173,12 +176,103 @@ public class CreatorController {
 
     }
 
-    // // 캠페인 데이터
-    // @GetMapping("/creator/campaigns")
-    // public String getCampaigns(Model model) {
-    // List<CampaignDTO> campaigns = creatorService.getCampaigns();
-    // model.addAttribute("campaigns", campaigns);
-    // return "creator/creator-campaign"; // HTML 템플릿 경로
+    /** ✅ 현재 로그인한 유저의 진행 중인 캠페인 목록 */
+    // @GetMapping("/active") // ✅ URL 수정 (active를 고정값으로 설정)
+    // public ResponseEntity<List<CampaignDTO>>
+    // getActiveCampaignsByCreator(Principal principal) {
+    // try {
+    // String userId = principal.getName(); // 로그인한 유저의 OAuth ID 가져오기
+    // List<CampaignDTO> campaigns =
+    // CampaignService.getActiveCampaignsByCreator(userId);
+    // return ResponseEntity.ok(campaigns);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    // }
     // }
 
+    /** ✅ 현재 로그인한 창작가의 진행 중인 캠페인 목록 가져오기 */
+    // @GetMapping("/campaign/active")
+    // public ResponseEntity<List<CampaignDTO>> getCreatorCampaigns(Principal
+    // principal) {
+    // try {
+    // String userId = principal.getName(); // 로그인한 유저 ID
+    // List<CampaignDTO> campaigns = creatorService.getCreatorCampaigns(userId);
+    // return ResponseEntity.ok(campaigns);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    // }
+    // }
+
+    @Autowired
+    private CampaignService campaignService;
+
+    @GetMapping("/campaign/active")
+    @ResponseBody
+    public ResponseEntity<List<CampaignDTO>> getCreatorActiveCampaigns(Principal principal) {
+        try {
+            String oauthId = principal.getName();
+            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+
+            if (creatorId == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // ✅ 진행 중인 캠페인 가져오기
+            List<CampaignDTO> campaigns = campaignService.getActiveCampaignsByCreator(creatorId);
+            return ResponseEntity.ok(campaigns);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // ✅ 종료된 캠페인 조회 API
+    @GetMapping("/campaign/finished")
+    @ResponseBody
+    public ResponseEntity<List<CampaignDTO>> getCreatorFinishedCampaigns(Principal principal) {
+        try {
+            String oauthId = principal.getName();
+            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+
+            if (creatorId == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // ✅ 종료된 캠페인 가져오기
+            List<CampaignDTO> campaigns = campaignService.getFinishedCampaignsByCreator(creatorId);
+            return ResponseEntity.ok(campaigns);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    // 거절당한 캠페인
+    @GetMapping("/campaign/rejected")
+    @ResponseBody
+    public ResponseEntity<List<CampaignDTO>> getRejectedCampaigns(Principal principal) {
+        try {
+            String oauthId = principal.getName();
+            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+
+            if (creatorId == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+
+            // ✅ 거절당한 캠페인 가져오기 (본인 소유 캠페인만)
+            List<CampaignDTO> campaigns = campaignService.getRejectedCampaignsByCreator(creatorId);
+
+            // ✅ 본인 캠페인 확인
+            if (campaigns.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 접근 권한 없음
+            }
+
+            return ResponseEntity.ok(campaigns);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }

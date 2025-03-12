@@ -36,8 +36,10 @@ import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.repository.CreatorRepository;
 import app.scit46.ufc.repository.ImageUrlRepository;
+import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import app.scit46.ufc.entity.CreatorEntity;
@@ -55,6 +57,7 @@ public class CreatorService {
     private final UserService userService;
     private final EntityManager entityManager;
     private static final RestTemplate restTemplate = new RestTemplate();
+    private CampaignRepository campaignRepository;
 
     @Value("${opendata.enc-key}")
     private String apiKey;
@@ -288,6 +291,20 @@ public class CreatorService {
             return false;
         }
     }
+
+    /** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
+    // public List<CampaignDTO> getCreatorCampaigns(String userId) {
+    // UserEntity user = userService.findUserByIdentity(userId);
+    // if (user == null) {
+    // throw new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!");
+    // }
+
+    // List<CampaignEntity> campaigns =
+    // campaignRepository.findByCreatedBy_CreatorId(user);
+    // return campaigns.stream()
+    // .map(CampaignDTO::toDTO)
+    // .collect(Collectors.toList());
+    // }
 
     // // 캠페인 정보를 프로필 부분에 출력하기 위한 로직
     // public List<CampaignDTO> getCampaigns() {

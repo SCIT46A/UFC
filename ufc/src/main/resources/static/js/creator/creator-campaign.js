@@ -31,30 +31,145 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // 캠페인 데이터 불러오기
-document.addEventListener("DOMContentLoaded", function() {
-    fetch("/api/ApiCampaignsController")
-        .then(Response => Response.json())
-        .then(campaigns => {
-            const campaignContainer = document.getElementById("ongoing-campaigns");
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 진행 중인 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/active", "#club-detail-active-container");
 
-            if (campaigns.length === 0) {
-                campaignContainer.innerHTML = "<p>현재 진행 중인 캠페인이 없습니다.</p>";
-                return;
+    // ✅ 종료된 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/finished", "#finished-events-container");
+});
+
+function fetchCampaigns(url, containerId) {
+    $.ajax({
+        url: url,
+        method: "GET",
+        success: (response) => {
+            console.log(`📌 캠페인 목록 (${url}):`, response);
+            let htmlResult = "";
+
+            if (response.length > 0) {
+                response.forEach((data) => {
+                    htmlResult += `
+                        <div class="main-bo-in-bo-pe" data-id="${data.campaignId}" data-type="${data.type}">
+                            <div class="main-bo-in-bo-pe-box">
+                                <a href="/campaign/${data.campaignId}" class="main-bo-in-bo-pe-box-a">
+                                    <div class="main-bo-in-bo-pe-box-a-img">
+                                        <img alt="" src="/api/image/${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
+                                        <div class="main-like-btn ${data.isLiked ? 'liked' : ''}">
+                                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                      fill="black" fill-opacity="0.25" stroke="white" stroke-width="1.6"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="main-bo-in-bo-pe-box-a-title">
+                                        <div class="main-bo-in-bo-pe-box-a-title-top">
+                                            <div class="main-bo-in-bo-pe-box-a-title-top-se">
+                                                <div>${data.sellerName}</div>
+                                            </div>
+                                            <div class="main-bo-in-bo-pe-box-a-title-mi">
+                                                <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
+                                                <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
+                                            </div>
+                                        </div>
+                                        <div class="main-funding">
+                                            <div class="main-funding-top">
+                                                <div>
+                                                    <span class="main-funding-top-per">${data.donationPercentage}%</span>
+                                                    <span class="main-funding-top-pri">${data.donatedQuantity}개 모임</span>
+                                                </div>
+                                                <em>${data.remainingDays}일 남음</em>
+                                            </div>
+                                            <div class="main-funding-bo" data-percentage="${data.donationPercentage}">
+                                                <div class="progress-bar" style="width: ${data.donationPercentage}%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                htmlResult = "<div>캠페인이 없습니다!</div>";
             }
 
-            campaigns.forEach(campaign => {
-                const div = document.createElement("div");
-                div.classList.add("campaign-item");
-                div.innerHTML = `
-                
-                `;
-                campaignContainer.appendChild(div);
-            });
-        })
-        .catch(error => {
-            console.error("캠페인 불러오기 실패", error);
-        });
+            $(containerId).html(htmlResult);
+        },
+        error: (error) => {
+            console.error(`❌ 캠페인 불러오기 실패 (${url}):`, error);
+            $(containerId).html("<div>캠페인 목록을 불러오는 데 실패했습니다.</div>");
+        }
+    });
+}
+
+// 거절된 캠페인
+document.addEventListener("DOMContentLoaded", function () {
+    // 💔 거절당한 캠페인 목록 불러오기
+    $.ajax({
+        url: `/creator/campaign/rejected`,
+        method: "GET",
+        success: (response) => {
+            console.log("📌 거절당한 캠페인 목록:", response);
+            let htmlResult = "";
+
+            if (response.length > 0) {
+                response.forEach((data) => {
+                    htmlResult += `
+                        <div class="main-bo-in-bo-pe" data-id="${data.campaignId}">
+                            <div class="main-bo-in-bo-pe-box">
+                                <a href="/campaign/${data.campaignId}" class="main-bo-in-bo-pe-box-a">
+                                    <div class="main-bo-in-bo-pe-box-a-img">
+                                        <img alt="" src="/api/image/${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
+                                    </div>
+                                    <div class="main-bo-in-bo-pe-box-a-title">
+                                        <div class="main-bo-in-bo-pe-box-a-title-mi">
+                                            <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
+                                            <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                htmlResult = "<div>거절당한 캠페인이 없습니다!</div>";
+            }
+
+            $("#rejected-events-container").html(htmlResult);
+        },
+        error: (error) => {
+            console.error("❌ 거절당한 캠페인 불러오기 실패:", error);
+
+            // 🔐 권한 오류 처리
+            if (error.status === 403) {
+                $("#rejected-events-container").html("<div>권한이 없는 캠페인입니다.</div>");
+            } else {
+                $("#rejected-events-container").html("<div>거절당한 캠페인 목록을 불러오는 데 실패했습니다.</div>");
+            }
+        }
+    });
 });
+
+//             if (campaigns.length === 0) {
+//                 campaignContainer.innerHTML = "<p>현재 진행 중인 캠페인이 없습니다.</p>";
+//                 return;
+//             }
+
+//             campaigns.forEach(campaign => {
+//                 const div = document.createElement("div");
+//                 div.classList.add("campaign-item");
+//                 div.innerHTML = `
+                
+//                 `;
+//                 campaignContainer.appendChild(div);
+//             });
+//         })
+//         .catch(error => {
+//             console.error("캠페인 불러오기 실패", error);
+//         });
+// });
 
 
 // 더보기 버튼 기능
