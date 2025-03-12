@@ -36,14 +36,18 @@
                         <div class="main-admin-image-warp"></div>
                     </button>
                 </div>
-                <h2 class="main-admin-name">UP-DA</h2>
-                <a href="http://localhost:10000/" class="main-admin-return">
-                    <button class="main-admin-return-button">
-                        <div class="main-admin-return-wrap">
-                            <div>서비스로 돌아가기</div>
-                        </div>
-                    </button>
-                </a>
+                <h2 class="main-admin-name" th:value="${loginUserId}">UP-DA</h2>
+                <div class="button-container">
+                    <a th:href="@{/logout}" class="main-admin-return">
+                        <button class="main-admin-return-button">로그아웃</button>
+                    </a>
+                </div>
+                <div class="button-container">
+                    <a href="https://upda.store/" class="main-admin-return">
+                        <button class="main-admin-return-button">서비스로 돌아가기</button>
+                    </a>
+                </div>
+
             </div>
         </div>
 
@@ -69,6 +73,5 @@
 </main>
 
 <script th:src="@{/js/admin/admin-user.js}" defer></script>
-
 </body>
 </html>
