@@ -28,18 +28,25 @@ public class AlertEntity {
     @Column(name = "alert_type", length = 30)
     private String alertType;
 
+    @Column(name = "image_url", length = 255)
+    private String imageUrl;
+
+    @Column(name = "link_url", length = 255)
+    private String linkUrl;
+
     @Column(name = "alert_date", nullable = false)
     private LocalDateTime alertDate;
 
-    // OneToMany: AlertTarget.alert 참조
     @OneToMany(mappedBy = "alert", fetch = FetchType.LAZY)
-    private List<AlertTargetEntity> alertTargets;
+    private List<UserAlertEntity> userAlerts;
 
     public static AlertEntity toEntity(AlertDTO dto) {
         return AlertEntity.builder()
                 .alertId(dto.getAlertId())
                 .content(dto.getContent())
                 .alertType(dto.getAlertType())
+                .imageUrl(dto.getImageUrl())
+                .linkUrl(dto.getLinkUrl())
                 .alertDate(dto.getAlertDate())
                 .build();
     }

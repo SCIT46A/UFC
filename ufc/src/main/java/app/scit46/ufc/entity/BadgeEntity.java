@@ -1,7 +1,6 @@
 package app.scit46.ufc.entity;
 
 import app.scit46.ufc.dto.BadgeDTO;
-import app.scit46.ufc.entity.alert.AlertTargetEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -34,10 +33,6 @@ public class BadgeEntity {
     // OneToMany: UserBadges.badge 참조
     @OneToMany(mappedBy = "badge", fetch = FetchType.LAZY)
     private List<UserBadgeEntity> userBadges;
-
-    // OneToMany: AlertTarget.target_badge 참조
-    @OneToMany(mappedBy = "targetBadge", fetch = FetchType.LAZY)
-    private List<AlertTargetEntity> alertTargets;
 
     public static BadgeEntity toEntity(BadgeDTO dto) {
         return BadgeEntity.builder()

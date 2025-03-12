@@ -25,5 +25,4 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
   
     LikeEntity findByUserAndCreator(UserEntity user, CreatorEntity creator);
 
-
 }

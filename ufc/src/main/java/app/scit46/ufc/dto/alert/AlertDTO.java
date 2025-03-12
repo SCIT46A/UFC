@@ -15,6 +15,8 @@ public class AlertDTO {
     private Long alertId;
     private String content;
     private String alertType;
+    private String imageUrl;
+    private String linkUrl;
     private LocalDateTime alertDate;
 
     public static AlertDTO toDTO(AlertEntity entity) {
@@ -22,6 +24,8 @@ public class AlertDTO {
                 .alertId(entity.getAlertId())
                 .content(entity.getContent())
                 .alertType(entity.getAlertType())
+                .imageUrl(entity.getImageUrl())
+                .linkUrl(entity.getLinkUrl())
                 .alertDate(entity.getAlertDate())
                 .build();
     }

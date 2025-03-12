@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import app.scit46.ufc.dto.*;
+import app.scit46.ufc.dto.alert.UserAlertDTO;
 import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.service.*;
+import app.scit46.ufc.service.alert.UserAlertService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
