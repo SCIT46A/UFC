@@ -60,6 +60,26 @@ document.addEventListener('DOMContentLoaded', function () {
     profileAdClose.classList.add('hidden');
     addressAdd;
   });
+
+  //프로필 이미지 가져오기
+  const profileImage = document.querySelector('.main-in-box-pro-le-in-img')
+  let profileImageId = profileImage.getAttribute('src');
+  console.log(profileImageId);
+
+
+  function extractImageId(imageUrl) {
+    let regex = /https:\/\/imagedelivery\.net\/[^\/]+\/([^\/]+)\/public/;
+    let match = imageUrl.match(regex);
+    return match ? match[1] : null;
+  }
+
+  let imageId = extractImageId(profileImageId);
+  //프로필 이미지 넣기
+  const profileTarget = document.querySelector('#imageInputField-add');
+  profileTarget.setAttribute('value', imageId);
+
+
+
 });
 
 // 다음 주소 API
@@ -99,6 +119,7 @@ document.querySelector('.pro-edit-btn-save').addEventListener('click', () => {
 
   totalAddress.value =
     (addressInput.value || '') + '#' + (addressDetailInput.value || '');
+    
 });
 
 const imageInput = document.getElementById('ch-img-btn');

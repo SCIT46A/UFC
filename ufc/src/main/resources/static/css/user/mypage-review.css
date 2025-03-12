@@ -141,6 +141,7 @@ main {
   justify-content: center;
   gap: 4px;
 }
+
 .container{
   max-width: 1200px !important;
   padding: 0px 15px !important;

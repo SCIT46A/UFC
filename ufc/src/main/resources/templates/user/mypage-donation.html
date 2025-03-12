@@ -105,7 +105,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
+                                                                <span th:text="${creatorLikes}"></span>
                                                             </div>
                                                         </div>
                                                         <div
@@ -134,8 +134,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                            <!-- 펀딩한 개수가 필요함함 -->
-                                                                <span></span>-
+                                                                <span th:text="${donationLikes}"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -178,7 +177,7 @@
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-like.html"
                                             th:href="@{/user/like}"
-                                            >좋아요 누른 캠페인</a>
+                                            >좋아요</a>
                                             </div>
                                         </span>
                                         <span class="main-in-box-na-box-pe-span">

@@ -205,8 +205,8 @@ main {
   position: absolute;
   background: rgb(248, 100, 83);
   bottom: -1px;
-  width: 148px;
-  left: 369px;
+  width: 60px;
+  left: 365px;
   transition: left 0.15s ease-out, width 0.09s ease-out;
 }
 

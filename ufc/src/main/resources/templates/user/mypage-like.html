@@ -84,6 +84,7 @@
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
                                                             >
                                                                 팔로잉
+                                                                
                                                                 <svg
                                                                     class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
                                                                     width="18"
@@ -103,7 +104,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
+                                                                <span th:text="${creatorLikes}"></span>
                                                             </div>
                                                         </div>
                                                         <div
@@ -121,6 +122,8 @@
                                                                     fill="none"
                                                                     xmlns="http://www.w3.org/2000/svg"
                                                                 >
+
+                                                                
                                                                     <path
                                                                         fill-rule="evenodd"
                                                                         clip-rule="evenodd"
@@ -132,7 +135,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
+                                                            <span th:text="${donationLikes}"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -174,7 +177,7 @@
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-like.html"
                                             th:href="@{/user/like}"
-                                            >좋아요 누른 캠페인</a>
+                                            >좋아요</a>
                                             </div>
                                         </span>
                                         <span class="main-in-box-na-box-pe-span">
