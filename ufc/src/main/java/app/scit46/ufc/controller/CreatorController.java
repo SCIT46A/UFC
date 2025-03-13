@@ -28,13 +28,17 @@ import org.springframework.web.client.RestTemplate;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.SearchResultDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.ImageUrlService;
+import app.scit46.ufc.service.SearchService;
+import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -43,8 +47,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequiredArgsConstructor
 public class CreatorController {
 
+    private final UserService userService;
     private final CreatorService creatorService;
     private final ImageService imageService;
+    private final SearchService searchService;
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
     @GetMapping("/create")
@@ -208,71 +214,115 @@ public class CreatorController {
     @Autowired
     private CampaignService campaignService;
 
+    // @GetMapping("/campaign/active")
+    // @ResponseBody
+    // public ResponseEntity<List<CampaignDTO>> getCreatorActiveCampaigns(Principal
+    // principal) {
+    // try {
+    // String oauthId = principal.getName();
+    // Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+
+    // if (creatorId == null) {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    // }
+
+    // // ✅ 진행 중인 캠페인 가져오기
+    // List<CampaignDTO> campaigns =
+    // campaignService.getActiveCampaignsByCreator(creatorId);
+    // return ResponseEntity.ok(campaigns);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    // }
+    // }
     @GetMapping("/campaign/active")
     @ResponseBody
-    public ResponseEntity<List<CampaignDTO>> getCreatorActiveCampaigns(Principal principal) {
-        try {
-            String oauthId = principal.getName();
-            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+    public ResponseEntity<List<SearchResultDTO>> searchActive(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "3") int limit) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
+        List<SearchResultDTO> results = searchService.searchAllActiveByCreator(creatorId);
+        return ResponseEntity.ok(results);
+    }
 
-            if (creatorId == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+    @GetMapping("/campaign/finished")
+    @ResponseBody
+    public ResponseEntity<List<SearchResultDTO>> searchFinished(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "3") int limit) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
+        List<SearchResultDTO> results = searchService.searchAllFinishedByCreator(creatorId);
+        return ResponseEntity.ok(results);
+    }
 
-            // ✅ 진행 중인 캠페인 가져오기
-            List<CampaignDTO> campaigns = campaignService.getActiveCampaignsByCreator(creatorId);
-            return ResponseEntity.ok(campaigns);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+    @GetMapping("/campaign/rejected")
+    @ResponseBody
+    public ResponseEntity<List<SearchResultDTO>> searchAppointed(
+            HttpServletRequest request,
+            @RequestParam(defaultValue = "0") int offset,
+            @RequestParam(defaultValue = "3") int limit) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
+        List<SearchResultDTO> results = searchService.searchAllAppointedByCreator(creatorId);
+        return ResponseEntity.ok(results);
     }
 
     // ✅ 종료된 캠페인 조회 API
-    @GetMapping("/campaign/finished")
-    @ResponseBody
-    public ResponseEntity<List<CampaignDTO>> getCreatorFinishedCampaigns(Principal principal) {
-        try {
-            String oauthId = principal.getName();
-            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+    // @GetMapping("/campaign/finished")
+    // @ResponseBody
+    // public ResponseEntity<List<CampaignDTO>>
+    // getCreatorFinishedCampaigns(Principal principal) {
+    // try {
+    // String oauthId = principal.getName();
+    // Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
 
-            if (creatorId == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+    // if (creatorId == null) {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    // }
 
-            // ✅ 종료된 캠페인 가져오기
-            List<CampaignDTO> campaigns = campaignService.getFinishedCampaignsByCreator(creatorId);
-            return ResponseEntity.ok(campaigns);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+    // // ✅ 종료된 캠페인 가져오기
+    // List<CampaignDTO> campaigns =
+    // campaignService.getFinishedCampaignsByCreator(creatorId);
+    // return ResponseEntity.ok(campaigns);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    // }
+    // }
 
     // 거절당한 캠페인
-    @GetMapping("/campaign/rejected")
-    @ResponseBody
-    public ResponseEntity<List<CampaignDTO>> getRejectedCampaigns(Principal principal) {
-        try {
-            String oauthId = principal.getName();
-            Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
+    // @GetMapping("/campaign/rejected")
+    // @ResponseBody
+    // public ResponseEntity<List<CampaignDTO>> getRejectedCampaigns(Principal
+    // principal) {
+    // try {
+    // String oauthId = principal.getName();
+    // Long creatorId = campaignService.getCreatorIdByOauthId(oauthId);
 
-            if (creatorId == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-            }
+    // if (creatorId == null) {
+    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    // }
 
-            // ✅ 거절당한 캠페인 가져오기 (본인 소유 캠페인만)
-            List<CampaignDTO> campaigns = campaignService.getRejectedCampaignsByCreator(creatorId);
+    // // ✅ 거절당한 캠페인 가져오기 (본인 소유 캠페인만)
+    // List<CampaignDTO> campaigns =
+    // campaignService.getRejectedCampaignsByCreator(creatorId);
 
-            // ✅ 본인 캠페인 확인
-            if (campaigns.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 접근 권한 없음
-            }
+    // // ✅ 본인 캠페인 확인
+    // if (campaigns.isEmpty()) {
+    // return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null); // 접근 권한 없음
+    // }
 
-            return ResponseEntity.ok(campaigns);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-    }
+    // return ResponseEntity.ok(campaigns);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    // }
+    // }
 }
