@@ -24,4 +24,6 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
     @Query("SELECT c FROM CreatorEntity c WHERE c.ownUser = :ownUser")
     Optional<CreatorEntity> findCreatorByUser(@Param("ownUser") UserEntity ownUser);
 
+    @Query("SELECT c FROM CreatorEntity c WHERE c.creatorId = :creatorId")
+    Optional<CreatorEntity> findByCreatorId(@Param("creatorId") Long creatorId);
 }

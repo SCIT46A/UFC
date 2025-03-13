@@ -104,7 +104,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                <span th:text="${creatorLikes}"></span>
+                                                                <span th:text="${creatorLikesCount}"></span>
                                                             </div>
                                                         </div>
                                                         <div
@@ -135,7 +135,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                            <span th:text="${donationLikes}"></span>
+                                                            <span th:text="${donationLikesCount}"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -198,27 +198,21 @@
                                 <div>
                                     <div class="like-top">
 
-                                        <span class="like-top-le">
-                                            <select class="like-top-select">
-                                            <option value="all">전체</option>
-                                            <option value="progress">진행중</option>
-                                            <option value="end">종료</option>
-                                        </select>
+                                            <a href="javascript:void(0)" class="like-top-campaign" id="like-campaign">캠페인</a>
 
-                                        </span>
+                                            <a href="javascript:void(0)" class="like-top-creator" id="like-creator">크리에이터</a>
                                         <div class="like-top-ri">
                                             <div class="like-top-ri-in">
                                                 <select class="like-top-sorting">
                                                     <option value="latest">최신순</option>
-                                                    <option value="add">추가순</option>
                                                     <option value="deadline">마감임박순</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="like-bo">
-                                        <div class="like-bo-box">
-                                            <div class="like-bo-box-in">
+                                        <div class="like-bo-box-campaign ">
+                                            <div class="like-bo-box-in-campaign">
                                                 <!-- 각각의div   -->
                                                 <div class="like-bo-box-in-pe" th:each="campaign, iterStatus : ${campaigns}">
                                                     <div
@@ -232,7 +226,7 @@
                                                                 class="like-bo-box-in-pe-in-a-img"
                                                             >
                                                                 <img
-                                                                    th:src="${imageUrls[iterStatus.index]}"
+                                                                    th:src="${campaignImageUrls[iterStatus.index]}"
                                                                     src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
                                                                     alt=""
                                                                 />
@@ -273,9 +267,6 @@
                                                                             class="like-bo-box-in-pe-in-a-content-title-top-text"
                                                                                 th:text="${campaign.createdBy.companyName}"
                                                                         >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
                                                                         </div>
                                                                     </div>
                                                                     <div
@@ -285,25 +276,11 @@
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-top"
                                                                                 th:text="${campaign.title}"
                                                                         >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
                                                                         </div>
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-bo"
                                                                                 th:text="${campaign.description}" 
                                                                         >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
                                                                         </div>
                                                                     </div>
                                                                     <div
@@ -344,6 +321,36 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- ---------------- Creator 좋아요 ------------------- -->
+                                            <div class="like-bo-box-creator hidden">
+                                                 <div class="like-bo-box-in-creator">
+                                                     <div class="creator-grid">
+                                                         <div class="creator-item" th:each="creator, iterStatus : ${creators}">
+                                                             <div class="creator-image">
+                                                                 <img th:src="${creatorImageUrls[iterStatus.index]}"
+                                                                 alt="크리에이터" />
+                                                            </div>
+                                                            <div class="creator-info">
+                                                                <h3 th:text="${creator.bName}"></h3>
+                                                                <p th:text="${creator.intro}"></p>
+                                                                <div class="main-like-btn" 
+                                                                th:attr="data-like-id=${creatorLikeMap[creator.creatorId] ? likes[iterStatus.index].likeId : null}"
+                                                                >
+                                                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path 
+                                                                            d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"          
+                                                                            stroke="white" stroke-width="1.6"
+                                                                            th:attr="fill=${creatorLikeMap[creator.creatorId] ? 'hotpink' : 'black'}, fill-opacity=${creatorLikeMap[creator.creatorId] ? '1' : '0.25'}"
+                                                                        ></path>
+
+                                                                    </svg>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- --------------------구분선 ----------------------- -->
                                         </div>
                                     </div>
                                 </div>

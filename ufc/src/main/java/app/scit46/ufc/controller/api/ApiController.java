@@ -153,6 +153,25 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
-
+    @PostMapping("/like/delete")
+    public ResponseEntity<Map<String, Object>> deleteLike(
+            @RequestParam("likeId") Long likeId,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+        }
+        try {
+            likeService.deleteLike(likeId, userId);
+            log.info("likeId: " + likeId);
+            log.info("userId: " + userId);
+            return ResponseEntity.ok(Map.of("success", true, "message", "좋아요가 삭제되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
 
 }

@@ -235,6 +235,14 @@ public class CreatorService {
         System.out.println("✅ 프로필 업데이트 완료!");
         return true;
     }
+
+
+
+    public List<CreatorDTO> getCreatorsByCreatorId(Long creatorId) {
+        return creatorRepository.findByCreatorId(creatorId).stream()
+                .map(CreatorDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 }
 
 

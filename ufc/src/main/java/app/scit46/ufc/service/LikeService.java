@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
@@ -161,5 +162,19 @@ public List<LikeDTO> getLikeByCampaignId(Long campaignId) {
             .map(LikeDTO::toDTO)
             .collect(Collectors.toList());
 }
+
+    @Transactional
+    public void deleteLike(Long likeId, Long userId) {
+        LikeEntity like = likeRepository.findById(likeId)
+                .orElseThrow(() -> new RuntimeException("해당 좋아요를 찾을 수 없습니다."));
+        
+        // 현재 사용자와 일치하는지 확인 (권한 체크)
+        if (!like.getUser().getUserId().equals(userId)) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+        
+        // 해당 LikeEntity 삭제
+        likeRepository.delete(like);
+    }
 
 }

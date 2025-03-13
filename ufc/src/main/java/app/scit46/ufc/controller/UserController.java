@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import app.scit46.ufc.dto.BadgeDTO;
+import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.LikeDTO;
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.UserBadgeDTO;
@@ -30,6 +31,7 @@ import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.BadgeService;
+import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.LikeService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.UserBadgeService;
@@ -62,7 +64,7 @@ public class UserController {
     private final CampaignGoalService campaignGoalService;
     private final RewardDeliveryService rewardDeliveryService;
     private final DeliveryService deliveryService;
-
+    private final CreatorService creatorService;
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -483,59 +485,87 @@ public class UserController {
 
         
         @GetMapping("/like")
-public String like(
-        HttpServletRequest request, 
-        Model model,
-        @RequestParam(value = "page", defaultValue = "0") int page,
-        @RequestParam(value = "size", defaultValue = "6") int size) {
+        public String like(HttpServletRequest request, Model model) {
+            HttpSession session = request.getSession(false);
+            Long userId = (Long) session.getAttribute("loginUserId");
+            
+            if (userId != null) {
+                try {
+                    UserDTO user = userService.readUserById(userId);
+                    List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                    
+                    // 좋아요한 항목들을 크리에이터와 캠페인으로 분류합니다.
+                    List<LikeDTO> creatorLikes = likes.stream()
+                            .filter(like -> like.getCreator() != null)
+                            .collect(Collectors.toList());
+                    List<LikeDTO> donationLikes = likes.stream()
+                            .filter(like -> like.getCampaign() != null)
+                            .collect(Collectors.toList());
+                    
+                    // donationLikes에 포함된 모든 캠페인을 중복 제거하여 가져옵니다.
+                    List<CampaignDTO> campaigns = donationLikes.stream()
+                            .map(like -> like.getCampaign())
+                            .distinct()
+                            .collect(Collectors.toList());
+                    
+                    // creatorLikes에 포함된 모든 크리에이터를 중복 제거하여 가져옵니다.
+                    List<CreatorDTO> creators = creatorLikes.stream()
+                            .map(like -> like.getCreator())
+                            .distinct()
+                            .collect(Collectors.toList());
+                    
+                    // 각 캠페인의 이미지 URL 추출
+                    List<String> campaignImageUrls = new ArrayList<>();
+                    for (CampaignDTO campaign : campaigns) {
+                        if (campaign != null && campaign.getPhoto() != null) {
+                            campaignImageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
+                        } else {
+                            campaignImageUrls.add(null);
+                        }
+                    }
+                    
+                    // 각 크리에이터의 이미지 URL 추출
+                    List<String> creatorImageUrls = new ArrayList<>();
+                    for (CreatorDTO creator : creators) {
+                        if (creator != null && creator.getProImgUrl() != null) {
+                            creatorImageUrls.add(imageService.getImageUrl(creator.getProImgUrl().getImageId()));
+                        } else {
+                            creatorImageUrls.add(null);
+                        }
+                    }
+                    
+                    // 사용자 프로필 이미지 URL 생성
+                    String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
+                            + user.getPhoto().getImageId() + "/public";
 
-    HttpSession session = request.getSession(false);
-    Long userId = (Long) session.getAttribute("loginUserId");
+                    Map<Long, Long> creatorLikeIdMap = new HashMap<>();
+                    for (LikeDTO like : creatorLikes) {
+                        if (like.getCreator() != null) {
+                            creatorLikeIdMap.put(like.getCreator().getCreatorId(), like.getLikeId());
+                        }
+                    }
+                    model.addAttribute("creatorLikeIdMap", creatorLikeIdMap);
 
-    if (userId != null) {
-        try {
-            UserDTO user = userService.readUserById(userId);
-            List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
-            Page<CampaignDTO> paging = likeService.getLikedCampaignsByUserId(userId, page, size);
-            List<CampaignDTO> campaigns = paging.getContent();
-            List<String> imageUrls = new ArrayList<>();
-            String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                    + user.getPhoto().getImageId() + "/public";
 
-            // ✅ `likes` 리스트를 분류 (creator_id 존재 여부 기준)
-            List<LikeDTO> creatorLikes = likes.stream()
-                    .filter(like -> like.getCreator() != null)
-                    .collect(Collectors.toList());
+                            // 모델에 값 추가
+                    model.addAttribute("likes", likes);
+                    model.addAttribute("creatorLikesCount", creatorLikes.size()); // 크리에이터 좋아요 수
+                    model.addAttribute("donationLikesCount", donationLikes.size()); // 캠페인 좋아요 수
+                    model.addAttribute("user", user);
+                    model.addAttribute("userImageId", userImageId);
+                    model.addAttribute("campaigns", campaigns);
+                    model.addAttribute("campaignImageUrls", campaignImageUrls);
+                    model.addAttribute("creators", creators);
+                    model.addAttribute("creatorImageUrls", creatorImageUrls);
 
-            List<LikeDTO> donationLikes = likes.stream()
-                    .filter(like -> like.getCampaign() != null)
-                    .collect(Collectors.toList());
-
-            // 각 캠페인의 이미지 URL 추출 (캠페인에 photo가 있는 경우 100% 있음)
-            for (CampaignDTO campaign : campaigns) {
-                if (campaign != null && campaign.getPhoto() != null) {
-                    imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
-                } else {
-                    imageUrls.add(null);
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-
-            model.addAttribute("likes", likes);
-            model.addAttribute("creatorLikes", creatorLikes.size()); // ✅ 크리에이터 관련 좋아요 목록
-            model.addAttribute("donationLikes", donationLikes.size()); // ✅ 후원 관련 좋아요 목록
-            model.addAttribute("user", user);
-            model.addAttribute("userImageId", userImageId);
-            model.addAttribute("campaigns", campaigns);
-            model.addAttribute("imageUrls", imageUrls);
-            model.addAttribute("campaignCount", paging.getTotalElements());
-            model.addAttribute("paging", paging);
-
-        } catch (DBNotFoundException e) {
-            model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+            
+            return "user/mypage-like";
         }
-    }
-    return "user/mypage-like";
-}
+
 
 
 
