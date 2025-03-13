@@ -7,6 +7,11 @@ body {
     padding: 0;
 }
 
+main {
+    background-color: #ffffff;
+    margin-bottom: 50px;
+}
+
 .container {
     width: 100%;
     max-width: 1200px;
@@ -150,7 +155,6 @@ body {
 
 .py-20 {
     padding-top: 5rem;
-    padding-bottom: 5rem;
 }
 
 .px-4 {
@@ -322,6 +326,7 @@ body {
     font-size: 12px;
     line-height: 20px;
     color: rgba(255, 255, 255, 0.7);
+    width: 40px;
 }
 
 .main-container-count-point{
@@ -415,11 +420,11 @@ body {
 
 .main-item{
     padding-top: 20px;
-    margin-bottom: 40px;
     position: relative;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+    margin-bottom: 30px;
 }
 
 .main-item-titie{
@@ -564,7 +569,7 @@ body {
 }
 
 .main-item-main-count{
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
     padding: 4px 0px 0px 11px;
     margin-right: -4px;
     z-index: 1;
@@ -644,7 +649,7 @@ body {
     font-size: 14px;
     font-weight: bold;
     line-height: 120%;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
 }
 
 .main-item-main-tag{
@@ -715,13 +720,27 @@ body {
 }
 
 .main-resent-all{
-    transform: translate3d(0px, 0px, 0px);
     position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
     display: flex;
     transition-property: transform;
+    transition: transform 0.5s ease-in-out; /* 트랜지션 추가 */
+    box-sizing: content-box;
+    margin-left: auto;
+    text-decoration: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+}
+
+.main-resent-all-add{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    display: flex;
+    transition-property: transform;
+    transition: transform 0.5s ease-in-out; /* 트랜지션 추가 */
     box-sizing: content-box;
     margin-left: auto;
     text-decoration: none;
@@ -729,7 +748,7 @@ body {
 }
 
 .main-resent-pe{
-    width: 192px;
+    width: 224px;
     margin-right: 12px;
     flex-shrink: 0;
     height: 100%;
@@ -789,6 +808,7 @@ body {
     display: flex;
     flex-direction: column;
     text-decoration: none;
+    margin-bottom: 5px;
 }
 
 .main-resent-content-box{
@@ -810,7 +830,7 @@ body {
 }
 
 .main-resent-content-box-se-in{
-    font-size: 11px;
+    font-size: 13px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(84, 84, 84);
@@ -828,7 +848,7 @@ body {
 }
 
 .main-resent-content-box-content-a{
-    font-size: 14px;
+    font-size: 16px;
     font-weight: normal;
     line-height: 120%;
     color: rgb(28, 28, 28);
@@ -847,10 +867,10 @@ body {
     display: flex;
     align-items: flex-end;
     margin-bottom: 6px;
-    font-size: 14px;
+    font-size: 16px;
     font-weight: bold;
     line-height: 120%;
-    color: rgb(235, 75, 56);
+    color: #16a34a ;
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
 }
@@ -870,6 +890,8 @@ body {
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+    flex-wrap: wrap;
+
 }
 
 .main-resent-tag-in-pe{
@@ -877,7 +899,7 @@ body {
     background-color: rgb(248, 248, 248);
     height: 18px;
     white-space: nowrap;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: 700;
     display: flex;
     -webkit-box-align: center;
@@ -887,4 +909,196 @@ body {
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+}
+
+.image-container {
+    width: 100%;
+    position: relative;
+    flex: 0  100%; /* 한 개씩 표시 */
+    
+}
+
+.main-container-title {
+    position: absolute;
+    bottom: 83%;
+    left: 0%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.main-container-title-in {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 16px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    white-space: nowrap;
+    font-size: 14px;
+    width: fit-content; /* 내용 크기에 맞춰 박스 크기 조정 */
+    max-width: 100%;
+
+    position: relative;
+}
+
+.image-container img{
+    width: 100%;
+    display: block;
+}
+
+.slider-container{
+    width: 100%;
+    overflow: hidden; /* 넘치는 부분 숨기기 */
+    position: relative;
+}
+
+.slider{
+    display: flex; /* 한 줄 배치 */
+    transition: transform 0.5s ease-in-out;
+    width: 300%; /* 3개의 이미지니까 300% */
+}
+
+.main-funding-bo{
+    overflow: hidden;
+    background: rgb(158, 158, 158);
+    height: 3px;
+    position: relative;
+    margin: 4px 0px 0px;
+}
+
+.main-funding-bo .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%; /* 초기 상태 */
+    background-color: #16a34a; /* 초록색 진행 바 */
+    transition: width 0.5s ease-in-out; /* 애니메이션 */
+}
+
+.main-resent-all-add-btn-le{
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    outline: 0px;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    left: -4px;
+}
+
+.main-resent-all-add-btn-ri{
+    outline: 0;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    right: -4px;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    font: inherit;
+    margin: 0;
+}
+
+.main-resent-all-add-btn-in{
+    display: inline-flex;
+    align-self: center;
+}
+
+.main-resent-all-add-btn-in svg{
+    font-size: 16px;
+    fill: rgb(13, 13, 13);
+    margin-right: 2px;
+    width: 0.5em;
+    height: 0.5em;
+}
+
+.main-resent-all-add-btn-add-le{
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    outline: 0px;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    left: -4px;
+}
+
+.main-resent-all-add-btn-add-ri{
+    outline: 0;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    right: -4px;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    font: inherit;
+    margin: 0;
+}
+
+
+.target-slide{
+    transform: translateX(-101%);
 }

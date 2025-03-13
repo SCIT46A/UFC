@@ -27,11 +27,11 @@ public class UserBadgeEntity {
     @JoinColumn(name = "badge_id")
     private BadgeEntity badge;
 
-    public static UserBadgeEntity toEntity(UserBadgeDTO dto, UserEntity user, BadgeEntity badge) {
+    public static UserBadgeEntity toEntity(UserBadgeDTO dto) {
         return UserBadgeEntity.builder()
                 .userBadgeId(dto.getUserBadgeId())
-                .user(user)
-                .badge(badge)
+                .user(UserEntity.builder().userId(dto.getUser().getUserId()).build())
+                .badge(BadgeEntity.builder().badgeId(dto.getBadge().getBadgeId()).build())
                 .build();
     }
 }

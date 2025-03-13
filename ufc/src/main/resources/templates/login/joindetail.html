@@ -30,7 +30,7 @@
                                 <div class="line"></div>
                             </div>
                             <form
-                                th:action="@{/user/joindetail}"
+                                th:action="@{/user/joinProc}"
                                 method="post"
                                 class="input-all-wrap"
                             >
@@ -147,7 +147,11 @@
                                         </div>
                                     </div>
                                     <!-- 주소 하나로 합치는곳 -->
-                                    <input type="hidden" class="total-add" name="address" />
+                                    <input
+                                        type="hidden"
+                                        class="total-add"
+                                        name="address"
+                                    />
 
                                     <div class="agreement-container">
                                         <p>
@@ -308,7 +312,12 @@
                         </div>
                     </div>
                 </div>
+                <div class="line"></div>
+              </div>
             </div>
+          </div>
         </div>
-    </body>
+      </div>
+    </div>
+  </body>
 </html>

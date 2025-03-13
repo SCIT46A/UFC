@@ -8,7 +8,7 @@
             th:href="@{/images/fix/favicon.png}"
             type="image/png"
         />
-        <title>UP-DA - 지속 가능한 미래에 투자하세요</title>
+        <title>UPDA - 지속 가능한 미래에 투자하세요</title>
         <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
@@ -20,18 +20,26 @@
             href="../../static/css/fix/header.css"
         />
         <link
-                rel="stylesheet"
-                th:href="@{/css/fix/footer.css}"
-                href="../../static/css/fix/footer.css"
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
         />
         <link
             rel="stylesheet"
             th:href="@{/css/index.css}"
             href="../static/css/index.css"
         />
+        <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
+        <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+        <script th:src="@{/js/fix/chat.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
+        <script src="../../resources/static/js/index.js" defer></script>
+        <script th:src="@{/js/index.js}" defer></script>
     </head>
     <body>
+        <div th:replace="~{fix/chat :: chat}"></div>
         <div th:replace="~{fix/header :: header}"></div>
         <div class="flex-col min-h-screen bg-green-50">
             <main class="flex-grow">
@@ -47,12 +55,12 @@
                                 투자하세요
                             </h1>
                             <p class="text-xl mb-8 max-w-2xl">
-                                UP-DA에서 혁신적인 업사이클링 캠페인에
-                                펀딩하고, <br />
+                                UPDA에서 혁신적인 업사이클링 캠페인에 펀딩하고,
+                                <br />
                                 함께 더 나은 세상을 만들어가요.
                             </p>
                             <a
-                            href="#projects"
+                                href="/campaign/active"
                                 class="inline-flex items-center bg-white text-green-700 px-6 py-3 rounded-full hover:bg-green-100 transition-colors"
                             >
                                 캠페인 둘러보기
@@ -60,57 +68,68 @@
                             </a>
                         </div>
                         <div class="md:w-1/2 main-box">
-                            <img
-                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1hc3NldHMiLCJrZXkiOiJoZXJvZXMvbWFpbl9tX3NpYl95b29rLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                alt="Eco-friendly Project Illustration"
-                                class="rounded-lg shadow-lg"
-                            />
-                            <!-- 하단 메뉴바 -->
+                            <div class="slider-container">
+                                <div class="slider">
+                                    <div class="image-container">
+                                        <img
+                                            src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1hc3NldHMiLCJrZXkiOiJoZXJvZXMvbWFpbl9tX3NpYl95b29rLmpwZyIsImVkaXRzIjp7InJlc2l6ZSI6eyJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
+                                            alt="Slide 1"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                새해 소망을 이루어줄게요
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image-container">
+                                        <img
+                                            src="https://cdn3.wadiz.kr/studio/images/2025/01/17/819c20dc-9611-44f8-9760-8124d046518d.jpeg/wadiz/resize/400/format/jpg/quality/85/"
+                                            alt="Slide 2"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                22222222
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="image-container">
+                                        <img
+                                            src="https://cdn3.wadiz.kr/studio/images/2025/01/06/328b5913-636b-4b5a-827b-ac0f1cea4112.jpeg/wadiz/resize/400/format/jpg/quality/85/"
+                                            alt="Slide 3"
+                                        />
+                                        <div class="main-container-title">
+                                            <div
+                                                class="main-container-title-in"
+                                            >
+                                                33333333
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 좌우 버튼 -->
                             <div class="main-container">
-                                <!-- 좌측 숫자 -->
                                 <div class="main-container-count">
                                     <strong class="main-container-count-point"
                                         >1</strong
                                     >
                                     / 3
                                 </div>
-                                <!-- 좌우 버튼 -->
                                 <div class="main-container-count-control">
                                     <button
                                         class="main-container-count-control-l"
                                     >
-                                        <svg
-                                            width="17"
-                                            height="16"
-                                            viewBox="0 0 17 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M4.7793 8.00016L9.77926 2.66683L10.7793 3.73354L6.77937 8.00016L10.7793 12.2668L9.77926 13.3335L4.7793 8.00016Z"
-                                                fill="white"
-                                            ></path>
-                                        </svg>
+                                        &#9665;
                                     </button>
                                     <button
                                         class="main-container-count-control-r"
                                     >
-                                        <svg
-                                            width="17"
-                                            height="16"
-                                            viewBox="0 0 17 16"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                fill-rule="evenodd"
-                                                clip-rule="evenodd"
-                                                d="M4.7793 8.00016L9.77926 2.66683L10.7793 3.73354L6.77937 8.00016L10.7793 12.2668L9.77926 13.3335L4.7793 8.00016Z"
-                                                fill="white"
-                                            ></path>
-                                        </svg>
+                                        &#9655;
                                     </button>
                                 </div>
                             </div>
@@ -127,170 +146,21 @@
                             주목할 만한 캠페인
                         </div>
                         <!-- 전체 캠페인 담당 -->
-                        <div class="grid md:grid-cols-3 gap-8">
+                        <div class="grid md:grid-cols-3 gap-8 topTarget">
                             <!-- 각각의 캠페인 -->
-                            <div
-                                th:each="num : ${#numbers.sequence(1,3)}"
-                                class="bg-white rounded-lg shadow-lg overflow-hidden target-project-main"
-                            >
-                                <img
-                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZTAxOGRjMDQtOTBkNS00NjE5LTgzZTQtYjAyN2IxNjQ0ODAwLzJlMzY3OGM2LWEzY2YtNGQ4ZS1iOTE0LTk0MjZmNjUwOWEyOS5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                    alt="플라스틱 병으로 만든 패션 액세서리"
-                                    class="w-full h-48 object-cover"
-                                />
-                                <div class="p-6">
-                                    <h1
-                                        class="target-project-main-seller text-gray-600 mb-4"
-                                    >
-                                        판매자는 판매판매
-                                    </h1>
-                                    <h3 class="text-xl font-semibold mb-2">
-                                        한국문학 불안을 [[${num}]]
-                                    </h3>
-                                    <p class="text-gray-600 mb-4">
-                                        글씨를 못쓴다고요? ㅋ 난 아닌데
-                                    </p>
-                                    <div th:each="num : ${#numbers.sequence(1,2)}">
-                                        <div class="progress mb-2">
-                                            <div
-                                                class="progress-bar"
-                                                th:style="'width: '+${num * 33}+'%'"
-                                            ></div>
-                                        </div>
-                                        <div
-                                            class="flex justify-between text-sm text-gray-500 mb-4"
-                                        >
-                                            <span th:text="${num * 33}+'% 달성'"></span>
-                                            <span th:text="'목표: 조관익mk.'+${num}+' 3명'"></span>
-                                        </div>
-                                    </div>
-                                    <div
-                                        class="flex justify-between items-center"
-                                    >
-                                        <span class="text-sm text-gray-500"
-                                            >[[${(num+1) * 120}]]명의 후원자</span
-                                        >
-                                        <button class="btn-outline">
-                                            후원하기
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>
-
-                <!-- 이제부터 이곳은 인기 -->
+                <!-- 인기있는 캠페인 -->
                 <div class="main-item container mx-auto px-4">
                     <!-- 상단부분 -->
                     <div class="main-item-titie">
                         <div class="main-item-titie-box">
                             <div class="main-item-titie-box-top">
                                 <div class="main-item-titie-box-top-title">
-                                    인기 캠페인
+                                    인기있는 캠페인
                                 </div>
-                                <a href="#" class="main-item-titie-box-top-all"
-                                    >전체보기</a
-                                >
-                            </div>
-                            <span class="main-item-titie-box-bo"
-                                >2020.10.10 기준</span
-                            >
-                        </div>
-                    </div>
-                    <!-- 메인내용 -->
-                    <div style="width: 100%">
-                        <div class="main-item-main">
-                            <!-- 각각의 캠페인 들어감 -->
-                            <div th:each="num : ${#numbers.sequence(1,8)}" class="main-item-main-first">
-                                <div class="main-item-main-first-in">
-                                    <a
-                                        href="./campaign/detail-campaign.html"
-                                        th:href="@{/campaign/detail}"
-                                        class="main-item-main-first-in-a"
-                                    >
-                                        <!-- 이미지 -->
-                                        <div class="main-item-img">
-                                            <img
-                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzU2MzZkNGQtNWMzYS00NWQ0LThhMmMtZDZjYWY2ZGQwNWM0LzdiZTIwYmZkLTlhZDQtNDQwMi05NzIwLTYxYTcwZWM3MmRiYi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                alt=""
-                                                class="main-item-img"
-                                            />
-                                            <!-- 좋아요 버튼 -->
-                                            <div class="main-item-img-cl">
-                                                <!-- 나중에 저번에 썻던거 추가하겠음 -->
-                                            </div>
-                                        </div>
-                                        <!-- 순위 -->
-                                        <div class="main-item-main-count">
-                                            [[${num}]]
-                                        </div>
-                                        <!-- 내용 -->
-                                        <div class="main-item-main-content">
-                                            <div
-                                                class="main-item-main-content-in"
-                                            >
-                                                <!-- 판매자 -->
-                                                <div
-                                                    class="main-item-main-seller"
-                                                >
-                                                    <div
-                                                        class="main-item-main-seller-a"
-                                                    >
-                                                        <div>
-                                                            판매자는 판매판매
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <!-- 판매제목 -->
-                                                <div
-                                                    class="main-item-main-title"
-                                                >
-                                                    <div
-                                                        class="main-item-main-title-a"
-                                                    >
-                                                        내용은 내용내용입니다.
-                                                    </div>
-                                                </div>
-                                                <!-- 달성율 -->
-                                                <div class="main-item-main-per">
-                                                    [[${num * 100}]]% 달성!
-                                                </div>
-                                                <!-- tag? -->
-                                                <div class="main-item-main-tag">
-                                                    <div
-                                                        class="main-item-main-tag-in"
-                                                    >
-                                                        <!-- 태그 여러개면 여기에 추가 -->
-                                                        <div
-                                                            class="main-item-main-tag-all"
-                                                        >
-                                                            청바지
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>  
-                    <!-- 전체보기 버튼 -->
-                    <a href="./campaign/all-campaign.html" th:href="@{/campaign/all}" class="main-item-main-all"
-                        >인기 캠페인 전체보기</a
-                    >
-                </div>
-                <!-- 최근 본 캠페인 -->
-                <div class="main-item container mx-auto px-4">
-                    <!-- 상단부분 -->
-                    <div class="main-item-titie">
-                        <div class="main-item-titie-box">
-                            <div class="main-item-titie-box-top">
-                                <div class="main-item-titie-box-top-title">
-                                    최근 본 캠페인
-                                </div>
-                                <a href="/" class="main-item-titie-box-top-all"
+                                <a href="/campaign/active" class="main-item-titie-box-top-all"
                                     >전체보기</a
                                 >
                             </div>
@@ -299,75 +169,76 @@
                     <!-- 메인 내용 -->
                     <div class="main-resent">
                         <!-- 메인 전체 묶는거 -->
-                        <div class="main-resent-all">
+                        <div class="main-resent-all" id="campaign-target">
                             <!-- 각각의 캠페인 -->
-                            <div th:each="num : ${#numbers.sequence(1,5)}" class="main-resent-pe">
-                                <div class="main-resent-pe-all">
-                                    <div class="main-resent-pe-all-in">
-                                        <!-- 이미지 -->
-                                        <div class="main-resent-pe-all-in-img">
-                                            <img
-                                                src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvMjRiMDQzOGItNTdkZi00ZGY1LTg4ODgtODhkZjA5YWY2M2U0LzE3ZTg5MjllLTM1MzktNDA4ZC1hZDY5LWYzMTNmYjE4Y2Q3My5wbmciLCJlZGl0cyI6eyJyZXNpemUiOnsid2lkdGgiOjQ2NSwiaGVpZ2h0Ijo0NjUsIndpdGhvdXRFbmxhcmdlbWVudCI6dHJ1ZX19fQ=="
-                                                alt=""
-                                                class="main-resent-pe-all-in-img-in"
-                                            />
-                                        </div>
-                                        <!-- 좋아요 나중에 추가 -->
-                                        <div></div>
-                                        <!-- 내용 -->
-                                        <div class="main-resent-pe-all-content">
-                                            <div
-                                                class="main-resent-content-box"
-                                            >
-                                                <!-- 판매자 -->
-                                                <div
-                                                    class="main-resent-content-box-se"
-                                                >
-                                                    <div
-                                                        class="main-resent-content-box-se-in"
-                                                    >
-                                                        이현우
-                                                    </div>
-                                                </div>
-                                                <!-- 내용 -->
-                                                <div
-                                                    class="main-resent-content-box-content"
-                                                >
-                                                    <div
-                                                        class="main-resent-content-box-content-a"
-                                                    >
-                                                        이현우의 카피카피
-                                                    </div>
-                                                </div>
-                                                <!-- 달성 -->
-                                                <div class="main-resent-per">
-                                                    [[${num * 1111}]]% 달성!
-                                                </div>
-                                                <!-- 태그 -->
-                                                <div class="main-resent-tag">
-                                                    <div
-                                                        class="main-resent-tag-in"
-                                                    >
-                                                        <!-- 각각의 태그 -->
-                                                        <div
-                                                            class="main-resent-tag-in-pe"
-                                                        >
-                                                            보드게임
-                                                        </div>
-                                                        <div
-                                                            class="main-resent-tag-in-pe"
-                                                        >
-                                                            이현우
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                        </div>
+                    </div>
+                    <button class="main-resent-all-add-btn-le hidden">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <button class="main-resent-all-add-btn-ri">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                </div>
+                <!-- 인기있는 물품 -->
+                <div class="main-item container mx-auto px-4">
+                    <!-- 상단부분 -->
+                    <div class="main-item-titie">
+                        <div class="main-item-titie-box">
+                            <div class="main-item-titie-box-top">
+                                <div class="main-item-titie-box-top-title">
+                                    인기있는 물품
                                 </div>
+                                <a href="/product/all" class="main-item-titie-box-top-all"
+                                    >전체보기</a
+                                >
                             </div>
                         </div>
                     </div>
+                    <!-- 메인 내용 -->
+                    <div class="main-resent">
+                        <!-- 메인 전체 묶는거 -->
+                        <div class="main-resent-all-add" id="product-target"></div>
+
+                    </div>
+                    <button class="main-resent-all-add-btn-add-le hidden">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
+                    <button class="main-resent-all-add-btn-add-ri">
+                        <div class="main-resent-all-add-btn-in">
+                            <svg viewBox="0 0 48 48">
+                                <path
+                                        fill-rule="evenodd"
+                                        clip-rule="evenodd"
+                                        d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                ></path>
+                            </svg>
+                        </div>
+                    </button>
                 </div>
             </main>
         </div>

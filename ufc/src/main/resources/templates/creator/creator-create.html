@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>틴플 :: 창장가 개설하기</title>
+        <title>UPDA :: 창작가 개설하기</title>
         <link
             rel="icon"
             th:href="@{/images/fix/favicon.png}"
@@ -18,15 +18,31 @@
             href="https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/static/woff2/SUIT.css"
             rel="stylesheet"
         />
+
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+        />
+
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+        />
+
+        <!-- ✅ SweetAlert2 CDN 추가 -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
     </head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
-        <!-- 창장가개설 페이지 시작 -->
-        <main class="club-create">
+        <!-- 창작가개설 페이지 시작 -->
+        <main class="club-create" method="post">
             <div id="app">
                 <div class="create-container">
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 1단계: 창장가 이름 작성 -->
+                    <!-- 1단계: 창작가 이름 작성 -->
                     <div class="name-form-wrap">
                         <div class="name-form-title-wrap">
                             <span class="name-form-title"
@@ -45,10 +61,10 @@
                         <div class="name-form-content-wrap">
                             <div class="name-form-text-wrap">
                                 <div class="name-form-text-title">
-                                    팀의 이름을 입력해주세요.
+                                    창작가의 이름을 입력해주세요.
                                 </div>
                                 <div class="name-form-text-content">
-                                    UP-DA에서 창장가의 이름이 됩니다.
+                                    UPDA에서 창작가의 이름이 됩니다.
                                     <br />
                                     제작하신 제품의 성향에 맞는 이름을
                                     정해주세요.
@@ -59,8 +75,11 @@
                                             <input
                                                 type="text"
                                                 class="name-form-input"
-                                                placeholder="ex) UP-DA"
+                                                id="bName"
+                                                name="creatorId"
+                                                placeholder="ex) UPDA"
                                                 maxlength="10"
+                                                oninput="creator_nickname()"
                                             />
                                         </div>
                                     </div>
@@ -69,10 +88,10 @@
                                     class="desc-form-text-title"
                                     style="padding-top: 50px"
                                 >
-                                    팀에 대한 소개글을 작성해주세요.
+                                    창작가에 대한 소개글을 작성해주세요.
                                 </div>
                                 <div class="desc-form-text-content">
-                                    창장가에 대해 한 마디로 소개해주세요.
+                                    창작가에 대해 한 마디로 소개해주세요.
                                 </div>
                                 <div class="desc-form-input-wrap">
                                     <div>
@@ -80,8 +99,11 @@
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
-                                                placeholder="우리 창장가를 한 마디로 표현한다면?"
+                                                id="seller_intro"
+                                                name="intro"
+                                                placeholder="우리 창작가를 한 마디로 표현한다면?"
                                                 maxlength="100"
+                                                oninput="creator_intro()"
                                             />
                                         </div>
                                     </div>
@@ -89,27 +111,13 @@
                                 <div class="name-form-button-wrap">
                                     <button class="name-form-button disabled">
                                         다음
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="name-form-img-wrap">
-                                <img
-                                    src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_01.png"
-                                    alt="창장가생성 이미지"
-                                    class="name-form-img"
-                                />
-                                <div class="name-form-chat-img-wrap">
-                                    <img
-                                        src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_02.png"
-                                        alt="메시지 이미지"
-                                        class="name-form-chat-img"
-                                    />
+                                    </button><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 개설 2단계: 창장가에 대한 소개글 입력 -->
+                    <!-- 개설 2단계: 창작가에 대한 소개글 입력 -->
                     <div class="desc-form-wrap">
                         <div class="desc-form-title-wrap">
                             <span class="desc-form-title"
@@ -127,9 +135,9 @@
                         </div>
                         <div class="desc-form-content-wrap">
                             <div class="desc-form-text-wrap">
-                                <!-- 대괄호 안에는 이전에 입력한 창장가명을 넣습니다. -->
+                                <!-- 대괄호 안에는 이전에 입력한 창작가명을 넣습니다. -->
                                 <div class="desc-form-text-title">
-                                    [UP-DA]에 창작자님에 대해 적어주세요.
+                                    [UPDA]에 창작자님에 대해 적어주세요.
                                 </div>
                                 <div class="desc-form-text-content">
                                     사업자 등록번호
@@ -140,21 +148,47 @@
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
-                                                placeholder="사업자 등록번호"
-                                                maxlength="100"
+                                                id="seller_regist_number"
+                                                name="bRegistNumber"
+                                                placeholder="예시) xxx-xx-xxxxx"
+                                                maxlength="12"
                                             />
                                         </div>
                                     </div>
                                 </div>
-                                <div class="desc-form-text-content">상호</div>
+
+                                <div class="desc-form-text-content">
+                                    사업자 등록 날짜
+                                </div>
+                                <div class="desc-form-input-wrap">
+                                    <div>
+                                        <div>
+                                            <input
+                                                type="date"
+                                                class="desc-form-input"
+                                                id="seller_regist_date"
+                                                name="registDate"
+                                                min="1900-01-01"
+                                                max="2099-12-31"
+                                                value=""
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="desc-form-text-content">상호명</div>
                                 <div class="desc-form-input-wrap">
                                     <div>
                                         <div>
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
+                                                id="seller_regist_name"
+                                                name="companyName"
                                                 placeholder="사업자등록증에 있는 상호명 입력"
-                                                maxlength="100"
+                                                maxlength="50"
+                                                oninput="update_seller_regist_name()"
                                             />
                                         </div>
                                     </div>
@@ -168,8 +202,10 @@
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
+                                                id="seller_regist_person"
+                                                name="bName"
                                                 placeholder="대표자 명"
-                                                maxlength="100"
+                                                maxlength="20"
                                             />
                                         </div>
                                     </div>
@@ -183,6 +219,8 @@
                                             <input
                                                 type="text"
                                                 class="desc-form-input"
+                                                id="seller_regist_location"
+                                                name="address"
                                                 placeholder="사업장 소재지"
                                                 maxlength="100"
                                             />
@@ -201,27 +239,13 @@
                                         class="desc-form-button disabled"
                                     >
                                         다음
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="desc-form-img-wrap">
-                                <img
-                                    src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_03.png"
-                                    alt="창장가생성 이미지"
-                                    class="desc-form-img"
-                                />
-                                <div class="desc-form-chat-img-wrap">
-                                    <img
-                                        src="https://event-us.kr/Content/neweventus/image/hostcenter/hostcenter_create_info_04.png"
-                                        alt="메시지 이미지"
-                                        class="desc-form-chat-img"
-                                    />
+                                    </button><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <!-- (서버담당을 위해 작성합니다. 배포 시 주석을 지웁시다.) -->
-                    <!-- 개설 3단계: 창장가에 대한 소개글 입력 -->
+                    <!-- 개설 3단계: 창작가에 대한 소개글 입력 -->
                     <div class="img-form-wrap">
                         <div class="img-form-title-wrap">
                             <span class="img-form-title"
@@ -240,10 +264,10 @@
                         <div class="img-form-content-wrap">
                             <div class="img-form-text-wrap">
                                 <div class="img-form-text-title">
-                                    [UP-DA] 창작가를 고유한 이미지로 꾸며주세요
+                                    [UPDA] 창작가를 고유한 이미지로 꾸며주세요
                                 </div>
                                 <div class="img-form-text-content">
-                                    창장가의 프로필, 창장가 커버가 직접 등록한
+                                    창작가의 프로필, 창작가 커버가 직접 등록한
                                     이미지로 채워집니다.
                                 </div>
                                 <div class="img-form-profile-size-error">
@@ -273,17 +297,18 @@
                                             <input
                                                 type="file"
                                                 id="background-image"
+                                                name="backImgUrl"
                                                 data-ratio="7.6:1"
                                                 accept="image/*"
                                             />
                                         </div>
                                         <div class="cover-delete-wrap">
                                             <img
-                                                src="/staticfiles/images/club/club-create/cover_delete_icon_white.png"
+                                                th:src="@{/images/category/cancel_image_icon.png}"
                                                 class="cover-delete"
                                             />
                                             <img
-                                                src="/staticfiles/images/club/club-detail/teenplay_delete_icon_hover.png"
+                                                th:src="@{/images/category/cancel_image_icon.png}"
                                                 class="cover-delete-hover"
                                             />
                                         </div>
@@ -306,11 +331,11 @@
                                                     class="profile-delete-wrap"
                                                 >
                                                     <img
-                                                        src="/staticfiles/images/club/club-create/cover_delete_icon_white.png"
+                                                        th:src="@{/images/category/cancel_image_icon.png}"
                                                         class="profile-delete"
                                                     />
                                                     <img
-                                                        src="/staticfiles/images/club/club-detail/teenplay_delete_icon_hover.png"
+                                                        th:src="@{/images/category/cancel_image_icon.png}"
                                                         class="profile-delete-hover"
                                                     />
                                                 </div>
@@ -319,6 +344,7 @@
                                                 <input
                                                     type="file"
                                                     id="profile-image"
+                                                    name="proImgUrl"
                                                     accept="image/*"
                                                     data-ratio="1:1"
                                                 />
@@ -327,7 +353,11 @@
                                         <div class="club-detail-title-wrap">
                                             <div class="club-detail-name-wrap">
                                                 <div class="club-detail-name">
-                                                    UP-DA
+                                                    <span class="display_name"></span>
+                                                    
+                                                </div>
+                                                <div class="company_name">
+                                                    <span class="display_seller_name"></span>
                                                 </div>
                                             </div>
                                             <div class="club-detail-stats-wrap">
@@ -335,7 +365,7 @@
                                                     <span
                                                         class="club-detail-stats-name"
                                                     >
-                                                        구성원
+                                                        팔로워
                                                     </span>
                                                     <span
                                                         class="club-detail-stats-count"
@@ -359,8 +389,7 @@
                                             <div
                                                 class="club-detail-introduction"
                                             >
-                                                안녕하세요! 틴플레이입니다. 우리
-                                                모두 틴플해요~!
+                                                <span class="display_creator_intro"></span>
                                             </div>
                                         </div>
                                     </div>
@@ -377,14 +406,14 @@
                                             type="button"
                                             class="img-form-button"
                                         >
-                                            창장가 개설 완료
+                                            창작가 개설 완료
                                         </button>
                                     </div>
                                     <div class="img-form-skip-wrap">
-                                        <span class="img-form-skip"
-                                            >이 단계 건너뛰기</span
-                                        >
-                                    </div>
+                                        <span class="img-form-skip">
+                                            취소하기
+                                        </span>
+                                    </div><br><br><br><br><br>
                                 </div>
                             </div>
                         </div>

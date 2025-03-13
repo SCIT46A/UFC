@@ -1,11 +1,9 @@
 package app.scit46.ufc.config;
 
 
-import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.extern.slf4j.Slf4j;
+import java.io.IOException;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
@@ -13,8 +11,11 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Map;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
@@ -28,7 +29,6 @@ public class OauthLogin implements AuthenticationSuccessHandler {
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = defaultOAuth2User.getAttributes();
-        log.info(attributes.toString());
 
 
         String identity = null;  // Google: sub, Kakao: id
@@ -65,7 +65,34 @@ public class OauthLogin implements AuthenticationSuccessHandler {
         if (existingUser != null) {
             // 이미 존재하는 회원 -> 세션에 정보 저장 후 루트 페이지로 이동
             request.getSession().setAttribute("loginUserId", existingUser.getUserId());
-            response.sendRedirect("/");
+
+            // 쿼리 파라미터로 전달된 redirectUrl 우선 사용
+            String redirectUrl = request.getParameter("redirectUrl");
+            if (redirectUrl == null || redirectUrl.isEmpty()) {
+                // 세션에 저장된 값이 있으면 사용
+                redirectUrl = (String) request.getSession().getAttribute("redirectUrl");
+            } else {
+                // 쿼리 파라미터로 넘어온 경우 세션에도 저장
+                request.getSession().setAttribute("redirectUrl", redirectUrl);
+            }
+            if (redirectUrl != null && !redirectUrl.isEmpty()) {
+                request.getSession().removeAttribute("redirectUrl");
+                response.sendRedirect(redirectUrl);
+                return;
+            }
+
+
+            //관리자 여부 확인
+            boolean isAdmin = "ADMIN".equals(existingUser.getRoles());
+
+
+            // 관리자면 /admin, 일반 유저면 /
+            if (isAdmin) {
+                response.sendRedirect("/admin/adminPage");  // 관리자일 경우 `/admin`으로 이동
+            } else {
+                response.sendRedirect("/");  // 일반 유저는 `/`으로 이동
+            }
+
         } else {
             // 신규 회원 -> 세션에 제공자 정보 저장 후 가입 페이지로 이동
             request.getSession().setAttribute("find", provider);

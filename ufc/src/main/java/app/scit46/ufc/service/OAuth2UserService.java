@@ -1,5 +1,7 @@
 package app.scit46.ufc.service;
 
+import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -9,8 +11,6 @@ import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class OAuth2UserService extends DefaultOAuth2UserService {
     @Override
@@ -19,6 +19,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         // Role generate
         List<GrantedAuthority> authorities = AuthorityUtils.createAuthorityList("ADMIN", "USER","CREATOR");
+
+
 
         // nameAttributeKey
         String userNameAttributeName = userRequest.getClientRegistration()
@@ -30,4 +32,5 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         return new DefaultOAuth2User(authorities, oAuth2User.getAttributes(), userNameAttributeName);
     }
+
 }

@@ -1,12 +1,32 @@
 package app.scit46.ufc.entity;
 
-import app.scit46.ufc.dto.UserDTO;
-import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.LastModifiedDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import app.scit46.ufc.entity.chat.ChatMessageEntity;
+import app.scit46.ufc.entity.chat.ChatRoomEntity;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import app.scit46.ufc.dto.ImageUrlDTO;
+import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.product.ProductPaymentEntity;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -54,7 +74,7 @@ public class UserEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "photo_id")
-    private PrivatePhotoEntity photoId;
+    private ImageUrlEntity photoId;
 
     @Column(name = "intro")
     private String intro;
@@ -66,7 +86,7 @@ public class UserEntity {
     private int userStatus;
 
     @Column(name = "status_reason")
-    private int statusReason;
+    private String statusReason;
 
     // OneToMany: Creators.own_user 참조
     @OneToMany(mappedBy = "ownUser", fetch = FetchType.LAZY)
@@ -96,7 +116,19 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 
-    public static UserEntity toEntity(UserDTO userDTO, PrivatePhotoEntity photoId) {
+    // 사용자가 채팅방의 첫 번째 사용자(user1)로 참여한 목록
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomsAsUser1;
+
+    // 사용자가 채팅방의 두 번째 사용자(user2)로 참여한 목록
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomsAsUser2;
+
+    // 사용자가 보낸 채팅 메시지
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    private List<ChatMessageEntity> chatMessages;
+
+    public static UserEntity toEntity(UserDTO userDTO) {
         return UserEntity.builder()
                 .userId(userDTO.getUserId())
                 .oauthId(userDTO.getOauthId())
@@ -108,7 +140,7 @@ public class UserEntity {
                 .roles(userDTO.getRoles())
                 .createdAt(userDTO.getCreatedAt())
                 .updatedAt(userDTO.getUpdatedAt())
-                .photoId(photoId)
+                .photoId(ImageUrlEntity.toEntity(userDTO.getPhoto()))
                 .intro(userDTO.getIntro())
                 .isMarketed(userDTO.getIsMarketed())
                 .userStatus(userDTO.getUserStatus())

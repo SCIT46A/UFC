@@ -1,481 +1,491 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>진행중인 캠페인</title>
-        <link
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>진행중인 캠페인</title>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <link
             rel="stylesheet"
             href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-        />
-        <script src="https://unpkg.com/lucide@latest"></script>
-        <link
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link
             rel="icon"
             th:href="@{/images/fix/favicon.png}"
             type="image/png"
-        />
-        <link
+    />
+    <link
             rel="stylesheet"
             th:href="@{/css/campaign/pay-campaign.css}"
             href="../../static/css/campaign/pay-campaign.css"
-        />
-        <link
+    />
+    <link
             rel="stylesheet"
             th:href="@{/css/fix/header.css}"
             href="../../static/css/fix/header.css"
-        />
-        <link
+    />
+    <link
             rel="stylesheet"
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
-        />
-        <script src="../../static/js/compaign/pay-compaign.js" defer></script>
-        <script th:src="@{/js/compaign/pay-compaign.js}" defer></script>
-        <script th:src="@{/js/fix/header.js}" defer></script>
-    </head>
-    <body>
-        <div th:replace="fix/header :: header"></div>
-        <main>
-            <section
-                id="projects"
-                style="background-color: #ffffff; padding-bottom: 30px"
-            >
-                <!-- 주목할 만한 프로젝트 -->
-                <div class="container mx-auto px-4 target-project">
-                    <div class="main">
-                        <div class="main-in">
-                            <div>
-                                <!-- 상단 간략소개 -->
-                                <div class="main-in-box">
-                                    <section class="main-in-box-section">
-                                        <div class="main-in-box-section-in">
-                                            <div
-                                                class="main-in-box-section-in-img"
-                                            >
-                                                <img
-                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvYzQyNmUyNWItZGYyNy00NjhlLTgzYmItNGI0YjhmYmVjOWYyL2UxYzViNWNmLTI0NjMtNGY2OC04YjM4LTc4OWViMTE4MGYxZi5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                    alt=""
-                                                />
-                                            </div>
-                                            <div
-                                                class="main-in-box-section-in-content"
-                                            >
+    />
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script src="../../static/js/campaign/pay-campaign.js" defer></script>
+    <script th:src="@{/js/campaign/pay-campaign.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fix/header :: header}"></div>
+<main>
+    <section
+            id="projects"
+            style="background-color: #ffffff; padding-bottom: 30px"
+    >
+        <!-- 주목할 만한 프로젝트 -->
+        <div id="rewardDataContainer" th:attr="data-reward=${donationRewardListJson}"></div>
+        <div class="container mx-auto px-4 target-project">
+            <div class="main">
+                <div class="main-in">
+                    <div>
+                        <!-- 상단 간략소개 -->
+                        <div class="main-in-box">
+                            <section class="main-in-box-section">
+                                <div class="main-in-box-section-in">
+                                    <div
+                                            class="main-in-box-section-in-img"
+                                    >
+                                        <img
+                                                th:src="${imageUrl}"
+                                                alt=""
+                                        />
+                                    </div>
+                                    <div
+                                            class="main-in-box-section-in-content"
+                                    >
                                                 <span
-                                                    class="main-in-box-section-in-content-top"
-                                                    >뭉치공방</span
+                                                        class="main-in-box-section-in-content-top"
+                                                        th:text="${campaign.createdBy.bName}"
+                                                ></span
                                                 >
-                                                <h3
-                                                    class="main-in-box-section-in-content-mi"
-                                                >
-                                                    <div
-                                                        class="main-in-box-section-in-content-mi-title"
-                                                    >
-                                                        겨울엔 붕어빵!코바늘로
-                                                        뜨는 귀여운 손난로
-                                                    </div>
-                                                </h3>
-                                                <div
-                                                    class="main-in-box-section-in-content-bo"
-                                                >
-                                                    <strong
-                                                        class="main-in-box-section-in-content-bo-le"
-                                                        >청바지 20개</strong
-                                                    >
-                                                    <span
-                                                        class="main-in-box-section-in-content-bo-mi"
-                                                        >930%</span
-                                                    >
-                                                    <span
-                                                        class="main-in-box-section-in-content-bo-ri"
-                                                        >9일남음</span
-                                                    >
-                                                </div>
+                                        <h3
+                                                class="main-in-box-section-in-content-mi"
+                                        >
+                                            <div
+                                                    class="main-in-box-section-in-content-mi-title"
+                                                    th:text="${campaign.description}"
+                                            >
+                                                겨울엔 붕어빵!코바늘로
+                                                뜨는 귀여운 손난로
                                             </div>
+                                        </h3>
+                                        <div
+                                                class="main-in-box-section-in-content-bo"
+                                        >
+                                            <strong
+                                                    class="main-in-box-section-in-content-bo-le"
+                                                    th:each="campaignGoalDTO : ${campaignGoalDTOS}"
+                                                    th:text="${campaignGoalDTO.material.name + ' ' + campaignGoalDTO.quantityRequired + '개'}">
+                                                >청바지 20개</strong
+                                            >
+                                            <span class="main-in-box-section-in-content-bo-ri"
+                                                  th:text="${campaign.startDate != null and campaign.endDate != null
+                                                                    ? T(java.time.temporal.ChronoUnit).DAYS.between(campaign.startDate.toLocalDate(), campaign.endDate.toLocalDate()) + '일 남음'
+                                                                    : '기간 정보 없음'}">
+                                                    </span>
                                         </div>
-                                    </section>
+                                    </div>
                                 </div>
-                                <!-- 결제 -->
-                                <div class="main-in-bo">
-                                    <!-- 설명 -->
-                                    <div class="main-in-bo-le">
-                                        <!-- 구성정보 -->
-                                        <div class="inner-box">
-                                            <div class="inner-box-in">
-                                                <!-- 제목 -->
-                                                <div class="inner-box-in-title">
-                                                    <p
-                                                        class="inner-box-in-title-p"
-                                                    >
-                                                        선물 정보
-                                                    </p>
-                                                </div>
-                                                <!-- 여기 내용 -->
+                            </section>
+                        </div>
+                        <!-- 결제 -->
+                        <div class="main-in-bo">
+                            <!-- 설명 -->
+                            <div class="main-in-bo-le">
+                                <!-- 구성정보 -->
+                                <div class="inner-box">
+                                    <div class="inner-box-in">
+                                        <!-- 제목 -->
+                                        <div class="inner-box-in-title">
+                                            <p
+                                                    class="inner-box-in-title-p"
+                                            >
+                                                선물 정보
+                                            </p>
+                                        </div>
+                                        <!-- 여기 내용 -->
+                                        <div
+                                                class="inner-box-in-content"
+                                        >
+                                            <div
+                                                    class="inner-box-in-contentr-in"
+                                            >
                                                 <div
-                                                    class="inner-box-in-content"
+                                                        class="inner-box-in-contentr-in-le"
+                                                >
+                                                    선물 구성
+                                                </div>
+                                                <div
+                                                        class="inner-box-in-contentr-in-ri"
                                                 >
                                                     <div
-                                                        class="inner-box-in-contentr-in"
+                                                            class="inner-box-in-contentr-in-ri-in-box"
                                                     >
-                                                        <div
-                                                            class="inner-box-in-contentr-in-le"
+                                                        <div class="reward-target"></div>
+                                                        <span
+                                                                class="inner-box-span-le"
+                                                        >예상
+                                                                    전달일</span
                                                         >
-                                                            선물 구성
-                                                        </div>
-                                                        <div
-                                                            class="inner-box-in-contentr-in-ri"
+                                                        <span
+                                                                class="inner-box-span-ri"
+                                                                th:text="${#temporals.format(campaign.sendDate, 'yyyy.MM.dd')}"
+                                                        >2025.02.19</span
                                                         >
-                                                            <div
-                                                                class="inner-box-in-contentr-in-ri-in"
-                                                            >
-                                                                <!-- 상품 제목 -->
-                                                                <span
-                                                                    class="inner-box-in-contentr-in-ri-in-title"
-                                                                    >토끼와
-                                                                    거북이 세트
-                                                                    (학생
-                                                                    할인)</span
-                                                                >
-                                                                <!-- 상품 구성품 -->
-                                                                <ul
-                                                                    class="inner-box-ul"
-                                                                >
-                                                                    <li>
-                                                                        <span
-                                                                            >프로그램북</span
-                                                                        >
-                                                                    </li>
-                                                                    <li>
-                                                                        <span
-                                                                            >북북이</span
-                                                                        >
-                                                                    </li>
-                                                                </ul>
-                                                                <!-- 도착 예정일 -->
-                                                                <div
-                                                                    class="inner-box-in-contentr-in-ri-in-box"
-                                                                >
-                                                                    <span
-                                                                        class="inner-box-span-le"
-                                                                        >예상
-                                                                        전달일</span
-                                                                    >
-                                                                    <span
-                                                                        class="inner-box-span-ri"
-                                                                        >2025.02.19</span
-                                                                    >
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- 사실상 반복 -->
-                                            <div class="inner-box-in">
-                                                <!-- 제목 -->
-                                                <div class="inner-box-in-title">
-                                                    <p
-                                                        class="inner-box-in-title-p"
-                                                    >
-                                                        참여자 기부품목
-                                                    </p>
-                                                </div>
-                                                <!-- 여기 내용 -->
-                                                <div
-                                                    class="inner-box-in-content"
-                                                >
-                                                    <div
-                                                        class="inner-box-in-contentr-in"
-                                                    >
-                                                        <div
-                                                            class="inner-box-in-contentr-in-le"
-                                                        >
-                                                            기부품 품목
-                                                        </div>
-                                                        <div
-                                                            class="inner-box-in-contentr-in-ri"
-                                                        >
-                                                            <div
-                                                                class="inner-box-in-contentr-in-ri-in"
-                                                            >
-                                                                <!-- 상품 제목 -->
-                                                                <span
-                                                                    class="inner-box-in-contentr-in-ri-in-title"
-                                                                    >토끼와
-                                                                    거북이 세트
-                                                                    (학생
-                                                                    할인)</span
-                                                                >
-                                                                <!-- 상품 구성품 -->
-                                                                <ul
-                                                                    class="inner-box-ul"
-                                                                >
-                                                                    <li>
-                                                                        <span
-                                                                            >종이종이</span
-                                                                        >
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="inner-box-in">
-                                                <!-- 제목 -->
-                                                <div class="inner-box-in-title">
-                                                    <p
-                                                        class="inner-box-in-title-p"
-                                                    >
-                                                        참여자 정보
-                                                    </p>
-                                                </div>
-                                                <!-- 여기 내용 -->
-                                                <div class="inner-box-user">
-                                                    <div
-                                                        class="inner-box-user-box"
-                                                    >
-                                                        <!-- 상단내용 -->
-                                                        <table
-                                                            class="inner-box-user-box-top"
-                                                        >
-                                                            <tbody>
-                                                                <!-- 각각의 설정들 -->
-                                                                <!-- 이름 -->
-                                                                <tr>
-                                                                    <th>
-                                                                        이름
-                                                                    </th>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            inputmode="numeric"
-                                                                            pattern="[0-9]*"
-                                                                            maxlength="20"
-                                                                            placeholder="이름을 입력해주세요."
-                                                                            autocapitalize="off"
-                                                                            autocomplete="off"
-                                                                            class="inner-box-input-box"
-                                                                            value=""
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <!-- 연락처 -->
-                                                                <tr>
-                                                                    <th>
-                                                                        연락처
-                                                                    </th>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            inputmode="numeric"
-                                                                            pattern="[0-9]*"
-                                                                            maxlength="20"
-                                                                            placeholder="휴대폰 번호를 입력해주세요."
-                                                                            autocapitalize="off"
-                                                                            autocomplete="off"
-                                                                            class="inner-box-input-box"
-                                                                            value=""
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <!-- 주소 -->
-                                                                <tr>
-                                                                    <th>
-                                                                        주소
-                                                                    </th>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            placeholder="주소를 입력해주세요."
-                                                                            autocapitalize="off"
-                                                                            autocomplete="off"
-                                                                            class="inner-box-input-box"
-                                                                            value=""
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                                <!-- 송장번호 -->
-                                                                <tr>
-                                                                    <th>
-                                                                        송장번호
-                                                                    </th>
-                                                                    <td>
-                                                                        <input
-                                                                            type="text"
-                                                                            inputmode="numeric"
-                                                                            pattern="[0-9]*"
-                                                                            maxlength="20"
-                                                                            placeholder="송장번호를 입력해주세요."
-                                                                            autocapitalize="off"
-                                                                            autocomplete="off"
-                                                                            class="inner-box-input-box"
-                                                                            value=""
-                                                                        />
-                                                                    </td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                        <!-- 하단 설명 -->
-                                                        <div
-                                                            class="inner-box-bo"
-                                                        >
-                                                            <div>
-                                                                * 위 연락처와
-                                                                이메일로 후원
-                                                                관련 소식이
-                                                                전달됩니다.
-                                                            </div>
-                                                            <div>
-                                                                * 연락처 및
-                                                                이메일 변경은
-                                                                설정 > 계정
-                                                                설정에서
-                                                                가능합니다.
-                                                            </div>
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- 결제 -->
-                                    <div class="inner-pay">
-                                        <div class="inner-pay-in">
-                                            <!-- 상단 전체금액 -->
-                                            <div class="inner-pay-in-total">
+                                    <!-- 사실상 반복 -->
+                                    <div class="inner-box-in">
+                                        <!-- 제목 -->
+                                        <div class="inner-box-in-title">
+                                            <p
+                                                    class="inner-box-in-title-p"
+                                            >
+                                                참여자 기부품목
+                                            </p>
+                                        </div>
+                                        <!-- 여기 내용 -->
+                                        <div
+                                                class="inner-box-in-content"
+                                        >
+                                            <div
+                                                    class="inner-box-in-contentr-in"
+                                            >
                                                 <div
-                                                    class="inner-pay-in-total-in"
+                                                        class="inner-box-in-contentr-in-le"
+                                                >
+                                                    기부품 품목
+                                                </div>
+                                                <div
+                                                        class="inner-box-in-contentr-in-ri"
                                                 >
                                                     <div
-                                                        class="inner-pay-in-total-in-le"
+                                                            class="inner-box-in-contentr-in-ri-in"
                                                     >
-                                                        최종 후원품목
-                                                    </div>
-                                                    <div
-                                                        class="inner-pay-in-total-in-ri"
-                                                    >
-                                                        <span>청바지 3개</span>
+                                                        <!-- 상품 제목 -->
+                                                        <span
+                                                                class="inner-box-in-contentr-in-ri-in-title"
+                                                        >전체 품목</span
+                                                        >
+                                                        <!-- 상품 구성품 -->
+                                                        <ul class="inner-box-ul">
+                                                            <th:block th:each="entry : ${donationSummary}">
+                                                                <li>
+                                                                    <span th:text="${entry.key} + ' ' + ${entry.value.total} + '개'"></span>
+                                                                </li>
+                                                            </th:block>
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <!-- 경고문구 -->
-                                            <div class="inner-pay-in-de">
-                                                <div
-                                                    class="inner-pay-in-de-top"
-                                                >
-                                                    캠페인 실패 시, 물품은
-                                                    <strong
-                                                        >자동기부처리가
-                                                        됩니다.</strong
-                                                    >
-                                                    이점 참고하시길 바랍니다
-                                                </div>
-                                                <div class="inner-pay-in-de-mi">
-                                                    <div
-                                                        class="inner-pay-in-de-mi-in"
-                                                    >
-                                                        <div
-                                                            class="inner-pay-in-de-mi-in-box"
-                                                        >
-                                                            <label
-                                                                for="person"
-                                                                class="inner-pay-in-de-mi-in-box-la"
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id="person"
-                                                                    class="inner-pay-in-de-mi-in-box-la-input"
-                                                                />
-                                                                <p>
-                                                                    개인정보 제
-                                                                    3자 제공
-                                                                    동의
-                                                                </p>
-                                                            </label>
-                                                            <a
-                                                                href="/"
-                                                                class="inner-pay-in-de-mi-in-box-la-a"
-                                                                >내용보기</a
-                                                            >
-                                                        </div>
-                                                    </div>
-                                                    <div
-                                                        class="inner-pay-in-de-mi-in"
-                                                    >
-                                                        <div
-                                                            class="inner-pay-in-de-mi-in-box"
-                                                        >
-                                                            <label
-                                                                for="check-a"
-                                                                class="inner-pay-in-de-mi-in-box-la"
-                                                            >
-                                                                <input
-                                                                    type="checkbox"
-                                                                    id="check-a"
-                                                                    class="inner-pay-in-de-mi-in-box-la-input"
-                                                                />
-                                                                <p>
-                                                                    후원
-                                                                    유의사항
-                                                                    확인
-                                                                </p>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="inner-pay-in-de-bo">
-                                                    <div
-                                                        class="inner-pay-in-de-bo-top"
-                                                    >
-                                                        후원은 구매가 아닌
-                                                        창의적인 계획에 물품을
-                                                        지원하는 일입니다.
-                                                    </div>
-                                                    <div
-                                                        class="inner-pay-in-de-bo-bo"
-                                                    >
-                                                        up-da에서의 후원은 아직
-                                                        실현되지 않은 프로젝트가
-                                                        실현될 수 있도록
-                                                        제작비를 후원하는
-                                                        과정으로, 기존의 상품
-                                                        또는 용역을 거래의
-                                                        대상으로 하는 매매와는
-                                                        차이가 있습니다. 따라서
-                                                        전자상거래법상 청약철회
-                                                        등의 규정이 적용되지
-                                                        않습니다.
-                                                    </div>
-                                                    <div
-                                                        class="inner-pay-in-de-bo-top"
-                                                    >
-                                                        프로젝트는 계획과 달리
-                                                        진행될 수 있습니다.
-                                                    </div>
-                                                    <div
-                                                        class="inner-pay-in-de-bo-bo"
-                                                    >
-                                                        예상을 뛰어넘는 멋진
-                                                        결과가 나올 수 있지만
-                                                        진행 과정에서 계획이
-                                                        지연, 변경되거나 무산될
-                                                        수도 있습니다. 본
-                                                        프로젝트를 완수할 책임과
-                                                        권리는 창작자에게
-                                                        있습니다.
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- 결제버튼 -->
                                         </div>
                                     </div>
+                                    <div class="inner-box-in">
+                                        <!-- 제목 -->
+                                        <div class="inner-box-in-title">
+                                            <p
+                                                    class="inner-box-in-title-p"
+                                            >
+                                                참여자 정보
+                                            </p>
+                                        </div>
+                                        <!-- 여기 내용 -->
+                                        <div class="inner-box-user">
+                                            <div
+                                                    class="inner-box-user-box"
+                                            >
+                                                <!-- 상단내용 -->
+                                                <table
+                                                        class="inner-box-user-box-top"
+                                                >
+                                                    <tbody>
+                                                    <!-- 각각의 설정들 -->
+                                                    <!-- 이름 -->
+                                                    <tr>
+                                                        <th>
+                                                            이름
+                                                        </th>
+                                                        <td>
+                                                            <input
+                                                                    type="text"
+                                                                    inputmode="numeric"
+                                                                    pattern="[0-9]*"
+                                                                    maxlength="20"
+                                                                    placeholder="이름을 입력해주세요."
+                                                                    autocapitalize="off"
+                                                                    autocomplete="off"
+                                                                    class="inner-box-input-box username"
+                                                                    th:value="${user.userName}"
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 연락처 -->
+                                                    <tr>
+                                                        <th>
+                                                            연락처
+                                                        </th>
+                                                        <td>
+                                                            <input
+                                                                    type="text"
+                                                                    inputmode="numeric"
+                                                                    pattern="[0-9]*"
+                                                                    maxlength="13"
+                                                                    placeholder="휴대폰 번호를 입력해주세요."
+                                                                    oninput="autoHyphen2(this)"
+                                                                    autocapitalize="off"
+                                                                    autocomplete="off"
+                                                                    class="inner-box-input-box phoneNumber"
+                                                                    th:value="${user.phoneNumber}"
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 주소 -->
+                                                    <tr>
+                                                        <th>
+                                                            주소
+                                                        </th>
+                                                        <td>
+                                                            <!-- '#' 이전 주소 -->
+                                                            <input
+                                                                    type="text"
+                                                                    autocapitalize="off"
+                                                                    autocomplete="off"
+                                                                    class="inner-box-input-box address"
+                                                                    readonly
+                                                                    th:value="${#strings.substringBefore(user.userAddress, '#')}"
+                                                            />
+                                                            <!-- '#' 이후 주소 -->
+                                                            <div style="display: flex">
+                                                                <input
+                                                                        type="text"
+                                                                        placeholder="상세주소를 입력해주세요."
+                                                                        autocapitalize="off"
+                                                                        autocomplete="off"
+                                                                        class="inner-box-input-box detail-address"
+                                                                        th:value="${#strings.substringAfter(user.userAddress, '#')}"
+                                                                />
+                                                                <!-- 전체 주소(메인주소 + '#' + 상세주소)를 담는 hidden 필드 -->
+                                                                <input type="hidden" class="total-add" name="address" th:value="${user.userAddress}" />
+                                                                <button class="address-btn-add-ver" onclick="execPostCode()" type="button">주소 변경</button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 송장번호 -->
+                                                    <tr>
+                                                        <th>
+                                                            송장번호
+                                                        </th>
+                                                        <td>
+                                                            <div style="display:flex;">
+                                                                <select class="invoice-select-box">
+                                                                    <option
+                                                                            value=""
+                                                                    >
+                                                                        택배사를 선택해주세요
+                                                                    </option>
+
+                                                                </select>
+                                                                <input
+                                                                        type="text"
+                                                                        inputmode="numeric"
+                                                                        pattern="[0-9]*"
+                                                                        maxlength="20"
+                                                                        placeholder="송장번호를 입력해주세요."
+                                                                        autocapitalize="off"
+                                                                        autocomplete="off"
+                                                                        class="inner-box-input-box"
+                                                                        value=""
+                                                                />
+                                                                <input type="hidden" class="total-invoce">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                                <!-- 하단 설명 -->
+                                                <div
+                                                        class="inner-box-bo"
+                                                >
+                                                    <div>
+                                                        * 위 연락처와
+                                                        이메일로 후원
+                                                        관련 소식이
+                                                        전달됩니다.
+                                                    </div>
+                                                    <div>
+                                                        * 연락처 및
+                                                        이메일 변경은
+                                                        설정 > 계정
+                                                        설정에서
+                                                        가능합니다.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 결제 -->
+                            <div class="inner-pay">
+                                <div class="inner-pay-in">
+                                    <!-- 상단 전체금액 -->
+                                    <div class="inner-pay-in-total">
+                                        <div
+                                                class="inner-pay-in-total-in"
+                                        >
+                                            <div
+                                                    class="inner-pay-in-total-in-le"
+                                            >
+                                                최종 후원품목
+                                            </div>
+                                            <div class="inner-pay-in-total-in-ri">
+                                                <th:block th:each="entry, stat : ${donationSummary}">
+                                                    <span th:text="${entry.key} + ' ' + ${entry.value.total} + '개'"></span>
+                                                    <span th:if="${!stat.last}">, </span>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 경고문구 -->
+                                    <div class="inner-pay-in-de">
+                                        <div
+                                                class="inner-pay-in-de-top"
+                                        >
+                                            캠페인 실패 시, 물품은
+                                            <strong
+                                            >자동기부처리가
+                                                됩니다.</strong
+                                            >
+                                            이점 참고하시길 바랍니다
+                                        </div>
+                                        <div class="inner-pay-in-de-mi">
+                                            <div
+                                                    class="inner-pay-in-de-mi-in"
+                                            >
+                                                <div
+                                                        class="inner-pay-in-de-mi-in-box"
+                                                >
+                                                    <label
+                                                            for="person"
+                                                            class="inner-pay-in-de-mi-in-box-la"
+                                                    >
+                                                        <input
+                                                                type="checkbox"
+                                                                id="person"
+                                                                class="inner-pay-in-de-mi-in-box-la-input"
+                                                        />
+                                                        <p>
+                                                            개인정보 제
+                                                            3자 제공
+                                                            동의
+                                                        </p>
+                                                    </label>
+                                                    <a
+                                                            href="/"
+                                                            class="inner-pay-in-de-mi-in-box-la-a"
+                                                    >내용보기</a
+                                                    >
+                                                </div>
+                                            </div>
+                                            <div
+                                                    class="inner-pay-in-de-mi-in"
+                                            >
+                                                <div
+                                                        class="inner-pay-in-de-mi-in-box"
+                                                >
+                                                    <label
+                                                            for="check-a"
+                                                            class="inner-pay-in-de-mi-in-box-la"
+                                                    >
+                                                        <input
+                                                                type="checkbox"
+                                                                id="check-a"
+                                                                class="inner-pay-in-de-mi-in-box-la-input"
+                                                        />
+                                                        <p>
+                                                            후원
+                                                            유의사항
+                                                            확인
+                                                        </p>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="inner-pay-in-de-bo">
+                                            <div
+                                                    class="inner-pay-in-de-bo-top"
+                                            >
+                                                후원은 구매가 아닌
+                                                창의적인 계획에 물품을
+                                                지원하는 일입니다.
+                                            </div>
+                                            <div
+                                                    class="inner-pay-in-de-bo-bo"
+                                            >
+                                                up-da에서의 후원은 아직
+                                                실현되지 않은 프로젝트가
+                                                실현될 수 있도록
+                                                제작비를 후원하는
+                                                과정으로, 기존의 상품
+                                                또는 용역을 거래의
+                                                대상으로 하는 매매와는
+                                                차이가 있습니다. 따라서
+                                                전자상거래법상 청약철회
+                                                등의 규정이 적용되지
+                                                않습니다.
+                                            </div>
+                                            <div
+                                                    class="inner-pay-in-de-bo-top"
+                                            >
+                                                프로젝트는 계획과 달리
+                                                진행될 수 있습니다.
+                                            </div>
+                                            <div
+                                                    class="inner-pay-in-de-bo-bo"
+                                            >
+                                                예상을 뛰어넘는 멋진
+                                                결과가 나올 수 있지만
+                                                진행 과정에서 계획이
+                                                지연, 변경되거나 무산될
+                                                수도 있습니다. 본
+                                                프로젝트를 완수할 책임과
+                                                권리는 창작자에게
+                                                있습니다.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 결제버튼 -->
+                                    <form action="/submitDonation" method="post" id="donationForm">
+                                        <th:block th:each="entry : ${donationSummary}">
+                                            <input type="hidden" name="donationItem"
+                                                   th:attr="data-donation-name=${entry.key},data-donation-total=${entry.value.total},data-donation-material-id=${entry.value.materialId},data-reward-id=${#strings.arrayJoin(entry.value.rewardId.toArray(), ',')}" />
+                                        </th:block>
+                                        <input type="hidden" class="campaign-id" th:value="${campaign.campaignId}">
+                                        <button type="button" class="reward-last-btn" disabled>기부하기</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
-        <div th:replace="fix/footer :: footer"></div>
-    </body>
+            </div>
+        </div>
+    </section>
+</main>
+<div th:replace="~{fix/footer :: footer}"></div>
+
+</body>
 </html>
