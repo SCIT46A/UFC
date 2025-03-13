@@ -77,18 +77,6 @@ function formatDate(date) {
     return parsedDate.toISOString().split("T")[0]; // YYYY-MM-DD 포맷 반환
 }
 
-// // ✅ 캠페인 등록 폼 제출 처리
-// function handleCampaignFormSubmit(event) {
-//     event.preventDefault();
-//     console.log("캠페인 등록:", {
-//         name: document.getElementById("campaignName").value,
-//         startDate: document.getElementById("campaignStartDate").value,
-//         endDate: document.getElementById("campaignEndDate").value,
-//         description: document.getElementById("campaignDescription").value
-//     });
-//     closeCampaignModal();
-// }
-
 // ✅ 캠페인 목록 가져오기
 async function fetchCampaigns() {
     try {
@@ -146,9 +134,26 @@ function renderCampaignList(campaigns) {
             </td>
             <td>${campaign.donationPercentage ? `${campaign.donationPercentage.toFixed(1)}%` : '0%'}</td>
             <td>
-                <button class="btn btn-primary" onclick="viewCampaignDetails('${campaign.campaignId}')">상세 보기</button>
+            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                <button class="btn btn-primary" onclick="${campaign.campaignStatus === 1
+                ? `viewCampaignDetails('${campaign.campaignId}')`
+                : `openCampaignUpdatePage('${campaign.campaignId}')`}">
+                    ${campaign.campaignStatus === 1 ? '캠페인 보기' : '캠페인 수정'}
+                </button>
+                ${campaign.campaignStatus === 2
+                ? `<button style="min-width: 89.89px; text-align: center;" class="btn btn-danger" onclick="showRejectionReason('${campaign.rejectedReason}')">
+                     거절 사유 
+                    </button>`
+                : ''}
+            </div>
             </td>
         `;
+        // <button class="btn ${campaign.campaignStatus === 1 ? 'btn-primary' : 'btn-update'}"
+        //     onclick="${campaign.campaignStatus === 1
+        //         ? `viewCampaignDetails('${campaign.campaignId}')`
+        //         : `openCampaignUpdatePage('${campaign.campaignId}')`}">
+        //     ${campaign.campaignStatus === 1 ? '캠페인 보기' : '캠페인 수정'}
+        // </button>
 
         tbody.appendChild(row);
     });
@@ -175,6 +180,9 @@ function getStatusClass(campaign) {
         }
         return donationRate < 100 ? "in-progress" : "in-progress-achieved"; // ✅ 진행 중인데 목표 달성
     }
+    if (campaign.campaignStatus === 2) {
+        return "rejected"; // ✅ 승인 거부
+    }
     return "";
 }
 
@@ -192,7 +200,10 @@ function getStatusText(campaign) {
         if (endDate < today) {
             return donationRate < 100 ? "종료: 목표 미달성" : "종료: 목표 달성";
         }
-        return donationRate < 100 ? "진행 중" : "목표 달성 진행 중"; // ✅ 진행 중인데 목표 달성한 경우 추가
+        return donationRate < 100 ? "진행 중" : "진행 중 : 목표 달성"; // ✅ 진행 중인데 목표 달성한 경우 추가
+    }
+    if (campaign.campaignStatus === 2) {
+        return "승인 거부";
     }
     return "알 수 없음";
 }
@@ -209,25 +220,71 @@ function viewCampaignDetails(campaignId) {
     }
 }
 
-
-// ✅ 모달 열기 및 닫기 함수
-// function openCampaignModal() {
-//     document.getElementById("campaignModal").style.display = "block";
-// }
-
-// function closeCampaignModal() {
-//     document.getElementById("campaignModal").style.display = "none";
-// }
+function openCampaignUpdatePage(campaignId) {
+    console.log("📌 캠페인 상세 보기:", campaignId);
+    const url = window.location.origin + "/campaign/update/" + campaignId;
+    // 새 창(팝업) 설정 (너비 1200px, 높이 800px)
+    const popup = window.open(url, "_blank", "width=1200,height=800,scrollbars=yes,resizable=yes");
+    // 창이 차단되었을 경우 처리
+    if (!popup) {
+        alert("팝업이 차단되었습니다. 팝업 차단을 해제해주세요.");
+    }
+}
 
 function openCampaignCreatePage() {
     const url = window.location.origin + "/campaign/create";
     window.open(url, "_blank");
 }
 
-// ✅ 캠페인 미리보기 함수
-function previewCampaign() {
-    console.log("👀 캠페인 미리보기");
-    alert("현재 등록된 캠페인의 미리보기 기능은 개발 중입니다.");
+
+// // ✅ 캠페인 미리보기 함수
+// function previewCampaign() {
+//     console.log("👀 캠페인 미리보기");
+//     alert("현재 등록된 캠페인의 미리보기 기능은 개발 중입니다.");
+// }
+
+// ✅ 모달 HTML 추가
+document.body.insertAdjacentHTML("beforeend", `
+    <div id="rejectionModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h3>거절 사유</h3>
+            <p id="rejectionReasonText"></p>
+        </div>
+    </div>
+`);
+
+// ✅ 모달 스타일 추가
+const modalStyle = `
+    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+    .modal-content { background-color: white; padding: 20px; margin: 15% auto; width: 50%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+    .close { float: right; font-size: 20px; cursor: pointer; }
+`;
+
+const styleSheet = document.createElement("style");
+styleSheet.innerText = modalStyle;
+document.head.appendChild(styleSheet);
+
+// ✅ 모달 열기 함수
+function showRejectionReason(reason) {
+    document.getElementById("rejectionReasonText").textContent = reason || "거절 사유가 제공되지 않았습니다.";
+    document.getElementById("rejectionModal").style.display = "block";
+}
+
+// ✅ 모달 닫기 함수
+function closeModal() {
+    document.getElementById("rejectionModal").style.display = "none";
+}
+
+
+
+//✅ 모달 열기 및 닫기 함수
+function openCampaignModal() {
+    document.getElementById("campaignModal").style.display = "block";
+}
+
+function closeCampaignModal() {
+    document.getElementById("campaignModal").style.display = "none";
 }
 
 // 🚀 페이지 로드 시 캠페인 데이터 불러오기

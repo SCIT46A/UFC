@@ -271,22 +271,6 @@ async function fetchDeliveryStatus(trackingNumber, courierId) {
     }
 }
 
-
-
-// async function updateDeliveryStatus(rdeliveryId, row) {
-//     try {
-//         let response = await fetch(`/api/delivery/status?rdeliveryId=${rdeliveryId}`);
-//         if (!response.ok) throw new Error("🚨 배송 상태 조회 실패!");
-
-//         let data = await response.json();
-//         row.children[11].textContent = data.status || "배송 정보 없음"; // 배송 상태 업데이트
-
-//     } catch (error) {
-//         console.error("🚨 배송 상태 업데이트 실패:", error);
-//     }
-// }
-
-
 // ✅ 발송 처리
 async function processDelivery(rewardDeliveryId) {
     const row = document.querySelector(`.delivery-checkbox[value="${rewardDeliveryId}"]`)?.closest("tr");
@@ -364,7 +348,7 @@ function updateRewardDeliveryCounts(counts) {
 
     for (let key in elements) {
         if (elements[key]) {
-            elements[key].textContent = counts[key] || 0;
+            elements[key].firstChild.nodeValue = counts[key] || 0;
         } else {
             console.warn(`⚠️ 경고: ${key} 요소를 찾을 수 없습니다.`);
         }

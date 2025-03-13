@@ -358,21 +358,12 @@ public class CampaignService {
             campaignData.put("endDate", ((java.sql.Date) result[3]).toLocalDate());
 
             campaignData.put("campaignStatus", result[4]); // ✅ 상태 추가
-            campaignData.put("donationPercentage", result[5] != null ? ((Number) result[5]).doubleValue() : 0.0);
+            campaignData.put("rejectedReason", result[5]); // ✅ 거절 사유 추가
+            campaignData.put("donationPercentage", result[6] != null ? ((Number) result[6]).doubleValue() : 0.0);
 
             return campaignData;
         }).collect(Collectors.toList());
     }
-
-    // // 리뷰-캠페인 조회
-    // public CampaignDTO getCampaignById(Long campaigned_by) {
-    // List<CampaignEntity> campaigns =
-    // campaignRepository.findByCampaignId(campaigned_by);
-    // return campaigns.stream()
-    // .findFirst() // 첫 번째 캠페인 엔티티를 선택
-    // .map(CampaignDTO::toDTO)
-    // .orElse(null);
-    // }
 
     public List<Long> getCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()

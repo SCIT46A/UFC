@@ -184,8 +184,6 @@ public class CreatorService {
         return CreatorDTO.toDTO(creatorEntity);
     }
 
-    // 하단부분에 사용하는거 없어서 일단 주석해두었습니다 궁금하신점은 문의주세요~ -cho
-
     // ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
     public CreatorEntity saveCreator(CreatorEntity creator) {
         return creatorRepository.save(creator); // JPA를 이용한 저장

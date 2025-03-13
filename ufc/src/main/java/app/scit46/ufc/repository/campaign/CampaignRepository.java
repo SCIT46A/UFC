@@ -24,7 +24,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     List<CampaignEntity> findAllWithCreator();
 
     // ✅ 특정 캠페인 상태(승인된)이며 시작일이 현재보다 이후인 캠페인 조회
-    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Integer  campaignStatus, LocalDateTime startDate);
+    List<CampaignEntity> findByCampaignStatusAndStartDateAfter(Integer campaignStatus, LocalDateTime startDate);
 
     List<CampaignEntity> findByTitleContaining(String title);
 
@@ -33,7 +33,7 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
 
     // ✅ 창작자가 만든 캠페인 조회(기부 달성률 포함) (Creator Dashboard)
     @Query(value = """
-                SELECT c.campaign_id, c.title, DATE(c.start_date) AS start_date, DATE(c.end_date) AS end_date, c.campaign_status,
+                SELECT c.campaign_id, c.title, DATE(c.start_date) AS start_date, DATE(c.end_date) AS end_date, c.campaign_status, c.rejected_reason,
                        IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md WHERE md.campaign_id = c.campaign_id), 0)
                        * 100.0 / NULLIF((SELECT SUM(cg.quantity_required) FROM CampaignGoals cg WHERE cg.campaign_id = c.campaign_id), 0)
                        AS donationPercentage

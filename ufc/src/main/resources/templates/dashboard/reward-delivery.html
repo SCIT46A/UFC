@@ -21,7 +21,7 @@
                                     <line x1="16" y1="16" x2="8" y2="16"></line>
                                 </svg>
                             </div>
-                            <span>신규주문/발주</span>
+                            <span>신규 주문</span>
                         </div>
                         <div class="count" id="newOrdersCount">0<span>건</span></div>
                     </div>
@@ -40,38 +40,8 @@
                         <div class="count" id="readyToShipCount">0<span>건</span></div>
                     </div>
 
-                    <!-- ✅ 발송기한 초과 -->
-                    <div class="tracking-card">
-                        <div class="card-content">
-                            <div class="icon-wrapper gray">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                                </svg>
-                            </div>
-                            <span>발송기한 초과</span>
-                        </div>
-                        <div class="count" id="overdueCount">0<span>건</span></div>
-                    </div>
 
-                    <!-- ✅ 발송처리 D-1 -->
-                    <div class="tracking-card orange">
-                        <div class="card-content">
-                            <div class="icon-wrapper">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <rect x="1" y="3" width="15" height="13"></rect>
-                                    <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
-                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                                </svg>
-                            </div>
-                            <span>발송처리 D-1</span>
-                        </div>
-                        <div class="count" id="shipmentD1Count">0<span>건</span></div>
-                    </div>
+
 
                     <!-- ✅ 발송마감 D-day -->
                     <div class="tracking-card orange">
@@ -88,8 +58,25 @@
                         <div class="count" id="shipmentDdayCount">0<span>건</span></div>
                     </div>
 
-                    <!-- ✅ 출고 완료 카드 -->
-                    <div class="tracking-card orange">
+                    <!-- ✅ 배송 중 -->
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
+                            <span>배송 중</span>
+                        </div>
+                        <div class="count" id="shipmentD1Count">0<span>건</span></div>
+                    </div>
+
+                    <!-- ✅ 배송 완료 카드 -->
+                    <div class="tracking-card">
                         <div class="card-content">
                             <div class="icon-wrapper">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -98,10 +85,27 @@
                                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                                 </svg>
                             </div>
-                            <span>출고 완료</span>
+                            <span>배송 완료</span>
                         </div>
                         <div class="count" id="shippedCount">0<span>건</span></div>
                     </div>
+
+                    <!-- ✅ 발송기한 초과 -->
+                    <div class="tracking-card orange">
+                        <div class="card-content">
+                            <div class="icon-wrapper gray">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>발송기한 초과</span>
+                        </div>
+                        <div class="count" id="overdueCount">0<span>건</span></div>
+                    </div>
+
                 </div>
 
 
@@ -149,8 +153,10 @@
                 <div class="left-section">
                     <span>목록 (총 1개)</span>
                     <select>
-                        <option>최근주문순</option>
-                        <option>오래된주문순</option>
+                        <!-- <option>최근 기부순</option>
+                        <option>오래된 기부순</option> -->
+                        <option>캠페인명 오름차순</option>
+                        <option>캠페인명 내림차순</option>
                         <option>발송마감일순</option>
                     </select>
                     <!-- <select>

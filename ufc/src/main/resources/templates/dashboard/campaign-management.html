@@ -10,8 +10,12 @@
             <section class="card-container">
                 <div class="status-grid">
                     <div class="status-card">
-                        <span>총 캠페인 수</span>
-                        <p th:text="${totalCampaigns}">50</p>
+                        <span>승인 대기</span>
+                        <p th:text="${pendingCampaigns}">50</p>
+                    </div>
+                    <div class="status-card">
+                        <span>승인 거부</span>
+                        <p th:text="${rejectedCampaigns}">500</p>
                     </div>
                     <div class="status-card">
                         <span>진행 중</span>
@@ -24,10 +28,6 @@
                     <div class="status-card">
                         <span>목표 달성</span>
                         <p th:text="${achievedCampaigns}">10</p>
-                    </div>
-                    <div class="status-card">
-                        <span>제출 수</span>
-                        <p th:text="${totalSubmissions}">500</p>
                     </div>
                 </div>
             </section>

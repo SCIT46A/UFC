@@ -250,15 +250,13 @@ function updateDonationCounts(counts) {
 }
 
 function getStatusClass(status) {
-    return status === "processing" ? "processing" : // 🔹 추가
-        status === "pending" ? "pending" :
-            status === "approved" ? "approved" : "rejected";
+    return status === "pending" ? "pending" :
+        status === "approved" ? "approved" : "rejected";
 }
 
 function getStatusText(status) {
-    return status === "processing" ? "기부 진행 중" : // 🔹 추가
-        status === "pending" ? "검수 대기" :
-            status === "approved" ? "승인" : "반려";
+    return status === "pending" ? "검수 대기" :
+        status === "approved" ? "승인" : "반려";
 }
 
 
