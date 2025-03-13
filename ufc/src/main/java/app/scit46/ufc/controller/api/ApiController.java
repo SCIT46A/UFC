@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Map;
 
 import app.scit46.ufc.dto.*;
+import app.scit46.ufc.dto.chat.ChatMessageDTO;
+import app.scit46.ufc.dto.chat.ChatRoomDTO;
 import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.service.*;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.chat.ChatMessageService;
+import app.scit46.ufc.service.chat.ChatRoomService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +42,9 @@ public class ApiController {
     private final LikeService likeService;
     private final CampaignService campaignService;
     private final CourierService courierService;
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
+
 
 
     //  카테고리 입력
@@ -153,6 +160,40 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
+
+//  채팅관련 api컨틀롤러
+
+    @GetMapping("/chatRoom/all")
+    public List<ChatRoomDTO> getAllChatRooms(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId");
+        }
+        // 필요 시 loginUserId null 체크 및 예외 처리
+        return chatRoomService.findAll(loginUserId);
+    }
+
+    @GetMapping("/chatRoom/{chatRoomId}/messages")
+    public List<ChatMessageDTO> getMessagesByChatRoom(@PathVariable Long chatRoomId) {
+        return chatMessageService.findMessagesByChatRoomId(chatRoomId);
+    }
+
+    @GetMapping("/findme")
+    public Long findme(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId");
+        }
+        return loginUserId;
+    }
+
+
+    @GetMapping("/chatRoom/add")
+    public ChatRoomDTO chatRoomAdd(@RequestParam Long loginUserId, @RequestParam Long userId) {
+        return chatRoomService.createChatRoom(loginUserId, userId);
+    }
 
 
 }

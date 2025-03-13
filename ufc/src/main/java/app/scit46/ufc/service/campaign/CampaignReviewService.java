@@ -66,6 +66,7 @@ public class CampaignReviewService {
         reviewEntity.setRated(ratingValue);
         reviewEntity.setCampaignedBy(campaignEntity);
         reviewEntity.setReviewedBy(user);
+        reviewEntity.setStatus(true);
 
         CampaignReviewEntity savedEntity = campaignReviewRepository.save(reviewEntity);
 
