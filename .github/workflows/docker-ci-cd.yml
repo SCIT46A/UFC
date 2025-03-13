@@ -7,7 +7,7 @@
 
 on:
   push:
-    branches: [ "deploy" ]
+    branches: [ "deploy-test" ]
 
 permissions:
   contents: read
