@@ -85,8 +85,10 @@
                             <th>상품명</th>
                             <th>태그</th>
                             <th>재고</th>
+                            <th>가격</th>
                             <th>등록일</th>
-                            <th>판매상태</th>
+                            <th>설명</th>
+                            <th>상태</th>
                             <th>관리</th>
                         </tr>
                     </thead>
@@ -101,8 +103,21 @@
             <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
             <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
         </div>
+
+        <div id="description-modal" class="modal">
+            <div class="modal-content">
+                <h3>상품 설명</h3>
+                <div id="modal-description" contenteditable="true" class="editable-textarea"></div>
+                <div class="modal-actions">
+                    <button id="modal-save" class="btn btn-primary">저장</button>
+                    <button id="modal-close" class="btn btn-secondary">닫기</button>
+                </div>
+            </div>
+        </div>
     </div>
-    <script src="/js/dashboard/product-management.js" async></script>
+
+    </div>
+    <script src="/js/dashboard/product-management.js" defer></script>
 </body>
 
 </html>

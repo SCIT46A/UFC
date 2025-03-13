@@ -19,6 +19,8 @@ import org.springframework.http.HttpStatus;
 import app.scit46.ufc.dto.reward.InvoiceUpdateRequest;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
 @RequestMapping("/api/creator/dashboard")
@@ -193,6 +195,52 @@ public class ApiCreatorDashboardController {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(Collections.singletonMap("error",
                                                         "상품 데이터를 불러오는 중 오류 발생: " + e.getMessage()));
+                }
+        }
+
+        @PatchMapping("/products/{productId}")
+        public ResponseEntity<?> updateProduct(
+                        @PathVariable("productId") Long productId,
+                        @RequestBody Map<String, Object> requestBody) {
+                try {
+                        productService.updateProduct(productId, requestBody);
+                        return ResponseEntity.ok(Collections.singletonMap("message", "상품 업데이트 완료"));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Collections.singletonMap("error", "상품 업데이트 중 오류 발생: " + e.getMessage()));
+                }
+        }
+
+        @PatchMapping("/products/{productId}/tags")
+        public ResponseEntity<?> updateProductTags(
+                        @PathVariable("productId") Long productId,
+                        @RequestBody Map<String, List<String>> requestBody) {
+                try {
+                        List<String> newTags = requestBody.get("tags"); // ✅ 사용자 입력 태그
+                        productService.updateProductTags(productId, newTags); // ✅ 서비스 호출
+                        return ResponseEntity.ok(Collections.singletonMap("message", "태그 업데이트 완료"));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Collections.singletonMap("error", "태그 업데이트 중 오류 발생: " + e.getMessage()));
+                }
+        }
+
+        @PatchMapping("/products/{productId}/status")
+        public ResponseEntity<?> updateProductStatus(@PathVariable("productId") Long productId,
+                        @RequestBody Map<String, Integer> requestBody) {
+                productService.updateProductStatus(productId, requestBody.get("status"));
+                return ResponseEntity.ok(Collections.singletonMap("message", "상태 업데이트 완료"));
+        }
+
+        @PatchMapping("/products/{productId}/delete")
+        public ResponseEntity<?> softDeleteProduct(@PathVariable("productId") Long productId) {
+                try {
+                        System.out.println("🗑️ 상품 삭제 요청: " + productId);
+                        productService.deleteProduct(productId);
+                        return ResponseEntity.ok(Collections.singletonMap("message", "상품이 삭제(비활성화)되었습니다."));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Collections.singletonMap("error", "상품 삭제 실패: " + e.getMessage()));
                 }
         }
 
