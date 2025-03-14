@@ -5,6 +5,15 @@ import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
 import app.scit46.ufc.entity.product.ProductTagEntity;
 import app.scit46.ufc.repository.ProductRepository;
+import app.scit46.ufc.service.CreatorService;
+import app.scit46.ufc.service.ImageUrlService;
+import app.scit46.ufc.service.ItemService;
+import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.tag.TagService;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
 import app.scit46.ufc.repository.tag.ProductTagRepository;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.repository.tag.TagRepository;
@@ -17,14 +26,60 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-import org.springframework.transaction.annotation.Transactional;
+
+import app.scit46.ufc.dto.custom.GenerateProductDTO;
+import app.scit46.ufc.entity.ImageUrlEntity;
+import app.scit46.ufc.entity.ItemEntity;
+import app.scit46.ufc.repository.ItemRepository;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
+    private final EntityManager entityManager;
+    private final ItemService itemService;
     private final ProductRepository productRepository;
+    private final ImageUrlService imageUrlService;
+    private final UserService userService;
+    private final CreatorService creatorService;
+    private final TagService tagService;
+    private final ItemRepository itemRepository;
+
+    public ProductEntity saveProduct(ProductEntity product) {
+        return productRepository.save(product);
+    }
+
+    @Transactional
+    public Long registProduct(GenerateProductDTO cpDTO) {
+
+        // ImageUrlEntity image = entityManager.getReference(ImageUrlEntity.class,
+        // cpDTO.getImageId());
+        ImageUrlEntity image = imageUrlService.findByImageId(cpDTO.getImageId());
+        image = imageUrlService.findImageById(image.getId());
+
+        ItemEntity item = new ItemEntity();
+        item.setName(cpDTO.getTitle());
+        item.setDescription(cpDTO.getDescription());
+
+        if (image != null) {
+            item.setPhoto(image);
+        }
+
+        item = itemRepository.save(item);
+
+        ProductEntity product = ProductEntity.builder()
+                .item(item)
+                .price(cpDTO.getPrice())
+                .stockQuantity(cpDTO.getStock())
+                .createdBy(creatorService.findByOwnUser(userService.findUserByUserName(cpDTO.getUserName().trim())))
+                .build();
+        product = saveProduct(product);
+
+        tagService.linkProductTags(cpDTO.getTagList(), product);
+
+        return product.getProductId();
+    }
+
     private final ProductTagRepository productTagRepository;
     private final TagRepository tagRepository;
 

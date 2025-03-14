@@ -20,4 +20,12 @@ public class ItemService {
         }
         return itemRepository.save(ItemEntity.toEntity(itemDTO));
     }
+
+    public ItemEntity addItem(ItemEntity itemEntity) {
+        ItemEntity item = itemRepository.findByName(itemEntity.getName());
+        if (item != null) {
+            return item;
+        }
+        return itemRepository.save(itemEntity);
+    }
 }

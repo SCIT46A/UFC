@@ -1,15 +1,22 @@
 package app.scit46.ufc.controller.api;
 
-import app.scit46.ufc.dto.campaign.CampaignBoardDTO;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import app.scit46.ufc.dto.custom.GenerateProductDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,6 +25,14 @@ import java.util.Map;
 public class ApiProductController {
 
     private final ProductService productService;
+
+    @PostMapping("/regist")
+    public String generateProduct(@RequestBody GenerateProductDTO generateProduct) {
+
+        Long productId = productService.registProduct(generateProduct);
+
+        return productId.toString();
+    }
 
     @PostMapping("/add/{productId}")
     public ResponseEntity<Long> getProduct(@PathVariable Long productId, @RequestBody ProductDTO boardRequest) {
@@ -49,9 +64,5 @@ public class ApiProductController {
         ProductDTO updatedProduct = productService.updateProductContent(productId, content);
         return ResponseEntity.ok(updatedProduct);
     }
-
-
-
-
 
 }

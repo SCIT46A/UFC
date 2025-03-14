@@ -325,6 +325,13 @@ public class CampaignController {
         model.addAttribute("rewards", rewards);
 
         String rewardTitle = campaign.getTitle();
+
+        log.info("rewardTmp: {}", rewards);
+        if(rewards != null && !rewards.isEmpty()) {
+            log.info("reward list size: {}", rewards.size());
+            log.info("reward list contents: {}", rewards);
+        }
+
         return "campaign/update-campaign";
     }
 
