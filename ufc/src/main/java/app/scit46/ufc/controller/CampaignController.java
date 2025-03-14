@@ -100,8 +100,8 @@ public class CampaignController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
-                && campaign.getCreatedBy().getBusinessCert() != null)
-                        ? imageService.getImageUrl(campaign.getCreatedBy().getBusinessCert().getImageId())
+                && campaign.getCreatedBy().getProImgUrl() != null)
+                        ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                         : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
