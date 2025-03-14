@@ -25,14 +25,15 @@ public class SecurityConfig {
         private final OAuthSessionFilter oAuthSessionFilter;
         private final AuthenticationFailureHandler authenticationFailureHandler;
 
-       @Bean
-       @Primary
+        @Bean
+        @Primary
         public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
                 http.authorizeHttpRequests(auth -> auth
                                 .requestMatchers("/**").permitAll()
                                 .anyRequest().authenticated())
                                 .csrf(csrf -> csrf.disable())
+                                .headers(headers -> headers.frameOptions().sameOrigin())
                                 .oauth2Login(oauth2 -> oauth2
                                                 .loginPage("/login")
                                                 .successHandler(oauthSuccessHandler)

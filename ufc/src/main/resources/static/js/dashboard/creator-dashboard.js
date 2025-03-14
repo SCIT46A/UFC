@@ -63,16 +63,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function executePageScripts(url, creatorId) {
         const scriptMapping = {
-            "/creator/dashboard/products/register": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/creator/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/creator/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
             "/creator/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },
-            "/creator/dashboard/campaigns/register": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
             "/creator/dashboard/campaigns/management": { script: "/js/dashboard/campaign-management.js", init: "initCampaignManagement" },
             "/creator/dashboard/campaigns/donation/orders": { script: "/js/dashboard/donation-orders.js", init: "initDonationOrders" },
             "/creator/dashboard/campaigns/reward/delivery": { script: "/js/dashboard/reward-delivery.js", init: "initRewardDeliveryManagement" },
             "/creator/dashboard/inquiries": { script: "/js/dashboard/inquiries.js", init: "initInquiriesManagement" }
         };
+
+
+        // ✅ iframe을 사용한 페이지는 스크립트 실행 필요 없음
+        if (["/creator/dashboard/products/register", "/creator/dashboard/campaigns/register"].includes(url)) {
+            console.log(`⚠️ [SKIP] ${url}은 iframe으로 로드되므로 init 함수 실행 안 함.`);
+            return;
+        }
 
         // 기존 동적 스크립트 태그 제거
         document.querySelectorAll(".dynamic-script").forEach(script => script.remove());
@@ -90,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(`✅ [SCRIPT LOADED] ${script} 실행 완료`);
                 if (typeof window[init] === "function") {
                     console.log(`⚡ [INIT CALL] ${init} 실행`);
-                    window[init](creatorId); // ✅ creatorId 전달
+                    window[init]();
                 } else {
                     console.warn(`⚠️ [WARNING] ${init} 함수가 정의되지 않음.`);
                 }
@@ -105,4 +110,59 @@ document.addEventListener("DOMContentLoaded", function () {
             console.log(`⚠️ [WARNING] ${url}에 대한 매핑된 JS 없음`);
         }
     }
+
+    function loadFragment(url) {
+        console.log(`🔄 [FRAGMENT] ${url} 로드 시작...`);
+
+        const contentWrapper = document.querySelector(".content-wrapper");
+
+        const iframeMapping = {
+            "/creator/dashboard/products/register": "/product/regist?iframe=true",
+            "/creator/dashboard/campaigns/register": "/campaign/create?iframe=true"
+        };
+
+        const iframePages = Object.keys(iframeMapping);
+
+        if (iframePages.includes(url)) {
+            console.log(`🔄 [IFRAME] ${url}을 iframe으로 로드`);
+
+            contentWrapper.innerHTML = "";
+
+            const iframe = document.createElement("iframe");
+            iframe.src = iframeMapping[url];
+            iframe.width = "100%";
+            iframe.height = "1000px"; // 필요에 따라 높이 조절
+            iframe.style.border = "none";
+
+            // ✅ iframe 내부에서는 `footer.js` 실행 방지
+            iframe.onload = function () {
+                console.log("✅ [IFRAME LOADED] " + url);
+                iframe.contentWindow.postMessage({ hideFooter: true }, "*");
+            };
+
+            contentWrapper.appendChild(iframe);
+        } else {
+            fetch(url)
+                .then(response => {
+                    if (!response.ok) throw new Error(`❌ [ERROR] HTTP 오류: ${response.status}`);
+                    return response.text();
+                })
+                .then(html => {
+                    console.log(`✅ [FRAGMENT] ${url} 로드 완료!`);
+                    contentWrapper.innerHTML = html;
+                    executePageScripts(url);
+                })
+                .catch(error => console.error("❌ [ERROR] 페이지 로딩 오류:", error));
+        }
+    }
+
+    window.addEventListener("message", function (event) {
+        if (event.data.hideFooter) {
+            console.log("⚠️ [INFO] iframe에서 footer 숨기기");
+            const footer = document.querySelector("footer");
+            if (footer) {
+                footer.style.display = "none"; // ✅ footer를 숨김
+            }
+        }
+    });
 });

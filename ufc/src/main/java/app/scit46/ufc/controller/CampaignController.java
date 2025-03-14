@@ -81,13 +81,11 @@ public class CampaignController {
         }
         if (loginUserId == null) {
             model.addAttribute("status", false);
-        } else if(!loginUserId.equals(creatorId)){
+        } else if (!loginUserId.equals(creatorId)) {
             model.addAttribute("status", false);
-        }
-        else {
+        } else {
             model.addAttribute("status", true);
         }
-
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
@@ -299,10 +297,12 @@ public class CampaignController {
     }
 
     @GetMapping("/create") // 헤더에 존재하는 사용자 정보를 가져옴?
-    public String create(HttpServletRequest request, Model model) {
+    public String create(HttpServletRequest request, Model model,
+            @RequestParam(value = "iframe", required = false, defaultValue = "false") boolean iframe) {
         String username = request.getUserPrincipal().getName();
         // model.addAttribute("tags", tagService.readTagList()); // 추천태그 5개 추천 데이터
         model.addAttribute("username", username);
+        model.addAttribute("iframe", iframe);
         return "campaign/create-campaign";
     }
 
