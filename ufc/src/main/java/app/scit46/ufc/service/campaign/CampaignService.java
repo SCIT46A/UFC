@@ -1,5 +1,6 @@
 package app.scit46.ufc.service.campaign;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -135,7 +136,7 @@ public class CampaignService {
         // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
         // UserEntity.userId -> CreatorEntity.creatorId)
         UserEntity user = userService.findUserByUserName(ccDTO.getUserName().trim());
-        
+
         CreatorEntity creator = creatorService.findByOwnUser(user);
         // log.info("창작자 아이디 : {}", creatorId);
 
@@ -199,17 +200,16 @@ public class CampaignService {
 
         CreatorEntity creator = creatorService.findByOwnUser(user);
 
-        if(campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()){
+        if (campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()) {
             throw new RuntimeException("캠페인 수정 권한이 없습니다.");
         }
 
         ImageUrlEntity image = null;
         // 이미지가 변동이 있을 때만 이미지 업데이트
-        if(ucDTO.getImageId() != null){
+        if (ucDTO.getImageId() != null) {
             // 이미 저장처리된 이미지 아이디 조회
             image = imageService.findByImageId(ucDTO.getImageId());
-        }
-        else{
+        } else {
             image = imageService.findByImageId(campaign.getPhoto().getImageId());
         }
 
@@ -408,6 +408,63 @@ public class CampaignService {
         return campaignRepository.findSuccessfulCampaignIdsByCreator(creatorId);
     }
 
+    // 새롭게 추가함 :: 익준
+    public Long getCreatorIdByOauthId(String oauthId) {
+        UserEntity user = userService.findUserByIdentity(oauthId); // OAuth ID로 사용자 찾기
+        if (user != null && user.getCreators() != null && !user.getCreators().isEmpty()) {
+            // ✅ Creator 엔티티 목록 중 첫 번째 Creator의 ID 반환
+            return user.getCreators().get(0).getCreatorId();
+        }
+        return null;
+    }
+
+    public List<CampaignDTO> getActiveCampaignsByCreator(Long creatorId) {
+        // 모든 캠페인 가져오기
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // 진행 중인 캠페인 필터링 (campaign_status가 1인 것만)
+        List<CampaignEntity> activeCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getCampaignStatus() == 1) // ✅ 상태가 1인 캠페인만 필터링
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        // DTO로 변환해서 반환
+        return activeCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 새로 추가함 :: 익준
+    // ✅ 종료된 캠페인 목록 가져오기
+    public List<CampaignDTO> getFinishedCampaignsByCreator(Long creatorId) {
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // ✅ 종료된 캠페인 필터링 (종료일이 오늘 이전인 캠페인)
+        List<CampaignEntity> finishedCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getEndDate().toLocalDate().isBefore(LocalDate.now())) // 💡 변환해서 비교
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        return finishedCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 새로 추가함 :: 익준
+    public List<CampaignDTO> getRejectedCampaignsByCreator(Long creatorId) {
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // ✅ 거절당한 캠페인 필터링 (campaign_status가 2인 것만)
+        List<CampaignEntity> rejectedCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getCampaignStatus() == 2) // 💔 거절된 캠페인 필터링
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        return rejectedCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
     // 프론트 캠페인 수정용 리워드, 펀딩재료 데이터형식으로 변환
     public List<RewardListDTO> convertCampaignFundingAndRewards(Long id) {
         CampaignEntity campaign = campaignRepository.findById(id).orElse(null);
@@ -432,11 +489,11 @@ public class CampaignService {
             }
             List<RewardFundingDTO> rewardItemList = new ArrayList<>();
             for (RewardItemEntity rewardItem : reward.getRewardItems()) {
-              RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
-                      .name(rewardItem.getItem().getName())
-                      .amount(rewardItem.getQuantity())
-                      .build();
-              rewardItemList.add(rewardItemTmp);
+                RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
+                        .name(rewardItem.getItem().getName())
+                        .amount(rewardItem.getQuantity())
+                        .build();
+                rewardItemList.add(rewardItemTmp);
             }
             RewardListDTO rewardListDTO = RewardListDTO.builder()
                     .name(name)

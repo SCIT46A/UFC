@@ -19,7 +19,6 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
 
     CreatorEntity findByOwnUser(UserEntity ownUser);
 
-
     // 새로운 메서드 추가
     @Query("SELECT c FROM CreatorEntity c WHERE c.ownUser = :ownUser")
     Optional<CreatorEntity> findCreatorByUser(@Param("ownUser") UserEntity ownUser);

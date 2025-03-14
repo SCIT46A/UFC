@@ -23,6 +23,7 @@ public class ImageUrlDTO {
                         return null;
 
                 return ImageUrlDTO.builder()
+                                .id(entity.getId())
                                 .imageId(entity.getImageId())
                                 .filename(entity.getFilename())
                                 .uploadedAt(entity.getUploadedAt())

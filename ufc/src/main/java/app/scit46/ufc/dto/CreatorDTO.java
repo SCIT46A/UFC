@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Getter
 @Setter
@@ -30,21 +34,32 @@ public class CreatorDTO {
     private ImageUrlDTO backImgUrl; // ✅ PhotoDTO 포함
     private ImageUrlDTO proImgUrl; // ✅ PhotoDTO 포함
     private UserDTO ownUser; // ✅ UserDTO 포함
+
+    @JsonProperty
     private Boolean creatorStatus;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate bRegistDate;
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()
                 .creatorId(entity.getCreatorId())
                 .intro(entity.getIntro())
-                .businessCert(entity.getBusinessCert() != null ? ImageUrlDTO.toDTO(entity.getBusinessCert()) : null) // ✅                                                                                       // 변환
+                .businessCert(entity.getBusinessCert() != null ? ImageUrlDTO.toDTO(entity.getBusinessCert()) : null) // ✅
+                                                                                                                     // //
+                                                                                                                     // 변환
                 .bRegistNumber(entity.getBRegistNumber())
                 .bRegistDate(entity.getBRegistDate())
                 .bName(entity.getBName())
                 .companyName(entity.getCompanyName())
                 .address(entity.getAddress())
                 .bRegistDate(entity.getBRegistDate())
-                .backImgUrl(entity.getBackImgUrl() != null ? ImageUrlDTO.toDTO(entity.getBackImgUrl()) : null) // ✅ PhotoDTO 변환
-                .proImgUrl(entity.getProImgUrl() != null ? ImageUrlDTO.toDTO(entity.getProImgUrl()) : null) // ✅ PhotoDTO 변환
+                .backImgUrl(entity.getBackImgUrl() != null ? ImageUrlDTO.toDTO(entity.getBackImgUrl()) : null) // ✅
+                                                                                                               // PhotoDTO
+                                                                                                               // 변환
+                .proImgUrl(entity.getProImgUrl() != null ? ImageUrlDTO.toDTO(entity.getProImgUrl()) : null) // ✅
+                                                                                                            // PhotoDTO
+                                                                                                            // 변환
                 .ownUser(entity.getOwnUser() != null ? UserDTO.toDTO(entity.getOwnUser()) : null) // ✅ UserDTO 변환
                 .creatorStatus(entity.getCreatorStatus())
                 .build();

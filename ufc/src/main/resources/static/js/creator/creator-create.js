@@ -289,21 +289,57 @@ document.querySelector(".img-form-button").addEventListener("click", function ()
         let profileImageInput = document.getElementById('profile-image');    // 이미지 입력
         let backImageInput = document.getElementById('background-image');    // 이미지 입력
 
-        const intro = document.getElementById("seller_intro");
-        const bRegistNumber = document.getElementById("seller_regist_number");
-        const bName = document.getElementById("seller_regist_person");
-        const companyName = document.getElementById("seller_regist_name");
-        const address = document.getElementById("seller_regist_location");
+        // const intro = document.getElementById("seller_intro");
+        // const bRegistNumber = document.getElementById("seller_regist_number");
+        // const bName = document.getElementById("seller_regist_person");
+        // const companyName = document.getElementById("seller_regist_name");
+        // const address = document.getElementById("seller_regist_location");
+        // const bRegistDateInput = document.getElementById("seller_regist_date");
+
+        const intro = document.getElementById("seller_intro").value.trim() || "소개 없음";
+        const bRegistNumber = document.getElementById("seller_regist_number").value.trim() || "000-00-00000";
+        const bName = document.getElementById("seller_regist_person").value.trim() || "대표자 없음";
+        const companyName = document.getElementById("seller_regist_name").value.trim() || "회사 없음";
+        const address = document.getElementById("seller_regist_location").value.trim() || "주소 없음";
+        const bRegistDateInput = document.getElementById("seller_regist_date").value;
+
+        // 사업자 등록일
+        // let bRegistDate = null;
+        // if (bRegistDateInput && bRegistDateInput.value) {
+        //     bRegistDate = new Date(bRegistDateInput.value).toISOString();   // ISO 8601 형식 변환
+        // } else {
+        //     console.warn("⚠️ 사업자 등록일이 선택되지 않음! 기본값으로 오늘 날짜 설정");
+        //     bRegistDate = new Date().toISOString(); // 기본값: 현재 날짜
+        // }
+
+        // ✅ `bRegistDate` 변환 (사용자가 입력했을 경우만 변환)
+        let bRegistDate = null;
+        if (bRegistDateInput) {
+            bRegistDate = bRegistDateInput;
+        }
 
         // 값 초기화
         // ✅ 입력값이 없으면 기본값 설정
+        // const creatorData = {
+        //     intro: intro ? intro.value : "소개 없음",
+        //     registNumber: bRegistNumber ? bRegistNumber.value : "000-00-00000",
+        //     bizName: bName ? bName.value : "대표자 없음",
+        //     companyName: companyName ? companyName.value : "회사 없음",
+        //     address: address && address.value ? address.value : "주소 없음", // ✅ 주소가 null이면 기본값 설정
+        //     bRegistDate: bRegistDate    // 추가된 필드
+        // };
+
         const creatorData = {
-            intro: intro ? intro.value : "소개 없음",
-            registNumber: bRegistNumber ? bRegistNumber.value : "000-00-00000",
-            bizName: bName ? bName.value : "대표자 없음",
-            companyName: companyName ? companyName.value : "회사 없음",
-            address: address ? address.value : "주소 없음" // ✅ 주소가 null이면 기본값 설정
+            intro: document.getElementById("seller_intro").value.trim() || "소개 없음",
+            registNumber: document.getElementById("seller_regist_number").value.trim() || "000-00-00000",
+            bizName: document.getElementById("seller_regist_person").value.trim() || "대표자 없음",
+            companyName: document.getElementById("seller_regist_name").value.trim() || "회사 없음",
+            address: document.getElementById("seller_regist_location").value.trim() || "주소 없음",
+            bRegistDate: bRegistDate // ✅ "YYYY-MM-DD" 형식으로 백엔드 전송
         };
+
+        // ✅ 콘솔에서 데이터 확인
+        console.log("📤 서버로 전송할 데이터:", JSON.stringify(creatorData));
         
         // 이미지 파일 가져오기
         Promise.all([
