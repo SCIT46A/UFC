@@ -134,7 +134,7 @@
                                                             <div
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                <span th:text="${donationLikes}"></span>
+                                                                <span th:text="${donationCount}"></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -277,25 +277,3 @@
         <div th:replace="~{fix/footer :: footer}"></div>
     </body>
 </html>
-
-                                        <!-- <div class="pagination-container">
-                                            <ul class="pagination">
-                                                <!-- 이전 페이지 버튼 -->
-                                                <!-- <li th:if="${currentPage > 0}">
-                                                    <a th:href="@{/donation(page=${currentPage - 1}, size=5)}" class="pagination-link">이전</a>
-                                                </li>
-
-                                                <!-- 페이지 번호 -->
-                                                <!-- <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}">
-                                                    <a th:href="@{/donation(page=${i}, size=5)}"
-                                                    th:text="${i + 1}"
-                                                    th:classappend="${i == currentPage} ? 'active' : ''"
-                                                    class="pagination-link"></a>
-                                                </li> -->
-
-                                                <!-- 다음 페이지 버튼 -->
-                                                <!-- <li th:if="${currentPage + 1 < totalPages}">
-                                                    <a th:href="@{/donation(page=${currentPage + 1}, size=5)}" class="pagination-link">다음</a>
-                                                </li> -->
-                                            <!-- </ul>
-                                        </div> -->

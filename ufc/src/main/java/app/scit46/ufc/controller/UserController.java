@@ -2,6 +2,7 @@ package app.scit46.ufc.controller;
 
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
@@ -90,12 +92,11 @@ public class UserController {
                             .filter(like -> like.getCreator() != null)
                             .collect(Collectors.toList());
 
-                    List<LikeDTO> donationLikes = likes.stream()
-                            .filter(like -> like.getCampaign() != null)
-                            .collect(Collectors.toList());       
+                    List<MaterialDonationDTO> materialDonations = materialDonationService
+                                .getMaterialDonationsByUserId(user.getUserId()); 
 
                     model.addAttribute("creatorLikes", creatorLikes.size());
-                    model.addAttribute("donationLikes", donationLikes.size());
+                    model.addAttribute("donationCount", materialDonations.size());
                     
 
                     model.addAttribute("user", user);
@@ -161,12 +162,11 @@ public class UserController {
                                 .filter(like -> like.getCreator() != null)
                                 .collect(Collectors.toList());
 
-                        List<LikeDTO> donationLikes = likes.stream()
-                                .filter(like -> like.getCampaign() != null)
-                                .collect(Collectors.toList());
+                        List<MaterialDonationDTO> materialDonations = materialDonationService
+                                .getMaterialDonationsByUserId(userId);
 
                         model.addAttribute("creatorLikes", creatorLikes.size());
-                        model.addAttribute("donationLikes", donationLikes.size());
+                        model.addAttribute("donationCount", materialDonations.size());
                         model.addAttribute("imageUrls", imageUrls);
                         model.addAttribute("userImageId", userImageId);
                         // Page 객체를 그대로 전달해서 페이징 네비게이션에 활용
@@ -231,14 +231,11 @@ public class UserController {
                     try {
                         UserDTO user = userService.readUserById(userId);
 
-
-
                         List<MaterialDonationDTO> materialDonations = materialDonationService
-                                .getMaterialDonationsByUserId(userId);
+                                .getMaterialDonationsByUserId(user.getUserId());
 
                         List<CampaignDTO> campaigns = new ArrayList<>();
                         List<String> imageUrls = new ArrayList<>();
-                        List<RewardDeliveryDTO> rewardDeliveries = new ArrayList<>();
                         int goal, donationsum = 0;
                         List<Double> isAchived = new ArrayList<>();        
                         
@@ -254,6 +251,7 @@ public class UserController {
 
                                 goal = campaignGoalService.getCampaignGoalByCampaignId(campaign.getCampaignId()).get(0)
                                         .getQuantityRequired();
+
                                 List<MaterialDonationDTO> materialDonationsList = materialDonationService
                                         .getMaterialDonationsByCampaignId(campaign.getCampaignId());
 
@@ -278,9 +276,6 @@ public class UserController {
                                 .filter(like -> like.getCreator() != null)
                                 .collect(Collectors.toList());
 
-                        List<LikeDTO> donationLikes = likes.stream()
-                                .filter(like -> like.getCampaign() != null)
-                                .collect(Collectors.toList());
                         Map<String, String> statusMap = new HashMap<>();
                         statusMap.put("approved", "확인되었어요 🙂");
                         statusMap.put("rejected", "거절되었어요 🙁");
@@ -293,7 +288,7 @@ public class UserController {
                         model.addAttribute("isAchivedList", isAchivedList);
                         model.addAttribute("rewardNameList", rewardNameList);
                         model.addAttribute("creatorLikes", creatorLikes.size());
-                        model.addAttribute("donationLikes", donationLikes.size());
+                        model.addAttribute("donationCount", materialDonations.size());
                         System.out.println("후원 내역 개수: " + materialDonations.size());
                         //문제없음 5개로 나옴
                         
@@ -378,12 +373,11 @@ public class UserController {
                     .filter(like -> like.getCreator() != null)
                     .collect(Collectors.toList());
 
-            List<LikeDTO> donationLikes = likes.stream()
-                    .filter(like -> like.getCampaign() != null)
-                    .collect(Collectors.toList());
+            List<MaterialDonationDTO> materialDonations = materialDonationService
+                    .getMaterialDonationsByUserId(userId);
 
             model.addAttribute("creatorLikes", creatorLikes.size());
-            model.addAttribute("donationLikes", donationLikes.size());
+            model.addAttribute("donationCount", materialDonations.size());
             model.addAttribute("userBadgeIds", userBadgeIds);
             model.addAttribute("userBadges", userBadges); // 필요하면 그대로 추가
             model.addAttribute("badges", badges);
@@ -438,6 +432,7 @@ public class UserController {
                             .sum();
 
                     double achievement = (double) donationsum / goal * 100; // 백분율 변환
+                    achievement = Math.round(achievement);
 
                     // 5. 리워드 정보 가져오기
                     RewardDeliveryDTO reward = rewardDeliveryService
@@ -485,15 +480,19 @@ public class UserController {
 
         
         @GetMapping("/like")
-        public String like(HttpServletRequest request, Model model) {
+        public String like(
+                @RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+                HttpServletRequest request, Model model) {
             HttpSession session = request.getSession(false);
             Long userId = (Long) session.getAttribute("loginUserId");
-            
+
             if (userId != null) {
                 try {
                     UserDTO user = userService.readUserById(userId);
                     List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
-                    
+                    List<CampaignGoalDTO> campaignGoals = new ArrayList<>();
+                    int donationSum = 0;
+
                     // 좋아요한 항목들을 크리에이터와 캠페인으로 분류합니다.
                     List<LikeDTO> creatorLikes = likes.stream()
                             .filter(like -> like.getCreator() != null)
@@ -501,29 +500,43 @@ public class UserController {
                     List<LikeDTO> donationLikes = likes.stream()
                             .filter(like -> like.getCampaign() != null)
                             .collect(Collectors.toList());
-                    
+
                     // donationLikes에 포함된 모든 캠페인을 중복 제거하여 가져옵니다.
                     List<CampaignDTO> campaigns = donationLikes.stream()
-                            .map(like -> like.getCampaign())
+                            .map(LikeDTO::getCampaign)
                             .distinct()
                             .collect(Collectors.toList());
-                    
+
+                    // 최신순 (createdDate 내림차순) 또는 마감임박순 (endDate 오름차순)으로 정렬
+                    if ("latest".equals(sort)) {
+                        campaigns.sort(Comparator.comparing(CampaignDTO::getCreatedDate).reversed());
+                    } else if ("deadline".equals(sort)) {
+                        campaigns.sort(Comparator.comparing(CampaignDTO::getEndDate));
+                    }
+
                     // creatorLikes에 포함된 모든 크리에이터를 중복 제거하여 가져옵니다.
                     List<CreatorDTO> creators = creatorLikes.stream()
-                            .map(like -> like.getCreator())
+                            .map(LikeDTO::getCreator)
                             .distinct()
                             .collect(Collectors.toList());
-                    
+
                     // 각 캠페인의 이미지 URL 추출
                     List<String> campaignImageUrls = new ArrayList<>();
                     for (CampaignDTO campaign : campaigns) {
                         if (campaign != null && campaign.getPhoto() != null) {
                             campaignImageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
+                            List<CampaignGoalDTO> campaignGoal = campaignGoalService.getCampaignGoalByCampaignId(campaign.getCampaignId());
+                            campaignGoals.add(campaignGoal.get(0));
+                            List<MaterialDonationDTO> materialDonationsList = materialDonationService
+                                    .getMaterialDonationsByCampaignId(campaign.getCampaignId());
+                            for (MaterialDonationDTO donation : materialDonationsList) {
+                                donationSum += donation.getQuantity();
+                            }
                         } else {
                             campaignImageUrls.add(null);
                         }
                     }
-                    
+
                     // 각 크리에이터의 이미지 URL 추출
                     List<String> creatorImageUrls = new ArrayList<>();
                     for (CreatorDTO creator : creators) {
@@ -533,38 +546,69 @@ public class UserController {
                             creatorImageUrls.add(null);
                         }
                     }
-                    
+
                     // 사용자 프로필 이미지 URL 생성
                     String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
                             + user.getPhoto().getImageId() + "/public";
 
+                    // 각 좋아요 항목에서 크리에이터 또는 캠페인별 likeId 매핑
                     Map<Long, Long> creatorLikeIdMap = new HashMap<>();
                     for (LikeDTO like : creatorLikes) {
                         if (like.getCreator() != null) {
                             creatorLikeIdMap.put(like.getCreator().getCreatorId(), like.getLikeId());
                         }
                     }
-                    model.addAttribute("creatorLikeIdMap", creatorLikeIdMap);
 
+                    Map<Long, Long> campaignLikeIdMap = new HashMap<>();
+                    for (LikeDTO like : donationLikes) {
+                        if (like.getCampaign() != null) {
+                            campaignLikeIdMap.put(like.getCampaign().getCampaignId(), like.getLikeId());
+                        }
+                    }
+                    List<MaterialDonationDTO> materialDonations = materialDonationService.getMaterialDonationsByUserId(userId);
+                    int donationCount = materialDonations.size();
 
-                            // 모델에 값 추가
+                    if ("latest".equals(sort)) {
+                        campaigns.sort(Comparator.comparing(CampaignDTO::getCreatedDate).reversed());
+                    } else if ("deadline".equals(sort)) {
+                        campaigns.sort(Comparator.comparing(CampaignDTO::getEndDate));
+                    }
+
+                    Map<Long, Integer> donationSumByCampaign = materialDonations.stream()
+                        .collect(Collectors.groupingBy(
+                            donation -> donation.getCampaign().getCampaignId(),
+                            Collectors.summingInt(MaterialDonationDTO::getQuantity)
+                            ));
+
+                    double achievement = (double) donationSum / campaignGoals.get(0).getQuantityRequired() * 100;
+                    achievement = Math.round(achievement);
+
+                    
+                    // 모델에 값 추가
+                    model.addAttribute("donationSumByCampaign", donationSumByCampaign);
+                    model.addAttribute("achievement", achievement);
                     model.addAttribute("likes", likes);
                     model.addAttribute("creatorLikesCount", creatorLikes.size()); // 크리에이터 좋아요 수
-                    model.addAttribute("donationLikesCount", donationLikes.size()); // 캠페인 좋아요 수
+                    model.addAttribute("donationCount", donationCount); // 캠페인 좋아요 수
                     model.addAttribute("user", user);
                     model.addAttribute("userImageId", userImageId);
                     model.addAttribute("campaigns", campaigns);
                     model.addAttribute("campaignImageUrls", campaignImageUrls);
+                    model.addAttribute("campaignGoals", campaignGoals);
                     model.addAttribute("creators", creators);
                     model.addAttribute("creatorImageUrls", creatorImageUrls);
+                    model.addAttribute("creatorLikeIdMap", creatorLikeIdMap);
+                    model.addAttribute("campaignLikeIdMap", campaignLikeIdMap);
+                    model.addAttribute("sort", sort); // 현재 정렬 기준을 전달
 
                 } catch (DBNotFoundException e) {
                     model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-            
+
             return "user/mypage-like";
         }
+
 
 
 
