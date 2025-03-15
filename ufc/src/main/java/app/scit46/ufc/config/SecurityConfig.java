@@ -44,7 +44,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo.userService(oAuth2UserService)))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("/")
+                        .logoutSuccessUrl("https://upda.store/")
                         .invalidateHttpSession(true)
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")

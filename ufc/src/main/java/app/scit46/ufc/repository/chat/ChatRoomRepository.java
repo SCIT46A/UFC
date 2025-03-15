@@ -34,8 +34,10 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoomEntity, Long> 
             "LEFT JOIN u2.creators cr2 " +
             "LEFT JOIN cr1.proImgUrl cp1 " +
             "LEFT JOIN cr2.proImgUrl cp2 " +
-            "WHERE u1.userId = :myUserId OR u2.userId = :myUserId")
+            "WHERE u1.userId = :myUserId OR u2.userId = :myUserId " +
+            "ORDER BY c.createdTime DESC")
     List<ChatRoomDTO> findAllWithCreator(@Param("myUserId") Long myUserId);
+
 
     @Query("SELECT cr FROM ChatRoomEntity cr WHERE " +
             "(cr.user1.userId = :user1 AND cr.user2.userId = :user2) " +
