@@ -27,19 +27,15 @@ public class CreatorDTO {
     private String intro;
     private ImageUrlDTO businessCert; // ✅ PhotoDTO 포함
     private String bRegistNumber;
-    private LocalDateTime bRegistDate;
+    private LocalDate bRegistDate;
     private String bName;
     private String companyName;
     private String address;
     private ImageUrlDTO backImgUrl; // ✅ PhotoDTO 포함
     private ImageUrlDTO proImgUrl; // ✅ PhotoDTO 포함
     private UserDTO ownUser; // ✅ UserDTO 포함
-
     @JsonProperty
     private Boolean creatorStatus;
-
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate bRegistDate;
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()

@@ -3,6 +3,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
     console.log("✅ [INIT] dashboard.js 로드 완료");
 
+
+    // ✅ 기존 프로필 이미지 업로드 기능 제거 후, 새 코드 적용
+    const profileContainer = document.getElementById("profileContainer");
+    const fileInput = document.getElementById("profileUpload");
+    const profileImg = document.getElementById("profileImg");
+    const creatorId = document.getElementById("creatorId")?.value; // ✅ 크리에이터 ID 가져오기
+
+    if (profileContainer && fileInput) {
+        // 🔹 프로필 이미지 클릭 시 파일 선택 창 열기
+        profileContainer.addEventListener("click", function () {
+            fileInput.click();
+        });
+
+        // 🔹 파일 선택 후 미리보기 & API 호출
+        fileInput.addEventListener("change", async function (event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // ✅ 미리보기 기능
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                profileImg.src = e.target.result; // 미리보기 설정
+            };
+            reader.readAsDataURL(file);
+
+            try {
+                // ✅ 1. Cloudflare에 이미지 업로드
+                const formData = new FormData();
+                formData.append("file", file);
+
+                const uploadResponse = await fetch("/api/image/upload", {
+                    method: "POST",
+                    body: formData,
+                    headers: { "Accept": "application/json" }
+                });
+
+                if (!uploadResponse.ok) throw new Error("이미지 업로드에 실패했습니다.");
+
+                const imageIdText = await uploadResponse.text();
+                const responseData = { imageId: imageIdText };
+
+                const imageId = responseData.imageId;
+
+                const dbResponse = await fetch("/creator/profile/image", {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        creatorId: creatorId,
+                        profileImgId: imageId
+                    })
+                });
+
+                if (!dbResponse.ok) throw new Error("프로필 이미지 저장에 실패했습니다.");
+            } catch (error) {
+                console.error("❌ 오류 발생:", error.message);
+            }
+        });
+    }
     // ✅ 메뉴 클릭 이벤트 (이벤트 위임 적용)
     document.addEventListener("click", function (event) {
         const menuItem = event.target.closest(".menu-item[data-url]");

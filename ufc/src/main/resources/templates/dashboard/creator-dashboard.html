@@ -21,7 +21,7 @@
                 </a>
                 <div class="header-slash">|</div>
                 <div class="header-content">
-                    <span>Creator Center</span>
+                    <span th:text="${storeName}">Creator Center</span>
                 </div>
             </div>
         </header>
@@ -30,8 +30,13 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <div class="profile-section">
-                    <div class="profile-image"></div>
-                    <div class="profile-name">UP-DA</div>
+                    <div class="profile-image" id="profileContainer">
+                        <img id="profileImg" th:src="${profileImgUrl}" src="/images/default-profile.png" alt="프로필 이미지">
+                        <input type="file" id="profileUpload" style="display: none;">
+                    </div>
+
+                    <!-- 판매자 이름 -->
+                    <div class="profile-name" th:text="${creatorName}">판매자 아이디</div>
                     <button class="logout-button">로그아웃</button>
                 </div>
                 <ul class="sidebar-menu">

@@ -290,6 +290,28 @@ public class CreatorService {
             e.printStackTrace();
             return false;
         }
+
+    }
+
+    @Transactional
+    public String updateProfileImage(Long creatorId, String newProfileImgId) {
+        CreatorEntity creator = creatorRepository.findById(creatorId)
+                .orElseThrow(() -> new IllegalArgumentException("판매자 정보를 찾을 수 없습니다."));
+
+        ImageUrlEntity proImg = imageUrlService.findByImageId(newProfileImgId);
+        if (proImg == null) {
+            throw new RuntimeException("이미지가 데이터베이스에 저장되지 않았습니다.");
+        }
+
+        creator.setProImgUrl(proImg);
+
+        creatorRepository.save(creator);
+        entityManager.flush();
+
+        log.info("✅ 프로필 이미지 업데이트 완료: creatorId={}, imageId={}, filename={}",
+                creatorId, newProfileImgId, proImg.getFilename()); // ✅ 파일명도 로깅
+
+        return "프로필 이미지가 성공적으로 수정되었습니다!";
     }
 
     /** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
