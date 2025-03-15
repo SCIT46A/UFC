@@ -1,4 +1,4 @@
-package app.scit46.ufc.dto.reward;
+package app.scit46.ufc.dto.delivery;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,6 +12,6 @@ import java.lang.String;
 @AllArgsConstructor
 @NoArgsConstructor
 public class InvoiceUpdateRequest {
-    private Long donationId;
+    private Long Id;
     private String invoice; // "택배사코드#송장번호" 형태
 }

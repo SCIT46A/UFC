@@ -27,6 +27,8 @@ import app.scit46.ufc.repository.MaterialDonationRepository;
 import org.springframework.transaction.annotation.Transactional;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
+import app.scit46.ufc.repository.product.ProductDeliveryRepository;
+import app.scit46.ufc.entity.product.ProductDeliveryEntity;
 
 @Service
 public class DeliveryService {
@@ -39,6 +41,8 @@ public class DeliveryService {
     private MaterialDonationRepository materialDonationRepository;
     @Autowired
     private RewardDeliveryRepository rewardDeliveryRepository;
+    @Autowired
+    private ProductDeliveryRepository productDeliveryRepository;
 
     @Value("${tracker.api-key}")
     private String apiKey;
@@ -208,6 +212,50 @@ public class DeliveryService {
 
         delivery.setStatus("completed");
         rewardDeliveryRepository.save(delivery);
+    }
+
+    public Map<String, String> trackProductDelivery(List<Map<String, Object>> orders) {
+        Map<String, String> trackingResults = new ConcurrentHashMap<>();
+
+        List<CompletableFuture<Void>> futures = orders.stream()
+                .map(order -> CompletableFuture.supplyAsync(() -> {
+                    String courierId = (String) order.get("courierId");
+                    String trackingNumber = (String) order.get("trackingNumber");
+
+                    // 🚨 Null 또는 빈 값 체크 후 디버깅 로그 추가
+                    logger.info("🚀 배송 조회 요청: payId={}, courierId={}, trackingNumber={}",
+                            order.get("payId"), courierId, trackingNumber);
+
+                    if (courierId != null && trackingNumber != null) {
+                        return trackDelivery(courierId, trackingNumber);
+                    }
+                    return "미등록";
+                }, executor).thenAccept(status -> {
+                    trackingResults.put(order.get("payId").toString(), status);
+
+                    // ✅ 배송 상태가 "배송완료"면 DB 업데이트
+                    if ("배송완료".equals(status) && "shipping".equals(order.get("deliveryStatus"))) {
+                        updateDeliveryStatusToCompleted((Long) order.get("payId"));
+                    }
+                })).toList();
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        return trackingResults;
+    }
+
+    @Transactional
+    public void updateDeliveryStatusToCompleted(Long payId) {
+        ProductDeliveryEntity delivery = productDeliveryRepository.findPDeliveryIdByPay_PayId(payId)
+                .orElseThrow(() -> new RuntimeException("배송 정보를 찾을 수 없습니다. ID: " + payId));
+
+        if (!"shipping".equals(delivery.getStatus())) {
+            logger.warn("⚠ 상태 변경 불가: 배송 ID {}의 상태가 이미 {}입니다.", payId, delivery.getStatus());
+            return;
+        }
+
+        delivery.setStatus("completed");
+        productDeliveryRepository.save(delivery);
+        logger.info("✅ DB 업데이트 완료: 배송 ID {} → 상태 변경됨 (completed)", payId);
     }
 
 }

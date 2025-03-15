@@ -2,25 +2,27 @@ package app.scit46.ufc.controller.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.http.ResponseEntity;
-import java.util.Map;
-import java.util.List;
-import java.util.Collections;
-import app.scit46.ufc.service.campaign.CampaignService;
-import app.scit46.ufc.service.MaterialDonationService;
-import app.scit46.ufc.service.reward.RewardDeliveryService;
-import app.scit46.ufc.service.product.ProductService;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
-import app.scit46.ufc.dto.reward.InvoiceUpdateRequest;
-import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import app.scit46.ufc.service.product.ProductPaymentService;
+import app.scit46.ufc.service.product.ProductDeliveryService;
+import app.scit46.ufc.service.reward.RewardDeliveryService;
+import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.product.ProductService;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/creator/dashboard")
@@ -31,6 +33,8 @@ public class ApiCreatorDashboardController {
         private final MaterialDonationService materialDonationService;
         private final RewardDeliveryService rewardDeliveryService;
         private final ProductService productService;
+        private final ProductPaymentService productPaymentService;
+        private final ProductDeliveryService productDeliveryService;
 
         /**
          * 
@@ -115,13 +119,11 @@ public class ApiCreatorDashboardController {
 
         @GetMapping("/reward/deliveries")
         public ResponseEntity<Map<String, Object>> getRewardDeliveries(HttpSession session) {
-                // 1️⃣ 세션에서 creatorId 가져오기
                 Long creatorId = (Long) session.getAttribute("creatorId");
                 if (creatorId == null) {
                         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Unauthorized"));
                 }
 
-                // 2️⃣ 해당 크리에이터의 성공한 캠페인 ID 목록 조회
                 List<Long> campaignIds = campaignService.getSuccessfulCampaignIdsByCreator(creatorId);
 
                 if (campaignIds.isEmpty()) {
@@ -132,29 +134,25 @@ public class ApiCreatorDashboardController {
                                         Map.of("pending", 0, "shipping", 0, "completed", 0, "cancelled", 0)));
                 }
 
-                // 3️⃣ 성공한 캠페인의 리워드 배송 내역 조회
                 Map<String, Object> rewardDeliveryData = rewardDeliveryService.getRewardDeliveryData(campaignIds);
 
                 return ResponseEntity.ok(rewardDeliveryData);
         }
 
         @PostMapping("/reward/deliveries/{rdeliveryId}")
-        public ResponseEntity<?> updateInvoice(
+        public ResponseEntity<?> updateRewardInvoice(
                         @PathVariable("rdeliveryId") Long rdeliveryId,
                         @RequestBody Map<String, String> requestBody) {
 
                 try {
-                        // 🚀 1. 요청에서 courier(택배사)와 trackingNumber(송장번호) 가져오기
                         String courier = requestBody.get("courier");
                         String trackingNumber = requestBody.get("trackingNumber");
 
-                        // 🚨 필수 값 검증 (비어 있는 경우 오류 응답)
                         if (courier == null || courier.isEmpty() || trackingNumber == null
                                         || trackingNumber.isEmpty()) {
                                 return ResponseEntity.badRequest().body("🚨 택배사와 송장번호를 입력해야 합니다.");
                         }
 
-                        // 🚀 2. 송장번호 업데이트 (DB 저장)
                         rewardDeliveryService.updateInvoice(rdeliveryId, courier, trackingNumber);
 
                         return ResponseEntity.ok("✅ 송장 정보 업데이트 성공");
@@ -168,7 +166,7 @@ public class ApiCreatorDashboardController {
         }
 
         @PostMapping("/reward/deliveries/batch-update")
-        public ResponseEntity<?> updateInvoices(@RequestBody List<InvoiceUpdateRequest> updateRequests) {
+        public ResponseEntity<?> updateRewardInvoices(@RequestBody List<InvoiceUpdateRequest> updateRequests) {
                 rewardDeliveryService.updateInvoices(updateRequests);
                 return ResponseEntity.ok(Collections.singletonMap("message", "송장번호 업데이트 완료"));
         }
@@ -241,6 +239,73 @@ public class ApiCreatorDashboardController {
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body(Collections.singletonMap("error", "상품 삭제 실패: " + e.getMessage()));
+                }
+        }
+
+        @GetMapping("/products/orders")
+        public ResponseEntity<Map<String, Object>> getOrders(HttpSession session) {
+                Long creatorId = (Long) session.getAttribute("creatorId");
+                if (creatorId == null) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Map.of("error", "Unauthorized"));
+                }
+
+                Map<String, Object> orders = productPaymentService.getOrdersByCreator(creatorId);
+                return ResponseEntity.ok(orders);
+        }
+
+        @PostMapping("/products/orders/process/{payId}")
+        public ResponseEntity<?> processOrder(@PathVariable("payId") Long payId) {
+                System.out.println("🚀 발주 처리 요청: " + payId);
+                try {
+                        productPaymentService.processOrder(payId);
+                        return ResponseEntity.ok(Map.of("message", "✅ 발주 처리 완료"));
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("🚨 " + e.getMessage());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("❌ 서버 오류: " + e.getMessage());
+                }
+        }
+
+        @PostMapping("/products/orders/invoice/batch-update")
+        public ResponseEntity<?> updateProductInvoices(@RequestBody List<InvoiceUpdateRequest> updateRequests) {
+                productDeliveryService.updateInvoices(updateRequests);
+                return ResponseEntity.ok(Collections.singletonMap("message", "송장번호 업데이트 완료"));
+        }
+
+        @PostMapping("/products/orders/invoice/{payId}")
+        public ResponseEntity<?> updateProductInvoice(
+                        @PathVariable("payId") Long payId,
+                        @RequestBody Map<String, Object> requestBody) { // ✅ Object로 변경
+
+                try {
+                        String courier = (String) requestBody.get("courier");
+                        String trackingNumber = (String) requestBody.get("trackingNumber");
+
+                        // ✅ productId를 Long 타입으로 변환 (예외 방지)
+                        Long productId;
+                        try {
+                                productId = Long.parseLong(requestBody.get("productId").toString());
+                        } catch (Exception e) {
+                                return ResponseEntity.badRequest()
+                                                .body(Collections.singletonMap("error", "🚨 올바른 상품 ID가 아닙니다."));
+                        }
+
+                        if (courier == null || courier.isEmpty() || trackingNumber == null
+                                        || trackingNumber.isEmpty()) {
+                                return ResponseEntity.badRequest()
+                                                .body(Collections.singletonMap("error", "🚨 택배사와 송장번호를 입력해야 합니다."));
+                        }
+
+                        productDeliveryService.updateInvoice(payId, productId, courier, trackingNumber);
+
+                        return ResponseEntity.ok("✅ 송장 정보 업데이트 성공");
+
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("🚨 " + e.getMessage());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("❌ 서버 오류: " + e.getMessage());
                 }
         }
 

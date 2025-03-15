@@ -527,9 +527,6 @@ async function updateInvoicesInDB(data) {
 }
 
 
-
-
-
 function getCourierCode(courierName) {
     const couriers = {
         "CJ대한통운": "kr.cjlogistics",

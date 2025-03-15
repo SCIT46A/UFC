@@ -25,7 +25,7 @@
                         <span class="count" th:text="${deliveryCompletedCount}">45</span>
                     </div>
                     <div class="status-card warning">
-                        <span>취소/교환 요청</span>
+                        <span>취소 요청</span>
                         <span class="count" th:text="${cancelExchangeCount}">3</span>
                     </div>
                 </div>
@@ -33,11 +33,9 @@
 
             <!-- Batch Actions -->
             <div class="batch-actions">
-                <button class="btn btn-secondary" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
-                <button class="btn btn-secondary" onclick="changeOrderStatus()">주문상태 변경</button>
-                <button class="btn btn-secondary" onclick="processSelectedOrders()">선택주문 처리</button>
-                <button class="btn btn-warning">취소요청 처리</button>
-                <button class="btn btn-warning">교환요청 처리</button>
+                <button class="btn btn-secondary" onclick="processSelectedOrders()">선택발주 처리</button>
+                <button class="btn btn-secondary" onclick="downloadOrderExcel()">주문 내역 다운로드</button>
+                <button class="btn btn-warning" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
             </div>
 
             <!-- Search Section -->
@@ -55,7 +53,6 @@
                         <option value="in_delivery">배송중</option>
                         <option value="delivery_completed">배송완료</option>
                         <option value="cancel_requested">취소요청</option>
-                        <option value="exchange_requested">교환요청</option>
                     </select>
                 </div>
                 <div class="search-row">
@@ -92,61 +89,25 @@
                 <button class="btn-secondary">조회항목 설정</button>
             </div>
             <div class="table-container">
-                <table class="order-table">
+                <table>
                     <thead>
                         <tr>
                             <th><input type="checkbox" id="selectAll"></th>
-                            <th>주문일자</th>
                             <th>주문번호</th>
-                            <th>주문자</th>
-                            <th>상품정보</th>
-                            <th>주문상태</th>
+                            <th>주문일자</th>
+                            <th>주문내역</th> <!-- 상품명, 상품 수량 -->
+                            <th>주문상태</th><!-- 결제완료, 취소요청, 취소   -->
+                            <th>고객명</th>
+                            <th>연락처</th>
+                            <th>주소</th>
+                            <th>택배사</th>
                             <th>송장번호</th>
                             <th>관리</th>
+                            <th>배송상태</th>
+                            <!-- 송장등록, 송장 수정, 송장등록 전, 취소요청이 들어오면 취소버튼튼 -->
                         </tr>
                     </thead>
-                    <tbody>
-                        <!-- 데이터가 있을 경우 -->
-                        <tr th:each="order : ${orders}" th:if="${not #lists.isEmpty(orders)}">
-                            <td><input type="checkbox" class="order-checkbox" th:value="${order.id}"></td>
-                            <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}">2024-02-16 15:30
-                            </td>
-                            <td th:text="${order.orderNumber}">ORDER-001</td>
-                            <td th:text="${order.customerName}">홍길동</td>
-                            <td th:text="${order.productInfo}">상품명 외 2건</td>
-                            <td>
-                                <span class="status-badge" th:classappend="${order.status == 'COMPLETED' ? 'completed' : 
-                                                    order.status == 'CANCELLED' ? 'cancelled' : 'pending'}"
-                                    th:text="${order.statusText}">배송준비중</span>
-                            </td>
-                            <td>
-                                <div class="invoice-input">
-                                    <input type="text" class="search-input" th:value="${order.trackingNumber}"
-                                        placeholder="송장번호 입력">
-                                    <button class="btn" onclick="updateTrackingNumber(this)">저장</button>
-                                </div>
-                            </td>
-                            <td>
-                                <button class="btn" onclick="viewOrderDetail(this)">상세</button>
-                                <button class="btn" onclick="updateDeliveryStatus(this)">배송상태변경</button>
-                            </td>
-                        </tr>
-
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${#lists.isEmpty(orders)}">
-                            <td colspan="8">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="order-table-body">
                     </tbody>
 
                 </table>
@@ -167,22 +128,12 @@
                 </div>
                 <div class="modal-body">
                     <div class="search-row">
-                        <label>택배사</label>
-                        <select class="search-input">
-                            <option value="">택배사 선택</option>
-                            <option value="cj">CJ대한통운</option>
-                            <option value="lotte">롯데택배</option>
-                            <option value="hanjin">한진택배</option>
-                        </select>
-                    </div>
-                    <div class="search-row">
-                        <label>송장번호</label>
-                        <textarea class="search-input" rows="4"
-                            placeholder="송장번호를 입력하세요 (여러 개인 경우 줄바꿈으로 구분)"></textarea>
+                        <label>엑셀 업로드</label>
+                        <input type="file" id="invoiceExcelUpload" accept=".xlsx">
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-primary" onclick="processBatchInvoice()">일괄등록</button>
+                    <button class="btn btn-primary" onclick="uploadInvoiceExcel()">업로드</button>
                     <button class="btn" onclick="closeBatchInvoiceModal()">취소</button>
                 </div>
             </div>
