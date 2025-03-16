@@ -10,7 +10,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.entity.product.ProductTagEntity;
+
 import java.util.Optional;
+
 
 @Repository
 public interface ProductTagRepository extends JpaRepository<ProductTagEntity, Long> {

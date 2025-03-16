@@ -14,10 +14,12 @@ import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+
 import app.scit46.ufc.repository.tag.ProductTagRepository;
 import app.scit46.ufc.entity.TagEntity;
 import app.scit46.ufc.repository.tag.TagRepository;
 import java.util.Optional;
+
 import java.util.Map;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -44,6 +46,8 @@ public class ProductService {
     private final CreatorService creatorService;
     private final TagService tagService;
     private final ItemRepository itemRepository;
+    private final ProductTagRepository productTagRepository;
+    private final TagRepository tagRepository;
 
     public ProductEntity saveProduct(ProductEntity product) {
         return productRepository.save(product);
@@ -52,8 +56,13 @@ public class ProductService {
     @Transactional
     public Long registProduct(GenerateProductDTO cpDTO) {
 
+        
+        // ImageUrlEntity image = entityManager.getReference(ImageUrlEntity.class, cpDTO.getImageId());
+
+
         // ImageUrlEntity image = entityManager.getReference(ImageUrlEntity.class,
         // cpDTO.getImageId());
+
         ImageUrlEntity image = imageUrlService.findByImageId(cpDTO.getImageId());
         image = imageUrlService.findImageById(image.getId());
 
@@ -61,13 +70,16 @@ public class ProductService {
         item.setName(cpDTO.getTitle());
         item.setDescription(cpDTO.getDescription());
 
-        if (image != null) {
+
+        if(image != null) {
+
             item.setPhoto(image);
         }
 
         item = itemRepository.save(item);
 
         ProductEntity product = ProductEntity.builder()
+
                 .item(item)
                 .price(cpDTO.getPrice())
                 .stockQuantity(cpDTO.getStock())
@@ -80,8 +92,7 @@ public class ProductService {
         return product.getProductId();
     }
 
-    private final ProductTagRepository productTagRepository;
-    private final TagRepository tagRepository;
+
 
     public List<Map<String, Object>> getProductsByCreator(Long creatorId) {
         List<Object[]> resultList = productRepository.findProductsByCreatorId(creatorId);

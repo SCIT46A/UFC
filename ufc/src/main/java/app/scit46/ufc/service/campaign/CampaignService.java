@@ -202,16 +202,21 @@ public class CampaignService {
 
         CreatorEntity creator = creatorService.findByOwnUser(user);
 
+
         if (campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()) {
+
             throw new RuntimeException("캠페인 수정 권한이 없습니다.");
         }
 
         ImageUrlEntity image = null;
         // 이미지가 변동이 있을 때만 이미지 업데이트
-        if (ucDTO.getImageId() != null) {
+
+        if(ucDTO.getImageId() != null){
             // 이미 저장처리된 이미지 아이디 조회
             image = imageService.findByImageId(ucDTO.getImageId());
-        } else {
+        }
+        else{
+
             image = imageService.findByImageId(campaign.getPhoto().getImageId());
         }
 
@@ -491,11 +496,13 @@ public class CampaignService {
             }
             List<RewardFundingDTO> rewardItemList = new ArrayList<>();
             for (RewardItemEntity rewardItem : reward.getRewardItems()) {
-                RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
-                        .name(rewardItem.getItem().getName())
-                        .amount(rewardItem.getQuantity())
-                        .build();
-                rewardItemList.add(rewardItemTmp);
+
+              RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
+                      .name(rewardItem.getItem().getName())
+                      .amount(rewardItem.getQuantity())
+                      .build();
+              rewardItemList.add(rewardItemTmp);
+
             }
             RewardListDTO rewardListDTO = RewardListDTO.builder()
                     .name(name)

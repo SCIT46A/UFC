@@ -27,7 +27,9 @@ public class CreatorDTO {
     private String intro;
     private ImageUrlDTO businessCert; // ✅ PhotoDTO 포함
     private String bRegistNumber;
+
     private LocalDate bRegistDate;
+
     private String bName;
     private String companyName;
     private String address;

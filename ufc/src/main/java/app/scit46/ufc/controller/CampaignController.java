@@ -107,6 +107,7 @@ public class CampaignController {
                 ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                 : DEFAULT_IMAGE;
 
+
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
         List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
@@ -334,7 +335,9 @@ public class CampaignController {
         String rewardTitle = campaign.getTitle();
 
         log.info("rewardTmp: {}", rewards);
+
         if (rewards != null && !rewards.isEmpty()) {
+
             log.info("reward list size: {}", rewards.size());
             log.info("reward list contents: {}", rewards);
         }
