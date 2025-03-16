@@ -25,6 +25,45 @@ $(function () {
         }
     });
 
+    // 알림 등록
+    $.ajax({
+        url: "/api/alert/list",
+        method: "GET",
+        success: function (response) {
+            response.forEach(alert => {
+                const alertTag = `
+                <a href="${alert.linkUrl}">
+                    <div class="al-in-box-warp-pe">
+                        <div>
+                            <div
+                                    class="al-in-box-warp-pe-img"
+                            ><img src="${alert.imageUrl}" alt="alert image"></div>
+                        </div>
+
+                        <div class="al-in-box-warp-pe-content">
+                            <div
+                                    class="al-in-box-warp-pe-content-box"
+                            >
+                                <div
+                                        class="al-in-box-warp-pe-content-box-top"
+                                >
+                                    ${alert.content}
+                                </div>
+                            </div>
+                            <p class="al-in-box-warp-pe-content-box-bottom">${alert.alertDate}</p>
+                        </div>
+                    </div>          
+                </a>
+                `;
+                console.log(alert);
+                $(".modal-login-in").append(alertTag);
+            });
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error); // 에러 발생 시 콘솔에 출력
+        }
+    });
+
 
     //  로그인정보가 보고 나타내기
 

@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
-import app.scit46.ufc.entity.AlertTargetEntity;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.ImageUrlEntity;
 import app.scit46.ufc.entity.MaterialDonationEntity;
@@ -88,10 +87,6 @@ public class CampaignEntity {
 
   @OneToMany(mappedBy = "campaign", fetch = FetchType.LAZY)
   private List<CampaignTagEntity> campaignTags;
-
-  // OneToMany: AlertTarget.target_campaign 참조
-  @OneToMany(mappedBy = "targetCampaign", fetch = FetchType.LAZY)
-  private List<AlertTargetEntity> alertTargets;
 
   public static CampaignEntity toEntity(CampaignDTO dto) {
     return CampaignEntity.builder()
