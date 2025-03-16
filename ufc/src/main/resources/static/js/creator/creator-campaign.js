@@ -17,22 +17,260 @@ document.getElementById("create_campaign").addEventListener("click", function ()
     window.location.href = "/campaign/intro"; // ✅ 서버 경로 기준으로 이동
 });
 
+// 누적캠페인 숫자 변경
+document.addEventListener("DOMContentLoaded", function () {
+    fetch()
+        .then(Response => Response.json())
+        .then(totalCount => {
+            const totalCampaignCountElement = document.getElementById("total-campaign-count");
+            totalCampaignCountElement.textContent = `누적 캠페인: ${totalCount}개`;
+        })
+        .catch(error => {
+            console.error("누적 캠페인 수 조회 실패:", error);
+        });
+});
 
-// 더보기 버튼 기능
-document.addEventListener("DOMContentLoaded", function() {
-    const showMoreBtn = document.querySelector(".show-more-btn");
-    const hiddenContent = document.querySelector(".hidden-content");
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 진행 중인 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/active", "#club-detail-active-container", "#tp-show-more-btn");
 
-    showMoreBtn.addEventListener("click", function() {
-        if (hiddenContent.style.display === "none" || hiddenContent.style.display === ""){
-            hiddenContent.style.display = "block";
-            showMoreBtn.querySelector("div").textContent = "접기";
-        } else {
-            hiddenContent.style.display = "none";
-            showMoreBtn.querySelector("div").textContent = "더보기";
+    // ✅ 종료된 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/finished", "#finished-events-container", "#show-more-btn");
+
+    // ✅ 예정된 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/rejected", "#appointed-events-container", "#appointed-more-btn");
+});
+
+// ✅ 캠페인 데이터 로드 함수
+function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
+    $.ajax({
+        url: `${url}?offset=${offset}&limit=${limit}`,  // ✅ offset과 limit 추가
+        method: "GET",
+        success: (response) => {
+            console.log(`📌 캠페인 목록 (${url}):`, response);
+            let htmlResult = "";
+
+            if (response.length > 0) {
+                response.forEach((data) => {
+                    htmlResult += `
+                        <div class="main-bo-in-bo-pe" data-id="${data.originalId}" data-type="${data.type}">
+                            <div class="main-bo-in-bo-pe-box">
+                                <a href="/campaign/${data.originalId}" class="main-bo-in-bo-pe-box-a">
+                                    <div class="main-bo-in-bo-pe-box-a-img">
+                                        <img alt="" src="${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
+                                        <div class="main-like-btn ${data.isLiked ? 'liked' : ''}">
+                                            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
+                                                      fill="black" fill-opacity="0.25" stroke="white" stroke-width="1.6"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <div class="main-bo-in-bo-pe-box-a-title">
+                                        <div class="main-bo-in-bo-pe-box-a-title-top">
+                                            <div class="main-bo-in-bo-pe-box-a-title-top-se">
+                                                <div>${data.sellerName}</div>
+                                            </div>
+                                            <div class="main-bo-in-bo-pe-box-a-title-mi">
+                                                <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
+                                                <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
+                                            </div>
+                                        </div>
+                                        <div class="main-funding">
+                                            <div class="main-funding-top">
+                                                <div>
+                                                    <span class="main-funding-top-per">${data.donationPercentage || 0}%</span>
+                                                    <span class="main-funding-top-pri">${data.donatedQuantity || 0}개 모임</span>
+                                                </div>
+                                                <em>${data.remainingDays || 0}일 남음</em>
+                                            </div>
+                                            <div class="main-funding-bo" data-percentage="${data.donationPercentage || 0}">
+                                                <div class="progress-bar" style="width: ${data.donationPercentage || 0}%;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // ✅ 더보기 버튼 표시 여부
+                if (response.length < limit) {
+                    $(moreBtnId).hide();
+                } else {
+                    $(moreBtnId).show().off("click").on("click", function () {
+                        fetchCampaigns(url, containerId, moreBtnId, offset + limit);
+                    });
+                }
+            } else {
+                htmlResult = `
+                        <div></div>                        
+                        <div style="
+                            text-align: center;
+                            font-size: 1.5rem;
+                            color: #888;
+                            margin: 30px 0;
+                            opacity: 0.6;
+                        ">
+                            캠페인이 존재하지 않습니다!
+                        </div>
+                        <div></div>`;
+                $(moreBtnId).hide();
+            }
+
+            $(containerId).append(htmlResult);
+        },
+        error: (error) => {
+            console.error(`❌ 캠페인 불러오기 실패 (${url}):`, error);
+            $(containerId).html("<div>캠페인 목록을 불러오는 데 실패했습니다.</div>");
         }
     });
-});
+}
+
+// // 거절된 캠페인
+// document.addEventListener("DOMContentLoaded", function () {
+//     // 💔 거절당한 캠페인 목록 불러오기
+//     $.ajax({
+//         url: `/creator/campaign/rejected`,
+//         method: "GET",
+//         success: (response) => {
+//             console.log("📌 거절당한 캠페인 목록:", response);
+//             let htmlResult = "";
+
+//             if (response.length > 0) {
+//                 response.forEach((data) => {
+//                     htmlResult += `
+//                         <div class="main-bo-in-bo-pe" data-id="${data.campaignId}">
+//                             <div class="main-bo-in-bo-pe-box">
+//                                 <a href="/campaign/${data.campaignId}" class="main-bo-in-bo-pe-box-a">
+//                                     <div class="main-bo-in-bo-pe-box-a-img">
+//                                         <img alt="" src="/api/image/${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
+//                                     </div>
+//                                     <div class="main-bo-in-bo-pe-box-a-title">
+//                                         <div class="main-bo-in-bo-pe-box-a-title-mi">
+//                                             <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
+//                                             <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
+//                                         </div>
+//                                     </div>
+//                                 </a>
+//                             </div>
+//                         </div>
+//                     `;
+//                 });
+//             } else {
+//                 htmlResult = "<div>거절당한 캠페인이 없습니다!</div>";
+//             }
+
+//             $("#rejected-events-container").html(htmlResult);
+//         },
+//         error: (error) => {
+//             console.error("❌ 거절당한 캠페인 불러오기 실패:", error);
+
+//             // 🔐 권한 오류 처리
+//             if (error.status === 403) {
+//                 $("#rejected-events-container").html("<div>권한이 없는 캠페인입니다.</div>");
+//             } else {
+//                 $("#rejected-events-container").html("<div>거절당한 캠페인 목록을 불러오는 데 실패했습니다.</div>");
+//             }
+//         }
+//     });
+// });
+
+//             if (campaigns.length === 0) {
+//                 campaignContainer.innerHTML = "<p>현재 진행 중인 캠페인이 없습니다.</p>";
+//                 return;
+//             }
+
+//             campaigns.forEach(campaign => {
+//                 const div = document.createElement("div");
+//                 div.classList.add("campaign-item");
+//                 div.innerHTML = `
+                
+//                 `;
+//                 campaignContainer.appendChild(div);
+//             });
+//         })
+//         .catch(error => {
+//             console.error("캠페인 불러오기 실패", error);
+//         });
+// });
+
+
+// 더보기 버튼 기능
+let currentPage = 1;    // 현재 페이지 번호
+const itemsPerPage = 3; // 한번에 로드할 데이터 수
+let totalItems = 20;    // 전체 데이터 개수 (나중에 바꿀 예정)
+
+function loadMore() {
+    const itemContainer = document.getElementById("club-detail-active-container");
+
+    // 페이지에 해당하는 데이터 가져오기
+    const start = (currentPage -1) * itemsPerPage + 1;
+    const end = Math.min(start + itemsPerPage - 1, totalItems);
+
+    // 더보기 버튼 업데이트
+    const loadMoreBtn = document.getElementById("toggleBtn");
+    loadMoreBtn.textContent = `더보기 (${end}/${totalItems})`;
+
+    // 데이터 추가 표시
+    for (let i = start; i <= end; i++) {
+        const item = document.createElement("div");
+        item.textContent = `${i}`;
+        itemContainer.appendChild(item);
+    }
+
+    // 모든 데이터를 다 불러왔을 경우 버튼 숨기기
+    if (end >= totalItems) {
+        loadMoreBtn.style.display = "none";
+    }
+
+    currentPage++;
+}
+
+// 초기 데이터 로딩
+loadMore();
+
+
+
+
+
+// 실제로 데이터 받아오고 아래 로직으로 실행할 예정
+// fetch로 실제 데이터 연동해서 가져오기
+// let currentPage = 1;
+// const itemsPerPage = 3;
+
+// async function loadMore() {
+//     try {
+//         const response = await fetch(`/api/items?page=${currentPage}&size=${itemsPerPage}`);
+//         const data = await response.json();
+
+//         const itemContainer = document.getElementById("contentList");
+//         const loadMoreBtn = document.getElementById("toggleBtn");
+
+//         data.items.forEach((item, index) => {
+//             const div = document.createElement("div");
+//             div.textContent = `아이템 ${item.name} (${index + 1})`;
+//             itemContainer.appendChild(div);
+//         });
+
+//         loadMoreBtn.textContent = `더보기 (${itemContainer.childElementCount}/${data.totalItems})`;
+
+//         if (itemContainer.childElementCount >= data.totalItems) {
+//             loadMoreBtn.style.display = "none";
+//         }
+
+//         currentPage++;  // 페이지 증가
+//     } catch (error) {
+//         console.error("❌ 데이터 로드 실패:", error);
+//         alert("데이터를 가져오는 중 오류가 발생했습니다.");
+//     }
+// }
+
+// // 초기 데이터 로딩
+// loadMore();
+
+
+
 
 /*
 document.addEventListener("DOMContentLoaded", function() {

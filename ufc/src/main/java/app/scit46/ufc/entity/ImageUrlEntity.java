@@ -66,6 +66,9 @@ public class ImageUrlEntity {
     private List<CampaignEntity> campaigns;
 
     public static ImageUrlEntity toEntity(ImageUrlDTO dto) {
+        if (dto == null || dto.getImageId() == null) { // ✅ `null` 체크 추가
+            return null;
+        }
         return builder()
                 // .id(dto.getId()) // 기본값 자동 생성이므로 주석처리
                 .imageId(dto.getImageId())

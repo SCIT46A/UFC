@@ -19,11 +19,14 @@ import app.scit46.ufc.repository.ProductRepository;
 import app.scit46.ufc.repository.SearchRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import app.scit46.ufc.repository.tag.TagRepository;
+import app.scit46.ufc.service.cloudflare.ImageService;
 import app.scit46.ufc.util.HangulUtils;
 import app.scit46.ufc.util.SimilarityUtil;
 
 @Service
 public class SearchService {
+
+    private final ImageService imageService;
 
     @Autowired
     private SearchRepository searchRepository;
@@ -39,6 +42,10 @@ public class SearchService {
 
     @Autowired
     private LikeRepository likeRepository;
+
+    SearchService(ImageService imageService) {
+        this.imageService = imageService;
+    }
 
     public List<SearchDTO> search_target(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -102,38 +109,57 @@ public class SearchService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-//    ---------------------------------------------------------------------------------
-
+    // ---------------------------------------------------------------------------------
 
     @Transactional(readOnly = true)
     public List<SearchResultDTO> searchAll(String keyword,
-                                           String sortType,
-                                           String donationFilter,
-                                           List<String> tagFilters,
-                                           Long userLoginId) {
+            String sortType,
+            String donationFilter,
+            List<String> tagFilters,
+            Long userLoginId) {
         List<SearchResultDTO> results = searchRepository.findSearchResults(keyword, userLoginId);
         results.sort(Comparator.comparingInt(dto -> SimilarityUtil.computeDistance(dto.getTitle(), keyword)));
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
 
     @Transactional(readOnly = true)
+    public List<SearchResultDTO> searchAllActiveByCreator(
+            Long creatorId) {
+        List<SearchResultDTO> activeResults = searchRepository.findActiveCampaignsByCreatorId(creatorId);
+        activeResults.forEach(result -> result.setImageId(imageService.getImageUrl(result.getImageId())));
+        return activeResults;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> searchAllFinishedByCreator(
+            Long creatorId) {
+        List<SearchResultDTO> finishedResults = searchRepository.findFinishedCampaignsByCreatorId(creatorId);
+        finishedResults.forEach(result -> result.setImageId(imageService.getImageUrl(result.getImageId())));
+        return finishedResults;
+    }
+
+    @Transactional(readOnly = true)
+    public List<SearchResultDTO> searchAllAppointedByCreator(
+            Long creatorId) {
+        List<SearchResultDTO> AppointedResults = searchRepository.findAppointedCampaignsByCreatorId(creatorId);
+        AppointedResults.forEach(result -> result.setImageId(imageService.getImageUrl(result.getImageId())));
+        return AppointedResults;
+    }
+
+    @Transactional(readOnly = true)
     public List<SearchResultDTO> getOngoingCampaigns(String sortType,
-                                                     String donationFilter,
-                                                     List<String> tagFilters,
-                                                     Long userLoginId) {
+            String donationFilter,
+            List<String> tagFilters,
+            Long userLoginId) {
         List<SearchResultDTO> results = searchRepository.findOngoingCampaigns(userLoginId);
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
 
     @Transactional(readOnly = true)
     public List<SearchResultDTO> getUpcomingCampaigns(String sortType,
-                                                      String donationFilter,
-                                                      List<String> tagFilters,
-                                                      Long userLoginId) {
+            String donationFilter,
+            List<String> tagFilters,
+            Long userLoginId) {
         List<SearchResultDTO> results = searchRepository.findUpcomingCampaigns(userLoginId);
         return applyFiltersAndSorting(results, sortType, donationFilter, tagFilters);
     }
@@ -145,12 +171,12 @@ public class SearchService {
     }
 
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> findTop10CampaignsByLikes(Long userLoginId){
+    public List<SearchResultDTO> findTop10CampaignsByLikes(Long userLoginId) {
         return searchRepository.findTop10CampaignsByLikes(userLoginId);
     }
 
     @Transactional(readOnly = true)
-    public List<SearchResultDTO> findTop10ProductsByLikes(Long userLoginId){
+    public List<SearchResultDTO> findTop10ProductsByLikes(Long userLoginId) {
         return searchRepository.findTop10ProductsByLikes(userLoginId);
     }
 
@@ -160,8 +186,8 @@ public class SearchService {
         List<IntroPageCampaignDTO> rows = campaignRepository.findCampaignGoalRows(); // 쿼리에서 LIMIT을 제거
 
         // 캠페인 ID 기준 그룹화
-        Map<Long, List<IntroPageCampaignDTO>> grouped =
-                rows.stream().collect(Collectors.groupingBy(IntroPageCampaignDTO::getCampaignId));
+        Map<Long, List<IntroPageCampaignDTO>> grouped = rows.stream()
+                .collect(Collectors.groupingBy(IntroPageCampaignDTO::getCampaignId));
 
         // 그룹별로 최종 DTO로 변환
         List<CampaignWithGoalsDTO> allCampaigns = new ArrayList<>();
@@ -176,8 +202,7 @@ public class SearchService {
                             row.getRequiredQuantity() == null ? 0 : row.getRequiredQuantity(),
                             row.getDonatedQuantity() == null ? 0 : row.getDonatedQuantity(),
                             row.getDonationPercentage() == null ? 0.0 : row.getDonationPercentage(),
-                            row.getTotalDonors() == null ? 0 : row.getTotalDonors()
-                    ))
+                            row.getTotalDonors() == null ? 0 : row.getTotalDonors()))
                     .collect(Collectors.toList());
 
             CampaignWithGoalsDTO campaignDto = new CampaignWithGoalsDTO();
@@ -208,24 +233,6 @@ public class SearchService {
         return result;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * 공통 필터 및 정렬 적용 메서드
      * - tagFilters: DTO의 tags(콤마 구분 문자열)를 분리하여 포함 여부 확인
@@ -233,9 +240,9 @@ public class SearchService {
      * - sortType: 최신(latest), 마감일(deadline), 좋아요(like) 등
      */
     private List<SearchResultDTO> applyFiltersAndSorting(List<SearchResultDTO> results,
-                                                         String sortType,
-                                                         String donationFilter,
-                                                         List<String> tagFilters) {
+            String sortType,
+            String donationFilter,
+            List<String> tagFilters) {
         // 1. 태그 필터 적용 (이미 List<String> 타입)
         if (tagFilters != null && !tagFilters.isEmpty()) {
             results = results.stream()
@@ -255,10 +262,14 @@ public class SearchService {
                         if ("campaign".equals(dto.getType()) && dto.getDonationPercentage() != null) {
                             double perc = dto.getDonationPercentage();
                             switch (donationFilter) {
-                                case "below50": return perc <= 50;
-                                case "between51to100": return perc > 50 && perc < 100;
-                                case "above100": return perc >= 100;
-                                default: return true;
+                                case "below50":
+                                    return perc <= 50;
+                                case "between51to100":
+                                    return perc > 50 && perc < 100;
+                                case "above100":
+                                    return perc >= 100;
+                                default:
+                                    return true;
                             }
                         }
                         // 제품은 기부 퍼센트 필터 적용 대상이 아님
@@ -283,7 +294,7 @@ public class SearchService {
                     break;
                 case "like":
                     results.sort(Comparator.comparing(
-                                    (SearchResultDTO dto) -> dto.getLikes() == null ? 0 : dto.getLikes())
+                            (SearchResultDTO dto) -> dto.getLikes() == null ? 0 : dto.getLikes())
                             .reversed());
                     break;
                 default:
@@ -292,8 +303,5 @@ public class SearchService {
         }
         return results;
     }
-
-
-
 
 }
