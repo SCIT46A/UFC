@@ -292,6 +292,17 @@ public class CreatorService {
         }
     }
 
+
+
+    public List<CreatorDTO> getCreatorsByCreatorId(Long creatorId) {
+        return creatorRepository.findByCreatorId(creatorId).stream()
+                .map(CreatorDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+}
+
+
+
     /** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
     // public List<CampaignDTO> getCreatorCampaigns(String userId) {
     // UserEntity user = userService.findUserByIdentity(userId);

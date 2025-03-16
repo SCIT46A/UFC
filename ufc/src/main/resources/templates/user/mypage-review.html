@@ -92,7 +92,7 @@
                               <div
                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                               >
-                                -
+                                <span th:text="${creatorLikes}"></span>
                               </div>
                             </div>
                             <div
@@ -121,7 +121,7 @@
                               <div
                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                               >
-                                -
+                                <span th:text="${donationCount}"></span>
                               </div>
                             </div>
                           </div>
@@ -166,7 +166,7 @@
                           <a
                             href="/src/main/resources/templates/user/mypage-like.html"
                             th:href="@{/user/like}"
-                            >좋아요 누른 캠페인</a
+                            >좋아요</a
                           >
                         </div>
                       </span>
@@ -224,13 +224,7 @@
                     <div class="content-box-in-user-btn report-menu">
                       <div class="content-box-in-user-btn-in">
                         <div class="content-box-in-user-btn-in-warp">
-                          <svg viewBox="0 0 48 48">
-                            <path
-                              fill-rule="evenodd"
-                              clip-rule="evenodd"
-                              d="M6.4 19C8.83 19 10.8 20.97 10.8 23.4C10.8 25.83 8.83 27.8 6.4 27.8C3.97 27.8 2 25.83 2 23.4C2 20.97 3.97 19 6.4 19ZM24.0001 19C26.4301 19 28.4001 20.97 28.4001 23.4C28.4001 25.83 26.4301 27.8 24.0001 27.8C21.5701 27.8 19.6001 25.83 19.6001 23.4C19.6001 20.97 21.5701 19 24.0001 19ZM45.9997 23.4C45.9997 20.97 44.0307 19 41.5997 19C39.1697 19 37.2007 20.97 37.2007 23.4C37.2007 25.83 39.1697 27.8 41.5997 27.8C44.0307 27.8 45.9997 25.83 45.9997 23.4Z"
-                            ></path>
-                          </svg>
+                          
                         </div>
                       </div>
                     </div>

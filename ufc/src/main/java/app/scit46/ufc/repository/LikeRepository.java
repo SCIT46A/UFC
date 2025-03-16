@@ -1,12 +1,15 @@
 package app.scit46.ufc.repository;
 
 import java.util.List;
-import app.scit46.ufc.entity.CreatorEntity;
-import app.scit46.ufc.entity.UserEntity;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.LikeEntity;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
 
@@ -25,5 +28,9 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
   
     LikeEntity findByUserAndCreator(UserEntity user, CreatorEntity creator);
 
+    Page<LikeEntity> findByUser_UserId(Long userId, Pageable pageable);
+
+
+    List<LikeEntity> findByCampaign_CampaignId(Long campaignId);
 
 }

@@ -34,9 +34,21 @@ public class CreatorDTO {
 
     @JsonProperty
     private Boolean creatorStatus;
-
+  
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate bRegistDate;
+
+//  메시지 부분 사용하기 위해 제작
+// 새 생성자: bName와 proImgUrl 값만 필요할 경우 (proImgUrl은 imageId로 사용)
+public CreatorDTO(Long creatorId, String bName, String proImgUrl) {
+    this.creatorId = creatorId;
+    this.bName = bName;
+    // proImgUrl 문자열을 ImageUrlDTO의 imageId에 대입하여 생성
+    this.proImgUrl = ImageUrlDTO.builder()
+            .imageId(proImgUrl)
+            .build();
+}
+
 
     public static CreatorDTO toDTO(CreatorEntity entity) {
         return CreatorDTO.builder()
