@@ -151,6 +151,7 @@ public class LikeService {
     public List<ProductEntity> findProductLikeList(Long userId) {
         List<LikeEntity> likeList = likeRepository.findByUser_UserId(userId);
         return likeList.stream().map(LikeEntity::getProduct).collect(Collectors.toList());
+    }
       
     public List<LikeDTO> getLikesByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)

@@ -36,5 +36,4 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
 
     Page<LikeEntity> findByUser_UserId(Long userId, Pageable pageable);
 
-    List<LikeEntity> findByCampaign_CampaignId(Long campaignId);
 }
