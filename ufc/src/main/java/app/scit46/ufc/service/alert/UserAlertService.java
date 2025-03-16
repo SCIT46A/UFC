@@ -10,6 +10,7 @@ import app.scit46.ufc.service.LikeService;
 
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,31 +38,43 @@ public class UserAlertService {
 
     // 사용자가 받은 알림 조회
     public List<UserAlertDTO> getUserAlertList(Long userId) {
-        return userAlertRepository.findByUser_UserIdOrderByCreatedTimeDesc(userId).stream().map(UserAlertDTO::toDTO).collect(Collectors.toList());
+        return userAlertRepository.findByUser_UserIdOrderByUserAlertIdDesc(userId).stream().map(UserAlertDTO::toDTO).collect(Collectors.toList());
     }
 
     // 작성된 알림과 사용자 아이디를 받아서 알림 전송
     public void sendAlert(String alertType, AlertEntity alert, List<UserEntity> users) {
-        switch(alertType){
-            case "Notice":
-                break;
-            case "Campaign":
-                break;
-            case "CampaignBoard":
-                break;
-            case "Badge":
-                break;
-            case "MaterialDonation":
-                break;
-            case "Product":
-                break;
-            case "RewardDelivery":
-                break;
-            case "ProductDelivery":
-                break;
-            default:
-                throw new IllegalArgumentException("지원하지 않는 알림 타입입니다.");
-        }
+        // switch(alertType){
+        //     // 공지사항 = 전체유저
+        //     case "Notice":
+        //         break;
+        //     // 캠페인 등록 = 관리자
+        //     case "cRegist":
+        //         break;
+        //     // 캠페인 승인 = 창작자, 관심유저
+        //     case "cAccept":
+        //         break;
+        //     // 캠페인 거절 = 창작자, 관심유저
+        //     case "cDecline":
+        //         break;
+        //     // 업적 달성 = 전체유저
+        //     case "Badge":
+        //         break;
+        //     // 기부 등록 = 창작자
+        //     case "mRegist":
+        //         break;
+        //     // 기부 승인 = 참여유저
+        //     case "mAccept":
+        //         break;
+        //     // 기부 거절 = 참여유저
+        //     case "mDecline":
+        //         break;
+        //     // 상품 등록 = 관심유저
+        //     case "pRegist":
+        //         break;
+        //     // 예외 처리
+        //     default:
+        //         throw new IllegalArgumentException("지원하지 않는 알림 타입입니다.");
+        // }
         
         // 알림 저장
         saveAlert(alert, users);

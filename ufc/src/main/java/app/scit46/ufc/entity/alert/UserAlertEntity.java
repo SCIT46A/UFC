@@ -27,7 +27,7 @@ import lombok.ToString;
 @ToString
 @Builder
 @Entity
-@Table(name = "UserAlert")
+@Table(name = "UserAlerts")
 public class UserAlertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
