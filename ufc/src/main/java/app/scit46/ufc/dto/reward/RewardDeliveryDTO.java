@@ -21,6 +21,22 @@ public class RewardDeliveryDTO {
     // 추가된 amount 필드
     private Integer amount;
 
+    public String getCourierId() {
+        if (invoice != null && invoice.contains("#")) {
+            String[] parts = invoice.split("#");
+            return parts.length > 0 ? parts[0] : "";
+        }
+        return "";
+    }
+
+    public String getTrackingNumber() {
+        if (invoice != null && invoice.contains("#")) {
+            String[] parts = invoice.split("#");
+            return parts.length > 1 ? parts[1] : "";
+        }
+        return "";
+    }
+
     public static RewardDeliveryDTO toDTO(RewardDeliveryEntity entity) {
         if (entity == null)
             return null;

@@ -1,6 +1,8 @@
 package app.scit46.ufc.controller;
 
 
+import java.util.HashMap;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -126,7 +128,6 @@ public class UserController {
     // }
 
 
-
         @GetMapping("/review")
         public String review (HttpServletRequest request,
                 Model model,
@@ -181,46 +182,44 @@ public class UserController {
                         model.addAttribute("user", user);
                         model.addAttribute("reviewCount", paging.getTotalElements());
 
-                    } catch (DBNotFoundException e) {
-                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-                    }
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-            return "user/mypage-review";
         }
+        return "user/mypage-review";
+    }
 
+    // List<CampaignEntity> campaign = donations.stream()
+    // .map(donation ->
+    // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+    // .flatMap(List::stream)
+    // .collect(Collectors.toList());
 
-
-        // List<CampaignEntity> campaign = donations.stream()
-        // .map(donation ->
-        // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
-        // .flatMap(List::stream)
-        // .collect(Collectors.toList());
-
-
-        // 유저 정보 수정 창 조회
-        @GetMapping("/edit")
-        public String edit (HttpServletRequest request, Model model){
-            HttpSession session = request.getSession(false); // 세션 가져오기
-            Long userId = null; // 기본값 설정
-            if (session != null) {
-                userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-                if (userId != null) {
-                    try {
-                        // 사용자 정보를 데이터베이스에서 조회
-                        UserDTO user = userService.readUserById(userId);
-                        List<String> imageUrls = new ArrayList<>();
-                        imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
-                        model.addAttribute("user", user);
-                        model.addAttribute("imageUrls", imageUrls);
-                    } catch (DBNotFoundException e) {
-                        // 사용자 정보를 찾을 수 없는 경우 처리
-                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-                    }
+    // 유저 정보 수정 창 조회
+    @GetMapping("/edit")
+    public String edit(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long userId = null; // 기본값 설정
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    List<String> imageUrls = new ArrayList<>();
+                    imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
+                    model.addAttribute("user", user);
+                    model.addAttribute("imageUrls", imageUrls);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-            return "user/mypage-profile-edit";
         }
+        return "user/mypage-profile-edit";
+    }
+
 
        
         
@@ -325,11 +324,19 @@ public class UserController {
                     } catch (DBNotFoundException e) {
                         model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                     }
+                    model.addAttribute("imageUrls", imageUrls);
+                    model.addAttribute("campaigns", campaigns);
+                    model.addAttribute("donationCount", materialDonations.size());
+                    model.addAttribute("materialDonations", materialDonations);
+                    model.addAttribute("user", user);
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-
-            return "user/mypage-donation";
         }
+
+        return "user/mypage-donation";
+    }
 
 
 
@@ -621,76 +628,104 @@ public class UserController {
 
 
 
+    // 충돌로 인한 주석처리 - 필요시 다시 검토 필요
+    // @PostMapping("/userUpdate")
+    // public String postMethodName(
+    // HttpServletRequest request,
+    // @ModelAttribute UserDTO userDTO,
+    // RedirectAttributes rttr
+    // ) {
+    // log.info(userDTO.toString());
+    // String oauthId = request.getUserPrincipal().getName();
+    // UserDTO user = UserDTO.toDTO(userService.findUserByIdentity(oauthId));
+    // userDTO.setUserId(user.getUserId());
+    // userService.userUpdate(userDTO);
+    // log.info(user.toString());
+    // return "redirect:/user";
+    // }
 
+    @GetMapping("/badge")
+    public String badge() {
+        return "user/mypage-badge";
+    }
 
-        // 로그인 관련
+    @GetMapping("/donation/detail")
+    public String alarmDetail() {
+        return "user/mypage-donation-detail";
+    }
 
-        @GetMapping("/login")
-        public String loginPage(@RequestParam(value = "redirectUrl", required = false) String redirectUrl, HttpSession session, Model model) {
-            if (redirectUrl != null && !redirectUrl.isEmpty()) {
-                session.setAttribute("redirectUrl", redirectUrl);
-            }
-            return "login/login";
+    // 로그인 관련
+
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "redirectUrl", required = false) String redirectUrl,
+            HttpSession session, Model model) {
+        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+            session.setAttribute("redirectUrl", redirectUrl);
         }
+        return "login/login";
+    }
 
+    @GetMapping("/join")
+    public String joinDetailPage(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
 
-        @GetMapping("/join")
-        public String joinDetailPage (HttpServletRequest request, Model model){
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-
-                // 세션에서 카카오 정보 꺼내기
-                String identity = (String) session.getAttribute("identity");
-                String nickname = (String) session.getAttribute("nickname");
-                String email = (String) session.getAttribute("email");
-                String find = (String) session.getAttribute("find");
-
-                // 모델에 담아 뷰로 전달
-                model.addAttribute("identity", identity);
-                model.addAttribute("nickname", nickname);
-                model.addAttribute("email", email);
-                model.addAttribute("find", find);
-            }
-            return "/login/joindetail";
-        }
-
-        @PostMapping("/joinProc")
-        public String joinDetailSubmit (HttpServletRequest request,@RequestParam("check") int check,
-        @RequestParam("address") String address,
-        @RequestParam("phone") String phone,
-        @RequestParam("intro") String intro){
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                // 세션이 없으면 에러 처리
-                return "redirect:/error";
-            }
-            String kakaoId = (String) session.getAttribute("identity");
+            // 세션에서 카카오 정보 꺼내기
+            String identity = (String) session.getAttribute("identity");
             String nickname = (String) session.getAttribute("nickname");
             String email = (String) session.getAttribute("email");
             String find = (String) session.getAttribute("find");
 
-            // DB 저장 (UserDTO 만들거나 직접)
-            UserDTO userDTO = new UserDTO();
-            userDTO.setOauthId(kakaoId);
-            userDTO.setUserName(nickname);
-            userDTO.setEmail(email);
-            userDTO.setLoginType(find);
-            userDTO.setIsMarketed(check);
-            userDTO.setUserAddress(address);
-            userDTO.setPhoneNumber(phone);
-            userDTO.setIntro(intro);
 
-            // userService.add(...) 저장
-            UserEntity savedUser = userService.saveUser(userDTO);
+            // 모델에 담아 뷰로 전달
+            model.addAttribute("identity", identity);
+            model.addAttribute("nickname", nickname);
+            model.addAttribute("email", email);
+            model.addAttribute("find", find);
 
-            // 가입 완료 후, 세션에 로그인 정보 저장
-            session.setAttribute("loginUserId", savedUser.getUserId());
-
-            chatRoomService.createChatRoom(savedUser.getUserId(), 0L);
-
-            // 메인 페이지로 리다이렉트
-            return "redirect:/";
         }
+        return "/login/joindetail";
+    }
 
+    @PostMapping("/joinProc")
+    public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check,
+            @RequestParam("address") String address,
+            @RequestParam("phone") String phone,
+            @RequestParam("intro") String intro) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            // 세션이 없으면 에러 처리
+            return "redirect:/error";
+        }
+        String kakaoId = (String) session.getAttribute("identity");
+        String nickname = (String) session.getAttribute("nickname");
+        String email = (String) session.getAttribute("email");
+        String find = (String) session.getAttribute("find");
+
+        // DB 저장 (UserDTO 만들거나 직접)
+        UserDTO userDTO = new UserDTO();
+        userDTO.setOauthId(kakaoId);
+        userDTO.setUserName(nickname);
+        userDTO.setEmail(email);
+        userDTO.setLoginType(find);
+        userDTO.setIsMarketed(check);
+        userDTO.setUserAddress(address);
+        userDTO.setPhoneNumber(phone);
+        userDTO.setIntro(intro);
+
+        // userService.add(...) 저장
+        UserEntity savedUser = userService.saveUser(userDTO);
+
+        // 가입 완료 후, 세션에 로그인 정보 저장
+        session.setAttribute("loginUserId", savedUser.getUserId());
+
+        chatRoomService.createChatRoom(savedUser.getUserId(), 0L);
+
+        // 메인 페이지로 리다이렉트
+        return "redirect:/";
+
+        // 메인 페이지로 리다이렉트
+        return "redirect:/";
+    }
 
 }

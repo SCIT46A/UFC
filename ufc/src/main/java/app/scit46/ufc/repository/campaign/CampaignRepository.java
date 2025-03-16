@@ -34,6 +34,17 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     // ✅ 창작자가 만든 캠페인 조회 (Creator Dashboard)
     List<CampaignEntity> findByCreatedBy_CreatorId(Long creatorId);
 
+    // ✅ 창작자가 만든 캠페인 조회(기부 달성률 포함) (Creator Dashboard)
+    @Query(value = """
+                SELECT c.campaign_id, c.title, DATE(c.start_date) AS start_date, DATE(c.end_date) AS end_date, c.campaign_status, c.rejected_reason,
+                       IFNULL((SELECT SUM(md.quantity) FROM MaterialsDonations md WHERE md.campaign_id = c.campaign_id), 0)
+                       * 100.0 / NULLIF((SELECT SUM(cg.quantity_required) FROM CampaignGoals cg WHERE cg.campaign_id = c.campaign_id), 0)
+                       AS donationPercentage
+                FROM Campaigns c
+                WHERE c.created_by = :creatorId
+            """, nativeQuery = true)
+    List<Object[]> findCampaignsWithAchievement(@Param("creatorId") Long creatorId);
+
     // ✅ 창작자가 성공한 캠페인 ID 조회 (Creator Dashboard)
     @Query("SELECT c.campaignId FROM CampaignEntity c WHERE c.createdBy.id = :creatorId AND c.isSuccess = true")
     List<Long> findSuccessfulCampaignIdsByCreator(@Param("creatorId") Long creatorId);

@@ -2,11 +2,8 @@ package app.scit46.ufc.controller;
 
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.service.UserService;
-import app.scit46.ufc.service.campaign.CampaignService;
-import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.cloudflare.ImageService;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.security.core.Authentication;
@@ -14,9 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import java.util.Map;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,9 +22,8 @@ import org.slf4j.LoggerFactory;
 public class CreatorDashboardController {
 
     private final UserService userService;
-    private final CampaignService campaignService;
-    private final MaterialDonationService materialDonationService;
     private final Logger logger = LoggerFactory.getLogger(CreatorDashboardController.class);
+    private final ImageService imageService;
 
     /**
      * 🔹 창작자 대시보드 메인 페이지
@@ -49,12 +42,24 @@ public class CreatorDashboardController {
         // 🔹 CreatorEntity 조회 및 세션에 저장
         CreatorEntity creator = currentUser.getCreators().get(0);
         Long creatorId = creator.getCreatorId();
-        session.setAttribute("creatorId", creatorId); // ✅ 세션에 저장
+        String storeName = creator.getCompanyName();
+        String creatorName = creator.getBName();
 
-        // 🔹 로그 출력
-        logger.info("📌 세션에 저장된 creatorId: {}", session.getAttribute("creatorId"));
+        // 🔹 Cloudflare 이미지 URL 가져오기 (이미지가 없으면 기본 이미지 설정)
+        String profileImgUrl = creator.getProImgUrl() != null
+                ? imageService.getImageUrl(creator.getProImgUrl().getImageId())
+                : "/images/default-profile.png";
+
+        session.setAttribute("creatorId", creatorId);
+        session.setAttribute("storeName", storeName);
+        session.setAttribute("creatorName", creatorName);
+        session.setAttribute("profileImgUrl", profileImgUrl);
 
         model.addAttribute("creatorId", creatorId);
+        model.addAttribute("storeName", storeName);
+        model.addAttribute("creatorName", creatorName);
+        model.addAttribute("profileImgUrl", profileImgUrl);
+
         return "dashboard/creator-dashboard";
     }
 
@@ -155,18 +160,4 @@ public class CreatorDashboardController {
         model.addAttribute("creatorId", creatorId);
         return view;
     }
-    // /**
-    // * 🔹 **세션 값 확인 API** (디버깅 용도)
-    // * - 현재 세션에 `creatorId`가 있는지 확인하는 API
-    // */
-    // @GetMapping("/session/creatorId")
-    // @ResponseBody
-    // public ResponseEntity<String> getSessionCreatorId(HttpSession session) {
-    // Long creatorId = (Long) session.getAttribute("creatorId");
-    // if (creatorId == null) {
-    // return ResponseEntity.status(HttpStatus.NOT_FOUND).body("❌ 세션에 creatorId
-    // 없음");
-    // }
-    // return ResponseEntity.ok("📌 현재 세션에 저장된 creatorId: " + creatorId);
-    // }
 }

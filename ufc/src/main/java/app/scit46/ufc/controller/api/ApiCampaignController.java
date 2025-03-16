@@ -5,6 +5,7 @@ import app.scit46.ufc.dto.campaign.CampaignBoardReplyDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignReviewDTO;
 import app.scit46.ufc.dto.custom.GenerateCampaignDTO;
+import app.scit46.ufc.dto.custom.UpdateCampaignDTO;
 import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.service.RewardService;
 import app.scit46.ufc.service.campaign.CampaignBoardReplyService;
@@ -39,28 +40,28 @@ public class ApiCampaignController {
     @PostMapping("/campaign/create")
     public ResponseEntity<Long> createCampaign(@RequestBody GenerateCampaignDTO campaign) {
         Long campaignId = null;
-        try{
+        try {
             campaignId = campaignService.createCampaign(campaign);
-        }catch(Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body(null);
         }
 
         return ResponseEntity.ok(campaignId);
     }
 
-    @PostMapping("/update/{id}")
-    public ResponseEntity<Long> updateCampaign(@PathVariable("id") Long id, @RequestBody GenerateCampaignDTO campaign){
+    @PostMapping("/campaign/update")
+    public ResponseEntity<Long> updateCampaign(@RequestBody UpdateCampaignDTO campaign) {
 
-        campaignService.editCampaign(campaignService.getCampaignById(id), campaign);
+        campaignService.editCampaign(campaign);
 
-        return ResponseEntity.ok(id);
+        return ResponseEntity.ok(campaign.getCampaignId());
     }
 
     // board 신규 저장
     @PostMapping("/{id}/board")
     public ResponseEntity<Long> createBoard(@PathVariable("id") Long id,
-                                            @RequestBody CampaignBoardDTO boardRequest,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody CampaignBoardDTO boardRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
         Long boardId = campaignBoardService.boradsave(id, boardRequest.getContent(), boardRequest.getTitle());
         return ResponseEntity.ok(boardId);
@@ -76,11 +77,12 @@ public class ApiCampaignController {
     // board 수정하기
     @PostMapping("/{id}/board/{boardId}")
     public ResponseEntity<Long> createBoardEdit(@PathVariable("id") Long id,
-                                                @PathVariable("boardId") Long boardId,
-                                                @RequestBody CampaignBoardDTO boardRequest,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable("boardId") Long boardId,
+            @RequestBody CampaignBoardDTO boardRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
-        Long updatedBoardId = campaignBoardService.updateBoard(id, boardId, boardRequest.getContent(), boardRequest.getTitle(), userDetails);
+        Long updatedBoardId = campaignBoardService.updateBoard(id, boardId, boardRequest.getContent(),
+                boardRequest.getTitle(), userDetails);
         return ResponseEntity.ok(updatedBoardId);
     }
 
@@ -109,7 +111,7 @@ public class ApiCampaignController {
         }
     }
 
-//  board 댓글 관련
+    // board 댓글 관련
 
     @GetMapping("/replys/{boardId}")
     public ResponseEntity<List<CampaignBoardReplyDTO>> replylist(@PathVariable("boardId") Long boardId) {
@@ -122,7 +124,7 @@ public class ApiCampaignController {
         }
     }
 
-//  댓글 작성
+    // 댓글 작성
 
     @PostMapping("/replys/add")
     public ResponseEntity<?> createReply(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
@@ -146,11 +148,10 @@ public class ApiCampaignController {
         }
     }
 
-
-// 리뷰 불러오기
+    // 리뷰 불러오기
 
     @GetMapping("/review/{campaignId}")
-    public ResponseEntity<List<CampaignReviewDTO>> reviewList(@PathVariable Long campaignId) {
+    public ResponseEntity<List<CampaignReviewDTO>> reviewList(@PathVariable("campaignId") Long campaignId) {
         try {
             List<CampaignReviewDTO> reviews = campaignReviewService.replylist(campaignId);
             return ResponseEntity.ok(reviews);
@@ -160,7 +161,7 @@ public class ApiCampaignController {
         }
     }
 
-//  리뷰 작성하기
+    // 리뷰 작성하기
 
     @PostMapping("/review/add")
     public ResponseEntity<?> addReview(@RequestBody Map<String, Object> payload, HttpServletRequest request) {
@@ -177,7 +178,8 @@ public class ApiCampaignController {
             String content = payload.get("reviewContent").toString();
             String rating = payload.get("rating").toString();
 
-            CampaignReviewDTO campaignReviewDTO = campaignReviewService.createReview(campaignId, content, rating, loginUserId);
+            CampaignReviewDTO campaignReviewDTO = campaignReviewService.createReview(campaignId, content, rating,
+                    loginUserId);
             return ResponseEntity.ok(campaignReviewDTO);
         } catch (IllegalArgumentException e) {
             // 이미 리뷰가 존재하는 경우
@@ -188,20 +190,16 @@ public class ApiCampaignController {
         }
     }
 
-
-
-//  리워드 목록 가져오기
+    // 리워드 목록 가져오기
 
     @GetMapping("/reward/{campaignId}")
-    public List<RewardDTO> getAllRewards(@PathVariable Long campaignId) {
+    public List<RewardDTO> getAllRewards(@PathVariable("campaignId") Long campaignId) {
         return rewardService.getRewards(campaignId);
     }
 
     @GetMapping("/reward/target/{id}")
-    public RewardDTO getReward(@PathVariable Long id) {
+    public RewardDTO getReward(@PathVariable("id") Long id) {
         return rewardService.getReward(id);
     }
-
-
 
 }

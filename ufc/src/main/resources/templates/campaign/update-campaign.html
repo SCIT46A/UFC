@@ -12,10 +12,8 @@
         <!-- timepicker 시작 -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
         <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
-        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" />
         <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
         <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
         <!-- editer 시작 -->
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
@@ -31,10 +29,30 @@
         <link rel="stylesheet" th:href="@{/css/fix/footer.css}" />
 
         <script th:src="@{/js/campaign/update-campaign.js}" defer></script>
-        <script th:src="@{/js/cloudflare-upload.js}" defer></script>
+
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script th:src="@{/js/fix/footer.js}" defer></script>
+        <style>
 
+            .cam-gi-box-le-in-bo-pe-content-funding{
+                display: block;
+                font-weight: 700;
+                color: rgb(61, 61, 61);
+                margin: 0px 0px 8px;
+                max-width: 222px;
+                font-size: 20px !important;
+                line-height: 28px !important;
+            }
+            .cam-gi-box-le-in-bo-pe-content-reward{
+                display: block;
+                font-weight: 300;
+                color: rgb(61, 61, 61);
+                margin: 0px 0px 8px;
+                max-width: 222px;
+                font-size: 14px !important;
+                line-height: 20px !important;
+            }
+        </style>
 
     </head>
 
@@ -79,6 +97,7 @@
                                     <!-- 몸통 -->
                                     <!-- 여기서 각각의 div들어갑니다 -->
                                 <!-- 1. 기본정보 -->
+                                 <input type="hidden" th:value="${campaign.campaignId}" id="campaignId">
                                     <div class="cam-la-in-box-bo info">
                                         <div class="cam-la-in-box-bo-all">
                                             <!-- 이것도 사실 반복-->
@@ -270,7 +289,7 @@
                                                                         <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-start-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${campaign.startDate}" />
+                                                                        autocomplete="off" th:value="${#temporals.format(campaign.startDate, 'yyyy-MM-dd')}" />
                                                                     <!-- 시작 일자 옆에 동적으로 메시지를 표시 -->
                                                                     <span id="start-date-message" class="default-date-message"></span>
                                                                         </div>
@@ -297,7 +316,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-end-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${campaign.endDate}" />
+                                                                        autocomplete="off" th:value="${#temporals.format(campaign.endDate, 'yyyy-MM-dd')}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -318,7 +337,7 @@
                                                                     <div>
                                                                     <input type="date" class="datetime-picker"
                                                                         id="funding-send-datetime" placeholder="일자선택"
-                                                                        autocomplete="off" th:value="${campaign.sendDate}" />
+                                                                        autocomplete="off" th:value="${#temporals.format(campaign.sendDate, 'yyyy-MM-dd')}" />
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -393,18 +412,29 @@
                                                             제작할 리워드
                                                             <span id="rewardCount">0</span>
                                                         </span>
-                                                                        </div>
+                                                    </div>
                                                     <ul class="cam-gi-box-le-in-bo">
                                                         <!-- 각각의 리워드 표시 영역 -->
-                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="reward : ${rewards}">
+                                                        <div class="cam-gi-box-le-in-bo-pe" th:each="rewardTmp, rewardStat : ${rewards}" th:data-reward-id="${'reward-' + rewardStat.index}">
                                                             <div>
                                                                 <button class="cam-gi-box-le-in-bo-pe-content">
-                                                                    <strong th:each="fundingItem : ${reward.funding}">[[${fundingItem.name}]] [[${fundingItem.amount}]]개+</strong>
-                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${rewardTitle}"></p>
-                                                                    <ul th:each>
-                                                                        <li>${rewardTargetName} ${rewardTargetAmount}개</li>
+                                                                    <div th:each="funding : ${rewardTmp.funding}" class="cam-gi-box-le-in-bo-pe-content-funding">
+                                                                        <b th:text="${funding.name}"></b>
+                                                                        <b th:text="${funding.amount}"></b>
+                                                                        <b>개+</b>
+                                                                    </div>
+                                                                    <!-- 여기 수정: ${} -> th:text 사용 -->
+                                                                    <p class="cam-gi-box-le-in-bo-pe-content-title" th:text="${rewardTmp.name}"></p>
+                                                                    <ul th:each="rewardItem : ${rewardTmp.reward}">
+                                                                    <!-- 여기 수정: 변수명 reward->rewardItem 변경 (변수 충돌 방지) -->
+                                                                        <li class="cam-gi-box-le-in-bo-pe-content-reward">
+                                                                            <span th:text="${rewardItem.name}"></span>
+                                                                            <span th:text="${rewardItem.amount}"></span>
+                                                                            <span>개</span>
+                                                                        </li>
                                                                     </ul>
-                                                                    <span>예상 발송 시작일: <em>${rewardSendDate}</em></span>
+                                                                    <span>예상 발송 시작일: <em
+                                                                            th:text="${campaign.sendDate != null ? #temporals.format(campaign.sendDate, 'yyyy-MM-dd') : ''}"></em></span>
                                                                     <div class="cam-gi-box-le-in-bo-pe-content-div">
                                                                         <em class="cam-gi-em">
                                                                             <div class="cam-gi-em-in">
@@ -414,10 +444,11 @@
                                                                                         fill="#6D6D6D"></path>
                                                                                 </svg>
                                                                             </div>
-                                                                            <span class="cam-gi-em-in">${rewardSelectedCount}</span>명이 선택
+                                                                            <span class="cam-gi-em-in">0</span>명이 선택
                                                                         </em>
                                                                         <div class="cam-gi-em-box">
-                                                                            <em>${rewardLeftAmount}개 남음</em>
+                                                                            <!-- 여기 수정: 문자열 결합 방식 변경 -->
+                                                                            <em th:text="${rewardTmp.amount} + '개 남음'"></em>
                                                                         </div>
                                                                     </div>
                                                                 </button>
@@ -433,8 +464,9 @@
                                                                 </div>
                                                             </button>
                                                         </div>
+                                                        <!-- 각각의 리워드 표시 영역 끝 -->
                                                     </ul>
-                                                </div>
+                                                    </div>
                                                 </div>
                                                 <!-- 오른쪽 내용 -->
                                                 <div class="cam-gi-box-ri">
@@ -480,11 +512,13 @@
                                                                     <div>
                                                                     <span>물품 이름</span>
                                                                     <input type="text" class="cam-la-in-box-bo-all-de-div-box-input fundingItemInput"
+                                                                      id="fundingItemInput"
                                                                         placeholder="물품 이름 입력" />
                                                                     </div>
                                                                     <div>
                                                                     <span>물품 수량</span>
                                                                     <input type="number" class="cam-la-in-box-bo-all-de-div-box-input fundingAmountInput"
+                                                                        id="fundingAmountInput"
                                                                         placeholder="목표 수량 입력" />
                                                                     </div>
                                                                 <button class="cam-la-pay-btn funding" disabled>
@@ -494,10 +528,10 @@
                                                             <div class="cam-la-pay-box">
                                                                 <div class="cam-la-pay-box-total funding">
                                                                     <span>목표 달성에 필요한 물품</span>
-                                                                    </div>
-                                                                    <!-- 기부받을 품목 나오는곳 -->
                                                                 </div>
-                                                            </section>
+                                                                <!-- 기부받을 품목 나오는곳 -->
+                                                            </div>
+                                                        </section>
                                                         <section class="gi-se">
                                                                 <!-- 상단 이름 -->
                                                             <div class="gi-se-title">
@@ -516,11 +550,15 @@
                                                             <div style="display: flex; gap: 50px;">
                                                                 <div>
                                                                     <span>상품 이름</span>
-                                                                    <input type="text" class="cam-la-in-box-bo-all-de-div-box-input rewardItemInput" placeholder="물품 이름 입력" />
+                                                                    <input type="text" class="cam-la-in-box-bo-all-de-div-box-input rewardItemInput" 
+                                                                    id="rewardItemInput"
+                                                                    placeholder="물품 이름 입력" />
                                                                 </div>
                                                                     <div>
                                                                     <span>상품 수량</span>
-                                                                    <input type="number" class="cam-la-in-box-bo-all-de-div-box-input rewardAmountInput" placeholder="목표 수량 입력" />
+                                                                    <input type="number" class="cam-la-in-box-bo-all-de-div-box-input rewardAmountInput" 
+                                                                    id="rewardAmountInput"
+                                                                    placeholder="목표 수량 입력" />
                                                                     </div>
                                                                 <button class="cam-la-pay-btn reward">
                                                                         등록
@@ -646,7 +684,7 @@
                                         </button>
                                         <div class="cam-la-in-box-bottom-in-end">
                                             <button class="cam-la-in-box-bottom-in-end-btn">
-                                                <span class="cam-la-in-box-bottom-in-end-btn-span">다음</span>
+                                                <span class="cam-la-in-box-bottom-in-end-btn-span"></span>
                                                                 </button>
                                                             </div>
                                         </div>

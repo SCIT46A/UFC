@@ -155,9 +155,32 @@ public class CreatorController {
         }
     }
 
+    @PatchMapping("/profile/image")
+    public ResponseEntity<Map<String, String>> updateProfileImage(@RequestBody Map<String, String> updateData) {
+        try {
+            if (!updateData.containsKey("creatorId") || !updateData.containsKey("profileImgId")) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "필요한 데이터가 없습니다."));
+            }
+
+            Long creatorId = Long.parseLong(updateData.get("creatorId"));
+            String newProfileImgId = updateData.get("profileImgId");
+
+            String resultMessage = creatorService.updateProfileImage(creatorId, newProfileImgId);
+
+            // ✅ JSON 형식으로 응답 반환
+            return ResponseEntity.ok(Map.of("message", resultMessage));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "서버 오류 발생: " + e.getMessage()));
+        }
+    }
+
     /** 🔹 [GET] 캠페인 페이지 */
     @GetMapping("/campaign/{id}")
-    public String getCreatorCampaignPage(@PathVariable Long id, Model model) {
+    public String getCreatorCampaignPage(@PathVariable("id") Long id, Model model) {
         CreatorDTO creator = creatorService.getCreator(id);
 
         if (creator == null) {

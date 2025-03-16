@@ -3,11 +3,9 @@ package app.scit46.ufc.controller.api;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 import app.scit46.ufc.dto.*;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
-
 
 import app.scit46.ufc.entity.CreatorEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,12 +19,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.NoticeService;
 import app.scit46.ufc.service.ReportService;
 import app.scit46.ufc.service.campaign.CampaignService;
-
 
 @RestController
 @RequestMapping("/api/admin")
@@ -38,8 +34,8 @@ public class ApiAdminController {
     private final CreatorService creatorService;
     private final ReportService.UserUnbanScheduler userUnbanScheduler;
 
-
-    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService, CreatorService creatorService, ReportService.UserUnbanScheduler userUnbanScheduler) {
+    public ApiAdminController(NoticeService noticeService, ReportService reportService, CampaignService campaignService,
+            CreatorService creatorService, ReportService.UserUnbanScheduler userUnbanScheduler) {
         this.noticeService = noticeService;
         this.reportService = reportService;
         this.campaignService = campaignService;
@@ -87,16 +83,15 @@ public class ApiAdminController {
         return ResponseEntity.ok(campaignService.getFundingWaitingCampaigns());
     }
 
-
     // 승인 대기 중인 캠페인 목록 조회 API
     @GetMapping("/campaigns-pending")
     public ResponseEntity<List<CampaignDTO>> getPendingCampaigns() {
         return ResponseEntity.ok(campaignService.getPendingCampaigns());
     }
 
-    //하나만 승인
+    // 하나만 승인
     @PutMapping("/campaigns/{campaignId}/approve")
-    public ResponseEntity<Map<String, String>> approveCampaign(@PathVariable Long campaignId) {
+    public ResponseEntity<Map<String, String>> approveCampaign(@PathVariable("campaignId") Long campaignId) {
         campaignService.approveCampaign(campaignId);
         Map<String, String> response = new HashMap<>();
         response.put("message", "캠페인이 승인되었습니다.");
@@ -112,7 +107,6 @@ public class ApiAdminController {
         response.put("message", "승인처리 되었습니다.");
         return ResponseEntity.ok(response);
     }
-
 
     // 캠페인 신고 현황
     @GetMapping("/campaign-report")
@@ -142,13 +136,13 @@ public class ApiAdminController {
         }
     }
 
-    //유저 신고 목록 API
+    // 유저 신고 목록 API
     @GetMapping("/user-reports")
     public ResponseEntity<List<ReportDTO>> getUserReports() {
         return ResponseEntity.ok(reportService.getAllReportedUsers());
     }
 
-    //유저 신고 조치 API
+    // 유저 신고 조치 API
     @PostMapping("/user-reports/action")
     public ResponseEntity<Map<String, Object>> processUserReport(@RequestBody Map<String, String> request) {
         Map<String, Object> response = new HashMap<>();
@@ -173,21 +167,20 @@ public class ApiAdminController {
         }
     }
 
-    //정지 해제 즉시 실행
+    // 정지 해제 즉시 실행
     @PostMapping("/unban-check")
     public ResponseEntity<String> unbanCheck() {
         userUnbanScheduler.unbanExpiredUsers();
         return ResponseEntity.ok("정지 해제 체크 실행 완료");
     }
 
-
-    //공지사항 목록 조회
+    // 공지사항 목록 조회
     @GetMapping("/notices")
     public ResponseEntity<List<NoticeDTO>> getAllNotices() {
         return ResponseEntity.ok(noticeService.getAllNotices());
     }
 
-    //공지사항 등록
+    // 공지사항 등록
     @PostMapping("/notices/create")
     public ResponseEntity<NoticeDTO> createNotice(@RequestBody NoticeDTO noticeDTO) {
         return ResponseEntity.ok(noticeService.createNotice(noticeDTO));
@@ -195,7 +188,7 @@ public class ApiAdminController {
 
     // 창작자 사업자 등록 검증 API 엔드포인트
     @PostMapping("/verify/{creatorId}")
-    public ResponseEntity<Map<String, Object>> verifyCreator(@PathVariable Long creatorId) {
+    public ResponseEntity<Map<String, Object>> verifyCreator(@PathVariable("creatorId") Long creatorId) {
         // 🔹 DB에서 창작자 정보 가져오기
         CreatorEntity creator = creatorService.getCreatorById(creatorId);
         if (creator == null) {
@@ -206,7 +199,7 @@ public class ApiAdminController {
         CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
                 .bRegistNumber(creator.getBRegistNumber())
                 .bName(creator.getBName())
-                .startDt("20231128")  // 개업일자 기본값 설정
+                .startDt("20231128") // 개업일자 기본값 설정
                 .build();
 
         ResponseEntity<String> response = creatorService.callBusinessValidationAPI(dto);
@@ -223,10 +216,8 @@ public class ApiAdminController {
         }
     }
 
-
-
     @PutMapping("/{creatorId}/approve")
-    public ResponseEntity<Map<String, Object>> approveCreator(@PathVariable Long creatorId) {
+    public ResponseEntity<Map<String, Object>> approveCreator(@PathVariable("creatorId") Long creatorId) {
         try {
             // 🔹 1. 해당 창작자 정보 가져오기
             CreatorEntity creator = creatorService.getCreatorById(creatorId);
@@ -248,7 +239,6 @@ public class ApiAdminController {
         }
     }
 
-
     // ✅ 3. 창작자 승인 대기 목록 조회 API
     @GetMapping("/creator-approval")
     public ResponseEntity<List<CreatorDTO>> getPendingCreators() {
@@ -260,6 +250,7 @@ public class ApiAdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
         }
     }
+
     @GetMapping("/creator-status")
     public ResponseEntity<List<Map<String, Object>>> getCreatorStatus() {
         List<CreatorDTO> creators = creatorService.getAllCreators();
@@ -275,6 +266,5 @@ public class ApiAdminController {
 
         return ResponseEntity.ok(responseList);
     }
-
 
 }

@@ -37,6 +37,7 @@ public class SecurityConfig {
                 // CSRF는 이미 disable되어 있지만, 혹시 필요한 경우 CORS도 활성화
                 .csrf(csrf -> csrf.disable())
                 .cors(Customizer.withDefaults())
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/login")
                         .successHandler(oauthSuccessHandler)
@@ -60,5 +61,6 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/ws/**");
     }
+
 
 }

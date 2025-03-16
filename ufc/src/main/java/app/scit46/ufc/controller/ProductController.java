@@ -45,8 +45,6 @@ public class ProductController {
 
     private final PayService payService;
 
-
-
     @GetMapping("/all")
     public String create() {
         return "product/allProduct";
@@ -58,7 +56,7 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
+    public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = null;
         if (session != null) {
@@ -72,7 +70,6 @@ public class ProductController {
         int status = product.getStatus();
         log.info("제품 상태: " + status);
 
-
         // status가 0(예: 미승인)인 경우, 로그인한 사용자가 크리에이터와 동일해야 함
         if (status != 1) {
             if (loginUserId == null || !loginUserId.equals(creatorId)) {
@@ -85,12 +82,9 @@ public class ProductController {
         // model에 status 값을 그대로 전달 (0,1,2 등)
         model.addAttribute("status", status);
 
-
-
-// 사용 예시
+        // 사용 예시
         List<ProductTagDTO> tags = productTagService.findTagsByProductId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
-
 
         // 캠페인 이미지 처리
         String imageUrl = (product.getItem().getPhoto() != null)
@@ -101,15 +95,14 @@ public class ProductController {
         // 크리에이터 이미지 처리
         String creatorImageUrl = (product.getCreatedBy() != null
                 && product.getCreatedBy().getBusinessCert() != null)
-                ? imageService.getImageUrl(product.getCreatedBy().getBusinessCert().getImageId())
-                : DEFAULT_IMAGE;
+                        ? imageService.getImageUrl(product.getCreatedBy().getBusinessCert().getImageId())
+                        : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
-//        ------
+        // ------
 
-
-//
-//
+        //
+        //
         log.info(product.toString());
         boolean campaignLike = likeService.likeCheck(product.getProductId(), loginUserId, "product");
         boolean creatorLike = likeService.likeCheck(product.getCreatedBy().getCreatorId(), loginUserId, "creator");
@@ -119,14 +112,12 @@ public class ProductController {
         model.addAttribute("tags", tags);
         model.addAttribute("product", product);
 
-
-
         return "product/detail-product";
     }
 
-
     @GetMapping("/pay")
-    public String pay(@RequestParam Integer stock, @RequestParam Long productId, HttpServletRequest request, Model model) {
+    public String pay(@RequestParam Integer stock, @RequestParam Long productId, HttpServletRequest request,
+            Model model) {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 
         ProductDTO product = productService.findProductById(productId);
@@ -173,7 +164,5 @@ public class ProductController {
                     .body(Map.of("success", false, "message", "결제 검증 실패", "error", e.getMessage()));
         }
     }
-
-
 
 }

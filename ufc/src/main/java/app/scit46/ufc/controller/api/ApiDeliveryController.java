@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.HashMap;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import app.scit46.ufc.service.delivery.DeliveryService;
 
@@ -24,32 +25,18 @@ public class ApiDeliveryController {
         this.deliveryService = deliveryService;
     }
 
-    // @GetMapping("/{invoice}")
-    // public ResponseEntity<Map<String, Object>> track(@PathVariable("invoice")
-    // String invoice) {
-    // try {
-    // String[] parts = invoice.split("#");
-    // if (parts.length != 2) {
-    // return ResponseEntity.badRequest().body(Map.of("error", "잘못된 송장 번호 형식"));
-    // }
+    @GetMapping("/status")
+    public ResponseEntity<Map<String, String>> getDeliveryStatus(
+            @RequestParam("courierId") String courierId,
+            @RequestParam("trackingNumber") String trackingNumber) {
 
-    // String courierName = parts[0];
-    // String trackingNumber = parts[1];
+        String status = deliveryService.trackDelivery(courierId, trackingNumber);
 
-    // logger.info("🚚 컨트롤러에서 받은 송장번호: {}", invoice);
+        // ✅ JSON 응답 형식으로 변경
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status);
 
-    // String trackingResult = deliveryService.trackDelivery(courierName,
-    // trackingNumber);
+        return ResponseEntity.ok(response); // ✅ JSON 반환
+    }
 
-    // Map<String, Object> response = new HashMap<>();
-    // response.put("trackingData", trackingResult);
-
-    // return ResponseEntity.ok(response);
-
-    // } catch (Exception e) {
-    // logger.error("🚨 배송조회 중 오류 발생:", e);
-    // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-    // .body(Map.of("error", "서버 오류 발생"));
-    // }
-    // }
 }
