@@ -561,7 +561,7 @@ textarea {
 }
 
 .club-detail-active-container {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.5rem;
   display: grid;
 }
@@ -738,7 +738,7 @@ textarea {
 }
 
 .finished-events-container {
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1.5rem;
   display: grid;
 }
@@ -867,6 +867,12 @@ textarea {
   --tw-text-opacity: 1;
   color: rgb(206 211 214 / var(--tw-text-opacity));
   font-size: 0.8125rem;
+}
+
+.appointed-events-container {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+  display: grid;
 }
 
 .show-more-btn-in-progress-wrap {

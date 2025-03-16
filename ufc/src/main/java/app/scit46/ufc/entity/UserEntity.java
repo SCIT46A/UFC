@@ -10,6 +10,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.entity.alert.UserAlertEntity;
 import app.scit46.ufc.entity.product.ProductPaymentEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -112,7 +113,6 @@ public class UserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<LikeEntity> likes;
 
-    // OneToMany: UserAlert.user 참조
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
 

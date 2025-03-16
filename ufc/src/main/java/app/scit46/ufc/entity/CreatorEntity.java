@@ -1,5 +1,6 @@
 package app.scit46.ufc.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public class CreatorEntity {
     private String bRegistNumber;
 
     @Column(name = "b_regist_date", nullable = false)
-    private LocalDateTime bRegistDate;
+    private LocalDate bRegistDate;
 
     @Column(name = "b_name", nullable = false, length = 20)
     private String bName;
@@ -89,7 +90,6 @@ public class CreatorEntity {
     // OneToMany: Likes.creator 참조
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<LikeEntity> likes;
-
 
     public static CreatorEntity toEntity(CreatorDTO dto) {
         return CreatorEntity.builder()

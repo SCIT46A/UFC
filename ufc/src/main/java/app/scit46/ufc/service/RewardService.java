@@ -118,4 +118,14 @@ public class RewardService {
 
     }
 
+    public void deleteReward(CampaignEntity campaignEntity) {
+        // 기존 리워드 삭제
+        List<RewardEntity> rewards = rewardRepository.findAllByCampaign(campaignEntity);
+        for (RewardEntity reward : rewards) {
+            rewardMaterialRepository.deleteByReward(reward);
+            rewardItemRepository.deleteByReward(reward);
+        }
+        rewardRepository.deleteByCampaign(campaignEntity);
+    }
+
 }

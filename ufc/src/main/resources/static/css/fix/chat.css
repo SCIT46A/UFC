@@ -705,7 +705,7 @@
     -webkit-box-pack: end;
     justify-content: flex-end;
     width: 52px;
-    padding: 0px 6px 0px 16px;
+    padding: 0px 6px 7px 7px;
 }
 
 .server-message-icon-wrap {
@@ -721,8 +721,8 @@
     justify-content: center;
     overflow: hidden;
     background-color: rgb(255, 255, 255);
-    width: 30px;
-    height: 30px;
+    width: 33px;
+    height: 33px;
     border-radius: 12.6px;
 }
 

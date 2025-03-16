@@ -62,7 +62,7 @@ public class CampaignController {
     }
 
     @GetMapping("/{id}")
-    public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
+    public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션 가져오기
         Long loginUserId = null; // 기본값 설정
         if (session != null) {
@@ -80,15 +80,15 @@ public class CampaignController {
             }
         }
         if (loginUserId == null) {
+
             model.addAttribute("status", 0);
         } else if(!loginUserId.equals(creatorId)){
             model.addAttribute("status", 0);
         }
         else {
             model.addAttribute("status", 1);
+
         }
-
-
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
@@ -101,9 +101,13 @@ public class CampaignController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
+
+
                 && campaign.getCreatedBy().getProImgUrl() != null)
                 ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                 : DEFAULT_IMAGE;
+
+
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
         List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
@@ -113,7 +117,6 @@ public class CampaignController {
         int totalQuantity = materialDonationDtos.stream()
                 .mapToInt(MaterialDonationDTO::getQuantity)
                 .sum();
-
 
         boolean campaignLike = likeService.likeCheck(campaign.getCampaignId(), loginUserId, "campaign");
         boolean creatorLike = likeService.likeCheck(campaign.getCreatedBy().getCreatorId(), loginUserId, "creator");
@@ -131,13 +134,12 @@ public class CampaignController {
     }
 
     @GetMapping("/test/{id}")
-    public String detailCampaign(@PathVariable Long id) {
-//        // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
+    public String detailCampaign(@PathVariable("id") Long id) {
+        // // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
 
         return "campaign/detail-campaign-test";
     }
-
 
     @GetMapping("/expected")
     public String expectedCampaign() {
@@ -145,8 +147,8 @@ public class CampaignController {
     }
 
     @GetMapping("/pay")
-    public String payCampaign(@RequestParam(required = false) String donationDetails,
-                              HttpServletRequest request, Model model) {
+    public String payCampaign(@RequestParam(name = "donationDetails", required = false) String donationDetails,
+            HttpServletRequest request, Model model) {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 
         HttpSession session = request.getSession(false);
@@ -162,13 +164,12 @@ public class CampaignController {
             }
         }
 
-
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             // JSON 문자열을 List<Map<String, Object>> 형태로 변환
             List<Map<String, Object>> donationList = objectMapper.readValue(
-                    donationDetails, new TypeReference<List<Map<String, Object>>>() {}
-            );
+                    donationDetails, new TypeReference<List<Map<String, Object>>>() {
+                    });
             log.info(donationList.toString());
 
             // campaignId 처리 (기존 코드)
@@ -221,8 +222,10 @@ public class CampaignController {
 
                 // rewardId 추출 (존재하면 저장, 없으면 null)
                 Object rewardIdObj = donation.get("rewardId");
-                Object rewardId = (rewardIdObj != null && !(rewardIdObj instanceof String && ((String) rewardIdObj).trim().isEmpty()))
-                        ? rewardIdObj : null;
+                Object rewardId = (rewardIdObj != null
+                        && !(rewardIdObj instanceof String && ((String) rewardIdObj).trim().isEmpty()))
+                                ? rewardIdObj
+                                : null;
 
                 if (donationSummary.containsKey(name)) {
                     Map<String, Object> summary = donationSummary.get(name);
@@ -251,13 +254,13 @@ public class CampaignController {
             }
             model.addAttribute("donationSummary", donationSummary);
 
-
             // donationList에서 rewardId가 존재하는 항목만 별도로 담기 (rewardId와 count만)
             List<Map<String, Object>> donationRewardList = new ArrayList<>();
             for (Map<String, Object> donation : donationList) {
                 Object rewardIdObj = donation.get("rewardId");
                 // rewardId가 null이 아니고 빈 문자열이 아닌 경우에만 처리
-                if (rewardIdObj != null && !(rewardIdObj instanceof String && ((String) rewardIdObj).trim().isEmpty())) {
+                if (rewardIdObj != null
+                        && !(rewardIdObj instanceof String && ((String) rewardIdObj).trim().isEmpty())) {
                     Map<String, Object> rewardItem = new HashMap<>();
                     rewardItem.put("rewardId", rewardIdObj);
 
@@ -279,9 +282,6 @@ public class CampaignController {
             String donationRewardListJson = mapper.writeValueAsString(donationRewardList);
             model.addAttribute("donationRewardListJson", donationRewardListJson);
 
-
-
-
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("JSON 파싱 오류: " + e.getMessage());
@@ -296,10 +296,8 @@ public class CampaignController {
             }
         }
 
-
         return "campaign/pay-campaign";
     }
-
 
     @GetMapping("/intro")
     public String intro() {
@@ -307,20 +305,22 @@ public class CampaignController {
     }
 
     @GetMapping("/create") // 헤더에 존재하는 사용자 정보를 가져옴?
-    public String create(HttpServletRequest request, Model model) {
+    public String create(HttpServletRequest request, Model model,
+            @RequestParam(value = "iframe", required = false, defaultValue = "false") boolean iframe) {
         String username = request.getUserPrincipal().getName();
-        //model.addAttribute("tags", tagService.readTagList()); // 추천태그 5개 추천 데이터
+        // model.addAttribute("tags", tagService.readTagList()); // 추천태그 5개 추천 데이터
         model.addAttribute("username", username);
+        model.addAttribute("iframe", iframe);
         return "campaign/create-campaign";
     }
 
     // 캠페인 수정 페이지
     @GetMapping("/update/{id}")
-    public String update(@PathVariable Long id, Model model, HttpServletRequest request) {
+    public String update(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         String username = request.getUserPrincipal().getName();
 
         CampaignDTO campaign = campaignService.readCampaign(id);
-        //ImageID 대신 ImageUrl 전달
+        // ImageID 대신 ImageUrl 전달
         campaign.getPhoto().setImageId(imageService.getImageUrl(campaign.getPhoto().getImageId()));
 
         List<String> campaignTags = campaignService.getCampaignTags(id);
@@ -333,6 +333,15 @@ public class CampaignController {
         model.addAttribute("rewards", rewards);
 
         String rewardTitle = campaign.getTitle();
+
+        log.info("rewardTmp: {}", rewards);
+
+        if (rewards != null && !rewards.isEmpty()) {
+
+            log.info("reward list size: {}", rewards.size());
+            log.info("reward list contents: {}", rewards);
+        }
+
         return "campaign/update-campaign";
     }
 

@@ -3,10 +3,14 @@ package app.scit46.ufc.dto;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//import app.scit46.ufc.dto.product.ProductItemDTO;
 import app.scit46.ufc.dto.reward.RewardItemDTO;
 import app.scit46.ufc.entity.ItemEntity;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter

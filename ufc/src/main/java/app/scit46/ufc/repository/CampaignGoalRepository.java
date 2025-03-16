@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
+import app.scit46.ufc.entity.MaterialEntity;
+import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.campaign.CampaignGoalEntity;
 
 @Repository
@@ -18,4 +20,11 @@ public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity
     List<CampaignGoalEntity> findAllWithCampaign();
 
     List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
+
+    void deleteByCampaignAndMaterial(CampaignEntity campaignEntity, MaterialEntity material);
+
+    // List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
+
 }

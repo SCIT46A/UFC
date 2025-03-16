@@ -33,6 +33,34 @@
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script th:src="@{/js/fix/footer.js}" defer></script>
 
+        <style>
+            /* 태그 스타일 */
+            .tag-container span {
+                display: inline-block;
+                margin-right: 8px;
+                margin-bottom: 8px;
+                padding: 4px 12px;
+                background: rgb(74, 222, 128);
+                color: white;
+                border-radius: 16px;
+                font-size: 14px;
+            }
+            
+            /* 이미지 미리보기 스타일 */
+            .product-image-preview {
+                margin-top: 10px;
+                border: 1px solid #eee;
+                padding: 10px;
+                border-radius: 8px;
+                display: inline-block;
+            }
+            
+            .product-image-preview img {
+                display: block;
+                margin: 0 auto;
+            }
+        </style>
+
     </head>
 
     <body>
@@ -203,7 +231,7 @@
                                                   <p class="cam-la-in-box-bo-all-de-div-box-title">
                                                           가격
                                                       </p>
-                                                  <input type="number" name="title"
+                                                  <input type="number" name="price"
                                                           class="cam-la-in-box-bo-all-de-div-box-input"
                                                       placeholder="상품의 가격을 입력해주세요!" />
                                                   </div>
@@ -224,7 +252,7 @@
                                                 <p class="cam-la-in-box-bo-all-de-div-box-title">
                                                         수량
                                                     </p>
-                                                <input type="number" name="title"
+                                                <input type="number" name="stock"
                                                         class="cam-la-in-box-bo-all-de-div-box-input"
                                                     placeholder="상품의 판매 재고 수량을 입력해주세요!" />
                                                 </div>
@@ -294,7 +322,7 @@
                                                             <strong>※ 이미지를 등록하면 즉시 반영됩니다.</strong>
                                                             </div>
                                                         <input type="file" multiple class="cam-img"
-                                                            id="campaignImageInput" accept="image/*" />
+                                                            id="productImageInput" accept="image/*" />
                                                         <!-- 이미지 파일만 선택 가능하도록 -->
                                                         </div>
                                                         <li class="cam-img-re">
@@ -331,62 +359,29 @@
                                     <!-- 2. 최종 확인 -->
                                     <div class="cam-la-in-box-bo final hidden">
                                         <div class="cam-la-in-box-bo-all">
-                                        <!-- 캠페인 기본 정보 요약 -->
+                                        <!-- 상품 기본 정보 요약 -->
                                         <div class="final-summary-section">
-                                            <h3>캠페인 기본 정보</h3>
+                                            <h3>상품 기본 정보</h3>
                                             <div class="final-summary-content">
                                                 <div class="summary-item">
-                                                    <label>캠페인 제목</label>
+                                                    <label>상품명</label>
                                                     <p id="final-campaign-title"></p>
                                                 </div>
                                                 <div class="summary-item">
-                                                    <label>캠페인 태그</label>
+                                                    <label>상품 태그</label>
                                                     <div id="final-campaign-tags" class="tag-container"></div>
-                                            </div>
+                                                </div>
                                                 <div class="summary-item">
-                                                    <label>캠페인 설명</label>
+                                                    <label>상품 설명</label>
                                                     <p id="final-campaign-desc"></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                        
-                                        <!-- 펀딩 일정 요약 -->
-                                        <div class="final-summary-section">
-                                            <h3>펀딩 일정</h3>
-                                            <div class="final-summary-content">
-                                                <div class="summary-item">
-                                                    <label>펀딩 기간</label>
-                                                    <p id="final-funding-period"></p>
                                                 </div>
                                                 <div class="summary-item">
-                                                    <label>리워드 준비 기간</label>
-                                                    <p id="final-prepare-period"></p>
-                                                        </div>
-                                                        </div>
-                                                    </div>
-                                        
-                                        <!-- 리워드 구성 요약 -->
-                                        <div class="final-summary-section">
-                                            <h3>리워드 구성</h3>
-                                            <div id="final-rewards-list" class="final-summary-content">
+                                                    <label>상품 가격</label>
+                                                    <p id="final-product-price"></p>
                                                 </div>
-                                            </div>
-
-                                        <!-- 전체 필요 기부품 요약 -->
-                                        <div class="final-summary-section">
-                                            <h3>전체 필요 기부품</h3>
-                                            <div class="final-summary-content">
-                                                <div class="total-funding-items">
-                                                    <table class="funding-summary-table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>기부품 이름</th>
-                                                                <th>총 필요 수량</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="totalFundingList">
-                                                        </tbody>
-                                                    </table>
+                                                <div class="summary-item">
+                                                    <label>재고 수량</label>
+                                                    <p id="final-product-stock"></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -424,7 +419,7 @@
     <!-- 로딩 오버레이 -->
     <div class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>
-        <div class="loading-text">캠페인을 등록하고 있습니다...</div>
+        <div class="loading-text">상품을 등록하고 있습니다...</div>
     </div>
     </body>
 </html>

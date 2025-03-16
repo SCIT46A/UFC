@@ -1,13 +1,12 @@
 package app.scit46.ufc.service.product;
 
-
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import app.scit46.ufc.entity.product.ProductEntity;
 import app.scit46.ufc.entity.product.ProductPaymentEntity;
-import app.scit46.ufc.repository.ProductPaymentRepository;
 import app.scit46.ufc.repository.ProductRepository;
+import app.scit46.ufc.repository.product.ProductPaymentRepository;
 import app.scit46.ufc.service.UserService;
 import kr.co.bootpay.Bootpay;
 import lombok.RequiredArgsConstructor;
@@ -66,8 +65,7 @@ public class PayService {
         }
     }
 
-
-//   여기 트렌젹센 걸고 이제 성공 시 작업 하면됩니다~
+    // 여기 트렌젹센 걸고 이제 성공 시 작업 하면됩니다~
     @Transactional
     public void gopay(Map<String, Object> payload) {
         String receiptId = (String) payload.get("receipt_id");
@@ -106,22 +104,20 @@ public class PayService {
             ProductPaymentEntity target = ProductPaymentEntity.toEntity(productPaymentDTO);
             productPaymentRepository.save(target);
 
-// ✅ 기존 ProductEntity를 DB에서 조회
+            // ✅ 기존 ProductEntity를 DB에서 조회
             ProductEntity productEntity = productRepository.findById(productDTO.getProductId())
                     .orElseThrow(() -> new RuntimeException("상품 정보를 찾을 수 없습니다."));
 
-// ✅ 기존 ProductEntity의 stockQuantity 값을 수정
+            // ✅ 기존 ProductEntity의 stockQuantity 값을 수정
             productEntity.setStockQuantity(productEntity.getStockQuantity() - stock);
 
-// ✅ 수정된 엔티티 저장
+            // ✅ 수정된 엔티티 저장
             productRepository.save(productEntity);
-
 
             System.out.println("✅ 결제 검증 성공: " + res);
         } catch (Exception e) {
             throw new RuntimeException("결제 검증 과정에서 오류 발생", e);
         }
     }
-
 
 }

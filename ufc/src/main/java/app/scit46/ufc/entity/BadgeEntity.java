@@ -34,10 +34,6 @@ public class BadgeEntity {
     @OneToMany(mappedBy = "badge", fetch = FetchType.LAZY)
     private List<UserBadgeEntity> userBadges;
 
-    // OneToMany: AlertTarget.target_badge 참조
-    @OneToMany(mappedBy = "targetBadge", fetch = FetchType.LAZY)
-    private List<AlertTargetEntity> alertTargets;
-
     public static BadgeEntity toEntity(BadgeDTO dto) {
         return BadgeEntity.builder()
                 .badgeId(dto.getBadgeId())

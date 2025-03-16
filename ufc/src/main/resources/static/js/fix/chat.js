@@ -198,7 +198,7 @@ $(document).ready(function () {
                                     <img src="/api/image/${data.creator.proImgUrl.imageId}" alt="" class="chat-window-inner-pe-box-img target-img">
                                     <div class="chat-window-inner-pe-box-ri">
                                         <div class="chat-window-inner-pe-box-ri-top">${data.creator.bname}</div>
-                                        <div class="chat-window-inner-pe-box-ri-bo">${data.createdTime}</div>
+                                        <div class="chat-window-inner-pe-box-ri-bo">${timeForToday_time(data.createdTime)}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -209,7 +209,7 @@ $(document).ready(function () {
                                     <img src="${data.user2.photo && data.user2.photo.imageId ? `/api/image/${data.user2.photo.imageId}` : 'https://assets.tumblbug.com/profile/default_avatar.png'}" alt="" class="chat-window-inner-pe-box-img target-img">
                                     <div class="chat-window-inner-pe-box-ri">
                                         <div class="chat-window-inner-pe-box-ri-top">${data.user2.userName}</div>
-                                        <div class="chat-window-inner-pe-box-ri-bo">${data.createdTime}</div>
+                                        <div class="chat-window-inner-pe-box-ri-bo">${timeForToday_time(data.createdTime)}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -220,7 +220,7 @@ $(document).ready(function () {
                                     <img src="${data.user1.photo && data.user1.photo.imageId ? `/api/image/${data.user1.photo.imageId}` : 'https://assets.tumblbug.com/profile/default_avatar.png'}" alt="" class="chat-window-inner-pe-box-img target-img">
                                     <div class="chat-window-inner-pe-box-ri">
                                         <div class="chat-window-inner-pe-box-ri-top">${data.user1.userName}</div>
-                                        <div class="chat-window-inner-pe-box-ri-bo">${data.createdTime}</div>
+                                        <div class="chat-window-inner-pe-box-ri-bo">${timeForToday_time(data.createdTime)}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -376,6 +376,7 @@ $(document).ready(function () {
         if(event.which === 13 && !event.shiftKey) {
             event.preventDefault();
             sendMessage();
+
         }
     });
 
@@ -384,6 +385,7 @@ $(document).ready(function () {
     // ===============================
     $(document).on('click', '.bottom-message-send-button', function(){
         sendMessage();
+
     });
 
     // ---------------------
@@ -456,6 +458,7 @@ $(document).ready(function () {
                         // 웹소켓 연결 및 구독
                         connectWebsocket(activeChatRoomId);
                         chatRoom();
+
                     },
                     error: function(xhr, status, error) {
                         console.error("메시지 로딩 에러:", error);
@@ -473,13 +476,22 @@ $(document).ready(function () {
     // 모달창(채팅창) 열기/닫기
     // ===============================
     chatBtn.on("click", () => {
+        console.log(userId);
+        if (isNaN(userId)) {
+            window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(window.location.href);
+            return;
+        }
+        console.log(userId);
         chatRoomBtn.removeClass("hidden");
         chatBtn.addClass("hidden");
+        chatRoom();
     });
+
 
     chatRoomCloseBtn.on("click", () => {
         chatBtn.removeClass("hidden");
         chatRoomBtn.addClass("hidden");
+        chatRoom()
     });
 
     chatInnerCloseBtn.on("click", () => {
@@ -496,5 +508,44 @@ $(document).ready(function () {
             });
             stompClient = null;
         }
+        chatRoom()
     });
+
+    function timeForToday_time(datetime) {
+        const today = new Date();
+        const date = new Date(datetime);
+
+        let gap = Math.floor((today.getTime() - date.getTime()) / 1000 / 60);
+
+        if (gap < 1) {
+            return "방금 전";
+        }
+
+        if (gap < 60) {
+            return `${gap}분 전`;
+        }
+
+        gap = Math.floor(gap / 60);
+
+        if (gap < 24) {
+            return `${gap}시간 전`;
+        }
+
+        gap = Math.floor(gap / 24);
+
+        if (gap < 31) {
+            return `${gap}일 전`;
+        }
+
+        gap = Math.floor(gap / 31);
+
+        if (gap < 12) {
+            return `${gap}개월 전`;
+        }
+
+        gap = Math.floor(gap / 12);
+
+        return `${gap}년 전`;
+    }
+
 });
