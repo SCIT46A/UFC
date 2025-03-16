@@ -49,7 +49,9 @@ import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.material.MaterialService;
 import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -136,7 +138,7 @@ public class CampaignService {
         // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
         // UserEntity.userId -> CreatorEntity.creatorId)
         UserEntity user = userService.findUserByUserName(ccDTO.getUserName().trim());
-        
+
         CreatorEntity creator = creatorService.findByOwnUser(user);
         // log.info("창작자 아이디 : {}", creatorId);
 
@@ -200,17 +202,21 @@ public class CampaignService {
 
         CreatorEntity creator = creatorService.findByOwnUser(user);
 
-        if(campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()){
+
+        if (campaign.getCreatedBy().getCreatorId() != creator.getCreatorId()) {
+
             throw new RuntimeException("캠페인 수정 권한이 없습니다.");
         }
 
         ImageUrlEntity image = null;
         // 이미지가 변동이 있을 때만 이미지 업데이트
+
         if(ucDTO.getImageId() != null){
             // 이미 저장처리된 이미지 아이디 조회
             image = imageService.findByImageId(ucDTO.getImageId());
         }
         else{
+
             image = imageService.findByImageId(campaign.getPhoto().getImageId());
         }
 
@@ -373,21 +379,25 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-    public List<CampaignDTO> getCampaignsByCreator(Long creatorId) {
-        return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
-                .map(CampaignDTO::toDTO)
-                .collect(Collectors.toList());
-    }
+    public List<Map<String, Object>> getCampaignsByCreator(Long creatorId) {
+        List<Object[]> results = campaignRepository.findCampaignsWithAchievement(creatorId);
 
-    // // 리뷰-캠페인 조회
-    // public CampaignDTO getCampaignById(Long campaigned_by) {
-    // List<CampaignEntity> campaigns =
-    // campaignRepository.findByCampaignId(campaigned_by);
-    // return campaigns.stream()
-    // .findFirst() // 첫 번째 캠페인 엔티티를 선택
-    // .map(CampaignDTO::toDTO)
-    // .orElse(null);
-    // }
+        return results.stream().map(result -> {
+            Map<String, Object> campaignData = new HashMap<>();
+            campaignData.put("campaignId", (Long) result[0]);
+            campaignData.put("title", (String) result[1]);
+
+            // ✅ DATE 변환
+            campaignData.put("startDate", ((java.sql.Date) result[2]).toLocalDate());
+            campaignData.put("endDate", ((java.sql.Date) result[3]).toLocalDate());
+
+            campaignData.put("campaignStatus", result[4]); // ✅ 상태 추가
+            campaignData.put("rejectedReason", result[5]); // ✅ 거절 사유 추가
+            campaignData.put("donationPercentage", result[6] != null ? ((Number) result[6]).doubleValue() : 0.0);
+
+            return campaignData;
+        }).collect(Collectors.toList());
+    }
 
     public List<Long> getCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
@@ -486,11 +496,13 @@ public class CampaignService {
             }
             List<RewardFundingDTO> rewardItemList = new ArrayList<>();
             for (RewardItemEntity rewardItem : reward.getRewardItems()) {
+
               RewardFundingDTO rewardItemTmp = RewardFundingDTO.builder()
                       .name(rewardItem.getItem().getName())
                       .amount(rewardItem.getQuantity())
                       .build();
               rewardItemList.add(rewardItemTmp);
+
             }
             RewardListDTO rewardListDTO = RewardListDTO.builder()
                     .name(name)

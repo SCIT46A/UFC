@@ -11,22 +11,23 @@ import app.scit46.ufc.entity.TagEntity;
 
 public interface TagRepository extends JpaRepository<TagEntity, Long> {
   @Query(value = """
-      SELECT t.tag_id, t.content, 
-            (COUNT(ct.tag_id) + COUNT(pt.tag_id)) AS total_usage
-      FROM Tags t
-      LEFT JOIN CampaignTags ct ON t.tag_id = ct.tag_id
-      LEFT JOIN ProductTags pt ON t.tag_id = pt.tag_id
-      GROUP BY t.tag_id, t.content
-      ORDER BY total_usage DESC
-      LIMIT 11
-  """, nativeQuery = true)
+          SELECT t.tag_id, t.content,
+                (COUNT(ct.tag_id) + COUNT(pt.tag_id)) AS total_usage
+          FROM Tags t
+          LEFT JOIN CampaignTags ct ON t.tag_id = ct.tag_id
+          LEFT JOIN ProductTags pt ON t.tag_id = pt.tag_id
+          GROUP BY t.tag_id, t.content
+          ORDER BY total_usage DESC
+          LIMIT 11
+      """, nativeQuery = true)
   List<Object[]> findTopTags();
-
 
   @Query("SELECT s FROM TagEntity s WHERE LOWER(REPLACE(s.content, ' ', '')) LIKE LOWER(CONCAT('%', :keyword, '%'))")
   List<TagEntity> tagByKeyword(@Param("keyword") String keyword);
 
   Optional<TagEntity> findByContent(String content);
 
-  
+  @Query("SELECT t.tagId FROM TagEntity t WHERE t.content = :content")
+  Optional<Integer> findTagIdByContent(@Param("content") String content);
+
 }

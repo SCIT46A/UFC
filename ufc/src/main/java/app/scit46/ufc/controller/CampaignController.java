@@ -80,14 +80,15 @@ public class CampaignController {
             }
         }
         if (loginUserId == null) {
+
             model.addAttribute("status", 0);
         } else if(!loginUserId.equals(creatorId)){
             model.addAttribute("status", 0);
         }
         else {
             model.addAttribute("status", 1);
-        }
 
+        }
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
@@ -100,10 +101,13 @@ public class CampaignController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
+
+
                 && campaign.getCreatedBy().getProImgUrl() != null)
                 ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                 : DEFAULT_IMAGE;
-      
+
+
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
         List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
@@ -143,7 +147,7 @@ public class CampaignController {
     }
 
     @GetMapping("/pay")
-    public String payCampaign(@RequestParam(required = false) String donationDetails,
+    public String payCampaign(@RequestParam(name = "donationDetails", required = false) String donationDetails,
             HttpServletRequest request, Model model) {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 
@@ -301,10 +305,12 @@ public class CampaignController {
     }
 
     @GetMapping("/create") // 헤더에 존재하는 사용자 정보를 가져옴?
-    public String create(HttpServletRequest request, Model model) {
+    public String create(HttpServletRequest request, Model model,
+            @RequestParam(value = "iframe", required = false, defaultValue = "false") boolean iframe) {
         String username = request.getUserPrincipal().getName();
         // model.addAttribute("tags", tagService.readTagList()); // 추천태그 5개 추천 데이터
         model.addAttribute("username", username);
+        model.addAttribute("iframe", iframe);
         return "campaign/create-campaign";
     }
 
@@ -329,7 +335,9 @@ public class CampaignController {
         String rewardTitle = campaign.getTitle();
 
         log.info("rewardTmp: {}", rewards);
-        if(rewards != null && !rewards.isEmpty()) {
+
+        if (rewards != null && !rewards.isEmpty()) {
+
             log.info("reward list size: {}", rewards.size());
             log.info("reward list contents: {}", rewards);
         }

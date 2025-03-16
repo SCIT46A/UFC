@@ -1,6 +1,8 @@
 package app.scit46.ufc.controller;
 
 
+import java.util.HashMap;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -126,7 +128,6 @@ public class UserController {
     // }
 
 
-
         @GetMapping("/review")
         public String review (HttpServletRequest request,
                 Model model,
@@ -181,159 +182,119 @@ public class UserController {
                         model.addAttribute("user", user);
                         model.addAttribute("reviewCount", paging.getTotalElements());
 
-                    } catch (DBNotFoundException e) {
-                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-                    }
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-            return "user/mypage-review";
         }
+        return "user/mypage-review";
+    }
 
+    // List<CampaignEntity> campaign = donations.stream()
+    // .map(donation ->
+    // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
+    // .flatMap(List::stream)
+    // .collect(Collectors.toList());
 
-
-        // List<CampaignEntity> campaign = donations.stream()
-        // .map(donation ->
-        // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
-        // .flatMap(List::stream)
-        // .collect(Collectors.toList());
-
-
-        // 유저 정보 수정 창 조회
-        @GetMapping("/edit")
-        public String edit (HttpServletRequest request, Model model){
-            HttpSession session = request.getSession(false); // 세션 가져오기
-            Long userId = null; // 기본값 설정
-            if (session != null) {
-                userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-                if (userId != null) {
-                    try {
-                        // 사용자 정보를 데이터베이스에서 조회
-                        UserDTO user = userService.readUserById(userId);
-                        List<String> imageUrls = new ArrayList<>();
-                        imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
-                        model.addAttribute("user", user);
-                        model.addAttribute("imageUrls", imageUrls);
-                    } catch (DBNotFoundException e) {
-                        // 사용자 정보를 찾을 수 없는 경우 처리
-                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-                    }
+    // 유저 정보 수정 창 조회
+    @GetMapping("/edit")
+    public String edit(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long userId = null; // 기본값 설정
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    List<String> imageUrls = new ArrayList<>();
+                    imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
+                    model.addAttribute("user", user);
+                    model.addAttribute("imageUrls", imageUrls);
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-            return "user/mypage-profile-edit";
         }
+        return "user/mypage-profile-edit";
+    }
 
-       
-        
-        @GetMapping("/donation")
-        public String donation(
-                HttpServletRequest request
-                , Model model
-                ){
-            HttpSession session = request.getSession(false);
-            Long userId = null;
 
-            if (session != null) {
-                userId = (Long) session.getAttribute("loginUserId");
-                if (userId != null) {
-                    try {
-                        UserDTO user = userService.readUserById(userId);
 
-                        List<MaterialDonationDTO> materialDonations = materialDonationService
-                                .getMaterialDonationsByUserId(user.getUserId());
 
-                        List<CampaignDTO> campaigns = new ArrayList<>();
-                        List<String> imageUrls = new ArrayList<>();
-                        int goal, donationsum = 0;
-                        List<Double> isAchived = new ArrayList<>();        
-                        
-                        List<Double> isAchivedList = new ArrayList<>();
-                        List<String> rewardNameList = new ArrayList<>();
-                        String rewardName = null;
 
-                        for (MaterialDonationDTO materialDonation : materialDonations) {
-                            CampaignDTO campaign = materialDonation.getCampaign();
-                            if (campaign != null && campaign.getPhoto() != null) {
-                                campaigns.add(campaign);
-                                imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
 
-                                goal = campaignGoalService.getCampaignGoalByCampaignId(campaign.getCampaignId()).get(0)
-                                        .getQuantityRequired();
+    @GetMapping("/donation")
+    public String donation(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long userId = (Long) session.getAttribute("loginUserId");
+            if (userId != null) {
+                try {
+                    UserDTO user = userService.readUserById(userId);
+                    List<MaterialDonationDTO> materialDonations = materialDonationService.getMaterialDonationsByUserId(user.getUserId());
+                    List<CampaignDTO> campaigns = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    List<Double> isAchivedList = new ArrayList<>();
+                    List<String> rewardNameList = new ArrayList<>();
 
-                                List<MaterialDonationDTO> materialDonationsList = materialDonationService
-                                        .getMaterialDonationsByCampaignId(campaign.getCampaignId());
+                    for (MaterialDonationDTO materialDonation : materialDonations) {
+                        CampaignDTO campaign = materialDonation.getCampaign();
+                        if (campaign != null && campaign.getPhoto() != null) {
+                            campaigns.add(campaign);
+                            imageUrls.add(imageService.getImageUrl(campaign.getPhoto().getImageId()));
 
-                                donationsum = 0; // 후원 개수 초기화
-                                for (MaterialDonationDTO donation : materialDonationsList) {
-                                    donationsum += donation.getQuantity();
-                                }
+                            int goal = campaignGoalService.getCampaignGoalByCampaignId(campaign.getCampaignId()).get(0)
+                                    .getQuantityRequired();
+                            int donationsum = materialDonationService.getMaterialDonationsByCampaignId(campaign.getCampaignId())
+                                    .stream().mapToInt(MaterialDonationDTO::getQuantity).sum();
 
-                                double achievement = (double) donationsum / goal * 100; // 백분율 변환
-                                isAchivedList.add(achievement); // 리스트에 추가
+                            double achievement = (double) donationsum / goal * 100;
+                            isAchivedList.add(achievement);
 
-                                rewardName = rewardDeliveryService
-                                        .getRewardNameByDonationId(materialDonation.getDonationId());
-                                rewardNameList.add(rewardName);
-
-                            }
+                            String rewardName = rewardDeliveryService.getRewardNameByDonationId(materialDonation.getDonationId());
+                            rewardNameList.add(rewardName);
                         }
-                        
-                        List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
-                        // ✅ `likes` 리스트를 분류 (creator_id 존재 여부 기준)
-                        List<LikeDTO> creatorLikes = likes.stream()
-                                .filter(like -> like.getCreator() != null)
-                                .collect(Collectors.toList());
-
-                        Map<String, String> statusMap = new HashMap<>();
-                        statusMap.put("approved", "확인되었어요 🙂");
-                        statusMap.put("rejected", "거절되었어요 🙁");
-                        statusMap.put("pending", "검토중이에요!");
-                        model.addAttribute("statusMap", statusMap);
-
-
-
-
-                        model.addAttribute("isAchivedList", isAchivedList);
-                        model.addAttribute("rewardNameList", rewardNameList);
-                        model.addAttribute("creatorLikes", creatorLikes.size());
-                        model.addAttribute("donationCount", materialDonations.size());
-                        System.out.println("후원 내역 개수: " + materialDonations.size());
-                        //문제없음 5개로 나옴
-                        
-                        // List<RewardDTO> rewards = new ArrayList<>();
-                        String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                                + user.getPhoto().getImageId() + "/public";
-
-                        // int totalPages = paging.getTotalPages();
-
-
-
-                        // model.addAttribute("totalPages", totalPages);
-                        //캠페인 달성 성공 여부
-                        model.addAttribute("isAchived", isAchived);
-                        //캠페인 이미지
-                        model.addAttribute("imageUrls", imageUrls);
-                        //캠페인 정보
-                        model.addAttribute("campaigns", campaigns);
-                        //유저 후원 개수
-                        model.addAttribute("donationCount", materialDonations.size());
-                        //유저 후원 내역
-                        model.addAttribute("materialDonations", materialDonations);
-                        //유저 정보
-                        model.addAttribute("user", user);
-                        //유저 프로필 이미지
-                        model.addAttribute("userImageId", userImageId);
-                    } catch (DBNotFoundException e) {
-                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                     }
+
+                    List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                    List<LikeDTO> creatorLikes = likes.stream()
+                            .filter(like -> like.getCreator() != null)
+                            .collect(Collectors.toList());
+
+                    Map<String, String> statusMap = new HashMap<>();
+                    statusMap.put("approved", "확인되었어요 🙂");
+                    statusMap.put("rejected", "거절되었어요 🙁");
+                    statusMap.put("pending", "검토중이에요!");
+
+                    String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                            ? "/images/user/default_avatar.png"
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId() + "/public";
+
+                    model.addAttribute("statusMap", statusMap);
+                    model.addAttribute("isAchivedList", isAchivedList);
+                    model.addAttribute("rewardNameList", rewardNameList);
+                    model.addAttribute("creatorLikes", creatorLikes.size());
+                    model.addAttribute("donationCount", materialDonations.size());
+                    model.addAttribute("imageUrls", imageUrls);
+                    model.addAttribute("campaigns", campaigns);
+                    model.addAttribute("materialDonations", materialDonations);
+                    model.addAttribute("user", user);
+                    model.addAttribute("userImageId", userImageId);
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
                 }
             }
-
-            return "user/mypage-donation";
         }
+        return "user/mypage-donation";
+    }
 
 
 
-        // 회원탈퇴(status 1로 변경)
+
+
+    // 회원탈퇴(status 1로 변경)
         @GetMapping("/delete")
         public String delete (
                 HttpSession session,
@@ -621,76 +582,103 @@ public class UserController {
 
 
 
+    // 충돌로 인한 주석처리 - 필요시 다시 검토 필요
+    // @PostMapping("/userUpdate")
+    // public String postMethodName(
+    // HttpServletRequest request,
+    // @ModelAttribute UserDTO userDTO,
+    // RedirectAttributes rttr
+    // ) {
+    // log.info(userDTO.toString());
+    // String oauthId = request.getUserPrincipal().getName();
+    // UserDTO user = UserDTO.toDTO(userService.findUserByIdentity(oauthId));
+    // userDTO.setUserId(user.getUserId());
+    // userService.userUpdate(userDTO);
+    // log.info(user.toString());
+    // return "redirect:/user";
+    // }
 
+//    @GetMapping("/badge")
+//    public String badge() {
+//        return "user/mypage-badge";
+//    }
 
-        // 로그인 관련
+    @GetMapping("/donation/detail")
+    public String alarmDetail() {
+        return "user/mypage-donation-detail";
+    }
 
-        @GetMapping("/login")
-        public String loginPage(@RequestParam(value = "redirectUrl", required = false) String redirectUrl, HttpSession session, Model model) {
-            if (redirectUrl != null && !redirectUrl.isEmpty()) {
-                session.setAttribute("redirectUrl", redirectUrl);
-            }
-            return "login/login";
+    // 로그인 관련
+
+    @GetMapping("/login")
+    public String loginPage(@RequestParam(value = "redirectUrl", required = false) String redirectUrl,
+            HttpSession session, Model model) {
+        if (redirectUrl != null && !redirectUrl.isEmpty()) {
+            session.setAttribute("redirectUrl", redirectUrl);
         }
+        return "login/login";
+    }
 
+    @GetMapping("/join")
+    public String joinDetailPage(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
 
-        @GetMapping("/join")
-        public String joinDetailPage (HttpServletRequest request, Model model){
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-
-                // 세션에서 카카오 정보 꺼내기
-                String identity = (String) session.getAttribute("identity");
-                String nickname = (String) session.getAttribute("nickname");
-                String email = (String) session.getAttribute("email");
-                String find = (String) session.getAttribute("find");
-
-                // 모델에 담아 뷰로 전달
-                model.addAttribute("identity", identity);
-                model.addAttribute("nickname", nickname);
-                model.addAttribute("email", email);
-                model.addAttribute("find", find);
-            }
-            return "/login/joindetail";
-        }
-
-        @PostMapping("/joinProc")
-        public String joinDetailSubmit (HttpServletRequest request,@RequestParam("check") int check,
-        @RequestParam("address") String address,
-        @RequestParam("phone") String phone,
-        @RequestParam("intro") String intro){
-            HttpSession session = request.getSession(false);
-            if (session == null) {
-                // 세션이 없으면 에러 처리
-                return "redirect:/error";
-            }
-            String kakaoId = (String) session.getAttribute("identity");
+            // 세션에서 카카오 정보 꺼내기
+            String identity = (String) session.getAttribute("identity");
             String nickname = (String) session.getAttribute("nickname");
             String email = (String) session.getAttribute("email");
             String find = (String) session.getAttribute("find");
 
-            // DB 저장 (UserDTO 만들거나 직접)
-            UserDTO userDTO = new UserDTO();
-            userDTO.setOauthId(kakaoId);
-            userDTO.setUserName(nickname);
-            userDTO.setEmail(email);
-            userDTO.setLoginType(find);
-            userDTO.setIsMarketed(check);
-            userDTO.setUserAddress(address);
-            userDTO.setPhoneNumber(phone);
-            userDTO.setIntro(intro);
 
-            // userService.add(...) 저장
-            UserEntity savedUser = userService.saveUser(userDTO);
+            // 모델에 담아 뷰로 전달
+            model.addAttribute("identity", identity);
+            model.addAttribute("nickname", nickname);
+            model.addAttribute("email", email);
+            model.addAttribute("find", find);
 
-            // 가입 완료 후, 세션에 로그인 정보 저장
-            session.setAttribute("loginUserId", savedUser.getUserId());
-
-            chatRoomService.createChatRoom(savedUser.getUserId(), 0L);
-
-            // 메인 페이지로 리다이렉트
-            return "redirect:/";
         }
+        return "/login/joindetail";
+    }
 
+    @PostMapping("/joinProc")
+    public String joinDetailSubmit(HttpServletRequest request, @RequestParam("check") int check,
+            @RequestParam("address") String address,
+            @RequestParam("phone") String phone,
+            @RequestParam("intro") String intro) {
+        HttpSession session = request.getSession(false);
+        if (session == null) {
+            // 세션이 없으면 에러 처리
+            return "redirect:/error";
+        }
+        String kakaoId = (String) session.getAttribute("identity");
+        String nickname = (String) session.getAttribute("nickname");
+        String email = (String) session.getAttribute("email");
+        String find = (String) session.getAttribute("find");
+
+        // DB 저장 (UserDTO 만들거나 직접)
+        UserDTO userDTO = new UserDTO();
+        userDTO.setOauthId(kakaoId);
+        userDTO.setUserName(nickname);
+        userDTO.setEmail(email);
+        userDTO.setLoginType(find);
+        userDTO.setIsMarketed(check);
+        userDTO.setUserAddress(address);
+        userDTO.setPhoneNumber(phone);
+        userDTO.setIntro(intro);
+
+        // userService.add(...) 저장
+        UserEntity savedUser = userService.saveUser(userDTO);
+
+        // 가입 완료 후, 세션에 로그인 정보 저장
+        session.setAttribute("loginUserId", savedUser.getUserId());
+
+        chatRoomService.createChatRoom(savedUser.getUserId(), 0L);
+
+        // 메인 페이지로 리다이렉트
+        return "redirect:/";
+
+
+    }
 
 }

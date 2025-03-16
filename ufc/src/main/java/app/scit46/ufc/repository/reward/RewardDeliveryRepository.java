@@ -9,11 +9,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import java.util.Optional;
 
 public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEntity, Long> {
 
+    //
     @Query("SELECT r FROM RewardDeliveryEntity r WHERE r.reward.campaign.campaignId IN :campaignIds")
     List<RewardDeliveryEntity> findByCampaignIdIn(@Param("campaignIds") List<Long> campaignIds);
+
+
+    Optional<RewardDeliveryEntity> findByDonation_DonationId(Long donationId);
 
    @Query("SELECT rw.reward.rewardName, md.donatedDate, c.title, md.quantity, c.photo.imageId, c.isSuccess " +
        "FROM RewardDeliveryEntity rw " +
@@ -27,4 +32,5 @@ public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEn
 
    @Query("SELECT rw FROM RewardDeliveryEntity rw WHERE rw.donation.donationId = :donationId")
    RewardDeliveryEntity findRewardDeliveryByDonationId(@Param("donationId") Long donationId);
+
 }

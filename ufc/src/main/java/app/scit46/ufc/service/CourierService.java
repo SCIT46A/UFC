@@ -22,4 +22,8 @@ public class CourierService {
         return courierRepository.findCourierNameByCourierId(courierId);
     }
 
+    public String getCourierIdByName(String courierName) {
+        return courierRepository.findCourierIdByName(courierName);
+    }
+
 }

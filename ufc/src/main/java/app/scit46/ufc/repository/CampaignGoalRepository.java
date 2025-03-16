@@ -21,8 +21,10 @@ public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity
 
     List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
 
+
     void deleteByCampaignAndMaterial(CampaignEntity campaignEntity, MaterialEntity material);
 
     // List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
 
 }

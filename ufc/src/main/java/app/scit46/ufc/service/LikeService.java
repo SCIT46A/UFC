@@ -25,6 +25,11 @@ import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 
 @Service
 @RequiredArgsConstructor
@@ -130,6 +135,23 @@ public class LikeService {
         }
     }
 
+    //알림 전송 목적으로 만듦
+    public List<CreatorEntity> findCreatorLikeList(Long userId) {
+        List<LikeEntity> likeList = likeRepository.findByUser_UserId(userId);
+        return likeList.stream().map(LikeEntity::getCreator).collect(Collectors.toList());
+    }
+
+    // 알림 전송 목적으로 만듦
+    public List<CampaignEntity> findCampaignLikeList(Long userId) {
+        List<LikeEntity> likeList = likeRepository.findByUser_UserId(userId);
+        return likeList.stream().map(LikeEntity::getCampaign).collect(Collectors.toList());
+    }
+
+    // 알림 전송 목적으로 만듦
+    public List<ProductEntity> findProductLikeList(Long userId) {
+        List<LikeEntity> likeList = likeRepository.findByUser_UserId(userId);
+        return likeList.stream().map(LikeEntity::getProduct).collect(Collectors.toList());
+      
     public List<LikeDTO> getLikesByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));

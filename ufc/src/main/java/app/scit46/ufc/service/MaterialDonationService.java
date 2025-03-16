@@ -32,13 +32,10 @@ public class MaterialDonationService {
 
     private CampaignService campaignService;
 
-
     @Autowired
     public void setCampaignService(@Lazy CampaignService campaignService) {
         this.campaignService = campaignService;
     }
-
-
 
     public List<MaterialDonationDTO> donationFindByUserId(Long userId) {
         List<MaterialDonationEntity> materialDonationEntities = materialDonationRepository.findAllByUser_UserId(userId);
@@ -49,7 +46,7 @@ public class MaterialDonationService {
                 .map(MaterialDonationDTO::toDTO)
                 .toList();
     }
-    
+
     public List<MaterialDonationDTO> getMaterialDonationsByUserId(Long userId) {
         List<MaterialDonationEntity> temp = materialDonationRepository.findAllByUser_UserId(userId);
         if (temp.isEmpty()) {
@@ -59,7 +56,6 @@ public class MaterialDonationService {
                 .map(MaterialDonationDTO::toDTO)
                 .toList();
     }
-
 
     public List<MaterialDonationDTO> findDonationByCampaign(Long campaignId) {
         return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
@@ -101,7 +97,7 @@ public class MaterialDonationService {
 
     public Map<String, Object> getDonationData(List<Long> campaignIds) {
         List<MaterialDonationDTO> donations = getDonationsByCampaignIds(campaignIds);
-        Map<String, String> trackingStatuses = deliveryService.trackMultipleDeliveries(donations);
+        Map<String, String> trackingStatuses = deliveryService.trackMaterialDonations(donations);
 
         List<Map<String, Object>> transformedDonations = donations.stream().map(donation -> {
             String courierId = donation.getCourierId();

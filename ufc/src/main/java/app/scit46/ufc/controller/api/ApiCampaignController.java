@@ -60,8 +60,8 @@ public class ApiCampaignController {
     // board 신규 저장
     @PostMapping("/{id}/board")
     public ResponseEntity<Long> createBoard(@PathVariable("id") Long id,
-                                            @RequestBody CampaignBoardDTO boardRequest,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestBody CampaignBoardDTO boardRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
         Long boardId = campaignBoardService.boradsave(id, boardRequest.getContent(), boardRequest.getTitle());
         return ResponseEntity.ok(boardId);
@@ -77,9 +77,9 @@ public class ApiCampaignController {
     // board 수정하기
     @PostMapping("/{id}/board/{boardId}")
     public ResponseEntity<Long> createBoardEdit(@PathVariable("id") Long id,
-                                                @PathVariable("boardId") Long boardId,
-                                                @RequestBody CampaignBoardDTO boardRequest,
-                                                @AuthenticationPrincipal UserDetails userDetails) {
+            @PathVariable("boardId") Long boardId,
+            @RequestBody CampaignBoardDTO boardRequest,
+            @AuthenticationPrincipal UserDetails userDetails) {
         CampaignDTO campaign = campaignService.readCampaign(id);
         Long updatedBoardId = campaignBoardService.updateBoard(id, boardId, boardRequest.getContent(),
                 boardRequest.getTitle(), userDetails);
