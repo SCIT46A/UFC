@@ -22,8 +22,11 @@ public interface CampaignReviewRepository extends JpaRepository<CampaignReviewEn
     CampaignReviewEntity findBycReviewId(Long cReviewId);
 
     CampaignReviewEntity findBycReviewIdAndContent(Long cReviewId, String content);
+    
     List<CampaignReviewEntity> findByContentLike(String content);
+
     Page<CampaignReviewEntity> findAll(Pageable pageable);
+    
     Page<CampaignReviewEntity> findByReviewedBy_UserId(Long userId, Pageable pageable);
 
     Optional<CampaignReviewEntity> findByCampaignedByAndReviewedBy(CampaignEntity campaign, UserEntity user);

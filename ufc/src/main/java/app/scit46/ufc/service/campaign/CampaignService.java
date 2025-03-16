@@ -78,6 +78,8 @@ public class CampaignService {
         return campaignRepository.findById(id).orElse(null);
     }
 
+
+
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
@@ -552,4 +554,15 @@ public class CampaignService {
         }
     }
 
+    public boolean isCampaignAchieved(Long campaignId) {
+        Integer result = campaignRepository.isCampaignAchieved(campaignId);
+        return result != null && result == 1;
+    }
+
+
+    public List<CampaignDTO> getCampaignsByCampaignId(Long campaignId) {
+        return campaignRepository.findByCampaignId(campaignId).stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 }

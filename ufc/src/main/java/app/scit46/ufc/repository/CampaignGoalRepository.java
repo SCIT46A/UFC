@@ -18,4 +18,7 @@ public interface CampaignGoalRepository extends JpaRepository<CampaignGoalEntity
     List<CampaignGoalEntity> findAllWithCampaign();
 
     List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
+    // List<CampaignGoalEntity> findByCampaign_CampaignId(Long campaignId);
+
 }
