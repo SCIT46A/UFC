@@ -6,11 +6,16 @@ import java.util.Map;
 
 import app.scit46.ufc.dto.*;
 import app.scit46.ufc.dto.alert.UserAlertDTO;
+import app.scit46.ufc.dto.chat.ChatMessageDTO;
+import app.scit46.ufc.dto.chat.ChatRoomDTO;
+
 import app.scit46.ufc.dto.custom.CampaignWithGoalsDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.service.*;
 import app.scit46.ufc.service.alert.UserAlertService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.chat.ChatMessageService;
+import app.scit46.ufc.service.chat.ChatRoomService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,6 +45,9 @@ public class ApiController {
     private final LikeService likeService;
     private final CampaignService campaignService;
     private final CourierService courierService;
+    private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
+
 
 
     //  카테고리 입력
@@ -155,6 +163,61 @@ public class ApiController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/like/delete")
+    public ResponseEntity<Map<String, Object>> deleteLike(
+            @RequestParam("likeId") Long likeId,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long userId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("success", false, "message", "로그인이 필요합니다."));
+        }
+        try {
+            likeService.deleteLike(likeId, userId);
+            log.info("likeId: " + likeId);
+            log.info("userId: " + userId);
+            return ResponseEntity.ok(Map.of("success", true, "message", "좋아요가 삭제되었습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("success", false, "message", e.getMessage()));
+        }
+    }
+
+
+//  채팅관련 api컨틀롤러
+
+    @GetMapping("/chatRoom/all")
+    public List<ChatRoomDTO> getAllChatRooms(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId");
+        }
+        // 필요 시 loginUserId null 체크 및 예외 처리
+        return chatRoomService.findAll(loginUserId);
+    }
+
+    @GetMapping("/chatRoom/{chatRoomId}/messages")
+    public List<ChatMessageDTO> getMessagesByChatRoom(@PathVariable Long chatRoomId) {
+        return chatMessageService.findMessagesByChatRoomId(chatRoomId);
+    }
+
+    @GetMapping("/findme")
+    public Long findme(HttpServletRequest request){
+        HttpSession session = request.getSession(false);
+        Long loginUserId = null;
+        if (session != null) {
+            loginUserId = (Long) session.getAttribute("loginUserId");
+        }
+        return loginUserId;
+    }
+
+
+    @GetMapping("/chatRoom/add")
+    public ChatRoomDTO chatRoomAdd(@RequestParam Long loginUserId, @RequestParam Long userId) {
+        return chatRoomService.createChatRoom(loginUserId, userId);
+    }
 
 
 }

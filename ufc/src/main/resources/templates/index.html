@@ -29,12 +29,17 @@
             th:href="@{/css/index.css}"
             href="../static/css/index.css"
         />
+        <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
         <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+        <script th:src="@{/js/fix/chat.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
         <script src="../../resources/static/js/index.js" defer></script>
         <script th:src="@{/js/index.js}" defer></script>
     </head>
     <body>
+        <div th:replace="~{fix/chat :: chat}"></div>
         <div th:replace="~{fix/header :: header}"></div>
         <div class="flex-col min-h-screen bg-green-50">
             <main class="flex-grow">

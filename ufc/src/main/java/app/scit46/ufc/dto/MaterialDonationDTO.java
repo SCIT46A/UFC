@@ -1,9 +1,18 @@
 package app.scit46.ufc.dto;
 
-import app.scit46.ufc.dto.campaign.CampaignDTO;
-import app.scit46.ufc.entity.MaterialDonationEntity;
-import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
+import app.scit46.ufc.entity.MaterialDonationEntity;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -20,6 +29,7 @@ public class MaterialDonationDTO {
     private String status;
     private LocalDateTime donatedDate;
     private String invoice;
+    private List<RewardDeliveryDTO> rewardDeliveries;
 
     public String getCourierId() {
         return invoice != null ? invoice.split("#")[0] : "";
@@ -43,6 +53,9 @@ public class MaterialDonationDTO {
                 .status(entity.getStatus())
                 .donatedDate(entity.getDonatedDate())
                 .invoice(entity.getInvoice())
+                .rewardDeliveries(entity.getRewardDeliveries() != null ? entity.getRewardDeliveries().stream()
+                        .map(RewardDeliveryDTO::toDTO)
+                        .collect(Collectors.toList()) : null)
                 .build();
     }
 
