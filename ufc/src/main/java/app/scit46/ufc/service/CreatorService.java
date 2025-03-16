@@ -314,6 +314,17 @@ public class CreatorService {
         return "프로필 이미지가 성공적으로 수정되었습니다!";
     }
 
+
+
+    public List<CreatorDTO> getCreatorsByCreatorId(Long creatorId) {
+        return creatorRepository.findByCreatorId(creatorId).stream()
+                .map(CreatorDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+}
+
+
+
     /** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
     // public List<CampaignDTO> getCreatorCampaigns(String userId) {
     // UserEntity user = userService.findUserByIdentity(userId);
@@ -381,4 +392,4 @@ public class CreatorService {
     // return false;
     // }
     // }
-}
+//}

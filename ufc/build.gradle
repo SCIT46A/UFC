@@ -45,6 +45,10 @@ dependencies {
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
 //	결제를 위한 부트페이
 	implementation 'io.github.bootpay:backend:+'
+
+//  채팅을 위한 웹소켓
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 }
 
 tasks.named('test') {

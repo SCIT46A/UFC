@@ -513,10 +513,10 @@ em{
 .main-modal-per-add {
     position: absolute;
     width: 107px;
-    height: 203px;
+    height: 152px;
     z-index: 9000;
-    top: 146px;
-    left: 13.5%;
+    top: 121px;
+    left: 6.2%;
     transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.4);
     border-radius: 999px;
@@ -645,7 +645,7 @@ em{
 .modal-tag-search {
     display: none;
     position: absolute;
-    top: 63%;
+    top: 96%;
     left: 926px;
     width: 276px;
     min-height: 200px;

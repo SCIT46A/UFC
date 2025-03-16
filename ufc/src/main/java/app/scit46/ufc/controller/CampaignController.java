@@ -73,18 +73,21 @@ public class CampaignController {
         CampaignDTO campaign = campaignService.readCampaign(id);
         // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
         Long creatorId = campaign.getCreatedBy().getOwnUser().getUserId();
-        int status = campaign.getCampaignStatus();
+        Integer status = campaign.getCampaignStatus();
         if (status == 0) {
             if (loginUserId == null || !loginUserId.equals(creatorId)) {
                 return "redirect:/";
             }
         }
         if (loginUserId == null) {
-            model.addAttribute("status", false);
-        } else if (!loginUserId.equals(creatorId)) {
-            model.addAttribute("status", false);
-        } else {
-            model.addAttribute("status", true);
+
+            model.addAttribute("status", 0);
+        } else if(!loginUserId.equals(creatorId)){
+            model.addAttribute("status", 0);
+        }
+        else {
+            model.addAttribute("status", 1);
+
         }
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
@@ -98,9 +101,12 @@ public class CampaignController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
+
+
                 && campaign.getCreatedBy().getProImgUrl() != null)
-                        ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
-                        : DEFAULT_IMAGE;
+                ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
+                : DEFAULT_IMAGE;
+
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
         List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
@@ -118,6 +124,7 @@ public class CampaignController {
 
         model.addAttribute("tags", tags);
         model.addAttribute("campaign", campaign);
+        log.info(campaign.toString());
         model.addAttribute("campaignGoalDTOS", campaignGoalDtos);
         model.addAttribute("totalDonors", totalDonors);
         model.addAttribute("totalQuantity", totalQuantity);

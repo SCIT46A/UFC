@@ -3,13 +3,11 @@ package app.scit46.ufc.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import org.springframework.stereotype.Repository;
 
 import app.scit46.ufc.entity.MaterialDonationEntity;
@@ -41,5 +39,6 @@ public interface MaterialDonationRepository extends JpaRepository<MaterialDonati
     @Query("SELECT d FROM MaterialDonationEntity d JOIN FETCH d.campaign")
     List<MaterialDonationEntity> findAllWithCampaign();
 
+    Page<MaterialDonationEntity> findByUser_UserId(Long userId, Pageable pageable);
 
 }
