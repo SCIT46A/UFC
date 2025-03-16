@@ -153,4 +153,18 @@ public class ImageService {
         return "https://imagedelivery.net/" + accountHash + "/" + imageId + "/public";
     }
 
+    public String getImageUrlBoard(String imageId) {
+        // 유효성 검사
+        // imageId가 null 경우 null 반환
+        if (imageId == null)
+            return null;
+        // imageID가 UUID 형식인지 검사
+        if (!UUID.fromString(imageId).toString().equals(imageId)) {
+
+            log.error("imgsrv.GET - 이미지 ID가 유효하지 않습니다.");
+            return null;
+        }
+        return "https://imagedelivery.net/" + accountHash + "/" + imageId + "/board";
+    }
+
 }

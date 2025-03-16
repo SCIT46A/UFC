@@ -278,12 +278,7 @@
                                                                         th:value="${#strings.substringAfter(user.userAddress, '#')}"
                                                                 />
                                                                 <!-- 전체 주소(메인주소 + '#' + 상세주소)를 담는 hidden 필드 -->
-                                                                <input
-                                                                        type="hidden"
-                                                                        class="total-add"
-                                                                        name="address"
-                                                                        th:value="${#strings.replace(user.userAddress, '#', ' ')}"
-                                                                />
+                                                                <input type="hidden" class="total-add" name="address" th:value="${user.userAddress}" />
                                                                 <button class="address-btn-add-ver" onclick="execPostCode()" type="button">주소 변경</button>
                                                             </div>
                                                         </td>

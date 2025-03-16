@@ -407,6 +407,16 @@ body {
     z-index: 1000;
 }
 
+.header-box-top-pe-my-login{
+    position: relative;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
 .header-box-top-pe-my-add{
     position: relative;
     display: flex;
@@ -1399,6 +1409,10 @@ body {
     width: 100%;
     padding: 0px;
     overflow: hidden auto;
+}
+
+.modal-re-search-box-bo-box-in::-webkit-scrollbar {
+    display: none;
 }
 
 .modal-re-search-box-bo-box-in-se{

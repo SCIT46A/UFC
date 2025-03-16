@@ -3,6 +3,8 @@ package app.scit46.ufc.entity;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import app.scit46.ufc.entity.chat.ChatMessageEntity;
+import app.scit46.ufc.entity.chat.ChatRoomEntity;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -113,6 +115,18 @@ public class UserEntity {
     // OneToMany: UserAlert.user 참조
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserAlertEntity> userAlerts;
+
+    // 사용자가 채팅방의 첫 번째 사용자(user1)로 참여한 목록
+    @OneToMany(mappedBy = "user1", fetch = FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomsAsUser1;
+
+    // 사용자가 채팅방의 두 번째 사용자(user2)로 참여한 목록
+    @OneToMany(mappedBy = "user2", fetch = FetchType.LAZY)
+    private List<ChatRoomEntity> chatRoomsAsUser2;
+
+    // 사용자가 보낸 채팅 메시지
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    private List<ChatMessageEntity> chatMessages;
 
     public static UserEntity toEntity(UserDTO userDTO) {
         return UserEntity.builder()

@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>판매중인 상품</title>
+
+    <!-- Tailwind CSS -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
+    <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link
+            rel="stylesheet"
+            th:href="@{/css/product/detail-product.css}"
+            href="../../static/css/product/detail-product.css"
+    />
+    <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+            href="../../static/css/fix/header.css"
+    />
+    <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+            href="../../static/css/fix/footer.css"
+    />
+
+    <!-- jQuery (Summernote는 jQuery에 의존합니다) -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <!-- Summernote Lite (Bootstrap 의존 없음) -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css"
+            rel="stylesheet"
+    />
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js">
+    </script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+
+    <!-- 커스텀 JS -->
+    <script src="../../static/js/product/detail-product.js" defer></script>
+    <script th:src="@{/js/product/detail-product.js}" defer></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
+    <script th:src="@{/js/fix/chat.js}" defer></script>
+</head>
+<body>
+<div th:replace="~{fix/chat :: chat}"></div>
+<div th:replace="~{fix/header :: header}"></div>
+<main>
+    <section id="projects" style="background-color: #ffffff">
+        <ul class="ul-add hidden">
+            <li>
+                <button type="button" class="ul-add-li">신고</button>
+            </li>
+        </ul>
+        <div class="report hidden">
+            <div class="report-in">
+                <div class="report-in-box">
+                    <div class="report-in-box-warp">
+                        <div class="report-in-box-warp-in">
+                            <!-- 상단 -->
+                            <div class="report-in-box-warp-in-title">
+                                커뮤니티 글/댓글 신고
+                                <button class="report-close">
+                                            <span class="report-close-span">
+                                                <div
+                                                        class="report-close-span-div"
+                                                >
+                                                    <svg
+                                                            width="20"
+                                                            height="20"
+                                                            viewBox="0 0 20 20"
+                                                            fill="none"
+                                                            xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                                fill-rule="evenodd"
+                                                                clip-rule="evenodd"
+                                                                d="M10.064 7.8927L2.13314 0L0.0311185 2.09192L7.96193 9.98462L0 17.9083L2.10202 20.0002L10.064 12.0765L17.8983 19.8732L20.0003 17.7813L12.166 9.98462L19.9692 2.21889L17.8672 0.126967L10.064 7.8927Z"
+                                                                fill="#3D3D3D"
+                                                        ></path>
+                                                    </svg>
+                                                </div>
+                                            </span>
+                                </button>
+                            </div>
+                            <!-- 내용 -->
+                            <div class="report-in-box-warp-in-content">
+                                <div
+                                        class="report-in-box-warp-in-content-box"
+                                >
+                                    <!-- 내용 -->
+                                    <div
+                                            class="report-in-box-warp-in-content-box-in"
+                                    >
+                                        <!-- 큰글 -->
+                                        <div
+                                                class="report-in-box-warp-in-content-box-in-title"
+                                        >
+                                            이 게시물을 신고하는 사유를
+                                            선택해 주세요.
+                                        </div>
+                                        <!-- 선택지 -->
+                                        <div
+                                                class="report-in-box-warp-in-content-box-in-content"
+                                        >
+                                            <!-- 각각의 이유 -->
+                                            <div
+                                                    class="report-in-box-warp-in-content-box-in-content-pe"
+                                            >
+                                                프로젝트와 관련 없는
+                                                홍보/스팸 콘텐츠
+                                            </div>
+                                            <div
+                                                    class="report-in-box-warp-in-content-box-in-content-pe add"
+                                            >
+                                                도용/사칭을 포함한
+                                                타인의 권리를 침해함
+                                            </div>
+                                            <div
+                                                    class="report-in-box-warp-in-content-box-in-content-pe"
+                                            >
+                                                특정인에 대한
+                                                욕설/인신공격/비방이
+                                                포함됨
+                                            </div>
+                                            <div
+                                                    class="report-in-box-warp-in-content-box-in-content-pe"
+                                            >
+                                                본인 또는 타인의
+                                                개인정보가 노출됨
+                                            </div>
+                                            <div
+                                                    class="report-in-box-warp-in-content-box-in-content-pe"
+                                            >
+                                                성적 수치심이나 불쾌감을
+                                                유발하는 내용이 포함됨
+                                            </div>
+                                        </div>
+                                        <!-- 설명 -->
+                                        <div
+                                                class="report-in-box-warp-in-content-add"
+                                        >
+                                            <div
+                                                    class="report-in-box-warp-in-content-add-more"
+                                            >
+                                                텀블벅 운영팀에서는
+                                                <a
+                                                        href="/"
+                                                        class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
+                                                >이용약관</a
+                                                >
+                                                및
+                                                <a
+                                                        href="/"
+                                                        class="ReportDescription__StyledLink-sc-1tjx00g-2 hjpUiv"
+                                                >커뮤니티
+                                                    운영정책</a
+                                                >에 따라 신고를 검토하고
+                                                조치하고 있습니다.
+                                                텀블벅 규정과 맞지 않는
+                                                게시물을 발견하시면
+                                                이곳에서 신고해
+                                                주세요.<br /><br />허위로
+                                                특정 이용자 또는 글을
+                                                반복적으로 신고할 경우
+                                                신고자 본인 계정의
+                                                이용이 정지될 수 있으니
+                                                유의해 주세요.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 버튼쪽 -->
+                                    <div class="report-btn">
+                                        <button class="report-btn-in">
+                                            신고 제출하기
+                                        </button>
+                                        <!-- 눌렀을때 -->
+                                        <!-- <button
+                                            class="report-btn-in add-add"
+                                        >
+                                            신고 제출하기
+                                        </button> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 주목할 만한 프로젝트 -->
+        <div class="container mx-auto px-4 target-project">
+            <div class="main">
+                <!-- 상단 설명쪽 -->
+                <div class="main-top">
+                    <div class="main-top-in">
+                        <div class="main-top-in-box">
+                            <!-- 상단제목 -->
+                            <!-- 이미지 -->
+                            <div class="main-top-in-box-img">
+                                <figure class="main-top-in-box-img-fi">
+                                    <div
+                                            class="main-top-in-box-img-fi-in"
+                                    >
+                                        <img th:src="${imageUrl}"
+                                             alt="Campaign Image"
+                                             class="main-top-in-box-img-fi-in-img" />
+
+                                    </div>
+                                </figure>
+                            </div>
+                            <!-- 펀딩내용 -->
+                            <aside class="main-top-in-box-content">
+                                <div
+                                        class="main-top-in-box-content-fund"
+                                >
+                                    <div
+                                            class="main-top-in-box-content-fund-top"
+                                    >
+                                        <div
+                                                class="main-top-in-box-content-fund-top-title"
+                                        >
+                                            상풍명
+                                        </div>
+                                        <div
+                                                class="main-top-in-box-content-fund-top-pi"
+                                        >
+                                        </div>
+                                        <h1
+                                                class="main-top-in-box-title-in-tag-title"
+                                        >
+                                            <span th:text="${product.item.name}"></span>
+                                            <div
+                                                    class="main-funding-in-box-le"
+                                            >
+                                                <div
+                                                        class="main-funding-in-box-le-in"
+                                                >
+                                                    <div
+                                                            class="main-funding-in-box-le-in-in"
+                                                    >
+                                                        <div
+                                                                class="main-funding-in-box-le-in-in-like"
+                                                                th:data-creator-id="${product.createdBy.creatorId}"
+                                                                th:classappend="${creatorLike} ? ' ' : 'likeFill' "
+                                                        >
+                                                            <div
+                                                                    class="main-funding-in-box-le-in-in-like-view"
+                                                            >
+                                                                <!-- 빈하트 -->
+                                                                <svg
+                                                                        viewBox="0 0 38 34"
+                                                                >
+                                                                    <path
+                                                                            clip-rule="evenodd"
+                                                                            d="M18.9996 5.62299L15.6051 2.55614C12.2106 -0.510215 6.56995 0.17753 3.48147 3.57849C-0.397666 7.66674 -0.397863 14.5859 3.70675 18.9121L19 33.8811L34.2923 18.9121C38.3969 14.5859 38.3971 7.66747 34.5176 3.57849C31.4291 0.17753 25.7888 -0.510094 22.3942 2.55614L18.9996 5.62299ZM32.0081 16.6701C34.9446 13.533 34.8523 8.58052 32.1962 5.78099L32.1721 5.75565L32.1487 5.72978C30.0533 3.42248 26.4219 3.23047 24.5394 4.93062L18.9996 9.93557L13.4601 4.93076C11.5777 3.2306 7.94577 3.42244 5.85042 5.72978L5.82689 5.75569L5.8028 5.78108C3.14716 8.57988 3.05453 13.533 5.99094 16.6701L18.9999 29.4033L32.0081 16.6701Z"
+                                                                            fill="#6D6D6D"
+                                                                    ></path>
+                                                                </svg>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </h1>
+                                    </div>
+                                    <!-- 남은기간 -->
+                                    <div
+                                            class="main-top-in-box-content-fund-mi"
+                                    >
+                                        <div class="main-top-in-box-content-fund-top-title">관련 태그</div>
+                                        <div
+                                                class="main-top-in-box-title-in-tag"
+                                        >
+                                            <span th:each="tag : ${tags}" th:text="${tag.tag.content}"></span>
+                                        </div>
+                                    </div>
+                                    <div
+                                            class="main-top-in-box-content-fund-bo"
+                                    >
+                                        <div
+                                                class="main-top-in-box-content-fund-top-title"
+                                        >
+                                            상품설명
+                                        </div>
+                                        <div
+                                                class="main-top-in-box-content-fund-top-pi"
+                                        >
+                                            <span class="main-top-in-box-content-fund-top-pi-add-span" th:text="${product.item.description}">명</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- 펀딩상세내용 -->
+                                <div class="main-funding-de">
+                                    <div class="main-funding-de-box">
+                                        <dl class="main-funding-de-box-in">
+                                            <dt class="main-funding-de-box-in-dt">가격</dt>
+                                            <dd class="main-funding-de-box-in-dd">
+                                                <span th:text="${product.price} + ' 원'">2025.01.26</span>
+                                            </dd>
+                                        </dl>
+                                        <dl class="main-funding-de-box-in">
+                                            <dt class="main-funding-de-box-in-dt">남은 수량</dt>
+                                            <dd class="main-funding-de-box-in-dd">
+                                                <span th:text="${product.stockQuantity} + ' 개'">2025.03.27</span>
+                                            </dd>
+                                        </dl>
+                                    </div>
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
+                </div>
+                <!-- 중간 네비게이션 -->
+                <div>
+                    <nav class="main-mi-na">
+                        <div class="main-mi-na-in">
+                            <div class="main-mi-na-in-box">
+                                <!-- 각각의 이동하는곳 -->
+                                <div
+                                        class="main-mi-na-in-box-pe campaign check"
+                                >
+                                    상품 소개
+                                </div>
+<!--                                <div class="main-mi-na-in-box-pe board " th:classappend="${product.status == 0} ? 'hidden'">-->
+<!--                                    새소식-->
+<!--                                </div>-->
+<!--                                <div class="main-mi-na-in-box-pe review" th:classappend="${product.status == 0} ? 'hidden'">-->
+<!--                                    리뷰-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+                <!-- 하단 내용쪽 -->
+                <div class="main-funding-bo">
+                    <!-- 프로젝트 내용 -->
+                    <div class="main-funding-bo-in">
+                        <div class="main-funding-bo-in-box">
+                            <!-- 왼쪽 내용 -->
+                            <div class="main-funding-bo-in-box-content">
+                                <div
+                                        class="main-funding-bo-in-box-content-all"
+                                >
+                                    <div
+                                            class="main-funding-bo-in-box-content-all-in"
+                                    >
+                                        <!-- 간단한 창작자 소개 -->
+                                        <div class="reward-in-se-in">
+                                            <!-- 세부정보 들어감 -->
+                                            <p>창작자 소개</p>
+                                            <!-- 이미지등 -->
+                                            <div
+                                                    class="reward-in-se-in-img"
+                                            >
+                                                <div
+                                                        class="reward-in-se-in-img-a"
+                                                >
+                                                    <div
+                                                            class="reward-in-se-in-img-a-box"
+                                                    >
+                                                                <span class="reward-in-se-in-img-a-box-span"
+                                                                      th:style="'background-image: url(' + ${creatorimageUrl} + ');'">
+                                                                </span>
+                                                        <div
+                                                                class="reward-in-se-in-img-a-box-in"
+                                                        >
+                                                                    <span th:text="${product.createdBy.bName}"
+                                                                    >세계관</span
+                                                                    >
+
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                            class="reward-in-se-in-bo"
+                                                    >
+                                                        <!-- 문의 -->
+                                                        <div
+                                                                class="reward-in-se-in-bo-btn"
+                                                        >
+                                                            <button
+                                                                    class="reward-in-se-in-bo-btn-le"
+                                                                    th:attr="data-userid=${product.createdBy.ownUser.userId}, data-image=${product.createdBy.proImgUrl.imageId}, data-username=${product.createdBy.bName}"
+                                                            >
+                                                                <div
+                                                                        class="reward-in-se-in-bo-btn-le-img"
+                                                                >
+                                                                    <svg
+                                                                            viewBox="0 0 18 18"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                                fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M9.93691 12.2063L10.9853 13.6766L12.0337 12.2063H14.7176V4.46085H3.28235V12.2063H9.93691ZM11.1124 15.3082C11.0488 15.3973 10.9218 15.3973 10.8582 15.3082L9.42073 13.2922H2.64706C2.42777 13.2922 2.25 13.1052 2.25 12.8746V3.79263C2.25 3.56198 2.42777 3.375 2.64706 3.375H15.3529C15.5722 3.375 15.75 3.56198 15.75 3.79263V12.8746C15.75 13.1052 15.5722 13.2922 15.3529 13.2922H12.5499L11.1124 15.3082Z"
+                                                                                fill="#3D3D3D"
+                                                                        ></path>
+                                                                        <ellipse
+                                                                                cx="5.82341"
+                                                                                cy="8.38654"
+                                                                                rx="0.794118"
+                                                                                ry="0.835267"
+                                                                                fill="#3D3D3D"
+                                                                        ></ellipse>
+                                                                        <ellipse
+                                                                                cx="8.99993"
+                                                                                cy="8.38654"
+                                                                                rx="0.794118"
+                                                                                ry="0.835267"
+                                                                                fill="#3D3D3D"
+                                                                        ></ellipse>
+                                                                        <ellipse
+                                                                                cx="12.1764"
+                                                                                cy="8.38654"
+                                                                                rx="0.794118"
+                                                                                ry="0.835267"
+                                                                                fill="#3D3D3D"
+                                                                        ></ellipse>
+                                                                    </svg>
+                                                                </div>
+                                                            </button>
+                                                        </div>
+                                                        <!-- 팔로우 -->
+                                                        <div
+                                                                class="reward-in-se-in-bo-btn"
+                                                        >
+                                                            <div
+                                                                    class="reward-in-se-in-bo-btn-in"
+                                                            >
+
+                                                                <button class="reward-in-se-in-bo-btn-ri"
+                                                                        th:data-creator-id="${product.createdBy.creatorId}"
+                                                                        th:classappend="${creatorLike} ? ' unlike' : '' "
+                                                                >
+                                                                    <svg
+                                                                            width="48"
+                                                                            height="48"
+                                                                            viewBox="0 0 48 48"
+                                                                            fill="none"
+                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                    >
+                                                                        <path
+                                                                                fill-rule="evenodd"
+                                                                                clip-rule="evenodd"
+                                                                                d="M26.1333 6.93333H21.8667V21.8667H8V26.1333H21.8667V41.0667H26.1333V26.1333H40V21.8667H26.1333V6.93333Z"
+                                                                                fill="#3D3D3D"
+                                                                        ></path>
+                                                                    </svg>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- 글 소개 -->
+                                            <div
+                                                    class="reward-in-se-in-content"
+                                                    th:text="${product.createdBy.intro}"
+                                            >
+                                            </div>
+                                            <!-- 문의 , 팔로우 -->
+                                        </div>
+                                        <!-- 여유공간용 -->
+                                        <div style="height: 20px"></div>
+                                        <!-- 내용 -->
+                                        <div class="content-box">
+                                            <input type="hidden" th:value="${product.productId}" id="product-id">
+                                            <div class="content-box-in">
+                                                <p style="color: gray"> ※ 게시글을 작성하셔야 관리자에게 승인받을 수 있습니다.</p>
+                                                <!--섬머노트 들어가는 곳입니다~-->
+                                                <div
+                                                        class="cam-pro-bo-ri-in-content"
+                                                >
+                                                    <p
+                                                            class="cam-pro-bo-ri-in-content-title"
+                                                    ></p>
+                                                    <div
+                                                            class="cam-pro-bo-ri-in-content-sum presentation-size"
+                                                    ></div>
+                                                </div>
+                                            </div>
+                                            <input type="hidden" th:value="${product.status}" id="campaign-status">
+                                            <button class="summer-btn " th:classappend="${product.status == 1} ? 'hidden'">작성하기</button>
+                                            <button class="summer-btn-edit" th:classappend="${product.status == 1} ? 'hidden'" >수정하기</button>
+                                            <button class="summer-btn-edit-save hidden">수정하기</button>
+                                        </div>
+                                        <!-- 게시글 -->
+<!--                                        <div class="main-board hidden">-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-top"-->
+<!--                                            ></div>-->
+<!--                                            <div class="main-board-top-table">-->
+<!--                                                <div-->
+<!--                                                        class="main-board-total"-->
+<!--                                                >-->
+<!--                                                    게시글-->
+<!--                                                    <strong class="board-count-target">0</strong>-->
+<!--                                                </div>-->
+<!--                                                <button class="main-board-add-btn" th:classappend="${status == 0} ? 'hidden-important'">등록하기</button>-->
+
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 게시글 눌렀을때 뒤로가기 버튼 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="main-board-back-div hidden"-->
+<!--                                            >-->
+<!--                                                <div class="main-board-add-btn-box">-->
+<!--                                                    <button-->
+<!--                                                            class="main-board-back"-->
+<!--                                                    >-->
+<!--                                                            <span>-->
+<!--                                                                <svg-->
+<!--                                                                        viewBox="0 0 24 24"-->
+<!--                                                                        fill="none"-->
+<!--                                                                        focusable="false"-->
+<!--                                                                        role="presentation"-->
+<!--                                                                        class="withIcon_icon__2nnc8 Button_icon__11zrq"-->
+<!--                                                                        aria-hidden="true"-->
+<!--                                                                >-->
+<!--                                                                    <path-->
+<!--                                                                            fill-rule="evenodd"-->
+<!--                                                                            clip-rule="evenodd"-->
+<!--                                                                            d="M16.076 2.576l.848.848L8.35 12l8.575 8.576-.848.848L6.65 12l9.425-9.424z"-->
+<!--                                                                    ></path>-->
+<!--                                                                </svg>-->
+<!--                                                                <span-->
+<!--                                                                        class="main-board-back-in"-->
+<!--                                                                >목록으로-->
+<!--                                                                    돌아가기</span-->
+<!--                                                                >-->
+<!--                                                            </span>-->
+<!--                                                    </button>-->
+<!--                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == 0} ? 'hidden-important'">작성하기</button>-->
+<!--                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == 0} ? 'hidden-important'">삭제</button>-->
+<!--                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == 0} ? 'hidden-important'">수정하기</button>-->
+<!--                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == 0} ? 'hidden-important'">수정적용</button>-->
+<!--                                                </div>-->
+<!--                                                <div-->
+<!--                                                        class="main-board-pe-box"-->
+<!--                                                >-->
+<!--                                                    <div-->
+<!--                                                            class="main-board-pe-in"-->
+<!--                                                    >-->
+<!--                                                        &lt;!&ndash; 제목 &ndash;&gt;-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-title"-->
+<!--                                                        >-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-title-add"-->
+<!--                                                        >-->
+
+<!--                                                        </p>-->
+<!--                                                        &lt;!&ndash; 갱신? 날짜 &ndash;&gt;-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-date"-->
+<!--                                                        >-->
+<!--                                                        <p-->
+<!--                                                                class="main-board-pe-in-date-add"-->
+<!--                                                        >-->
+
+<!--                                                        </p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+
+<!--                                            &lt;!&ndash; 각각의 댓글 나오는곳 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="main-board-total-pe"-->
+<!--                                            >-->
+
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 게시글 내용 보이는곳 &ndash;&gt;-->
+<!--                                            <div-->
+<!--                                                    class="content-board-box hidden"-->
+<!--                                            >-->
+<!--                                                <div-->
+<!--                                                        class="content-box-in-target"-->
+<!--                                                >-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                        <!-- 댓글 -->
+<!--                                        <div class="main-reply">-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-top"-->
+<!--                                            ></div>-->
+<!--                                            <div-->
+<!--                                                    class="main-reply-total"-->
+<!--                                            >-->
+<!--                                                댓글 <strong>1</strong>-->
+<!--                                            </div>-->
+<!--                                            &lt;!&ndash; 각각의 댓글 나오는곳 &ndash;&gt;-->
+<!--                                            <div id="reply-data-target">-->
+<!--                                                <input type="text" class="main-reply-input-box" placeholder="댓글을 입력해주세요">-->
+<!--                                            </div>-->
+
+<!--                                        </div>-->
+<!--                                        <div class="main-review hidden">-->
+<!--                                            <div-->
+<!--                                                    class="main-review-top"-->
+<!--                                            ></div>-->
+<!--                                            <div-->
+<!--                                                    class="main-review-total"-->
+<!--                                            >-->
+<!--                                                리뷰 <strong>1</strong>-->
+<!--                                            </div>-->
+<!--                                            <div>-->
+<!--                                                &lt;!&ndash;                                                        리뷰 입력하는곳&ndash;&gt;-->
+<!--                                                <div style="display: flex">-->
+<!--                                                            <span class="star">-->
+<!--                                                                <em></em>-->
+<!--                                                            </span>-->
+<!--                                                    <input type="text" class="main-review-input-box" placeholder="리뷰을 입력해주세요">-->
+<!--                                                </div>-->
+<!--                                                &lt;!&ndash;                                                     사람들 리뷰 나오는곳&ndash;&gt;-->
+<!--                                                <div id="review-data-target">-->
+<!--                                                    &lt;!&ndash;                                                            여기서 각각의 리뷰&ndash;&gt;-->
+
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="reply-border-target">
+                            <!-- 리워드 -->
+                            <div class="reward">
+                                <div class="reward-in">
+                                    <!-- 판매자 정보 -->
+
+                                    <!-- 리워드 정보 -->
+                                    <div class="reward-info">
+                                        <div class="reward-info-in">
+                                            <div
+                                                    class="reward-info-in-titme"
+                                            >
+                                                물품 구매
+                                            </div>
+                                            <!-- 결제 연결? -->
+                                            <div class="reward-choice">
+
+                                                <!-- 내가 선택한거 뜨게 -->
+                                                <div
+                                                        style="height: 20px"
+                                                ></div>
+                                                <div
+                                                        class="reward-choice-my"
+                                                >
+                                                    <!-- 각각의 내가 선택한거 -->
+                                                    <div class="reward-choice-my-pe"
+                                                         th:attr="data-available=${product.stockQuantity}, data-price=${product.price}">
+                                                        <div class="reward-choice-my-pe-box">
+                                                            <div class="reward-choice-my-pe-box-top">
+                                                                <ul>
+                                                                    <li>
+                                                                        <div class="reward-choice-my-pe-box-top-in" th:text="${product.item.name}"></div>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                            <div class="reward-choice-my-pe-box-bo">
+                                                                <div class="reward-choice-my-pe-box-bo-le">
+                                                                    <button class="reward-choice-btn remove-reward">
+                                                                        <div class="reward-choice-btn-le">
+                                                                            <!-- minus 아이콘 SVG -->
+                                                                            <svg viewBox="0 0 48 48">
+                                                                                <path d="M6 24.1C6 22.94 6.94 22 8.1 22H39.9C41.06 22 42 22.94 42 24.1C42 25.26 41.06 26.2 39.9 26.2H8.1C6.94 26.2 6 25.26 6 24.1Z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                    </button>
+                                                                    <input type="text" class="reward-choice-count" value="1" readonly>
+                                                                    <button class="reward-choice-btn add-reward">
+                                                                        <div class="reward-choice-btn-le">
+                                                                            <!-- plus 아이콘 SVG -->
+                                                                            <svg viewBox="0 0 48 48">
+                                                                                <path fill-rule="evenodd" clip-rule="evenodd" d="M43.71 21.855H25.99V4.09524C25.99 2.898 24.9945 2 23.9005 2 22.8054 2 21.81 2.898 21.81 4.09524V21.955H4.0905C2.896 21.955 2 22.8538 2 23.9501 2 25.0476 2.896 26.0454 4.0905 26.0454H21.91V43.9048C21.91 45.0023 22.8054 46 23.999 46 25.095 46 26.09 45.102 26.09 43.9048V26.0454H43.9085C45.005 26.0454 46 25.1474 46 23.9501 45.801 22.853 44.904 21.855 43.71 21.855Z"></path>
+                                                                            </svg>
+                                                                        </div>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="reward-choice-pri">
+                                                                    <!-- 여기서 숫자 결과와 뒤에 " 원" 텍스트가 붙음 -->
+                                                                    <span class="reward-choice-quantity" th:text="${product.price}">0</span> 원
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                </div>
+                                                <!-- 밑에 버튼 -->
+                                                <div
+                                                        style="height: 20px"
+                                                ></div>
+                                                <div class="reward-btn">
+                                                    <button
+                                                            class="reward-btn-in"
+                                                    >
+                                                                <span
+                                                                ><b
+                                                                >
+                                                                        </b
+                                                                        >구매하기</span
+                                                                >
+                                                        <p class="hidden"></p>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!-- 여기에 각각의 리워드가 들어감 -->
+                                            <div class="reward-target">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 하단 다른 프로젝트 추천 -->
+                    <div class="main-bo">
+                        <div class="main-item-titie">
+                            <div class="main-item-titie-box">
+                                <div class="main-item-titie-box-top">
+                                    <div class="main-item-titie-box-top-title">
+                                        이런 캠페인은 어떠세요?
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 메인 내용 -->
+                        <div class="main-resent">
+                            <!-- 메인 전체 묶는거 -->
+                            <div class="main-resent-all" id="campaign-target">
+                                <!-- 각각의 캠페인 -->
+                            </div>
+                        </div>
+                        <button class="main-resent-all-add-btn-le hidden">
+                            <div class="main-resent-all-add-btn-in">
+                                <svg viewBox="0 0 48 48">
+                                    <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M32.8912 45.3014L12 23.913L32.8912 2.52471C33.5866 1.8251 34.7804 1.8251 35.4777 2.52471C36.1741 3.22333 36.1741 4.42368 35.4777 5.22224L17.1731 23.913L35.4777 42.7018C36.1741 43.4024 36.1741 44.6018 35.4777 45.4013C35.0788 45.8011 34.6819 46 34.1845 46C33.7855 45.9011 33.2881 45.7002 32.8912 45.3014Z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </button>
+                        <button class="main-resent-all-add-btn-ri">
+                            <div class="main-resent-all-add-btn-in">
+                                <svg viewBox="0 0 48 48">
+                                    <path
+                                            fill-rule="evenodd"
+                                            clip-rule="evenodd"
+                                            d="M13.9071 46C13.4118 46 12.9164 45.8001 12.6192 45.4003C11.9257 44.7007 11.9257 43.5014 12.6192 42.7019L30.8493 24.0125L12.5201 5.22317C11.8266 4.52357 11.8266 3.32425 12.5201 2.5247C13.2136 1.8251 14.3034 1.8251 15.096 2.5247L36 24.0125L15.195 45.4003C14.7988 45.8001 14.3034 46 13.9071 46Z"
+                                    ></path>
+                                </svg>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" id="loginUserId" th:value="${loginUserId}">
+    </section>
+</main>
+<div th:replace="~{fix/footer :: footer}"></div>
+</body>
+</html>

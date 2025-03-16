@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+
+import app.scit46.ufc.service.chat.ChatRoomService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -61,12 +66,14 @@ public class UserController {
     private final LikeService likeService;
     private final ImageService imageService;
     private final MaterialDonationService materialDonationService;
+
     private final BadgeService badgeService;
     private final UserBadgeService userBadgeService;
     private final CampaignGoalService campaignGoalService;
     private final RewardDeliveryService rewardDeliveryService;
     private final DeliveryService deliveryService;
     private final CreatorService creatorService;
+    private final ChatRoomService chatRoomService;
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -678,6 +685,8 @@ public class UserController {
 
             // 가입 완료 후, 세션에 로그인 정보 저장
             session.setAttribute("loginUserId", savedUser.getUserId());
+
+            chatRoomService.createChatRoom(savedUser.getUserId(), 0L);
 
             // 메인 페이지로 리다이렉트
             return "redirect:/";
