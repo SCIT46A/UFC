@@ -1,26 +1,26 @@
 package app.scit46.ufc.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.stream.Collectors;
 
-import app.scit46.ufc.dto.MaterialDonationDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
-import lombok.RequiredArgsConstructor;
-import app.scit46.ufc.dto.MaterialDonationDTO;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.transaction.annotation.Transactional;
-import app.scit46.ufc.service.CourierService;
-import app.scit46.ufc.service.delivery.DeliveryService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.delivery.DeliveryService;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -144,5 +144,27 @@ public class MaterialDonationService {
         completeCounts.put("approved", donationCounts.getOrDefault("approved", 0L));
 
         return completeCounts;
+    }
+
+    public Page<MaterialDonationDTO> getListByUser(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("donatedDate").descending());
+        return materialDonationRepository.findByUser_UserId(userId, pageable).map(MaterialDonationDTO::toDTO);
+    }
+
+    public List<MaterialDonationDTO> getMaterialDonationsByCampaignId(Long campaignId) {
+        return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public MaterialDonationDTO getDonation(Long donationId) {
+        return materialDonationRepository.findById(donationId)
+                .map(MaterialDonationDTO::toDTO)
+                .orElseThrow(() -> new RuntimeException("Material Donation not found"));
+    }
+
+    public MaterialDonationDTO getDonationByDonationId(Long donationId) {
+        return materialDonationRepository.findById(donationId)
+                .map(MaterialDonationDTO::toDTO)
+                .orElseThrow(() -> new RuntimeException("Material Donation not found"));
     }
 }

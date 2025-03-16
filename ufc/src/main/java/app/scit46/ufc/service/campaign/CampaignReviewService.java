@@ -66,6 +66,7 @@ public class CampaignReviewService {
         reviewEntity.setRated(ratingValue);
         reviewEntity.setCampaignedBy(campaignEntity);
         reviewEntity.setReviewedBy(user);
+        reviewEntity.setStatus(true);
 
         CampaignReviewEntity savedEntity = campaignReviewRepository.save(reviewEntity);
 
@@ -132,6 +133,13 @@ public class CampaignReviewService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return campaignReviewRepository.findAll(pageable);
     }
+
+    public List<CampaignReviewDTO> getListByReviewerId(Long reviewerId) {
+        return campaignReviewRepository.findByReviewedBy_UserId(reviewerId).stream()
+                .map(CampaignReviewDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
 
 
 }

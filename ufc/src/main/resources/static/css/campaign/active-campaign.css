@@ -221,6 +221,10 @@ main{
     border-radius: 8px;
     transform-origin: center center;
 }
+.like-bo-box-in-pe-in-a-img{
+    width: 363.84px;
+    height: 363.84px;
+}
 
 .main-bo-in-bo-pe-box-a-img-size{
     width: 100%;
@@ -645,7 +649,7 @@ em{
 .modal-tag-search {
     display: none;
     position: absolute;
-    top: 63%;
+    top: 96%;
     left: 926px;
     width: 276px;
     min-height: 200px;

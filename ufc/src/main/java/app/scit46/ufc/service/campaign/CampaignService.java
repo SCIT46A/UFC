@@ -1,5 +1,6 @@
 package app.scit46.ufc.service.campaign;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +74,8 @@ public class CampaignService {
         return campaignRepository.findById(id).orElse(null);
     }
 
+
+
     // ================== 기본적인 CRUD 기능 작성 ================== //Start
 
     // 캠페인 리스트 조회(검색어를 통한 검색 -> 태그/제목 참조)
@@ -124,7 +127,6 @@ public class CampaignService {
     }
 
     // ================== 기본적인 CRUD 기능 작성 ================== //End
-
 
     // GenerateCampaign = 프론트에서 보낸 데이터를 받아줄 커스텀 DTO -> 파싱하여 적절히 처리하는 로직
     // Entity를 그대로 사용한 것은 영속성 문제로 인해 캠페인 생성에 필요한 세부 요소들의 연계에 오류가 발생하기 때문
@@ -260,7 +262,6 @@ public class CampaignService {
         }
     }
 
-
     // 캠페인에 할당되어 있는 태그 조회
     public List<String> getCampaignTags(Long campaignId) {
         List<CampaignTagEntity> campaignTag = campaignTagRepository
@@ -276,7 +277,6 @@ public class CampaignService {
     public List<CampaignEntity> campaignFindByCampaignId(Long campaignId) {
         return campaignRepository.findByCampaignId(campaignId);
     }
-
 
     // 펀딩 대기 중인 캠페인 조회
     public List<CampaignDTO> getFundingWaitingCampaigns() {
@@ -365,11 +365,6 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-
-
-
-
-
     // 캠페인 기부한 내역 조회
     public List<CampaignDTO> getCampaignsByUserId(List<Long> campaignId) {
         return campaignRepository.findByCampaignIdIn(campaignId)
@@ -384,17 +379,15 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
-
-//        // 리뷰-캠페인 조회
-//        public CampaignDTO getCampaignById(Long campaigned_by) {
-//            List<CampaignEntity> campaigns = campaignRepository.findByCampaignId(campaigned_by);
-//            return campaigns.stream()
-//                    .findFirst() // 첫 번째 캠페인 엔티티를 선택
-//                    .map(CampaignDTO::toDTO)
-//                    .orElse(null);
-//        }
-
-
+    // // 리뷰-캠페인 조회
+    // public CampaignDTO getCampaignById(Long campaigned_by) {
+    // List<CampaignEntity> campaigns =
+    // campaignRepository.findByCampaignId(campaigned_by);
+    // return campaigns.stream()
+    // .findFirst() // 첫 번째 캠페인 엔티티를 선택
+    // .map(CampaignDTO::toDTO)
+    // .orElse(null);
+    // }
 
     public List<Long> getCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
@@ -410,6 +403,63 @@ public class CampaignService {
 
     public List<Long> getSuccessfulCampaignIdsByCreator(Long creatorId) {
         return campaignRepository.findSuccessfulCampaignIdsByCreator(creatorId);
+    }
+
+    // 새롭게 추가함 :: 익준
+    public Long getCreatorIdByOauthId(String oauthId) {
+        UserEntity user = userService.findUserByIdentity(oauthId); // OAuth ID로 사용자 찾기
+        if (user != null && user.getCreators() != null && !user.getCreators().isEmpty()) {
+            // ✅ Creator 엔티티 목록 중 첫 번째 Creator의 ID 반환
+            return user.getCreators().get(0).getCreatorId();
+        }
+        return null;
+    }
+
+    public List<CampaignDTO> getActiveCampaignsByCreator(Long creatorId) {
+        // 모든 캠페인 가져오기
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // 진행 중인 캠페인 필터링 (campaign_status가 1인 것만)
+        List<CampaignEntity> activeCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getCampaignStatus() == 1) // ✅ 상태가 1인 캠페인만 필터링
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        // DTO로 변환해서 반환
+        return activeCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 새로 추가함 :: 익준
+    // ✅ 종료된 캠페인 목록 가져오기
+    public List<CampaignDTO> getFinishedCampaignsByCreator(Long creatorId) {
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // ✅ 종료된 캠페인 필터링 (종료일이 오늘 이전인 캠페인)
+        List<CampaignEntity> finishedCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getEndDate().toLocalDate().isBefore(LocalDate.now())) // 💡 변환해서 비교
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        return finishedCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    // 새로 추가함 :: 익준
+    public List<CampaignDTO> getRejectedCampaignsByCreator(Long creatorId) {
+        List<CampaignEntity> allCampaigns = campaignRepository.findByCreatedBy_CreatorId(creatorId);
+
+        // ✅ 거절당한 캠페인 필터링 (campaign_status가 2인 것만)
+        List<CampaignEntity> rejectedCampaigns = allCampaigns.stream()
+                .filter(campaign -> campaign.getCampaignStatus() == 2) // 💔 거절된 캠페인 필터링
+                .limit(3) // ✅ 최대 3개로 제한
+                .collect(Collectors.toList());
+
+        return rejectedCampaigns.stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
     // 프론트 캠페인 수정용 리워드, 펀딩재료 데이터형식으로 변환
@@ -517,7 +567,7 @@ public class CampaignService {
                 donation.setUser(user);
                 donation.setMaterial(materialDTO);
                 donation.setQuantity(donationTotal);
-                donation.setStatus("processing");
+                donation.setStatus("pending");
                 donation.setInvoice((String) formData.get("invoice"));
                 // donatedDate 값을 현재 시각으로 설정
                 donation.setDonatedDate(LocalDateTime.now());
@@ -583,4 +633,15 @@ public class CampaignService {
         }
     }
 
+    public boolean isCampaignAchieved(Long campaignId) {
+        Integer result = campaignRepository.isCampaignAchieved(campaignId);
+        return result != null && result == 1;
+    }
+
+
+    public List<CampaignDTO> getCampaignsByCampaignId(Long campaignId) {
+        return campaignRepository.findByCampaignId(campaignId).stream()
+                .map(CampaignDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 }

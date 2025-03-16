@@ -45,5 +45,4 @@ public class ImageUrlService {
         return imageUrlRepository.findById(id).orElseThrow(() -> new RuntimeException("Image not found"));
     }
 
-
 }

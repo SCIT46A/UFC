@@ -59,7 +59,7 @@ public class MaterialDonationEntity {
     @Column(name = "status", length = 10)
     private String status;
 
-    @Column(name = "donated_date", nullable = false)
+    @Column(name = "donated_date", nullable = false)   
     private LocalDateTime donatedDate;
 
     @Column(name = "invoice", length = 100, nullable = false)
