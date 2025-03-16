@@ -47,12 +47,26 @@ public class ProductDeliveryService {
     @Transactional
     public void updateInvoices(List<InvoiceUpdateRequest> updateRequests) {
         for (InvoiceUpdateRequest request : updateRequests) {
-            ProductDeliveryEntity delivery = productDeliveryRepository.findPDeliveryIdByPay_PayId(request.getId())
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "기부번호에 해당하는 배송 정보를 찾을 수 없음: " + request.getId()));
+            Optional<ProductDeliveryEntity> existingDelivery = productDeliveryRepository
+                    .findPDeliveryIdByPay_PayId(request.getId());
 
-            delivery.setInvoice(request.getInvoice()); // "택배사코드#송장번호"
-            productDeliveryRepository.save(delivery);
+            if (existingDelivery.isPresent()) {
+                System.out.println("🚨 기존 배송 정보가 존재하여 업데이트하지 않음: " + request.getId());
+            } else {
+                // ✅ 기존 배송 정보가 없을 경우, payId 기반으로 productId 조회
+                Long productId = productPaymentRepository.findProductIdByPayId(request.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("🚨 productId를 찾을 수 없음: " + request.getId()));
+
+                ProductDeliveryEntity newDelivery = new ProductDeliveryEntity();
+                newDelivery.setPay(productPaymentRepository.findById(request.getId())
+                        .orElseThrow(() -> new IllegalArgumentException("🚨 결제 정보를 찾을 수 없음: " + request.getId())));
+                newDelivery.setProduct(productRepository.findById(productId)
+                        .orElseThrow(() -> new IllegalArgumentException("🚨 상품을 찾을 수 없음: " + productId)));
+                newDelivery.setInvoice(request.getCourier() + "#" + request.getTrackingNumber());
+                newDelivery.setStatus("preparing");
+                productDeliveryRepository.save(newDelivery);
+                System.out.println("✅ 새로운 배송 정보 생성: " + request.getId());
+            }
         }
     }
 

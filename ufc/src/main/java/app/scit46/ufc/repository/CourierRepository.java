@@ -11,4 +11,7 @@ public interface CourierRepository extends JpaRepository<CourierEntity, String> 
 
     @Query("SELECT c.courierName FROM CourierEntity c WHERE c.courierId = :courierId")
     String findCourierNameByCourierId(@Param("courierId") String courierId);
+
+    @Query("SELECT c.courierId FROM CourierEntity c WHERE c.courierName = :courierName")
+    String findCourierIdByName(@Param("courierName") String courierName);
 }

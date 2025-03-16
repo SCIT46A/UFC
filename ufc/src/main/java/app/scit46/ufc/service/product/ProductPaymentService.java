@@ -102,6 +102,20 @@ public class ProductPaymentService {
         productPaymentRepository.save(order);
     }
 
+    @Transactional
+    public void approveCancel(Long payId) {
+        ProductPaymentEntity payment = productPaymentRepository.findById(payId)
+                .orElseThrow(() -> new IllegalArgumentException("🚨 주문을 찾을 수 없음: " + payId));
+
+        if (!"pending".equals(payment.getStatus())) {
+            throw new IllegalStateException("🚨 이 주문은 취소 요청 상태가 아닙니다.");
+        }
+
+        // ✅ 주문 상태를 'cancelled'로 변경
+        payment.setStatus("cancelled");
+        productPaymentRepository.save(payment);
+    }
+
     private String mapPaymentStatus(String status) {
         return switch (status) {
             case "completed" -> "결제 완료";

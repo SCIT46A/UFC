@@ -33,7 +33,6 @@
 
             <!-- Batch Actions -->
             <div class="batch-actions">
-                <button class="btn btn-secondary" onclick="processSelectedOrders()">선택발주 처리</button>
                 <button class="btn btn-secondary" onclick="downloadOrderExcel()">주문 내역 다운로드</button>
                 <button class="btn btn-warning" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
             </div>
@@ -79,12 +78,11 @@
             <div class="table-header">
                 <div class="left-section">
                     <span>목록 (총 1개)</span>
+
                     <select>
                         <option>최근주문순</option>
                     </select>
-                    <select>
-                        <option>100개씩 보기</option>
-                    </select>
+                    <button class="btn btn-secondary" onclick="processSelectedOrders()">선택발주 처리</button>
                 </div>
                 <button class="btn-secondary">조회항목 설정</button>
             </div>
@@ -96,15 +94,13 @@
                             <th>주문번호</th>
                             <th>주문일자</th>
                             <th>주문내역</th> <!-- 상품명, 상품 수량 -->
-                            <th>주문상태</th><!-- 결제완료, 취소요청, 취소   -->
                             <th>고객명</th>
                             <th>연락처</th>
                             <th>주소</th>
                             <th>택배사</th>
                             <th>송장번호</th>
                             <th>관리</th>
-                            <th>배송상태</th>
-                            <!-- 송장등록, 송장 수정, 송장등록 전, 취소요청이 들어오면 취소버튼튼 -->
+                            <th>상태</th>
                         </tr>
                     </thead>
                     <tbody id="order-table-body">

@@ -7,11 +7,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.http.HttpStatus;
 import lombok.RequiredArgsConstructor;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +22,7 @@ import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.product.ProductService;
+import app.scit46.ufc.service.CourierService;
 import org.springframework.http.ResponseEntity;
 
 @RestController
@@ -35,6 +36,7 @@ public class ApiCreatorDashboardController {
         private final ProductService productService;
         private final ProductPaymentService productPaymentService;
         private final ProductDeliveryService productDeliveryService;
+        private final CourierService courierService;
 
         /**
          * 
@@ -268,9 +270,19 @@ public class ApiCreatorDashboardController {
         }
 
         @PostMapping("/products/orders/invoice/batch-update")
-        public ResponseEntity<?> updateProductInvoices(@RequestBody List<InvoiceUpdateRequest> updateRequests) {
-                productDeliveryService.updateInvoices(updateRequests);
-                return ResponseEntity.ok(Collections.singletonMap("message", "송장번호 업데이트 완료"));
+        public ResponseEntity<?> batchUpdateInvoices(@RequestBody List<InvoiceUpdateRequest> invoices) {
+                try {
+                        // ✅ 택배사 이름 → 코드 변환
+                        for (InvoiceUpdateRequest invoice : invoices) {
+                                invoice.setCourier(courierService.getCourierIdByName(invoice.getCourier()));
+                        }
+
+                        productDeliveryService.updateInvoices(invoices);
+                        return ResponseEntity.ok(Collections.singletonMap("message", "✅ 송장번호 일괄 업데이트 성공"));
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body(Collections.singletonMap("error", "❌ 송장번호 업데이트 실패: " + e.getMessage()));
+                }
         }
 
         @PostMapping("/products/orders/invoice/{payId}")
@@ -303,6 +315,19 @@ public class ApiCreatorDashboardController {
 
                 } catch (IllegalArgumentException e) {
                         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("🚨 " + e.getMessage());
+                } catch (Exception e) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                        .body("❌ 서버 오류: " + e.getMessage());
+                }
+        }
+
+        @PostMapping("/products/orders/cancel/{payId}")
+        public ResponseEntity<?> approveCancelOrder(@PathVariable("payId") Long payId) {
+                try {
+                        productPaymentService.approveCancel(payId);
+                        return ResponseEntity.ok("✅ 주문 취소 승인 완료");
+                } catch (IllegalArgumentException e) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("🚨 주문을 찾을 수 없음: " + e.getMessage());
                 } catch (Exception e) {
                         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                                         .body("❌ 서버 오류: " + e.getMessage());

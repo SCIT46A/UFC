@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ProductPaymentRepository extends JpaRepository<ProductPaymentEntity, Long> {
 
@@ -33,5 +34,8 @@ public interface ProductPaymentRepository extends JpaRepository<ProductPaymentEn
                 WHERE p.created_by = :creatorId
             """, nativeQuery = true)
     List<Map<String, Object>> findOrdersByCreator(@Param("creatorId") Long creatorId);
+
+    @Query("SELECT p.product.productId FROM ProductPaymentEntity p WHERE p.payId = :payId")
+    Optional<Long> findProductIdByPayId(@Param("payId") Long payId);
 
 }
