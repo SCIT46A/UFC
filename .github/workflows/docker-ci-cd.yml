@@ -82,7 +82,7 @@ jobs:
           docker pull ghcr.io/${{ secrets.DOCKER_USERNAME }}/ufc:${{ vars.TAG }}-admin
 
           echo "Starting new container..."
-          docker run -d --name ufc-admin -p 10001:10000 ghcr.io/${{ secrets.DOCKER_USERNAME }}/ufc:${{ vars.TAG }}-admin
+          docker run -d --label io.portainer.accesscontrol.teams=upda --name ufc-admin -p 10001:10000 ghcr.io/${{ secrets.DOCKER_USERNAME }}/ufc:${{ vars.TAG }}-admin
 
           echo "Cleaning up unused images..."
           docker image prune -f
