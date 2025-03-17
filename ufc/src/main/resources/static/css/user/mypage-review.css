@@ -14,53 +14,6 @@ body {
   color: rgba(0, 0, 0, 0.87);
   box-sizing: inherit;
 }
-.pagination {
-  margin: 20px 0;
-  text-align: center;
-}
-
-/* ul 스타일: 가로로 정렬, 리스트 스타일 제거 */
-.pagination ul {
-  display: inline-flex;
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-/* 각 페이지 번호 또는 버튼 li에 대한 마진 */
-.pagination ul li {
-  margin: 0 5px;
-}
-
-/* 각 페이지 번호 a 태그 스타일 */
-.pagination ul li a {
-  display: block;
-  padding: 8px 12px;
-  text-decoration: none;
-  font-size: 14px;
-  color: #333;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-/* 호버 효과 */
-.pagination ul li a:hover {
-  background-color: #f2f2f2;
-  color: #000;
-}
-
-/* 현재 선택된 페이지 스타일 (active 클래스가 붙은 경우) */
-.pagination ul li a.active {
-  background-color: #007BFF;
-  color: #fff;
-  border-color: #007BFF;
-}
-
-/* "이전", "다음" 버튼에 대해 별도의 아이콘이나 추가 스타일을 주고 싶다면 */
-.pagination ul li a.btn-choice {
-  font-weight: bold;
-}
 
 .black-ctn{
   position: fixed;
@@ -1201,4 +1154,74 @@ main {
   font-weight: bold;
   line-height: 120%;
   appearance: button;
+}
+.pagination {
+  margin: 20px 0;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 12px; /* 버튼 간격을 좀 더 넉넉하게 */
+  padding: 0;
+  list-style: none;
+}
+
+/* 페이지네이션 개별 버튼 스타일 */
+.pagination li {
+  display: inline-block;
+  margin: 0 5px; /* 버튼 사이 여백 추가 */
+}
+
+/* 페이지 번호 및 이전/다음 버튼 */
+.pagination li a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 42px; /* 버튼 크기 조정 */
+  height: 42px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  text-decoration: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background-color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 현재 페이지 강조 */
+.pagination li a.active {
+  background-color: #007BFF;
+  color: white;
+  border-color: #007BFF;
+}
+
+/* 버튼 hover 효과 */
+.pagination li a:hover {
+  background-color: #f2f2f2;
+  color: #000;
+  border-color: #aaa;
+}
+
+/* "이전", "다음" 버튼 스타일 */
+.pagination li a.btn-choice {
+  font-weight: bold;
+  padding: 0 18px; /* 기존보다 넓게 */
+  width: auto;
+  border-radius: 20px;
+}
+
+/* 숫자와 "이전/다음" 버튼 사이 여백 조정 */
+.pagination li:first-child {
+  margin-right: 12px; /* "이전" 버튼과 숫자 사이 */
+}
+
+.pagination li:last-child {
+  margin-left: 12px; /* "다음" 버튼과 숫자 사이 */
+}
+
+/* 비활성화된 버튼 */
+.pagination li a.disabled {
+  color: #ccc;
+  pointer-events: none;
+  border-color: #eee;
 }
