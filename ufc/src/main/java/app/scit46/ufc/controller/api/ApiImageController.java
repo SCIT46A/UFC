@@ -77,7 +77,11 @@ public class ApiImageController {
 
     // 이미지 URL 변환
 
-
+    @GetMapping("/{imageId}/board")
+    public ResponseEntity<String> getImageUrlBoard(@PathVariable("imageId") String imageId) {
+        String result = imageService.getImageUrlBoard(imageId);
+        return ResponseEntity.ok(result);
+    }
 
 
 

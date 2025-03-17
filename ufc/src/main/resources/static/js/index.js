@@ -138,7 +138,7 @@ $(function () {
                 `;
             });
             $(".main-resent-all").html(htmlResult);
-            updateImageUrls("img.main-resent-pe-all-in-img-in");
+            updateImageUrls("#campaign-target img.main-resent-pe-all-in-img-in");
         },
         error: function (err) {
             console.error("중간 인기 캠페인 AJAX 오류:", err);
@@ -201,7 +201,7 @@ $(function () {
                 `;
             });
             $(".main-resent-all-add").html(htmlResult);
-            updateImageUrls("img.main-resent-pe-all-in-img-in");
+            updateImageUrls("#product-target img.main-resent-pe-all-in-img-in");
         },
         error: function (err) {
             console.error("하단 판매 인기순 AJAX 오류:", err);

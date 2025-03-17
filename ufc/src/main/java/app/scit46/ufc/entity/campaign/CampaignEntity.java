@@ -63,6 +63,9 @@ public class CampaignEntity {
   @Column(name = "is_success", nullable = false)
   private Boolean isSuccess;
 
+  @Column(name = "rejected_reason")
+  private String rejectedReason;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "photo_id")
   private ImageUrlEntity photo;
@@ -98,6 +101,7 @@ public class CampaignEntity {
         .startDate(dto.getStartDate())
         .endDate(dto.getEndDate())
         .sendDate(dto.getSendDate())
+        .rejectedReason(dto.getRejectedReason())
         .createdDate(dto.getCreatedDate())
         // .createdDate(dto.getCreatedDate()) // 기본값 자동 생성이므로 주석처리
         // .createdBy(CreatorEntity.builder().ownUser(UserEntity.builder().userId(createdBy).build()).build())

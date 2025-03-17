@@ -12,6 +12,7 @@
     />
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
+    <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
     <link
             rel="stylesheet"
             th:href="@{/css/campaign/detail-campaign.css}"
@@ -39,13 +40,16 @@
     <script
             src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js">
     </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
     <!-- 커스텀 JS -->
     <script src="../../static/js/campaign/detail-campaign.js" defer></script>
+    <script th:src="@{/js/fix/chat.js}" defer></script>
     <script th:src="@{/js/campaign/detail-campaign.js}" defer></script>
     <script th:src="@{/js/fix/header.js}" defer></script>
 </head>
 <body>
+<div th:replace="~{fix/chat :: chat}"></div>
 <div th:replace="~{fix/header :: header}"></div>
 <main>
     <section id="projects" style="background-color: #ffffff">
@@ -361,10 +365,10 @@
                                 >
                                     캠페인 소개
                                 </div>
-                                <div class="main-mi-na-in-box-pe board " th:classappend="${campaign.campaignStatus == false} ? 'hidden'">
+                                <div class="main-mi-na-in-box-pe board " th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
                                     새소식
                                 </div>
-                                <div class="main-mi-na-in-box-pe review" th:classappend="${campaign.campaignStatus == false} ? 'hidden'">
+                                <div class="main-mi-na-in-box-pe review" th:classappend="${campaign.campaignStatus == 0} ? 'hidden'">
                                     리뷰
                                 </div>
                             </div>
@@ -446,9 +450,8 @@
                                                         <div
                                                                 class="reward-in-se-in-bo-btn"
                                                         >
-                                                            <button
-                                                                    class="reward-in-se-in-bo-btn-le"
-                                                            >
+                                                            <button class="reward-in-se-in-bo-btn-le"
+                                                                    th:attr="data-userid=${campaign.createdBy.ownUser.userId}, data-image=${campaign.createdBy.proImgUrl.imageId}, data-username=${campaign.createdBy.bName}">
                                                                 <div
                                                                         class="reward-in-se-in-bo-btn-le-img"
                                                                 >
@@ -549,8 +552,8 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" th:value="${campaign.campaignStatus}" id="campaign-status">
-                                            <button class="summer-btn " th:classappend="${campaign.campaignStatus == true} ? 'hidden'">작성하기</button>
-                                            <button class="summer-btn-edit " th:classappend="${campaign.campaignStatus == true} ? 'hidden'" >수정하기</button>
+                                            <button class="summer-btn " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'">작성하기</button>
+                                            <button class="summer-btn-edit " th:classappend="${campaign.campaignStatus == 1} ? 'hidden'" >수정하기</button>
                                             <button class="summer-btn-edit-save hidden">수정하기</button>
                                         </div>
                                         <!-- 게시글 -->
@@ -565,7 +568,7 @@
                                                     게시글
                                                     <strong class="board-count-target">0</strong>
                                                 </div>
-                                                <button class="main-board-add-btn" th:classappend="${status == false} ? 'hidden-important'">등록하기</button>
+                                                <button class="main-board-add-btn" th:classappend="${status == 0} ? 'hidden-important'">등록하기</button>
 
                                             </div>
                                             <!-- 게시글 눌렀을때 뒤로가기 버튼 -->
@@ -598,10 +601,10 @@
                                                                 >
                                                             </span>
                                                     </button>
-                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == false} ? 'hidden-important'">작성하기</button>
-                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == false} ? 'hidden-important'">삭제</button>
-                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == false} ? 'hidden-important'">수정하기</button>
-                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == false} ? 'hidden-important'">수정적용</button>
+                                                    <button class="main-board-add-btn-save hidden" th:classappend="${status == 0} ? 'hidden-important'">작성하기</button>
+                                                    <button class="main-board-detail-delete-btn hidden" th:classappend="${status == 0} ? 'hidden-important'">삭제</button>
+                                                    <button class="main-board-add-btn-edit hidden" th:classappend="${status == 0} ? 'hidden-important'">수정하기</button>
+                                                    <button class="main-board-add-btn-edit-save hidden" th:classappend="${status == 0} ? 'hidden-important'">수정적용</button>
                                                 </div>
                                                 <div
                                                         class="main-board-pe-box"

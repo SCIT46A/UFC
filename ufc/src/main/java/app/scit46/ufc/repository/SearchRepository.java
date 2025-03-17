@@ -60,7 +60,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "  FROM Products p " +
             "  INNER JOIN Items i ON i.item_id = p.item_id " +
             "  WHERE i.name LIKE CONCAT('%', :keyword, '%') " +
-            "    AND p.status = 0 " + // 제품 상태 필터 추가
+            "    AND p.status = 1 " + // 제품 상태 필터 추가
             ") AS results",
             nativeQuery = true)
     List<SearchResultDTO> findSearchResults(@Param("keyword") String keyword, @Param("userLoginId") Long userLoginId);
@@ -139,7 +139,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "         WHERE l.product_id = p.product_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Products p " +
             "INNER JOIN Items i ON i.item_id = p.item_id " +
-            "WHERE p.status = 0", // 제품 상태 필터 추가
+            "WHERE p.status = 1", // 제품 상태 필터 추가
             nativeQuery = true)
     List<SearchResultDTO> findSales(@Param("userLoginId") Long userLoginId);
 
@@ -195,7 +195,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
             "         WHERE l.product_id = p.product_id AND l.user_id = :userLoginId) + 0) END) AS isLiked " +
             "FROM Products p " +
             "INNER JOIN Items i ON i.item_id = p.item_id " +
-            "WHERE p.status = 0 " + // 제품 상태 필터 추가
+            "WHERE p.status = 1 " + // 제품 상태 필터 추가
             "ORDER BY (SELECT COUNT(*) FROM Likes l WHERE l.product_id = p.product_id) DESC " +
             "LIMIT 10",
             nativeQuery = true)

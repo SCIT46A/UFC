@@ -8,10 +8,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import app.scit46.ufc.dto.product.ProductDTO;
 import app.scit46.ufc.entity.product.ProductEntity;
-import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -70,4 +70,32 @@ public class ProductService {
                 .map(ProductDTO::toDTO)
                 .collect(Collectors.toList());
     }
+    public ProductDTO findProductById(Long id) {
+        return productRepository.findById(id).stream().map(ProductDTO::toDTO).findFirst().orElse(null);
+    }
+
+    public Long productBoardSave(Long productId, String content) {
+        // 기존 엔티티를 직접 조회
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품을 찾을 수 없습니다."));
+        // content 필드 업데이트
+        productEntity.setContent(content);
+        // 엔티티를 저장 (업데이트)
+        productRepository.save(productEntity);
+        return productEntity.getProductId();
+    }
+
+    @Transactional
+    public ProductDTO updateProductContent(Long productId, String content) {
+        // 기존 엔티티를 DB에서 조회
+        ProductEntity productEntity = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("제품을 찾을 수 없습니다."));
+        // content 필드 업데이트
+        productEntity.setContent(content);
+        // 업데이트 후 저장 (업데이트가 트랜잭션 내에서 반영됨)
+        productRepository.save(productEntity);
+        // DTO 변환 후 반환
+        return ProductDTO.toDTO(productEntity);
+    }
+
 }

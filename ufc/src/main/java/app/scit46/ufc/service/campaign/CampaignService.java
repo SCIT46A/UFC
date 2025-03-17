@@ -488,7 +488,7 @@ public class CampaignService {
                 donation.setUser(user);
                 donation.setMaterial(materialDTO);
                 donation.setQuantity(donationTotal);
-                donation.setStatus("processing");
+                donation.setStatus("pending");
                 donation.setInvoice((String) formData.get("invoice"));
                 // donatedDate 값을 현재 시각으로 설정
                 donation.setDonatedDate(LocalDateTime.now());

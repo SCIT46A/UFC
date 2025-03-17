@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -54,6 +55,7 @@ public class ProductPaymentEntity {
     private Byte stock;
 
     @Column(name = "purchased_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime purchasedDate;
 
     @Column(name = "receipt_number", nullable = false, length = 100)
