@@ -282,7 +282,7 @@
                                                                         </div>
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                                th:text="${campaign.description}" 
+                                                                            th:text="${#strings.length(campaign.description) > 80 ? #strings.substring(campaign.description, 0, 80) + '...' : campaign.description}" 
                                                                         >
                                                                         </div>
                                                                     </div>
