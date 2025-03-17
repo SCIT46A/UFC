@@ -1,8 +1,6 @@
 package app.scit46.ufc.controller;
 
 
-import java.util.HashMap;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,11 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-
-import app.scit46.ufc.service.chat.ChatRoomService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +28,8 @@ import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
+import app.scit46.ufc.dto.product.ProductDTO;
+import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
@@ -48,8 +43,11 @@ import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignGoalService;
 import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.chat.ChatRoomService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import app.scit46.ufc.service.delivery.DeliveryService;
+import app.scit46.ufc.service.product.ProductPaymentService;
+import app.scit46.ufc.service.product.ProductService;
 import app.scit46.ufc.service.reward.RewardDeliveryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -76,6 +74,9 @@ public class UserController {
     private final DeliveryService deliveryService;
     private final CreatorService creatorService;
     private final ChatRoomService chatRoomService;
+    private final ProductPaymentService productPaymentService;
+    private final ProductService productService;
+
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -582,31 +583,72 @@ public class UserController {
 
 
 
-    // 충돌로 인한 주석처리 - 필요시 다시 검토 필요
-    // @PostMapping("/userUpdate")
-    // public String postMethodName(
-    // HttpServletRequest request,
-    // @ModelAttribute UserDTO userDTO,
-    // RedirectAttributes rttr
-    // ) {
-    // log.info(userDTO.toString());
-    // String oauthId = request.getUserPrincipal().getName();
-    // UserDTO user = UserDTO.toDTO(userService.findUserByIdentity(oauthId));
-    // userDTO.setUserId(user.getUserId());
-    // userService.userUpdate(userDTO);
-    // log.info(user.toString());
-    // return "redirect:/user";
-    // }
+        @GetMapping("/buy")
+    public String buy(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Long userId = (Long) session.getAttribute("loginUserId");
+            if (userId != null) {
+                try {
+                    //사용자 정보
+                    UserDTO user = userService.readUserById(userId);
 
-//    @GetMapping("/badge")
-//    public String badge() {
-//        return "user/mypage-badge";
-//    }
+                    //DonationCount 가져오기
+                    List<MaterialDonationDTO> materialDonations = materialDonationService
+                            .getMaterialDonationsByUserId(user.getUserId());
+                            
+                    //User 정보로 구매내역 가져오기
+                    List<ProductPaymentDTO> productPayments = productPaymentService
+                            .getProductPaymentsByUserId(user.getUserId());
 
-    @GetMapping("/donation/detail")
-    public String alarmDetail() {
-        return "user/mypage-donation-detail";
+                   List<CampaignDTO> campaigns = new ArrayList<>();
+                    List<String> imageUrls = new ArrayList<>();
+                    List<ProductDTO> products = new ArrayList<>();
+
+                    for (ProductPaymentDTO productPayment : productPayments) {
+                        
+                        //판매 물품 정보 가져오기
+                        ProductDTO product = productPayment.getProduct();
+                        if (product != null) {
+                             //판매 물품 정보 가져오기
+                            product = productService.findProductById((Long) productPayments.get(0).getProduct().getProductId());
+                    
+                            products.add(product);
+                            imageUrls.add(imageService.getImageUrl(product.getItem().getPhoto().getImageId()));
+                        }
+                    }
+                    //CreatorLikes 좋아요 체크
+                    List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                    List<LikeDTO> creatorLikes = likes.stream()
+                            .filter(like -> like.getCreator() != null)
+                            .collect(Collectors.toList());
+
+
+                    //사용자 프로필 사진 가져오기
+                    String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                            ? "/images/user/default_avatar.png"
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                    + "/public";
+
+                    model.addAttribute("campaigns", campaigns);
+                    model.addAttribute("creatorLikes", creatorLikes.size());
+                    model.addAttribute("donationCount", materialDonations.size());
+                    model.addAttribute("imageUrls", imageUrls);
+                    model.addAttribute("productPayments", productPayments);
+                    model.addAttribute("materialDonations", materialDonations);
+                    model.addAttribute("user", user);
+                    model.addAttribute("products", products);
+                    model.addAttribute("userImageId", userImageId);
+                } catch (DBNotFoundException e) {
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                }
+            }
+        }
+        return "user/mypage-buy";
     }
+
+    
+
 
     // 로그인 관련
 

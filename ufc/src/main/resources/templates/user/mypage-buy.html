@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>UP-DA :: 내가 후원함 캠페인</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        />
+        <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" />
+        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
+        <script src="https://unpkg.com/lucide@latest"></script>
+        <link
+            rel="icon"
+            th:href="@{/images/fix/favicon.png}"
+            type="image/png"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/user/mypage-buy.css}"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/header.css}"
+        />
+        <link
+            rel="stylesheet"
+            th:href="@{/css/fix/footer.css}"
+        />
+        <script th:src="@{/js/fix/header.js}" defer></script>
+    </head>
+    <body>
+        <div th:replace="~{fix/header :: header}"></div>
+        <main>
+            <section id="projects" style="background-color: #ffffff">
+                <!-- 주목할 만한 프로젝트 -->
+                <div class="container mx-auto px-4 target-project">
+                    <div class="main">
+                        <div class="main-in">
+                            <!-- 공용으로 들어가는 상단 -->
+                            <div class="main-in-box">
+                                <!-- 프로필쪽 -->
+                                <div class="main-in-box-pro">
+                                    <div class="main-in-box-pro-le">
+                                        <div class="main-in-box-pro-le-in">
+                                            <img
+                                                th:src="${userImageId}"
+                                                alt=""
+                                                class="main-in-box-pro-le-in-img"
+                                            />
+                                            <div
+                                                class="main-in-box-pro-le-in-box"
+                                            >
+                                                <div
+                                                    class="main-in-box-pro-le-in-box-title"
+                                                >
+                                                    <div
+                                                        class="main-in-box-pro-le-in-box-title-in"
+                                                    >
+                                                        <span th:text="${user.userName}">up-da</span>
+                                                    </div>
+                                                </div>
+                                                <div
+                                                    class="main-in-box-pro-le-in-box-content"
+                                                >
+                                                    <div
+                                                        class="main-in-box-pro-le-in-box-content-box"
+                                                    >
+                                                        <div
+                                                            class="main-in-box-pro-le-in-box-content-box-in"
+                                                        >
+                                                            <div
+                                                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                            >
+                                                                팔로잉
+                                                                <svg
+                                                                    class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 18 18"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                                                        fill="#545454"
+                                                                    ></path>
+                                                                </svg>
+                                                            </div>
+                                                            <div
+                                                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                                                            >
+                                                                <span th:text="${creatorLikes}"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            class="main-in-box-pro-le-in-box-content-box-in"
+                                                        >
+                                                            <div
+                                                                class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                            >
+                                                                후원수
+                                                                <svg
+                                                                    class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
+                                                                    width="18"
+                                                                    height="18"
+                                                                    viewBox="0 0 18 18"
+                                                                    fill="none"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                >
+                                                                    <path
+                                                                        fill-rule="evenodd"
+                                                                        clip-rule="evenodd"
+                                                                        d="M13.5 9L7.87504 15L6.75 13.7999L11.2499 9L6.75 4.20005L7.87504 3L13.5 9Z"
+                                                                        fill="#545454"
+                                                                    ></path>
+                                                                </svg>
+                                                            </div>
+                                                            <div
+                                                                class="main-in-box-pro-le-in-box-content-box-in-bo"
+                                                            >
+                                                                <span th:text="${donationCount}"></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <!-- 내비게이션바 -->
+                                <div class="main-in-box-na">
+                                    <div class="main-in-box-na-box">
+                                        <div class="main-in-box-na-box-pe">
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-profile.html"
+                                            th:href="@{/user}"
+                                            >프로필</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-review.html"
+                                            th:href="@{/user/review}"
+                                            >작성한 후기</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span current">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-donation.html"
+                                            th:href="@{/user/donation}"
+                                            >내가 후원한 캠페인</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in ">
+                                            <a 
+                                            href="/src/main/resources/templates/user/mypage-like.html"
+                                            th:href="@{/user/like}"
+                                            >좋아요</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-badge.html"
+                                            th:href="@{/user/badge}"
+                                            >뱃지</a>
+                                            </div>
+                                        </span>
+                                        <span class="main-in-box-na-box-pe-span">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-buy.html"
+                                            th:href="@{/user/buy}"
+                                            >구매내역</a>
+                                            </div>
+                                        </span>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- 각각의 나올것들 -->
+                            <div class="sup">
+                                <div class="sup-content">
+                                    <div class="sup-content-in">
+                                        <!-- 후원 내역 개수 출력 -->
+                                        <div class="sup-content-in-title">
+                                            <div class="sup-content-in-title-text">
+                                                <span th:text="${productPayments.size()}"></span>건의 구매내역이 있습니다
+                                            </div>
+                                        </div>
+
+                                        <!-- 각각의 후원 내역 출력 -->
+                                            <div class="sup-content-main" th:each="productPayment, iterStatus : ${productPayments}">
+                                            <div class="sup-content-main-box">
+                                                <div class="sup-content-main-box-in">
+                                                    <!-- 이미지 -->
+                                                    <div>
+                                                        <div class="sup-content-main-box-in-img">
+                                                            <a href="/">
+                                                                <img th:src="@{${imageUrls[iterStatus.index]}}" alt="캠페인 이미지"/>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- 내용 -->
+                                                    <div class="sup-content-main-box-in-content">
+                                                        <!-- 후원일 -->
+                                                        <div class="sup-content-main-box-in-content-date">
+                                                            <span>구매일: </span>
+                                                            <span th:text="${#temporals.format(productPayment.purchasedDate, 'yyyy.MM.dd')}"></span>
+                                                        </div>
+                                                        
+                                                        <!-- 제목 -->
+                                                        <a href="/" class="sup-content-main-box-in-content-title">
+                                                            <span th:text="${campaigns[iterStatus.index].title}">캠페인 제목</span>
+                                                        </a>
+                                                        
+                                                        <!-- 구성 -->
+                                                        <ul class="sup-content-main-box-in-content-in">
+                                                            <li>
+                                                                <span th:text="${productPayment.product.item.name}">구성품</span>
+                                                            </li>
+                                                        </ul>
+                                                        
+                                                        <!-- 비용 -->
+                                                        <div class="sup-content-main-box-in-content-pr">
+                                                            <div>
+                                                                <p class="sup-content-main-box-in-content-pr-le">
+                                                                   <span th:text="${productPayment.quantity}"></span>
+                                                                   <span> 개</span>
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <p class="sup-content-main-box-in-content-pr-ri">
+                                                                    <span th:text="${#temporals.format(productPayment.purchasedDate, 'yyyy.MM.dd')}"></span> 구매 완료
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    
+                                                    <!-- 결과 이미지 -->
+                                                    
+                                                </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </body>
+</html>

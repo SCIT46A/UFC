@@ -5,17 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.Service;
-
-import app.scit46.ufc.repository.product.ProductPaymentRepository;
-import app.scit46.ufc.service.CourierService;
-import app.scit46.ufc.service.product.ProductDeliveryService;
-import app.scit46.ufc.service.delivery.DeliveryService;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import app.scit46.ufc.entity.product.ProductPaymentEntity;
+import app.scit46.ufc.repository.product.ProductPaymentRepository;
+import app.scit46.ufc.service.CourierService;
+import app.scit46.ufc.service.delivery.DeliveryService;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -124,6 +124,13 @@ public class ProductPaymentService {
             case "ordered" -> "발주 완료";
             default -> "알 수 없음";
         };
+    }
+
+    public List<ProductPaymentDTO> getProductPaymentsByUserId(Long userId) {
+        return productPaymentRepository.findByPurchasedByUserId(userId)
+                .stream()
+                .map(ProductPaymentDTO::toDTO)
+                .collect(Collectors.toList());
     }
 
 }
