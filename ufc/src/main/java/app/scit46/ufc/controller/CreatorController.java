@@ -51,6 +51,7 @@ public class CreatorController {
     private final CreatorService creatorService;
     private final ImageService imageService;
     private final SearchService searchService;
+    private final CampaignService campaignService;
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
     @GetMapping("/create")
@@ -233,9 +234,6 @@ public class CreatorController {
     // return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     // }
     // }
-
-    @Autowired
-    private CampaignService campaignService;
 
     // @GetMapping("/campaign/active")
     // @ResponseBody
