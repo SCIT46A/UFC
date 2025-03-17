@@ -376,17 +376,6 @@ $(function () {
 
     });
 
-    // 임시 추가
-    fetch("/creator/create", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            username: "woo lee",
-            role: "creator"
-        })
-    })
     
 
     $(document).on("keydown", ".modal-search-box-in-top-input-in", function (event) {
