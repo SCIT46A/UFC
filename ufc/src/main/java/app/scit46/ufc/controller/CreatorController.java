@@ -261,9 +261,7 @@ public class CreatorController {
     @GetMapping("/campaign/active")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchActive(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
@@ -274,9 +272,7 @@ public class CreatorController {
     @GetMapping("/campaign/finished")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchFinished(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
@@ -287,9 +283,7 @@ public class CreatorController {
     @GetMapping("/campaign/rejected")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchAppointed(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
