@@ -1,14 +1,18 @@
 package app.scit46.ufc.service.product;
 
-import app.scit46.ufc.repository.ProductRepository;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+
+import app.scit46.ufc.dto.product.ProductDTO;
+import app.scit46.ufc.entity.product.ProductEntity;
+import app.scit46.ufc.exception.DBNotFoundException;
+import app.scit46.ufc.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -60,4 +64,10 @@ public class ProductService {
         return "알 수 없음";
     }
 
+
+    public List<ProductDTO> getProductById(Long productId) {
+        return productRepository.findById(productId).stream()
+                .map(ProductDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 }
