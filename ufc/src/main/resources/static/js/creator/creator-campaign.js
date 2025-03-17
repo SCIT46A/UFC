@@ -41,6 +41,25 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchCampaigns("/creator/campaign/rejected", "#appointed-events-container", "#appointed-more-btn");
 });
 
+// ✅ 글자 수 제한 함수
+function truncateText(text, maxLength) {
+    if (text.length > maxLength) {
+        return text.substring(0, maxLength) + "...";
+    }
+    return text;
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // ✅ 진행 중인 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/active", "#club-detail-active-container", "#tp-show-more-btn");
+
+    // ✅ 종료된 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/finished", "#finished-events-container", "#show-more-btn");
+
+    // ✅ 예정된 캠페인 불러오기
+    fetchCampaigns("/creator/campaign/rejected", "#appointed-events-container", "#appointed-more-btn");
+});
+
 // ✅ 캠페인 데이터 로드 함수
 function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
     $.ajax({
@@ -52,6 +71,9 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
 
             if (response.length > 0) {
                 response.forEach((data) => {
+                    // ✅ 글자 수 제한 적용
+                    const truncatedDescription = truncateText(data.description, 50);  // 글자 수 제한 (여기서 50으로 설정)
+
                     htmlResult += `
                         <div class="main-bo-in-bo-pe" data-id="${data.originalId}" data-type="${data.type}">
                             <div class="main-bo-in-bo-pe-box">
@@ -72,7 +94,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
                                             </div>
                                             <div class="main-bo-in-bo-pe-box-a-title-mi">
                                                 <div class="main-bo-in-bo-pe-box-a-title-mi-title">${data.title}</div>
-                                                <div class="main-bo-in-bo-pe-box-a-title-mi-content">${data.description}</div>
+                                                <div class="main-bo-in-bo-pe-box-a-title-mi-content">${truncatedDescription}</div>
                                             </div>
                                         </div>
                                         <div class="main-funding">
@@ -126,6 +148,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
         }
     });
 }
+
 
 // // 거절된 캠페인
 // document.addEventListener("DOMContentLoaded", function () {
