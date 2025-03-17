@@ -31,10 +31,16 @@
         />
         <script src="../../static/js/campaign/upcoming-campaign.js" defer></script>
         <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+
+        <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+        <script th:src="@{/js/fix/chat.js}" defer></script>
         <script th:src="@{/js/campaign/upcoming-campaign.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
     </head>
     <body>
+    <div th:replace="~{fix/chat :: chat}"></div>
         <div th:replace="~{fix/header :: header}"></div>
         <main>
             <section

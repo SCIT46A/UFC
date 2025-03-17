@@ -30,12 +30,17 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-
+        <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
+        <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+        <script th:src="@{/js/fix/chat.js}" defer></script>
         <!-- ✅ SweetAlert2 CDN 추가 -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
     </head>
     <body>
+    <div th:replace="~{fix/chat :: chat}"></div>
         <div th:replace="~{fix/header :: header}"></div>
         <!-- 창작가개설 페이지 시작 -->
         <main class="club-create" method="post">

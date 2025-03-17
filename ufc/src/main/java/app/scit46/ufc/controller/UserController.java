@@ -301,7 +301,7 @@ public class UserController {
                 @RequestParam(name = "userId") Long userId){
             userService.delete(userId);
             session.removeAttribute("loginUserId");
-            return "logout";
+            return "forward:/logout";
         }
 
 
