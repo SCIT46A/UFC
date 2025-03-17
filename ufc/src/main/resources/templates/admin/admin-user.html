@@ -33,10 +33,12 @@
             <div class="main-admin-wrap">
                 <div class="main-admin-container">
                     <button class="main-admin-button">
-                        <div class="main-admin-image-warp"></div>
+                        <div class="main-admin-image-warp">
+
+                        </div>
                     </button>
                 </div>
-                <h2 class="main-admin-name" th:value="${loginUserId}">UP-DA</h2>
+                <h2 class="main-admin-name" th:value="${loginUserId}"></h2>
                 <div class="button-container">
                     <a th:href="@{/logout}" class="main-admin-return">
                         <button class="main-admin-return-button">로그아웃</button>
@@ -72,6 +74,8 @@
     </div>
 </main>
 
-<script th:src="@{/js/admin/admin-user.js}" defer></script>
+<script th:src="@{/js/admin/admin-user.js}" defer>
+
+</script>
 </body>
 </html>

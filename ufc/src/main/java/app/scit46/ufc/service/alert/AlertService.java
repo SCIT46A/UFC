@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import app.scit46.ufc.dto.alert.AlertDTO;
@@ -46,6 +47,7 @@ public class AlertService {
     }
 
     // 알림 등록 / data는 각종 Entity 클래스 인스턴스
+    @Async
     public void registAlert(Object data, String type) {
         AlertEntity alert;
         Set<UserEntity> targetUsers = new HashSet<>();

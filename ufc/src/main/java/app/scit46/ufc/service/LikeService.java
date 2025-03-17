@@ -151,7 +151,8 @@ public class LikeService {
     public List<ProductEntity> findProductLikeList(Long userId) {
         List<LikeEntity> likeList = likeRepository.findByUser_UserId(userId);
         return likeList.stream().map(LikeEntity::getProduct).collect(Collectors.toList());
-      
+    }
+
     public List<LikeDTO> getLikesByUserId(Long userId) {
         UserEntity user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
@@ -166,35 +167,35 @@ public class LikeService {
     }
 
     public Page<CampaignDTO> getLikedCampaignsByUserId(Long userId, int page, int size) {
-    // 좋아요한 캠페인을 조회하는 JPQL 또는 QueryDSL 쿼리를 사용합니다.
-    // 예시: LIKE 엔티티와 Campaign 엔티티를 조인하여 userId에 해당하는 캠페인만 반환
-    return campaignRepository.findLikedCampaignsByUserId(userId, PageRequest.of(page, size)).map(CampaignDTO::toDTO);
-}
+        // 좋아요한 캠페인을 조회하는 JPQL 또는 QueryDSL 쿼리를 사용합니다.
+        // 예시: LIKE 엔티티와 Campaign 엔티티를 조인하여 userId에 해당하는 캠페인만 반환
+        return campaignRepository.findLikedCampaignsByUserId(userId, PageRequest.of(page, size)).map(CampaignDTO::toDTO);
+    }
 
 
 
-public List<LikeDTO> getLikeByUserUserId(Long userId) {
-    return likeRepository.findByUser_UserId(userId).stream()
-            .map(LikeDTO::toDTO)    
-            .collect(Collectors.toList());
-}
+    public List<LikeDTO> getLikeByUserUserId(Long userId) {
+        return likeRepository.findByUser_UserId(userId).stream()
+                .map(LikeDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 
-public List<LikeDTO> getLikeByCampaignId(Long campaignId) {
-    return likeRepository.findByCampaign_CampaignId(campaignId).stream()
-            .map(LikeDTO::toDTO)
-            .collect(Collectors.toList());
-}
+    public List<LikeDTO> getLikeByCampaignId(Long campaignId) {
+        return likeRepository.findByCampaign_CampaignId(campaignId).stream()
+                .map(LikeDTO::toDTO)
+                .collect(Collectors.toList());
+    }
 
     @Transactional
     public void deleteLike(Long likeId, Long userId) {
         LikeEntity like = likeRepository.findById(likeId)
                 .orElseThrow(() -> new RuntimeException("해당 좋아요를 찾을 수 없습니다."));
-        
+
         // 현재 사용자와 일치하는지 확인 (권한 체크)
         if (!like.getUser().getUserId().equals(userId)) {
             throw new RuntimeException("삭제 권한이 없습니다.");
         }
-        
+
         // 해당 LikeEntity 삭제
         likeRepository.delete(like);
     }

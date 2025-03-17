@@ -299,7 +299,7 @@ public class CreatorService {
                 .map(CreatorDTO::toDTO)
                 .collect(Collectors.toList());
     }
-}
+
 
 
 
@@ -369,5 +369,10 @@ public class CreatorService {
     // e.printStackTrace();
     // return false;
     // }
-    // }
+
+
+    @Transactional
+    public int approveMultipleCreators(List<Long> creatorIds) {
+        return creatorRepository.updateCreatorStatusByIds(creatorIds);
+    }
 }
