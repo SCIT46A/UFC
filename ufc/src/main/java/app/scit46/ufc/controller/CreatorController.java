@@ -51,6 +51,7 @@ public class CreatorController {
     private final CreatorService creatorService;
     private final ImageService imageService;
     private final SearchService searchService;
+    private final CampaignService campaignService;
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
     @GetMapping("/create")
@@ -234,9 +235,6 @@ public class CreatorController {
     // }
     // }
 
-    @Autowired
-    private CampaignService campaignService;
-
     // @GetMapping("/campaign/active")
     // @ResponseBody
     // public ResponseEntity<List<CampaignDTO>> getCreatorActiveCampaigns(Principal
@@ -261,9 +259,7 @@ public class CreatorController {
     @GetMapping("/campaign/active")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchActive(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
@@ -274,9 +270,7 @@ public class CreatorController {
     @GetMapping("/campaign/finished")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchFinished(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());
@@ -287,9 +281,7 @@ public class CreatorController {
     @GetMapping("/campaign/rejected")
     @ResponseBody
     public ResponseEntity<List<SearchResultDTO>> searchAppointed(
-            HttpServletRequest request,
-            @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "3") int limit) {
+            HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = (session != null) ? (Long) session.getAttribute("loginUserId") : null;
         Long creatorId = campaignService.getCreatorIdByOauthId(userService.findById(loginUserId).getOauthId());

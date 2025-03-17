@@ -127,6 +127,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
     });
 }
 
+
 // // 거절된 캠페인
 // document.addEventListener("DOMContentLoaded", function () {
 //     // 💔 거절당한 캠페인 목록 불러오기
