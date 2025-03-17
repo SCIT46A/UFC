@@ -2,23 +2,24 @@ package app.scit46.ufc.repository.campaign;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
-import app.scit46.ufc.dto.campaign.CampaignDTO;
-import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> {
 
     List<CampaignEntity> findByCampaignId(Long campaignId);
+
     List<CampaignEntity> findByCampaignIdIn(List<Long> campaignId);
 
-    // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = 0)
+    // ✅ 승인 대기 중인 캠페인 조회 (campaign_status = false)
     @Query("SELECT c FROM CampaignEntity c WHERE c.campaignStatus = 0")
     List<CampaignEntity> findByPendingApproval();
 
@@ -50,7 +51,8 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "  IFNULL(SUM(md.quantity), 0) AS donatedQuantity, " +
             "  IFNULL(SUM(md.quantity) * 100.0 / NULLIF(cg.quantity_required, 0), 0) AS donationPercentage, " +
             "  COUNT(DISTINCT md.user_id) AS totalDonors, " +
-            "  (SELECT COUNT(DISTINCT md2.user_id) FROM MaterialsDonations md2 WHERE md2.campaign_id = c.campaign_id) AS campaignDonors " +
+            "  (SELECT COUNT(DISTINCT md2.user_id) FROM MaterialsDonations md2 WHERE md2.campaign_id = c.campaign_id) AS campaignDonors "
+            +
             "FROM Campaigns c " +
             "LEFT JOIN CampaignGoals cg ON c.campaign_id = cg.campaign_id " +
             "LEFT JOIN MaterialsDonations md ON md.campaign_id = c.campaign_id AND md.material_id = cg.material_id " +
@@ -60,5 +62,23 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
             "GROUP BY c.campaign_id, cg.goal_id " +
             "ORDER BY donationPercentage ASC ", nativeQuery = true)
     List<IntroPageCampaignDTO> findCampaignGoalRows();
+
+
+    @Query("SELECT c FROM LikeEntity l JOIN l.campaign c WHERE l.user.id = :userId")
+    Page<CampaignEntity> findLikedCampaignsByUserId(@Param("userId") Long userId, Pageable pageable);   
+
+    
+    @Query(value = "SELECT " +
+        "CASE WHEN IFNULL(SUM(md.quantity) * 100.0 / NULLIF(cg.quantity_required, 0), 0) >= 100 " +
+        "THEN 1 ELSE 0 END AS isAchieved " +
+        "FROM Campaigns c " +
+        "LEFT JOIN CampaignGoals cg ON c.campaign_id = cg.campaign_id " +
+        "LEFT JOIN MaterialsDonations md ON md.campaign_id = c.campaign_id AND md.material_id = cg.material_id " +
+        "WHERE c.campaign_id = :campaignId " +
+        "GROUP BY c.campaign_id, cg.goal_id", nativeQuery = true)
+    Integer isCampaignAchieved(@Param("campaignId") Long campaignId);
+
+
+    
 
 }

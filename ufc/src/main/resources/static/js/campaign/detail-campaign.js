@@ -52,9 +52,10 @@ $(document).ready(function () {
                             return response.text();
                         })
                         .then(imageId => {
-                            return fetch(`/api/image/${imageId}`, { credentials: "include" });
+                            return fetch(`/api/image/${imageId}/board`, { credentials: "include" });
                         })
                         .then(response => {
+
                             if (!response.ok) throw new Error("이미지 URL 요청 실패");
                             return response.text();
                         })
@@ -261,7 +262,7 @@ $(document).ready(function () {
                                         return response.text();
                                     })
                                     .then(imageId => {
-                                        return fetch(`/api/image/${imageId}`, { credentials: 'include' });
+                                        return fetch(`/api/image/${imageId}/board`, { credentials: 'include' });
                                     })
                                     .then(response => {
                                         if (!response.ok) throw new Error("이미지 URL 요청 실패");
@@ -900,7 +901,6 @@ $(document).ready(function () {
             method: "GET",
             success: function (response) {
                 $(".reward-target").html("");
-                console.log(response);
                 response.forEach((data) => {
                     let rewardMaterialsHtml = data.rewardMaterials.map((dataAdd) => `
                     <div class="reward-info-pr-in-de">
@@ -995,6 +995,7 @@ $(document).ready(function () {
             if (response.length < 6) {
                 document.querySelector(".main-resent-all-add-btn-ri").classList.add("hidden");
             }
+            console.log(response)
             response.forEach((data) => {
                 let tagHtml = "";
                 if (data.tags && data.tags.length > 0) {
@@ -1010,7 +1011,7 @@ $(document).ready(function () {
                 <div class="main-resent-pe">
                     <div class="main-resent-pe-all">
                         <div class="main-resent-pe-all-in">
-                            <a class="main-resent-pe-all-in-img" href="/campaign/${data.campaignId}">
+                            <a class="main-resent-pe-all-in-img" href="/campaign/${data.originalId}">
                                 <img alt="" src="/api/image/${data.imageId}" class="main-resent-pe-all-in-img-in">
                             </a>
                             <div></div>
@@ -1283,6 +1284,19 @@ $(document).ready(function () {
     });
 
 
+
+    $(document).on("click", ".reward-in-se-in-bo-btn-le", function(event) {
+        event.preventDefault();
+
+        // hidden input에서 loginUserId 값을 읽어 로그인 상태 확인
+        var loginUserId = $("#loginUserId").val();
+        if (!loginUserId) {
+            alert("로그인을 해주세요");
+            var currentUrl = window.location.href;
+            window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(currentUrl);
+        }
+
+    });
 
 
 

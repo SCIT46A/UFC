@@ -33,10 +33,6 @@ public class NoticeEntity {
     @Column(name = "noticed_date", nullable = false)
     private LocalDateTime noticedDate;
 
-    // OneToMany: AlertTarget.target_notice 참조
-    @OneToMany(mappedBy = "targetNotice", fetch = FetchType.LAZY)
-    private List<AlertTargetEntity> alertTargets;
-
     public static NoticeEntity toEntity(NoticeDTO dto) {
         return builder()
                 .noticeId(dto.getNoticeId())

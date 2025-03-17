@@ -140,7 +140,7 @@ public class AlertService {
     }
 
     // 알림 생성
-    private AlertEntity generateAlert(Object data, String type){
+    public AlertEntity generateAlert(Object data, String type){
         return AlertEntity.builder()
                 .content(generateMessage(data, type))
                 .alertType(type)
@@ -151,7 +151,7 @@ public class AlertService {
     }
 
     // 알림 메시지 생성
-    private String generateMessage(Object data, String type) {
+    public String generateMessage(Object data, String type) {
         String message = "";
         if (data instanceof NoticeEntity) {
             NoticeEntity notice = (NoticeEntity) data;
@@ -198,7 +198,7 @@ public class AlertService {
     }
 
     // 알림 이동 링크 URL 생성
-    private String generateLinkUrl(Object data, String type) {
+    public String generateLinkUrl(Object data, String type) {
         String linkUrl = "https://upda.store";
         if (data instanceof NoticeEntity) {
             NoticeEntity notice = (NoticeEntity) data;
@@ -234,7 +234,7 @@ public class AlertService {
     }
 
     // 알림 이미지 URL 생성
-    private String generateImageUrl(Object data){
+    public String generateImageUrl(Object data){
         if(data instanceof NoticeEntity){
             return imageUrlService.findImage(0L);   //0번이 기본 이미지
         }else if(data instanceof CampaignEntity){

@@ -24,7 +24,7 @@ public class ProductDTO {
     private ItemDTO item; // ✅ ItemDTO 포함
     private Integer stockQuantity;
     private CreatorDTO createdBy; // ✅ CreatorDTO 포함
-
+    private String content;
     private Integer price;
     private int status;
     private LocalDateTime createTime;
@@ -33,6 +33,9 @@ public class ProductDTO {
         return ProductDTO.builder()
                 .productId(entity.getProductId())
                 .item(entity.getItem() != null ? ItemDTO.toDTO(entity.getItem()) : null) // ✅ ItemDTO 변환
+                .price(entity.getPrice())
+                .content(entity.getContent())
+                .status(entity.getStatus())
                 .stockQuantity(entity.getStockQuantity())
                 .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅ CreatorDTO 변환
                 .build();

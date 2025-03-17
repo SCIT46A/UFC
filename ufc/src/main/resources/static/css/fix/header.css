@@ -1411,6 +1411,10 @@ body {
     overflow: hidden auto;
 }
 
+.modal-re-search-box-bo-box-in::-webkit-scrollbar {
+    display: none;
+}
+
 .modal-re-search-box-bo-box-in-se{
     font-size: 1.23rem;
     width: 100%;
