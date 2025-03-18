@@ -300,13 +300,55 @@ main {
   font: 500 14px / 22px Pretendard, sans-serif;
 }
 
-.main-in-mi-content-box-btn {
+.main-in-mi-content-box-btn1 {
   display: flex;
   -webkit-box-pack: center;
   justify-content: center;
   flex-direction: column;
   margin-top: 54px;
   padding: 0px 16px;
+}
+
+.main-in-mi-content-box-btn2 {
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 54px;
+  padding: 0px 16px;
+}
+
+.main-in-mi-content-box-btn-proof {
+  outline: 0;
+  width: 280px;
+  height: 52px;
+  max-width: 328px;
+  color: white;
+  border: 1px solid rgb(236, 236, 236);
+  border-radius: 1px;
+  background: #16a34a;
+  font-weight: 500;
+  font-size: 16px !important; 
+  line-height: 1 !important;
+  cursor: pointer;
+  display: inline-block;
+  min-height: 1em;
+  vertical-align: baseline;
+  box-shadow: transparent 0px 0px 0px 1px inset,
+    rgba(0, 0, 0, 0.1) 0px 0em 0px 0px inset;
+  user-select: none;
+  transition: opacity 0.1s, background-color 0.1s, color 0.1s, box-shadow 0.1s,
+    background 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  margin: 0px 0.25em 0px 0px;
+  text-transform: none;
+  text-shadow: none;
+  font-style: normal;
+  text-align: center;
+  text-decoration: none;
+  padding: 1em 1.5em;
+  opacity: 1;
+  -webkit-appearance: button;
 }
 
 .main-in-mi-content-box-btn-in {

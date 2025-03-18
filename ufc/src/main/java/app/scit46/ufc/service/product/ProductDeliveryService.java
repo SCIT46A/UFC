@@ -8,6 +8,8 @@ import app.scit46.ufc.repository.product.ProductPaymentRepository;
 import app.scit46.ufc.repository.ProductRepository;
 import app.scit46.ufc.entity.product.ProductDeliveryEntity;
 import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
+import app.scit46.ufc.dto.product.ProductDeliveryDTO;
+
 import java.util.Optional;
 import java.util.List;
 
@@ -68,6 +70,11 @@ public class ProductDeliveryService {
                 System.out.println("✅ 새로운 배송 정보 생성: " + request.getId());
             }
         }
+    }
+
+    public ProductDeliveryDTO getProductDeliveryByPayId(Long payId) {
+        ProductDeliveryEntity deliveryEntity = productDeliveryRepository.findProductDeliveryByPayId(payId);
+        return deliveryEntity != null ? ProductDeliveryDTO.toDTO(deliveryEntity) : null;
     }
 
 }

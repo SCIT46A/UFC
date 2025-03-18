@@ -14,7 +14,7 @@ profile_edit.addEventListener("click", function() {
 
 // 캠페인 제작하기 버튼 클릭 시 intro-campaign 페이지로 이동
 document.getElementById("create_campaign").addEventListener("click", function () {
-    window.location.href = "/campaign/intro"; // ✅ 서버 경로 기준으로 이동
+    window.location.href = "/campaign/create"; // ✅ 서버 경로 기준으로 이동
 });
 
 // 누적캠페인 숫자 변경

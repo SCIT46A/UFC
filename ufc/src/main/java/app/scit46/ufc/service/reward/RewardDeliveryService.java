@@ -184,8 +184,10 @@ public class RewardDeliveryService {
     }
 
     public RewardDeliveryDTO getRewardDeliveryByDonationId(Long donationId) {
-        return RewardDeliveryDTO.toDTO(rewardDeliveryRepository.findRewardDeliveryByDonationId(donationId));
+            return RewardDeliveryDTO.toDTO(rewardDeliveryRepository.findRewardDeliveryByDonationId(donationId));
     }
+    
+
 
 
 }
