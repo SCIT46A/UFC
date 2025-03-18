@@ -169,8 +169,6 @@ public class ApiController {
         }
         try {
             likeService.deleteLike(likeId, userId);
-            log.info("likeId: " + likeId);
-            log.info("userId: " + userId);
             return ResponseEntity.ok(Map.of("success", true, "message", "좋아요가 삭제되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

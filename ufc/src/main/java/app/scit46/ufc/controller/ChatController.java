@@ -40,7 +40,6 @@ public class ChatController {
         ObjectMapper mapper = new ObjectMapper();
         try {
             String json = mapper.writeValueAsString(writeMessageRequest);
-            log.info("Received WriteMessageRequest: " + json);
         } catch (Exception e) {
             log.error("Error converting WriteMessageRequest to JSON", e);
         }

@@ -68,7 +68,7 @@ public class ProductController {
         ProductDTO product = productService.findProductById(id);
         Long creatorId = product.getCreatedBy().getOwnUser().getUserId();
         int status = product.getStatus();
-        log.info("제품 상태: " + status);
+
 
         // status가 0(예: 미승인)인 경우, 로그인한 사용자가 크리에이터와 동일해야 함
         if (status != 1) {
@@ -77,7 +77,7 @@ public class ProductController {
             }
         }
 
-        log.info("제품 상태: " + status);
+
 
         // model에 status 값을 그대로 전달 (0,1,2 등)
         model.addAttribute("status", status);
@@ -99,11 +99,7 @@ public class ProductController {
                         : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
-        // ------
 
-        //
-        //
-        log.info(product.toString());
         boolean campaignLike = likeService.likeCheck(product.getProductId(), loginUserId, "product");
         boolean creatorLike = likeService.likeCheck(product.getCreatedBy().getCreatorId(), loginUserId, "creator");
         model.addAttribute("campaignLike", campaignLike);
@@ -121,7 +117,6 @@ public class ProductController {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 
         ProductDTO product = productService.findProductById(productId);
-        log.info(product.toString());
         model.addAttribute("product", product);
         model.addAttribute("stock", stock);
 
@@ -164,5 +159,7 @@ public class ProductController {
                     .body(Map.of("success", false, "message", "결제 검증 실패", "error", e.getMessage()));
         }
     }
+
+
 
 }
