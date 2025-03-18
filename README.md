@@ -34,7 +34,7 @@ UPDA는 환경 보호에 관심이 있는 창작자와 후원자를 연결하는
 - GitHub Actions
 
 ## 📋 ERD
-![ERD 다이어그램](https://cdn.discordapp.com/attachments/1329368511062999135/1336554790896799804/erd111.PNG?ex=67a98126&is=67a82fa6&hm=6761733a736eeda1eb9edd3a4fba6a24547073fdb636abe9af7f64ac32997760&)
+![ERD 다이어그램](https://cdn.discordapp.com/attachments/1338520972097224797/1351355843714482186/image.png?ex=67da13b4&is=67d8c234&hm=694be2261c35d1f1920dc1ddb19163862c0105a126048da16ec036836f8989c8&)
 
 ## API
 > OAuth2
