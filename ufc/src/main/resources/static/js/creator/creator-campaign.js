@@ -39,25 +39,39 @@ function updateTotalCampaignCount() {
     $("#total-campaign-count").text(totalCount);
 }
 
+// 누적 캠페인 수를 계산할 변수
+let totalCampaignCount = 0;
+
 document.addEventListener("DOMContentLoaded", function () {
     // ✅ 진행 중인 캠페인 불러오기
-    fetchCampaigns("/creator/campaign/active", "#club-detail-active-container", "#tp-show-more-btn");
+    fetchCampaigns("/creator/campaign/active", "#club-detail-active-container", "#tp-show-more-btn", "#active-campaign-count");
 
     // ✅ 종료된 캠페인 불러오기
-    fetchCampaigns("/creator/campaign/finished", "#finished-events-container", "#show-more-btn");
+    fetchCampaigns("/creator/campaign/finished", "#finished-events-container", "#show-more-btn", "#finished-campaign-count");
 
     // ✅ 예정된 캠페인 불러오기
-    fetchCampaigns("/creator/campaign/rejected", "#appointed-events-container", "#appointed-more-btn");
+    fetchCampaigns("/creator/campaign/rejected", "#appointed-events-container", "#appointed-more-btn", "#appointed-campaign-count");
 });
 
 // ✅ 캠페인 데이터 로드 함수
-function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
+function fetchCampaigns(url, containerId, moreBtnId, countId, offset = 0, limit = 3) {
     $.ajax({
         url: `${url}?offset=${offset}&limit=${limit}`,  // ✅ offset과 limit 추가
         method: "GET",
         success: (response) => {
             console.log(`📌 캠페인 목록 (${url}):`, response);
             let htmlResult = "";
+
+            // ✅ 캠페인 수를 업데이트
+            if (countId) {
+                $(countId).text(response.length);
+            }
+
+            // ✅ 누적 캠페인 수 업데이트 (진행 중 + 종료된 캠페인 수)
+            if (url.includes("/creator/campaign/active") || url.includes("/creator/campaign/finished")) {
+                totalCampaignCount += response.length;
+                $("#total-campaign-count").text(totalCampaignCount);
+            }
 
             if (response.length > 0) {
                 response.forEach((data) => {
@@ -108,7 +122,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
                     $(moreBtnId).hide();
                 } else {
                     $(moreBtnId).show().off("click").on("click", function () {
-                        fetchCampaigns(url, containerId, moreBtnId, offset + limit);
+                        fetchCampaigns(url, containerId, moreBtnId, countId, offset + limit);
                     });
                 }
             } else {
@@ -129,7 +143,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
 
             $(containerId).append(htmlResult);
 
-            // ✅ 캠페인 수 업데이트
+            // 캠페인 수 업데이트
             updateTotalCampaignCount();
         },
         error: (error) => {
@@ -138,6 +152,7 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
         }
     });
 }
+
 
 
 // // 거절된 캠페인
