@@ -125,7 +125,6 @@ public class CampaignController {
 
         model.addAttribute("tags", tags);
         model.addAttribute("campaign", campaign);
-        log.info(campaign.toString());
         model.addAttribute("campaignGoalDTOS", campaignGoalDtos);
         model.addAttribute("totalDonors", totalDonors);
         model.addAttribute("totalQuantity", totalQuantity);
@@ -170,7 +169,6 @@ public class CampaignController {
             List<Map<String, Object>> donationList = objectMapper.readValue(
                     donationDetails, new TypeReference<List<Map<String, Object>>>() {
                     });
-            log.info(donationList.toString());
 
             // campaignId 처리 (기존 코드)
             if (!donationList.isEmpty() && donationList.get(0).containsKey("campaignId")) {
@@ -187,7 +185,6 @@ public class CampaignController {
                 if (campaignId != null) {
                     CampaignDTO campaign = campaignService.readCampaign(campaignId);
                     model.addAttribute("campaign", campaign);
-                    log.info(campaign.toString());
                     String imageUrl = (campaign.getPhoto() != null)
                             ? imageService.getImageUrl(campaign.getPhoto().getImageId())
                             : DEFAULT_IMAGE;

@@ -37,7 +37,7 @@ $(function () {
                         <div>
                             <div
                                     class="al-in-box-warp-pe-img"
-                            ><img src="${alert.imageUrl}" alt="alert image"></div>
+                            ><img src="${alert.imageUrl}" alt="alert image" style="width:70px; height:70px;"></div>
                         </div>
 
                         <div class="al-in-box-warp-pe-content">
@@ -50,13 +50,15 @@ $(function () {
                                     ${alert.content}
                                 </div>
                             </div>
-                            <p class="al-in-box-warp-pe-content-box-bottom">${alert.alertDate}</p>
+                            <p class="al-in-box-warp-pe-content-box-bottom" style="color:black;">
+                              ${(((new Date(alert.alertDate).getTime())-(new Date().getTime()))/1000*60*60*24)+"일 전"}
+                            </p>
                         </div>
                     </div>          
                 </a>
                 `;
                 console.log(alert);
-                $(".modal-login-in").append(alertTag);
+                $(".modal-alert > .modal-login-in").append(alertTag);
             });
         },
         error: function (xhr, status, error) {

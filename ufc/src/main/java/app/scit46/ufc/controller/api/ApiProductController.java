@@ -17,7 +17,6 @@ import app.scit46.ufc.service.product.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -35,14 +34,15 @@ public class ApiProductController {
     }
 
     @PostMapping("/add/{productId}")
-    public ResponseEntity<Long> getProduct(@PathVariable Long productId, @RequestBody ProductDTO boardRequest) {
+    public ResponseEntity<Long> getProduct(@PathVariable("productId") Long productId,
+            @RequestBody ProductDTO boardRequest) {
         Long productTargetId = productService.productBoardSave(productId, boardRequest.getContent());
 
         return ResponseEntity.ok(productTargetId);
     }
 
     @GetMapping("/{productId}")
-    public ResponseEntity<ProductDTO> getProduct(@PathVariable Long productId) {
+    public ResponseEntity<ProductDTO> getProduct(@PathVariable("productId") Long productId) {
         try {
             ProductDTO productDTO = productService.findProductById(productId);
             if (productDTO == null) {
@@ -57,7 +57,7 @@ public class ApiProductController {
 
     @PostMapping("/update/{productId}")
     public ResponseEntity<ProductDTO> updateProductContent(
-            @PathVariable Long productId,
+            @PathVariable("productId") Long productId,
             @RequestBody Map<String, String> payload) {
 
         String content = payload.get("content");

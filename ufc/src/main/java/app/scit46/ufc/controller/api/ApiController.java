@@ -48,9 +48,7 @@ public class ApiController {
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
 
-
-
-    //  카테고리 입력
+    // 카테고리 입력
     @GetMapping("/checkTag")
     public List<TagDTO> checkTag() {
         return tagService.getTopTags();
@@ -66,7 +64,7 @@ public class ApiController {
         return searchService.searchTagTarget(keyword);
     }
 
-    //  알림상태 확인하는거
+    // 알림상태 확인하는거
     @GetMapping("/checkAlert")
     public List<UserAlertDTO> checkAlert(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션 가져오기
@@ -94,8 +92,6 @@ public class ApiController {
         }
         return user;
     }
-
-
 
     @GetMapping("/lowertDonation")
     public ResponseEntity<List<CampaignWithGoalsDTO>> getCampaignsWithGoals() {
@@ -140,8 +136,7 @@ public class ApiController {
         return ResponseEntity.ok(Map.of("success", true, "isLiked", newState, "message", message));
     }
 
-
-    //  송장등록시 택배사 id?받아오기
+    // 송장등록시 택배사 id?받아오기
     @GetMapping("/invoice")
     public List<CourierDTO> couriers() {
         return courierService.findAll();
@@ -156,9 +151,8 @@ public class ApiController {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
         }
 
-
         // 트랜잭션 범위 내에서 처리하는 서비스 호출
-        campaignService.processDonation(loginUserId ,formData);
+        campaignService.processDonation(loginUserId, formData);
 
         return ResponseEntity.ok().build();
     }
@@ -175,8 +169,6 @@ public class ApiController {
         }
         try {
             likeService.deleteLike(likeId, userId);
-            log.info("likeId: " + likeId);
-            log.info("userId: " + userId);
             return ResponseEntity.ok(Map.of("success", true, "message", "좋아요가 삭제되었습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -184,8 +176,7 @@ public class ApiController {
         }
     }
 
-
-//  채팅관련 api컨틀롤러
+    // 채팅관련 api컨틀롤러
 
     @GetMapping("/chatRoom/all")
     public List<ChatRoomDTO> getAllChatRooms(HttpServletRequest request) {
@@ -199,12 +190,12 @@ public class ApiController {
     }
 
     @GetMapping("/chatRoom/{chatRoomId}/messages")
-    public List<ChatMessageDTO> getMessagesByChatRoom(@PathVariable Long chatRoomId) {
+    public List<ChatMessageDTO> getMessagesByChatRoom(@PathVariable("chatRoomId") Long chatRoomId) {
         return chatMessageService.findMessagesByChatRoomId(chatRoomId);
     }
 
     @GetMapping("/findme")
-    public Long findme(HttpServletRequest request){
+    public Long findme(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Long loginUserId = null;
         if (session != null) {
@@ -213,11 +204,9 @@ public class ApiController {
         return loginUserId;
     }
 
-
     @GetMapping("/chatRoom/add")
     public ChatRoomDTO chatRoomAdd(@RequestParam Long loginUserId, @RequestParam Long userId) {
         return chatRoomService.createChatRoom(loginUserId, userId);
     }
-
 
 }

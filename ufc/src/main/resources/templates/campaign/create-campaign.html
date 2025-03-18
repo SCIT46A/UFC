@@ -31,8 +31,8 @@
 
     <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
     <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
     <script th:src="@{/js/fix/chat.js}" defer></script>
 
     <script th:src="@{/js/campaign/create-campaign.js}" defer></script>
@@ -687,9 +687,7 @@
         </section>
     </main>
     <!-- 푸터 제거 -->
-    <th:block th:if="${iframe} != true">
-        <div th:replace="~{fix/footer :: footer}"></div>
-    </th:block>
+    <div th:replace="~{fix/footer :: footer}" th:attr="hidden=${iframe}"></div>
     <!-- 로딩 오버레이 -->
     <div class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>

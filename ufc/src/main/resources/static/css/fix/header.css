@@ -1184,13 +1184,14 @@ body {
 }
 
 .al-in-box-warp-pe{
-    padding: 10px 10px;
+    /* padding: 10px 10px; */
     transition: 0.2s ease-in-out;
     overflow: hidden;
     position: relative;
     display: inline-flex;
     flex-direction: row;
     min-height: 80px;
+    width: 100%;
     cursor: pointer;
     border: none;
     background: rgb(255, 255, 255);
