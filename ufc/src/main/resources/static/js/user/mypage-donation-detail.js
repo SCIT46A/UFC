@@ -96,25 +96,32 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Content-Type": "application/x-www-form-urlencoded"
                 }
             })
-            .then(response => {
-                console.log("📢 서버 응답 상태 코드:", response.status);
-                if (!response.ok) {
-                    return response.text().then(errorMessage => {
-                        throw new Error(`❌ 서버 오류: ${errorMessage}`);
-                    });
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log("📦 배송 상태 응답:", data);
-                deliveryStatusElement.innerText = data.status;
-            })
-            .catch(error => {
-                console.error("🚨 배송 조회 실패:", error);
-                deliveryStatusElement.innerText = "배송 정보를 가져오는 중 오류가 발생했습니다.";
-            });
+                .then(response => {
+                    console.log("📢 서버 응답 상태 코드:", response.status);
+                    if (!response.ok) {
+                        return response.text().then(errorMessage => {
+                            throw new Error(`❌ 서버 오류: ${errorMessage}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("📦 배송 상태 응답:", data);
+                    deliveryStatusElement.innerText = data.status;
+                })
+                .catch(error => {
+                    console.error("🚨 배송 조회 실패:", error);
+                    deliveryStatusElement.innerText = "배송 정보를 가져오는 중 오류가 발생했습니다.";
+                });
         } else {
             console.log("⚠️ courierId 또는 trackingNum이 비어 있습니다.");
         }
     }
+
+
+
+
+
+
+
 });

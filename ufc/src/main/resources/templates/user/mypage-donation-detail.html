@@ -177,7 +177,15 @@
                   
                 </div>
                 <!-- 밑에 버튼 -->
-                <div class="main-in-mi-content-box-btn">
+                <div class="main-in-mi-content-box-btn1"
+                 th:style="${achievement >= 100} ? 'display: block;' : 'display: none;'">
+                  <a th:href="@{/user/donation/certificate/{donationId}(donationId=${donation.donationId})}" target="_blank">
+                    <button class="main-in-mi-content-box-btn-proof">
+                      후원 증서 출력
+                    </button>
+                  </a>
+                </div>
+                <div class="main-in-mi-content-box-btn2">
                   <a th:href="@{/user/donation}">
                     <button class="main-in-mi-content-box-btn-in">
                       후원 목록 보기

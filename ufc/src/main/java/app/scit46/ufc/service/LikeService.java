@@ -1,6 +1,7 @@
 package app.scit46.ufc.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,10 +26,6 @@ import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.stereotype.Service;
 
 
 @Service
@@ -175,10 +172,21 @@ public class LikeService {
 
 
 public List<LikeDTO> getLikeByUserUserId(Long userId) {
-    return likeRepository.findByUser_UserId(userId).stream()
-            .map(LikeDTO::toDTO)    
+    if (userId == null) {
+        return new ArrayList<>(); // userId가 null이면 빈 리스트 반환
+    }
+
+    List<LikeEntity> likes = likeRepository.findByUser_UserId(userId);
+    
+    if (likes == null || likes.isEmpty()) {
+        return new ArrayList<>(); // 조회 결과가 없거나 null이면 빈 리스트 반환
+    }
+
+    return likes.stream()
+            .map(LikeDTO::toDTO)
             .collect(Collectors.toList());
 }
+
 
 public List<LikeDTO> getLikeByCampaignId(Long campaignId) {
     return likeRepository.findByCampaign_CampaignId(campaignId).stream()

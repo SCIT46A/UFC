@@ -37,6 +37,7 @@
             th:href="@{/css/fix/footer.css}"
         />
         <script th:src="@{/js/fix/header.js}" defer></script>
+        <script th:src="@{/js/user/mypage-buy.js}"></script>
     </head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
@@ -210,14 +211,51 @@
                                         </div>
 
                                         <!-- 각각의 후원 내역 출력 -->
+                                         <div class="sup-content-origin">
+
                                             <div class="sup-content-main" th:each="productPayment, iterStatus : ${productPayments}">
+                                                <div class="courierName" style="display: none;"  
+                                                    th:text="${reward[iterStatus.index].invoice != null ? reward[iterStatus.index].invoice : '배송 정보 없음'}">
+
+                                                </div>
+                                                <div class="main-in-mi-content-box" style="display: none;">
+                                                    <div class="main-in-mi-content-box-title">
+                                                    <p class="main-in-mi-content-box-title-le">배송 상태</p>
+                                                    </div>
+                                                    <form th:action="@{/user/buy/{productId}(productId=${productPayment.product.productId})}" method="post">
+                                                    <div class="main-in-mi-content-box-content">
+                                                        <dl class="main-in-mi-content-box-content-in">
+                                                        <dt>택배사 Id</dt>
+
+                                                        
+                                                        <dd> <input type="text" name="courierId" class="courierId"></dd>
+                                                        </dl>
+                                                        <dl class="main-in-mi-content-box-content-in">
+                                                        <dt>운송장 번호</dt>
+                                                        <dd> <input type="text" name="trackingNumber" class="trackingNumber"></dd>
+                                                        </dl>
+                                                        <dl class="main-in-mi-content-box-content-in">
+                                                        <dd> <button type="submit">조회</button></dd>
+                                                        </dl>
+                                                        <dl>
+                                                        <dt>
+                                                            배송 상태
+                                                        </dt>
+                                                        <dd class="result" th:if="${status != null}">
+                                                            <p id="status" th:text="${status}"></p>
+                                                        </dd>
+                                                        </dl>
+                                                    </div>
+                                                    </form>
+                                                </div>
                                             <div class="sup-content-main-box">
                                                 <div class="sup-content-main-box-in">
                                                     <!-- 이미지 -->
                                                     <div>
                                                         <div class="sup-content-main-box-in-img">
-                                                            <a href="/">
-                                                                <img th:src="@{${imageUrls[iterStatus.index]}}" alt="캠페인 이미지"/>
+                                                            <a th:href="@{/product/{productId}(productId=${productPayment.product.productId})}"
+                                                            >
+                                                                <img th:src="@{${imageUrls[iterStatus.index]}}" alt="아이템 이미지"/>
                                                             </a>
                                                         </div>
                                                     </div>
@@ -226,34 +264,29 @@
                                                     <div class="sup-content-main-box-in-content">
                                                         <!-- 후원일 -->
                                                         <div class="sup-content-main-box-in-content-date">
-                                                            <span>구매일: </span>
                                                             <span th:text="${#temporals.format(productPayment.purchasedDate, 'yyyy.MM.dd')}"></span>
                                                         </div>
                                                         
                                                         <!-- 제목 -->
                                                         <a href="/" class="sup-content-main-box-in-content-title">
-                                                            <span th:text="${campaigns[iterStatus.index].title}">캠페인 제목</span>
+                                                            <span th:text="${productPayment.product.item.name}"></span>
+                                                            <span th:text="|${productPayment.stock} 개|"></span>
                                                         </a>
-                                                        
-                                                        <!-- 구성 -->
-                                                        <ul class="sup-content-main-box-in-content-in">
-                                                            <li>
-                                                                <span th:text="${productPayment.product.item.name}">구성품</span>
-                                                            </li>
-                                                        </ul>
+
                                                         
                                                         <!-- 비용 -->
                                                         <div class="sup-content-main-box-in-content-pr">
                                                             <div>
                                                                 <p class="sup-content-main-box-in-content-pr-le">
-                                                                   <span th:text="${productPayment.quantity}"></span>
-                                                                   <span> 개</span>
+                                                                   <span th:text="|${#numbers.formatInteger(productPayment.price, 3, 'COMMA')} 원|"></span>
                                                                 </p>
                                                             </div>
                                                             <div>
-                                                                <p class="sup-content-main-box-in-content-pr-ri">
-                                                                    <span th:text="${#temporals.format(productPayment.purchasedDate, 'yyyy.MM.dd')}"></span> 구매 완료
+                                                                <p class="sup-content-main-box-in-content-pr-ri deliveryStatus">
                                                                 </p>
+                                                            </div>
+                                                            <div class="delete-btn" th:if="${productPayment.status == 'completed'}">
+                                                                <a th:href="@{/user/buy/delete/{payId}(payId=${productPayment.payId})}">주문 취소</a>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -263,6 +296,8 @@
                                                 </div>
                                                 </div>
                                             </div>
+                                        </div>
+
                                         </div>
 
 

@@ -1,5 +1,6 @@
 package app.scit46.ufc.service;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,13 +50,14 @@ public class MaterialDonationService {
 
     public List<MaterialDonationDTO> getMaterialDonationsByUserId(Long userId) {
         List<MaterialDonationEntity> temp = materialDonationRepository.findAllByUser_UserId(userId);
-        if (temp.isEmpty()) {
-            throw new RuntimeException("Material Donation not found");
+        if (temp == null || temp.isEmpty()) {
+            return Collections.emptyList();
         }
         return temp.stream()
                 .map(MaterialDonationDTO::toDTO)
                 .toList();
     }
+    
 
     public List<MaterialDonationDTO> findDonationByCampaign(Long campaignId) {
         return materialDonationRepository.findByCampaign_CampaignId(campaignId).stream().map(MaterialDonationDTO::toDTO)
