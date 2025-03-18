@@ -1214,3 +1214,43 @@ $(deleteButton).on('click', function (e) {
     this.style.display = 'none';
     checkInfoPageInput();
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    if (window.parent !== window) { // iframe 내부인지 확인
+        console.log("✅ [DEBUG] iframe 내부에서 실행됨");
+
+        // ✅ #projects에 스타일 적용하는 함수
+        function applyProjectsStyle() {
+            const projectsSection = document.querySelector("#projects");
+            if (projectsSection) {
+                console.log("✅ [DEBUG] #projects 요소 찾음, 스타일 적용 시작");
+                projectsSection.style.cssText = `
+                    display: flex !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    min-height: 1000px !important;
+                    width: 100% !important;
+                    background-color: white !important;
+                    padding: 20px !important;
+                    border: none !important;
+                `;
+                console.log("✅ [DEBUG] #projects 인라인 스타일 적용 완료");
+                return true;
+            }
+            return false;
+        }
+
+        // ✅ 즉시 적용 시도
+        if (!applyProjectsStyle()) {
+            console.warn("⚠️ [WARNING] #projects 요소가 아직 존재하지 않음, MutationObserver 활성화");
+            // ✅ #projects 요소가 생성될 때까지 감지
+            const observer = new MutationObserver((mutations, obs) => {
+                if (applyProjectsStyle()) {
+                    obs.disconnect();
+                }
+            });
+            observer.observe(document.body, { childList: true, subtree: true });
+        }
+    }
+});
+
