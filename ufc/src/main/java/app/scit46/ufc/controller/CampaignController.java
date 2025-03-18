@@ -82,10 +82,9 @@ public class CampaignController {
         if (loginUserId == null) {
 
             model.addAttribute("status", 0);
-        } else if(!loginUserId.equals(creatorId)){
+        } else if (!loginUserId.equals(creatorId)) {
             model.addAttribute("status", 0);
-        }
-        else {
+        } else {
             model.addAttribute("status", 1);
 
         }
@@ -102,11 +101,9 @@ public class CampaignController {
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
 
-
                 && campaign.getCreatedBy().getProImgUrl() != null)
-                ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
-                : DEFAULT_IMAGE;
-
+                        ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
+                        : DEFAULT_IMAGE;
 
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
@@ -350,6 +347,12 @@ public class CampaignController {
     @GetMapping("/upcoming")
     public String upcoming() {
         return "campaign/upcoming-campaign";
+    }
+
+    // 가이드 새롭게 추가
+    @GetMapping("/upcycling_campaign_guide")
+    public String guide() {
+        return "upcycling_campaign_guide";
     }
 
 }

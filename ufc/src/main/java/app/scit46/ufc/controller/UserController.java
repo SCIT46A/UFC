@@ -1,8 +1,6 @@
 package app.scit46.ufc.controller;
 
 
-import java.util.HashMap;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,11 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-
-
-import app.scit46.ufc.service.chat.ChatRoomService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,6 +28,9 @@ import app.scit46.ufc.dto.UserBadgeDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
+import app.scit46.ufc.dto.product.ProductDTO;
+import app.scit46.ufc.dto.product.ProductDeliveryDTO;
+import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.campaign.CampaignReviewEntity;
@@ -48,13 +44,18 @@ import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignGoalService;
 import app.scit46.ufc.service.campaign.CampaignReviewService;
 import app.scit46.ufc.service.campaign.CampaignService;
+import app.scit46.ufc.service.chat.ChatRoomService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import app.scit46.ufc.service.delivery.DeliveryService;
+import app.scit46.ufc.service.product.ProductDeliveryService;
+import app.scit46.ufc.service.product.ProductPaymentService;
+import app.scit46.ufc.service.product.ProductService;
 import app.scit46.ufc.service.reward.RewardDeliveryService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -68,6 +69,7 @@ public class UserController {
     private final LikeService likeService;
     private final ImageService imageService;
     private final MaterialDonationService materialDonationService;
+    private final ProductDeliveryService productDeliveryService;
 
     private final BadgeService badgeService;
     private final UserBadgeService userBadgeService;
@@ -76,6 +78,9 @@ public class UserController {
     private final DeliveryService deliveryService;
     private final CreatorService creatorService;
     private final ChatRoomService chatRoomService;
+    private final ProductPaymentService productPaymentService;
+    private final ProductService productService;
+
 
     // 유저 기본페이지 조회
     @GetMapping({ "/", "" })
@@ -101,11 +106,14 @@ public class UserController {
                             .filter(like -> like.getCreator() != null)
                             .collect(Collectors.toList());
 
+
                     List<MaterialDonationDTO> materialDonations = materialDonationService
-                                .getMaterialDonationsByUserId(user.getUserId()); 
+                                .getMaterialDonationsByUserId(user.getUserId());
+
+                    int donationCount = (materialDonations != null ? materialDonations.size() : 0);
 
                     model.addAttribute("creatorLikes", creatorLikes.size());
-                    model.addAttribute("donationCount", materialDonations.size());
+                    model.addAttribute("donationCount", donationCount);
                     
 
                     model.addAttribute("user", user);
@@ -119,13 +127,6 @@ public class UserController {
         return "user/mypage-profile";
     }
 
-    // 유저 도네이션 조회
-    // @GetMapping("/donation")
-    // public String donation(Model model) {
-    // LocalDateTime donatedDate = LocalDateTime.now();
-    // model.addAttribute("donatedDate", donatedDate);
-    // return "user/mypage-donation";
-    // }
 
 
         @GetMapping("/review")
@@ -173,8 +174,10 @@ public class UserController {
                         List<MaterialDonationDTO> materialDonations = materialDonationService
                                 .getMaterialDonationsByUserId(userId);
 
+                        int donationCount = (materialDonations != null ? materialDonations.size() : 0);
+
                         model.addAttribute("creatorLikes", creatorLikes.size());
-                        model.addAttribute("donationCount", materialDonations.size());
+                        model.addAttribute("donationCount", donationCount);
                         model.addAttribute("imageUrls", imageUrls);
                         model.addAttribute("userImageId", userImageId);
                         // Page 객체를 그대로 전달해서 페이징 네비게이션에 활용
@@ -190,35 +193,6 @@ public class UserController {
         return "user/mypage-review";
     }
 
-    // List<CampaignEntity> campaign = donations.stream()
-    // .map(donation ->
-    // campaignService.campaignFindByCampaignId(donation.getCampaign().getCampaignId()))
-    // .flatMap(List::stream)
-    // .collect(Collectors.toList());
-
-    // 유저 정보 수정 창 조회
-    @GetMapping("/edit")
-    public String edit(HttpServletRequest request, Model model) {
-        HttpSession session = request.getSession(false); // 세션 가져오기
-        Long userId = null; // 기본값 설정
-        if (session != null) {
-            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
-            if (userId != null) {
-                try {
-                    // 사용자 정보를 데이터베이스에서 조회
-                    UserDTO user = userService.readUserById(userId);
-                    List<String> imageUrls = new ArrayList<>();
-                    imageUrls.add(imageService.getImageUrl(user.getPhoto().getImageId()));
-                    model.addAttribute("user", user);
-                    model.addAttribute("imageUrls", imageUrls);
-                } catch (DBNotFoundException e) {
-                    // 사용자 정보를 찾을 수 없는 경우 처리
-                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
-                }
-            }
-        }
-        return "user/mypage-profile-edit";
-    }
 
 
 
@@ -233,7 +207,9 @@ public class UserController {
             if (userId != null) {
                 try {
                     UserDTO user = userService.readUserById(userId);
-                    List<MaterialDonationDTO> materialDonations = materialDonationService.getMaterialDonationsByUserId(user.getUserId());
+                    List<MaterialDonationDTO> materialDonations = materialDonationService
+                            .getMaterialDonationsByUserId(user.getUserId());
+                    int donationCount = (materialDonations != null ? materialDonations.size() : 0);
                     List<CampaignDTO> campaigns = new ArrayList<>();
                     List<String> imageUrls = new ArrayList<>();
                     List<Double> isAchivedList = new ArrayList<>();
@@ -247,13 +223,15 @@ public class UserController {
 
                             int goal = campaignGoalService.getCampaignGoalByCampaignId(campaign.getCampaignId()).get(0)
                                     .getQuantityRequired();
-                            int donationsum = materialDonationService.getMaterialDonationsByCampaignId(campaign.getCampaignId())
+                            int donationsum = materialDonationService
+                                    .getMaterialDonationsByCampaignId(campaign.getCampaignId())
                                     .stream().mapToInt(MaterialDonationDTO::getQuantity).sum();
-
+                            
                             double achievement = (double) donationsum / goal * 100;
                             isAchivedList.add(achievement);
 
-                            String rewardName = rewardDeliveryService.getRewardNameByDonationId(materialDonation.getDonationId());
+                            String rewardName = rewardDeliveryService
+                                    .getRewardNameByDonationId(materialDonation.getDonationId());
                             rewardNameList.add(rewardName);
                         }
                     }
@@ -270,13 +248,14 @@ public class UserController {
 
                     String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
                             ? "/images/user/default_avatar.png"
-                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId() + "/public";
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                    + "/public";
 
                     model.addAttribute("statusMap", statusMap);
                     model.addAttribute("isAchivedList", isAchivedList);
                     model.addAttribute("rewardNameList", rewardNameList);
                     model.addAttribute("creatorLikes", creatorLikes.size());
-                    model.addAttribute("donationCount", materialDonations.size());
+                    model.addAttribute("donationCount", donationCount);
                     model.addAttribute("imageUrls", imageUrls);
                     model.addAttribute("campaigns", campaigns);
                     model.addAttribute("materialDonations", materialDonations);
@@ -288,6 +267,23 @@ public class UserController {
             }
         }
         return "user/mypage-donation";
+    }
+
+    @GetMapping("/donation/certificate/{donationId}")
+    public String donationCertificate(HttpServletRequest request, @PathVariable("donationId") Long donationId, Model model) {
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("loginUserId");
+        if (userId != null) {
+            try {
+                UserDTO user = userService.readUserById(userId);
+                MaterialDonationDTO donation = materialDonationService.getDonationByDonationId(donationId);
+                model.addAttribute("user", user);
+                model.addAttribute("donation", donation);
+            } catch (DBNotFoundException e) {
+                model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+            }
+        }
+        return "user/mypage-donation-certificate";
     }
 
 
@@ -303,6 +299,16 @@ public class UserController {
             session.removeAttribute("loginUserId");
             return "forward:/logout";
         }
+
+
+        @GetMapping("/buy/delete/{payId}")
+        public String buydelete(
+            @PathVariable(name = "payId") Long payId){
+            productPaymentService.delete(payId);
+            
+            return "user/mypage-buy";
+        }
+        
 
 
         @PostMapping("/userUpdate")
@@ -344,8 +350,10 @@ public class UserController {
             List<MaterialDonationDTO> materialDonations = materialDonationService
                     .getMaterialDonationsByUserId(userId);
 
+            int donationCount = (materialDonations != null ? materialDonations.size() : 0);
+
             model.addAttribute("creatorLikes", creatorLikes.size());
-            model.addAttribute("donationCount", materialDonations.size());
+            model.addAttribute("donationCount", donationCount);
             model.addAttribute("userBadgeIds", userBadgeIds);
             model.addAttribute("userBadges", userBadges); // 필요하면 그대로 추가
             model.addAttribute("badges", badges);
@@ -445,6 +453,8 @@ public class UserController {
             return response;
         }
 
+        
+
 
         
         @GetMapping("/like")
@@ -534,7 +544,7 @@ public class UserController {
                         }
                     }
                     List<MaterialDonationDTO> materialDonations = materialDonationService.getMaterialDonationsByUserId(userId);
-                    int donationCount = materialDonations.size();
+                    int donationCount = (materialDonations != null ? materialDonations.size() : 0);
 
                     if ("latest".equals(sort)) {
                         campaigns.sort(Comparator.comparing(CampaignDTO::getCreatedDate).reversed());
@@ -548,7 +558,8 @@ public class UserController {
                             Collectors.summingInt(MaterialDonationDTO::getQuantity)
                             ));
 
-                    double achievement = (double) donationSum / campaignGoals.get(0).getQuantityRequired() * 100;
+                    double achievement = (campaignGoals.isEmpty()) ? 0 :
+                            ((double) donationSum / campaignGoals.get(0).getQuantityRequired()) * 100;
                     achievement = Math.round(achievement);
 
                     
@@ -582,31 +593,82 @@ public class UserController {
 
 
 
-    // 충돌로 인한 주석처리 - 필요시 다시 검토 필요
-    // @PostMapping("/userUpdate")
-    // public String postMethodName(
-    // HttpServletRequest request,
-    // @ModelAttribute UserDTO userDTO,
-    // RedirectAttributes rttr
-    // ) {
-    // log.info(userDTO.toString());
-    // String oauthId = request.getUserPrincipal().getName();
-    // UserDTO user = UserDTO.toDTO(userService.findUserByIdentity(oauthId));
-    // userDTO.setUserId(user.getUserId());
-    // userService.userUpdate(userDTO);
-    // log.info(user.toString());
-    // return "redirect:/user";
-    // }
+        @GetMapping("/buy")
+        public String buy(HttpServletRequest request, Model model) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                Long userId = (Long) session.getAttribute("loginUserId");
+                if (userId != null) {
+                    try {
+                        // 사용자 정보 가져오기
+                        UserDTO user = userService.readUserById(userId);
 
-//    @GetMapping("/badge")
-//    public String badge() {
-//        return "user/mypage-badge";
-//    }
+                        // DonationCount 가져오기
+                        List<MaterialDonationDTO> materialDonations = materialDonationService
+                                .getMaterialDonationsByUserId(user.getUserId());
 
-    @GetMapping("/donation/detail")
-    public String alarmDetail() {
-        return "user/mypage-donation-detail";
-    }
+                        // User 정보로 구매내역 가져오기
+                        List<ProductPaymentDTO> productPayments = productPaymentService
+                                .getProductPaymentsByUserId(user.getUserId());
+
+                        List<String> imageUrls = new ArrayList<>();
+                        List<ProductDTO> products = new ArrayList<>();
+                        List<ProductDeliveryDTO> rewards = new ArrayList<>();
+
+                        for (ProductPaymentDTO productPayment : productPayments) {
+                            ProductDTO product = productPayment.getProduct();
+                            if (product != null) {
+                                product = productService.findProductById(product.getProductId());
+                                products.add(product);
+                                imageUrls.add(imageService.getImageUrl(product.getItem().getPhoto().getImageId()));
+                                System.out.println("🔍 Checking payId: " + productPayment.getPayId());
+                                ProductDeliveryDTO reward = productDeliveryService.getProductDeliveryByPayId(productPayment.getPayId());
+                                rewards.add(reward);
+                                if (reward == null) {
+                                    System.out.println("🚨 배송 정보 없음! payId: " + productPayment.getPayId());
+                                } else {
+                                    System.out.println("✅ 배송 정보 찾음: " + reward);
+                                }
+
+                            }
+                        }
+
+                        
+                        
+
+                        // CreatorLikes 좋아요 체크
+                        List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                        List<LikeDTO> creatorLikes = likes.stream()
+                                .filter(like -> like.getCreator() != null)
+                                .collect(Collectors.toList());
+
+                        // 사용자 프로필 사진 가져오기
+                        String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                                ? "/images/user/default_avatar.png"
+                                : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                        + "/public";
+
+                        model.addAttribute("reward", rewards);
+
+                        model.addAttribute("creatorLikes", creatorLikes.size());
+                        model.addAttribute("donationCount", materialDonations.size());
+                        model.addAttribute("imageUrls", imageUrls);
+                        model.addAttribute("productPayments", productPayments);
+                        model.addAttribute("user", user);
+                        model.addAttribute("products", products);
+                        model.addAttribute("userImageId", userImageId);
+                    } catch (DBNotFoundException e) {
+                        model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                    }
+                }
+            }
+            return "user/mypage-buy";
+        }
+
+    //영수증번호로 불러와야 삭제랑 연동됨
+
+    
+
 
     // 로그인 관련
 
