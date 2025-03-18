@@ -53,11 +53,26 @@ document.addEventListener("DOMContentLoaded", function () {
 let allCampaigns = [];
 let allCampaignGoals = [];
 let allMaterialDonations = [];
+function handleResponse(response) {
+    if (!response.ok) {
+        throw new Error(`HTTP 오류 ${response.status}: ${response.statusText}`);
+    }
+    return response.text().then(text => {
+        console.log("서버 응답:", text); // 🔍 서버 응답을 먼저 확인
+
+        try {
+            return JSON.parse(text);
+        } catch (error) {
+            throw new Error(`JSON 파싱 오류: 응답이 올바른 JSON 형식이 아닙니다.\n응답 내용: ${text}`);
+        }
+    });
+}
 function fetchCampaignStatus() {
     return Promise.all([
         fetch("/api/admin/campaign-status").then(res => res.json()),
         fetch("/api/admin/campaign-goals").then(res => res.json()),
-        fetch("/api/admin/material-donations").then(res => res.json())
+        fetch("/api/admin/material-donations").then(res => handleResponse(res))
+        //fetch("/api/admin/material-donations").then(res => res.json())
     ])
         .then(([campaigns, campaignGoals, materialDonations]) => {
             allCampaigns = campaigns || [];
@@ -460,7 +475,7 @@ function generatePendingCampaignTable(campaigns) {
 
 //거부 사유 입력 팝업
 function openPopup(campaignId) {
-  let popup = document.getElementById('popup');
+    let popup = document.getElementById('popup');
 
     if (!popup) {
         document.body.insertAdjacentHTML("beforeend", `
@@ -1307,5 +1322,3 @@ function submitNotice() {
             alert("공지사항 등록 중 오류가 발생했습니다.");
         });
 }
-
-

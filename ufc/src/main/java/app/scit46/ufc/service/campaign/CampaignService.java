@@ -2,10 +2,7 @@ package app.scit46.ufc.service.campaign;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import app.scit46.ufc.dto.*;
@@ -13,6 +10,7 @@ import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.*;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import app.scit46.ufc.repository.*;
+import app.scit46.ufc.service.alert.AlertService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -72,6 +70,7 @@ public class CampaignService {
     private final ImageUrlService imageService;
     private final RewardService rewardService;
     private final RewardDeliveryRepository rewardDeliveryRepository;
+    private final AlertService alertService;
 
     public CampaignEntity findCampaignById(Long id) {
         return campaignRepository.findById(id).orElse(null);
@@ -272,6 +271,7 @@ public class CampaignService {
         CampaignEntity campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new RuntimeException("캠페인을 찾을 수 없습니다."));
         campaign.setCampaignStatus(1);
+        alertService.registAlert(campaign, "cAccept");
         campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
     }
 
@@ -286,6 +286,7 @@ public class CampaignService {
 
         for (CampaignEntity campaign : campaigns) {
             campaign.setCampaignStatus(1);
+            alertService.registAlert(campaign, "cAccept");
         }
         campaignRepository.saveAll(campaigns);
     }
@@ -331,9 +332,12 @@ public class CampaignService {
     // ✅ 캠페인 기부 내역 조회 (MaterialDonationEntity → MaterialDonationDTO 변환)
     @Transactional(readOnly = true)
     public List<MaterialDonationDTO> getAllMaterialDonations() {
-        return materialDonationRepository.findAll().stream()
-                .map(MaterialDonationDTO::toDTO) // Entity → DTO 변환
+        List<MaterialDonationDTO> donations = materialDonationRepository.findAll().stream()
+                .map(MaterialDonationDTO::toDTO)
+                .filter(Objects::nonNull) // ✅ null 방지
                 .collect(Collectors.toList());
+
+        return donations.isEmpty() ? Collections.emptyList() : donations;
     }
 
     // 캠페인 기부한 내역 조회
@@ -607,6 +611,7 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
+    // 캠페인 거부
     @Transactional
     public void saveRejectedReason(Long campaignId, String reason) {
         // 캠페인 조회
@@ -616,6 +621,7 @@ public class CampaignService {
         // 거부 사유 저장 & 상태 변경
         campaign.setRejectedReason(reason);
         campaign.setCampaignStatus(2); // ✅ 거부 상태 (2)로 변경
+        alertService.registAlert(campaign, "cDecline");
 
         campaignRepository.save(campaign);
     }

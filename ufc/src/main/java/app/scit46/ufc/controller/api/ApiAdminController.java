@@ -12,6 +12,7 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,7 @@ import app.scit46.ufc.service.campaign.CampaignService;
 
 @RestController
 @RequestMapping("/api/admin")
+@Slf4j
 public class ApiAdminController {
 
     private final NoticeService noticeService;
@@ -67,14 +69,21 @@ public class ApiAdminController {
 
     // 캠페인 기부 내역 조회 API
     @GetMapping("/material-donations")
-    public ResponseEntity<List<MaterialDonationDTO>> getAllMaterialDonations() {
+    public ResponseEntity<?> getAllMaterialDonations() {
         try {
-            return ResponseEntity.ok(campaignService.getAllMaterialDonations());
+            List<MaterialDonationDTO> donations = campaignService.getAllMaterialDonations();
+
+            if (donations == null || donations.isEmpty()) {
+                return ResponseEntity.ok(Collections.emptyList()); // 빈 리스트 반환
+            }
+
+            return ResponseEntity.ok(donations);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+                    .body(Collections.singletonMap("error", "DB 조회 중 오류 발생"));
         }
     }
+
 
     // 펀딩 대기 캠페인 목록 조회 API 추가
     @GetMapping("/campaigns-funding-waiting")
@@ -259,7 +268,7 @@ public class ApiAdminController {
         CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
                 .bRegistNumber(creator.getBRegistNumber())
                 .bName(creator.getBName())
-                .startDt("20231128")  // 개업일자 기본값 설정
+                .startDt(creator.getBRegistDate().toString().replace("-", ""))  // 개업일자 기본값 설정
                 .build();
 
         ResponseEntity<String> response = creatorService.callBusinessValidationAPI(dto);

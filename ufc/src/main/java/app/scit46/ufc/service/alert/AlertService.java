@@ -57,6 +57,16 @@ public class AlertService {
             alert = generateAlert(notice, "Notice");
             targetUsers = new HashSet<>(userRepository.findAll());
 
+        // 창작자 승인 -> 창작자
+        } else if (data instanceof CreatorEntity) {
+            CreatorEntity creator = (CreatorEntity) data;
+            if(type.equals("uAccept")){
+                alert = generateAlert(creator, "uAccept");
+                targetUsers.add(userRepository.findById(creator.getOwnUser().getUserId()).get());
+            }else{
+                throw new IllegalArgumentException("[창작자 등록]지원하지 않는 타입 : " + type);
+            }
+
         // 캠페인 등록 -> 관심유저, 캠페인 승인 / 거절 -> 창작자
         } else if (data instanceof CampaignEntity) {
             CampaignEntity campaign = (CampaignEntity) data;
@@ -142,7 +152,7 @@ public class AlertService {
     }
 
     // 알림 생성
-    public AlertEntity generateAlert(Object data, String type){
+    private AlertEntity generateAlert(Object data, String type){
         return AlertEntity.builder()
                 .content(generateMessage(data, type))
                 .alertType(type)
@@ -153,7 +163,7 @@ public class AlertService {
     }
 
     // 알림 메시지 생성
-    public String generateMessage(Object data, String type) {
+    private String generateMessage(Object data, String type) {
         String message = "";
         if (data instanceof NoticeEntity) {
             NoticeEntity notice = (NoticeEntity) data;
@@ -200,7 +210,7 @@ public class AlertService {
     }
 
     // 알림 이동 링크 URL 생성
-    public String generateLinkUrl(Object data, String type) {
+    private String generateLinkUrl(Object data, String type) {
         String linkUrl = "https://upda.store";
         if (data instanceof NoticeEntity) {
             NoticeEntity notice = (NoticeEntity) data;
@@ -236,7 +246,7 @@ public class AlertService {
     }
 
     // 알림 이미지 URL 생성
-    public String generateImageUrl(Object data){
+    private String generateImageUrl(Object data){
         if(data instanceof NoticeEntity){
             return imageUrlService.findImage(0L);   //0번이 기본 이미지
         }else if(data instanceof CampaignEntity){

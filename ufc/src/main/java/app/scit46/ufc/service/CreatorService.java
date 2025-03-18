@@ -17,6 +17,7 @@ import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.campaign.CampaignDTO;
 
+import app.scit46.ufc.service.alert.AlertService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -57,6 +58,7 @@ public class CreatorService {
     private final UserService userService;
     private final EntityManager entityManager;
     private static final RestTemplate restTemplate = new RestTemplate();
+    private final AlertService alertService;
     private CampaignRepository campaignRepository;
 
     @Value("${opendata.enc-key}")
@@ -92,7 +94,7 @@ public class CreatorService {
             Map<String, Object> businessInfo = new HashMap<>();
             businessInfo.put("b_no", dto.getBRegistNumber() != null ? dto.getBRegistNumber() : "");
             businessInfo.put("p_nm", dto.getBName() != null ? dto.getBName() : "");
-            businessInfo.put("start_dt", "20231128");
+            businessInfo.put("start_dt", dto.getStartDt() != null ? dto.getStartDt() : "");
             businesses.add(businessInfo);
             requestData.put("businesses", businesses);
 
@@ -211,7 +213,9 @@ public class CreatorService {
 
     // ✅ 창작자 승인 상태를 변경하고 저장하는 메서드 추가
     public CreatorEntity saveCreator(CreatorEntity creator) {
-        return creatorRepository.save(creator); // JPA를 이용한 저장
+        CreatorEntity entity = creatorRepository.save(creator); // JPA를 이용한 저장
+        alertService.registAlert(entity, "uAccept"); // 사용자에게 창작자 전환 승인 알림 전송
+        return entity;
     }
 
     public CreatorEntity findByOwnUser(UserEntity user) {

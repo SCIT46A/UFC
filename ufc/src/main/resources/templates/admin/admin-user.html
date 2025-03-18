@@ -34,10 +34,13 @@
                 <div class="main-admin-container">
                     <button class="main-admin-button">
                         <div class="main-admin-image-warp">
-                            <img th:src="${userImage}"
-                                 alt=""
-                                 class="main-in-box-pro-le-in-img"
-                                 style="width:68px; height:68px; object-fit:cover;"/>
+                            <th:block th:if="${userImage != null}">
+                                <img th:src="${userImage}"
+                                     alt="프로필 이미지"
+                                     class="main-in-box-pro-le-in-img"
+                                     style="width:68px; height:68px; object-fit:cover;"/>
+                            </th:block>
+
                         </div>
                     </button>
                 </div>
@@ -52,7 +55,6 @@
                         <button class="main-admin-return-button">서비스로 돌아가기</button>
                     </a>
                 </div>
-
             </div>
         </div>
 
