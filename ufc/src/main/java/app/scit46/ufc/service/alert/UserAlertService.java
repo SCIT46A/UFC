@@ -1,5 +1,11 @@
 package app.scit46.ufc.service.alert;
 
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service;
+
 import app.scit46.ufc.dto.alert.UserAlertDTO;
 import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.entity.alert.AlertEntity;
@@ -7,13 +13,7 @@ import app.scit46.ufc.entity.alert.UserAlertEntity;
 import app.scit46.ufc.repository.UserRepository;
 import app.scit46.ufc.repository.alert.UserAlertRepository;
 import app.scit46.ufc.service.LikeService;
-
-import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -38,7 +38,7 @@ public class UserAlertService {
 
     // 사용자가 받은 알림 조회
     public List<UserAlertDTO> getUserAlertList(Long userId) {
-        return userAlertRepository.findByUser_UserIdOrderByUserAlertIdDesc(userId).stream().map(UserAlertDTO::toDTO).collect(Collectors.toList());
+        return userAlertRepository.findByUser_UserIdAndReadTimeIsNullOrderByUserAlertIdDesc(userId).stream().map(UserAlertDTO::toDTO).collect(Collectors.toList());
     }
 
     // 작성된 알림과 사용자 아이디를 받아서 알림 전송
@@ -87,6 +87,13 @@ public class UserAlertService {
                     .alert(alert)
                     .build());
         }
+    }
+
+    @Transactional
+    public boolean readAlert(Long userAlertId){
+        UserAlertEntity entity = userAlertRepository.findById(userAlertId).orElseThrow();
+        entity.setReadTime(LocalDateTime.now());
+        return true;
     }
 
 }
