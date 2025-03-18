@@ -700,7 +700,7 @@ public class UserController {
             model.addAttribute("find", find);
 
         }
-        return "/login/joindetail";
+        return "login/joindetail";
     }
 
     @PostMapping("/joinProc")

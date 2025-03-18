@@ -137,7 +137,9 @@ public class CampaignService {
 
         // 사용자 이름으로 창작자 아이디 조회(UserEntity.userName -> CreatorEntity.ownUser ->
         // UserEntity.userId -> CreatorEntity.creatorId)
-        UserEntity user = userService.findUserByUserName(ccDTO.getUserName().trim());
+        // 유저 이름으로 사용자 찾는 로직은 더이상 사용되지 않음 ccDTO의 userName = oauthID
+        //UserEntity user = userService.findUserByUserName(ccDTO.getUserName().trim());
+        UserEntity user = userService.findUserByIdentity(ccDTO.getUserName());
 
         CreatorEntity creator = creatorService.findByOwnUser(user);
         // log.info("창작자 아이디 : {}", creatorId);

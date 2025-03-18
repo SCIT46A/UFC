@@ -51,11 +51,9 @@ public class ApiImageController {
 
         try {
             // 파일과 업로드한 유저의 ID를 파라미터로 전달하여 이미지 업로드/DB 저장 후 이미지ID 반환
-            log.info("image upload start");
 
             String result = imageService.uploadImage(file, userId); // Image Id
             // String imageUrl = ImageService.getImageUrl(result);
-            log.info("image upload success");
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("image upload error : {}", e.getMessage());

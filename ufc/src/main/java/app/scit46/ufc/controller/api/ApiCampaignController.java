@@ -38,8 +38,10 @@ public class ApiCampaignController {
     private final RewardService rewardService;
 
     @PostMapping("/campaign/create")
-    public ResponseEntity<Long> createCampaign(@RequestBody GenerateCampaignDTO campaign) {
+    public ResponseEntity<Long> createCampaign(@RequestBody GenerateCampaignDTO campaign, HttpServletRequest request) {
+        String oauthId = request.getUserPrincipal().getName();
         Long campaignId = null;
+        campaign.setUserName(oauthId);
         try {
             campaignId = campaignService.createCampaign(campaign);
         } catch (Exception e) {

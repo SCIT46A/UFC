@@ -30,39 +30,71 @@ $(function () {
         url: "/api/alert/list",
         method: "GET",
         success: function (response) {
-            response.forEach(alert => {
-                const alertTag = `
-                <a href="${alert.linkUrl}">
-                    <div class="al-in-box-warp-pe">
-                        <div>
-                            <div
-                                    class="al-in-box-warp-pe-img"
-                            ><img src="${alert.imageUrl}" alt="alert image"></div>
-                        </div>
-
-                        <div class="al-in-box-warp-pe-content">
-                            <div
-                                    class="al-in-box-warp-pe-content-box"
-                            >
+            if (response == null || response.length === 0) {
+                // response가 null이거나 빈 배열일 경우 "알림이 없습니다" 텍스트 추가
+                $(".modal-alert > .modal-login-in").append('<p style="color:rgb(123,123,123); text-align:center;">알림이 없습니다</p>');
+            } else {
+                response.forEach(alert => {
+                    const alertTag = `
+                    <a data-link="${alert.linkUrl}">
+                        <div class="al-in-box-warp-pe">
+                            <div>
                                 <div
-                                        class="al-in-box-warp-pe-content-box-top"
-                                >
-                                    ${alert.content}
-                                </div>
+                                        class="al-in-box-warp-pe-img"
+                                ><img src="${alert.imageUrl}" alt="alert image" style="width:70px; height:70px;"></div>
                             </div>
-                            <p class="al-in-box-warp-pe-content-box-bottom">${alert.alertDate}</p>
-                        </div>
-                    </div>          
-                </a>
-                `;
-                console.log(alert);
-                $(".modal-login-in").append(alertTag);
-            });
+
+                            <div class="al-in-box-warp-pe-content">
+                                <div
+                                        class="al-in-box-warp-pe-content-box"
+                                >
+                                    <div
+                                            class="al-in-box-warp-pe-content-box-top"
+                                    >
+                                        ${alert.content}
+                                    </div>
+                                </div>
+                                <p class="al-in-box-warp-pe-content-box-bottom">
+                                ${timeForToday_time(new Date(alert.alertDate))}
+                                </p>
+                            </div>
+                        </div>          
+                    </a>
+                    `;
+                    console.log(alert);
+                    $(".modal-alert > .modal-login-in").append(alertTag);
+                });
+            }
         },
         error: function (xhr, status, error) {
             console.error("Error:", error); // 에러 발생 시 콘솔에 출력
         }
     });
+    $(document).on('click', 'a[data-link]', function(event) {
+        event.preventDefault();  // 기본 링크 이동을 막음 (페이지가 새로고침되지 않도록)
+
+        var linkUrl = $(this).data('link');  // 클릭한 a 태그의 data-link 값 가져오기
+
+        // AJAX 요청을 통해 읽음 처리
+        $.ajax({
+            url: "/api/alert/read",  // 알림 읽음 처리 API 호출
+            method: "GET",
+            data: { linkUrl: linkUrl },  // 읽은 알림에 대한 데이터 전송
+            success: function(response) {
+                // 응답에 실제 이동할 URL이 있다면 그 URL로 이동
+                if (response.redirectUrl) {
+                    window.location.href = response.redirectUrl;  // 응답으로 받은 URL로 이동
+                } else {
+                    console.log("이동할 URL이 없습니다.");  // URL이 없으면 이동하지 않음
+                }
+            },
+            error: function(xhr, status, error) {
+                // 오류 처리 (필요시)
+                console.error("알림 읽기 처리 중 오류 발생:", error);
+            }
+        });
+    });
+   
 
 
     //  로그인정보가 보고 나타내기
@@ -474,4 +506,42 @@ $(function () {
         });
 
     }
+
+    function timeForToday_time(datetime) {
+        const today = new Date();
+        const date = new Date(datetime);
+
+        let gap = Math.floor((today.getTime() - date.getTime()) / 1000 / 60);
+
+        if (gap < 1) {
+            return "방금 전";
+        }
+
+        if (gap < 60) {
+            return `${gap}분 전`;
+        }
+
+        gap = Math.floor(gap / 60);
+
+        if (gap < 24) {
+            return `${gap}시간 전`;
+        }
+
+        gap = Math.floor(gap / 24);
+
+        if (gap < 31) {
+            return `${gap}일 전`;
+        }
+
+        gap = Math.floor(gap / 31);
+
+        if (gap < 12) {
+            return `${gap}개월 전`;
+        }
+
+        gap = Math.floor(gap / 12);
+
+        return `${gap}년 전`;
+    }
 });
+
