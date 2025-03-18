@@ -11,8 +11,8 @@ UPDA는 환경 보호에 관심이 있는 창작자와 후원자를 연결하는
 ### 주요 기능
 - 🔄 재활용 재료 기부 시스템
 - 💰 제품 제작 펀딩
-- 🎁 리워드 배송
-- 💬 실시간 채팅 문의(예정)
+- 🎁 리워드 배송 지원
+- 💬 실시간 채팅 문의
 - 🏆 환경 보호 활동 업적 시스템
 
 ## 🛠 기술 스택
@@ -22,11 +22,12 @@ UPDA는 환경 보호에 관심이 있는 창작자와 후원자를 연결하는
 - Spring Boot 3.4.1
 - Spring Security
 - Spring Data JPA + Hibernate
-- MySQL 8.0
+- MySQL 9.1
 
 ### Frontend
+- Vanilla(HTML/CSS/JS)
+- jQuery 3.7.1
 - Thymeleaf
-- Tailwind CSS
 
 ### DevOps
 - Docker
@@ -49,5 +50,15 @@ https://tracker.delivery/
 > 공공 데이터
 - 사업자 등록 확인
 https://www.data.go.kr/tcs/dss/selectApiDataDetailView.do?publicDataPk=15081808
-- 통신판매업 등록 확인
-https://www.data.go.kr/data/15126311/openapi.do
+> BootPay
+- 국내 결제규격 지원
+https://www.bootpay.co.kr/
+> Summernote
+- WYSIWYG Editor
+https://summernote.org/
+> Cloudflare Images
+- Image Repository, CDN
+https://www.cloudflare.com/ko-kr/developer-platform/products/cloudflare-images/
+> DAUM 주소 API
+- 대한민국 주소찾기 API(JS)
+https://postcode.map.daum.net/guide
