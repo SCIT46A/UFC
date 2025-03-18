@@ -30,6 +30,15 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+
+// ✅ 누적 캠페인 수 업데이트 함수
+function updateTotalCampaignCount() {
+    const activeCount = $("#club-detail-active-container").children().length;
+    const finishedCount = $("#finished-events-container").children().length;
+    const totalCount = activeCount + finishedCount;
+    $("#total-campaign-count").text(totalCount);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     // ✅ 진행 중인 캠페인 불러오기
     fetchCampaigns("/creator/campaign/active", "#club-detail-active-container", "#tp-show-more-btn");
@@ -119,6 +128,9 @@ function fetchCampaigns(url, containerId, moreBtnId, offset = 0, limit = 3) {
             }
 
             $(containerId).append(htmlResult);
+
+            // ✅ 캠페인 수 업데이트
+            updateTotalCampaignCount();
         },
         error: (error) => {
             console.error(`❌ 캠페인 불러오기 실패 (${url}):`, error);
