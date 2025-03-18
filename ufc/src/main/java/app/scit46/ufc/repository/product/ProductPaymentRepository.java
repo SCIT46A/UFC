@@ -38,4 +38,7 @@ public interface ProductPaymentRepository extends JpaRepository<ProductPaymentEn
     @Query("SELECT p.product.productId FROM ProductPaymentEntity p WHERE p.payId = :payId")
     Optional<Long> findProductIdByPayId(@Param("payId") Long payId);
 
+    @Query("SELECT p FROM ProductPaymentEntity p WHERE p.payId = :payId")
+    Optional<ProductPaymentEntity> findByPayId(@Param("payId") Long payId);
+
 }

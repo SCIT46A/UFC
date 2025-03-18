@@ -42,10 +42,14 @@
 </head>
 
 <body>
-    <th:block th:if="${iframe} != true">
+    <div th:if="${iframe} == true" style="display: none;">
         <div th:replace="~{fix/chat :: chat}"></div>
         <div th:replace="~{fix/header :: header}"></div>
-    </th:block>
+    </div>
+    <div th:if="${iframe} != true">
+        <div th:replace="~{fix/chat :: chat}"></div>
+        <div th:replace="~{fix/header :: header}"></div>
+    </div>
     <main>
         <section id="projects" style="background-color: #ffffff">
             <!-- 주목할 만한 캠페인 -->
@@ -687,7 +691,12 @@
         </section>
     </main>
     <!-- 푸터 제거 -->
-    <div th:replace="~{fix/footer :: footer}" th:attr="hidden=${iframe}"></div>
+    <div th:if="${iframe} == true" style="display: none;">
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </div>
+    <div th:if="${iframe} != true">
+        <div th:replace="~{fix/footer :: footer}"></div>
+    </div>
     <!-- 로딩 오버레이 -->
     <div class="loading-overlay" style="display: none;">
         <div class="loading-spinner"></div>

@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import kr.co.bootpay.model.request.Cancel;
+import app.scit46.ufc.service.product.ProductPaymentService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,6 +30,8 @@ public class PayService {
     private final ProductPaymentRepository productPaymentRepository;
 
     private final ProductRepository productRepository;
+
+    private final ProductPaymentService productPaymentService;
 
     @Value("${bootpay.RestAPI-key}")
     private String restAPIKey;
@@ -117,6 +121,28 @@ public class PayService {
             System.out.println("✅ 결제 검증 성공: " + res);
         } catch (Exception e) {
             throw new RuntimeException("결제 검증 과정에서 오류 발생", e);
+        }
+    }
+
+    @Transactional
+    public void cancel(Long payId) {
+
+        Bootpay api = getBootpay();
+        goGetToken(); // 토큰 발급 후 검증 진행
+
+        ProductPaymentDTO productPaymentDTO = productPaymentService.findByPayId(payId);
+
+        String receiptId = productPaymentDTO.getReceiptNumber();
+
+        Cancel cancel = new Cancel();
+        cancel.receiptId = receiptId;
+        cancel.cancelUsername = "test";
+        cancel.cancelMessage = "test";
+
+        try {
+            api.receiptCancel(cancel);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

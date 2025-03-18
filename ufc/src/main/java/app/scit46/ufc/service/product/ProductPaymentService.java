@@ -11,6 +11,7 @@ import app.scit46.ufc.repository.product.ProductPaymentRepository;
 import app.scit46.ufc.service.CourierService;
 import app.scit46.ufc.service.product.ProductDeliveryService;
 import app.scit46.ufc.service.delivery.DeliveryService;
+import app.scit46.ufc.dto.product.ProductPaymentDTO;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,6 +125,12 @@ public class ProductPaymentService {
             case "ordered" -> "발주 완료";
             default -> "알 수 없음";
         };
+    }
+
+    public ProductPaymentDTO findByPayId(Long payId) {
+        return productPaymentRepository.findById(payId)
+                .map(ProductPaymentDTO::toDTO)
+                .orElseThrow(() -> new RuntimeException("결제 정보를 찾을 수 없습니다."));
     }
 
 }

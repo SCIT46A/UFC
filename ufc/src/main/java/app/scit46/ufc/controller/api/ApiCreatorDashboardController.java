@@ -24,6 +24,7 @@ import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.product.ProductService;
 import app.scit46.ufc.service.CourierService;
 import org.springframework.http.ResponseEntity;
+import app.scit46.ufc.service.product.PayService;
 
 @RestController
 @RequestMapping("/api/creator/dashboard")
@@ -37,6 +38,7 @@ public class ApiCreatorDashboardController {
         private final ProductPaymentService productPaymentService;
         private final ProductDeliveryService productDeliveryService;
         private final CourierService courierService;
+        private final PayService payService;
 
         /**
          * 
@@ -324,6 +326,7 @@ public class ApiCreatorDashboardController {
         @PostMapping("/products/orders/cancel/{payId}")
         public ResponseEntity<?> approveCancelOrder(@PathVariable("payId") Long payId) {
                 try {
+                        payService.cancel(payId);
                         productPaymentService.approveCancel(payId);
                         return ResponseEntity.ok("✅ 주문 취소 승인 완료");
                 } catch (IllegalArgumentException e) {
