@@ -17,6 +17,7 @@ import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -46,8 +47,8 @@ public class ApiImageController {
             return ResponseEntity.badRequest().body("파일이 비어 있습니다.");
         }
 
-        String oauthId = request.getUserPrincipal().getName(); // OAuth 식별자
-        Long userId = userService.findUserByIdentity(oauthId).getUserId();
+        HttpSession session = request.getSession(false);
+        Long userId = (Long) session.getAttribute("loginUserId");
 
         try {
             // 파일과 업로드한 유저의 ID를 파라미터로 전달하여 이미지 업로드/DB 저장 후 이미지ID 반환
@@ -70,7 +71,6 @@ public class ApiImageController {
         String result = imageService.getImageUrl(imageId);
         return ResponseEntity.ok(result);
     }
-
 
     @GetMapping("/{imageId}/board")
     public ResponseEntity<String> getImageUrlBoard(@PathVariable("imageId") String imageId) {

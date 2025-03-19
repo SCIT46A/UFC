@@ -30,11 +30,11 @@ public class OauthLogin implements AuthenticationSuccessHandler {
         DefaultOAuth2User defaultOAuth2User = (DefaultOAuth2User) authentication.getPrincipal();
         Map<String, Object> attributes = defaultOAuth2User.getAttributes();
 
-
-        String identity = null;  // Google: sub, Kakao: id
-        String nickname = null;  // Google: name, Kakao: properties.nickname
-        String email = null;     // Google: email, Kakao: kakao_account.email
+        String identity = null;  // Google: sub, Kakao: id, Naver: id
+        String nickname = null;  // Google: name, Kakao: properties.nickname, Naver: name
+        String email = null;     // Google: email, Kakao: kakao_account.email, Naver: email
         String provider = null;
+
         if (attributes.containsKey("sub")) {
             // Google 사용자 정보 추출
             identity = (String) attributes.get("sub");
@@ -42,37 +42,33 @@ public class OauthLogin implements AuthenticationSuccessHandler {
             email = (String) attributes.get("email");
             provider = "google";
         } else if (attributes.containsKey("id")) {
-            // Kakao 사용자 정보 추출
-            identity = attributes.get("id").toString();
-            Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-            Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
-            provider = "kakao";
-            nickname = properties != null ? (String) properties.get("nickname") : null;
-            email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
-        } else if (attributes.containsKey("response")) {
-            // 네이버 사용자 정보 추출
-            Map<String, Object> responseAttributes = (Map<String, Object>) attributes.get("response");
-            identity = (String) responseAttributes.get("id");
-            nickname = (String) responseAttributes.get("name");
-            email = (String) responseAttributes.get("email");
-            provider = "naver";
+            // 카카오와 네이버 둘 다 "id"가 있으므로 카카오의 경우 추가 키가 있음
+            if (attributes.containsKey("kakao_account")) {
+                // Kakao 사용자 정보 추출
+                identity = attributes.get("id").toString();
+                Map<String, Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
+                Map<String, Object> properties = (Map<String, Object>) attributes.get("properties");
+                provider = "kakao";
+                nickname = properties != null ? (String) properties.get("nickname") : null;
+                email = kakaoAccount != null ? (String) kakaoAccount.get("email") : null;
+            } else {
+                // 네이버 로그인 (평탄화된 경우)
+                identity = (String) attributes.get("id");
+                nickname = (String) attributes.get("name");
+                email = (String) attributes.get("email");
+                provider = "naver";
+            }
         }
+        // 기존에 attributes.containsKey("response")인 경우는 더 이상 발생하지 않음
 
-
-        // 사용자 정보 처리
+        // 이하 로그인 처리 로직은 그대로 진행
         UserEntity existingUser = userService.findUserByIdentity(identity);
-
         if (existingUser != null) {
-            // 이미 존재하는 회원 -> 세션에 정보 저장 후 루트 페이지로 이동
             request.getSession().setAttribute("loginUserId", existingUser.getUserId());
-
-            // 쿼리 파라미터로 전달된 redirectUrl 우선 사용
             String redirectUrl = request.getParameter("redirectUrl");
             if (redirectUrl == null || redirectUrl.isEmpty()) {
-                // 세션에 저장된 값이 있으면 사용
                 redirectUrl = (String) request.getSession().getAttribute("redirectUrl");
             } else {
-                // 쿼리 파라미터로 넘어온 경우 세션에도 저장
                 request.getSession().setAttribute("redirectUrl", redirectUrl);
             }
             if (redirectUrl != null && !redirectUrl.isEmpty()) {
@@ -80,21 +76,13 @@ public class OauthLogin implements AuthenticationSuccessHandler {
                 response.sendRedirect(redirectUrl);
                 return;
             }
-
-
-            //관리자 여부 확인
             boolean isAdmin = "ADMIN".equals(existingUser.getRoles());
-
-
-            // 관리자면 /admin, 일반 유저면 /
             if (isAdmin) {
-                response.sendRedirect("/admin/adminPage");  // 관리자일 경우 `/admin`으로 이동
+                response.sendRedirect("/admin/adminPage");
             } else {
-                response.sendRedirect("/");  // 일반 유저는 `/`으로 이동
+                response.sendRedirect("/");
             }
-
         } else {
-            // 신규 회원 -> 세션에 제공자 정보 저장 후 가입 페이지로 이동
             request.getSession().setAttribute("find", provider);
             request.getSession().setAttribute("identity", identity);
             request.getSession().setAttribute("nickname", nickname);
@@ -102,6 +90,7 @@ public class OauthLogin implements AuthenticationSuccessHandler {
             response.sendRedirect("/user/join");
         }
     }
+
 
     private String getProvider(Authentication authentication) {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();

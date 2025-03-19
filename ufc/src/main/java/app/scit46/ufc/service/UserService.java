@@ -36,7 +36,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    //회원 정보 업데이트
+    // 회원 정보 업데이트
     @Transactional
     public void userUpdate(UserDTO userDTO) {
         System.out.println(userDTO.getUserId());
@@ -111,12 +111,10 @@ public class UserService {
         return userRepository.save(user);
     }
 
-
     public UserEntity findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
 
     public UserDTO findByIdDTO(Long userId) {
         return userRepository.findById(userId).map(UserDTO::toDTO).orElse(null);

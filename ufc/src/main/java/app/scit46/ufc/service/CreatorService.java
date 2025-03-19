@@ -166,11 +166,8 @@ public class CreatorService {
 
     // 해당 내용 추가됨
     @Transactional
-    public void createCreator(CreatorCreateDTO creatorCreateDTO, String OAuthId) {
-        System.out.println("🔹 DB 저장 시작...");
+    public void createCreator(CreatorCreateDTO creatorCreateDTO, Long OAuthId) {
 
-        // 값 확인
-        System.out.println("Service에서 받은 데이터: " + creatorCreateDTO);
 
         // ✅ bRegistDate가 null이면 기본값 설정 (기본값으로 오늘 날짜가 들어가고 있었음)
         if (creatorCreateDTO.getBRegistDate() == null) {
@@ -189,11 +186,11 @@ public class CreatorService {
                 .creatorStatus(false) // 기본값: 미승인
                 .proImgUrl(imageUrlService.findByImageId(creatorCreateDTO.getProfileImg()))
                 .backImgUrl(imageUrlService.findByImageId(creatorCreateDTO.getBackImg()))
-                .ownUser(userService.findUserByIdentity(OAuthId))
+                .ownUser(userService.findById(OAuthId))
                 .build();
 
         creatorRepository.save(creator);
-        System.out.println("✅ DB 저장 완료!");
+        log.info("==================================================================");
     }
 
     /** 🔹 특정 사용자(로그인한 창작자)의 정보 가져오기 */
@@ -314,8 +311,6 @@ public class CreatorService {
         return "프로필 이미지가 성공적으로 수정되었습니다!";
     }
 
-
-
     public List<CreatorDTO> getCreatorsByCreatorId(Long creatorId) {
         return creatorRepository.findByCreatorId(creatorId).stream()
                 .map(CreatorDTO::toDTO)
@@ -323,73 +318,71 @@ public class CreatorService {
     }
 }
 
+/** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
+// public List<CampaignDTO> getCreatorCampaigns(String userId) {
+// UserEntity user = userService.findUserByIdentity(userId);
+// if (user == null) {
+// throw new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!");
+// }
 
+// List<CampaignEntity> campaigns =
+// campaignRepository.findByCreatedBy_CreatorId(user);
+// return campaigns.stream()
+// .map(CampaignDTO::toDTO)
+// .collect(Collectors.toList());
+// }
 
-    /** ✅ 현재 로그인한 창작가의 캠페인 가져오기 */
-    // public List<CampaignDTO> getCreatorCampaigns(String userId) {
-    // UserEntity user = userService.findUserByIdentity(userId);
-    // if (user == null) {
-    // throw new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!");
-    // }
+// // 캠페인 정보를 프로필 부분에 출력하기 위한 로직
+// public List<CampaignDTO> getCampaigns() {
+// // 캠페인 정보를 가져오는 로직
+// return campaignRepository.findAll();
+// }
 
-    // List<CampaignEntity> campaigns =
-    // campaignRepository.findByCreatedBy_CreatorId(user);
-    // return campaigns.stream()
-    // .map(CampaignDTO::toDTO)
-    // .collect(Collectors.toList());
-    // }
+// @Transactional
+// public boolean updateCreator(CreatorCreateDTO creatorDTO) {
+// try {
+// // ✅ 기존 Creator 조회
+// CreatorEntity creator = creatorRepository.findById(creatorDTO.getId())
+// .orElseThrow(() -> new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!"));
 
-    // // 캠페인 정보를 프로필 부분에 출력하기 위한 로직
-    // public List<CampaignDTO> getCampaigns() {
-    // // 캠페인 정보를 가져오는 로직
-    // return campaignRepository.findAll();
-    // }
+// // ✅ 수정 가능한 필드만 업데이트
+// if (creatorDTO.getIntro() != null) {
+// creator.setIntro(creatorDTO.getIntro());
+// }
+// if (creatorDTO.getBizName() != null) {
+// creator.setBName(creatorDTO.getBizName());
+// }
+// if (creatorDTO.getCompanyName() != null) {
+// creator.setCompanyName(creatorDTO.getCompanyName());
+// }
 
-    // @Transactional
-    // public boolean updateCreator(CreatorCreateDTO creatorDTO) {
-    // try {
-    // // ✅ 기존 Creator 조회
-    // CreatorEntity creator = creatorRepository.findById(creatorDTO.getId())
-    // .orElseThrow(() -> new IllegalArgumentException("❌ 창작가를 찾을 수 없습니다!"));
+// // ✅ 프로필 이미지 업데이트
+// if (creatorDTO.getProfileImg() != null) {
+// ImageUrlDTO image =
+// ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getProfileImg()));
+// image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
+// // log.info("==={}", image);
+// creator.setProImgUrl(image);
+// }
 
-    // // ✅ 수정 가능한 필드만 업데이트
-    // if (creatorDTO.getIntro() != null) {
-    // creator.setIntro(creatorDTO.getIntro());
-    // }
-    // if (creatorDTO.getBizName() != null) {
-    // creator.setBName(creatorDTO.getBizName());
-    // }
-    // if (creatorDTO.getCompanyName() != null) {
-    // creator.setCompanyName(creatorDTO.getCompanyName());
-    // }
+// // ✅ 배경 이미지 업데이트
+// if (creatorDTO.getBackImg() != null) {
+// ImageUrlDTO image =
+// ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getBackImg()));
+// image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
+// // log.info("==={}", image);
+// creator.setBackImgUrl(image);
+// }
 
-    // // ✅ 프로필 이미지 업데이트
-    // if (creatorDTO.getProfileImg() != null) {
-    // ImageUrlDTO image =
-    // ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getProfileImg()));
-    // image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
-    // // log.info("==={}", image);
-    // creator.setProImgUrl(image);
-    // }
-
-    // // ✅ 배경 이미지 업데이트
-    // if (creatorDTO.getBackImg() != null) {
-    // ImageUrlDTO image =
-    // ImageUrlDTO.toDTO(imageUrlService.findByImageId(creatorDTO.getBackImg()));
-    // image = ImageUrlDTO.toDTO(imageUrlService.findImageById(image.getId()));
-    // // log.info("==={}", image);
-    // creator.setBackImgUrl(image);
-    // }
-
-    // // ✅ 수정 불가능한 필드는 그대로 유지
-    // log.info("📌 DB에 수정된 유저 정보 저장 중...");
-    // creatorRepository.save(creator);
-    // log.info("✅ 업데이트 완료!");
-    // return true;
-    // } catch (Exception e) {
-    // log.error("❌ 업데이트 중 오류 발생: {}", e.getMessage());
-    // e.printStackTrace();
-    // return false;
-    // }
-    // }
-//}
+// // ✅ 수정 불가능한 필드는 그대로 유지
+// log.info("📌 DB에 수정된 유저 정보 저장 중...");
+// creatorRepository.save(creator);
+// log.info("✅ 업데이트 완료!");
+// return true;
+// } catch (Exception e) {
+// log.error("❌ 업데이트 중 오류 발생: {}", e.getMessage());
+// e.printStackTrace();
+// return false;
+// }
+// }
+// }

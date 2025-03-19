@@ -1,19 +1,10 @@
 package app.scit46.ufc.controller;
 
-import java.net.http.HttpRequest;
-import java.security.Principal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,15 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.client.RestTemplate;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.SearchResultDTO;
-import app.scit46.ufc.dto.campaign.CampaignDTO;
+import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.CreatorService;
-import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.SearchService;
 import app.scit46.ufc.service.UserService;
 import app.scit46.ufc.service.campaign.CampaignService;
@@ -40,11 +31,12 @@ import app.scit46.ufc.service.cloudflare.ImageService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/creator") // 🔹 모든 URL이 "/creator"로 시작하도록 설정
 @RequiredArgsConstructor
+@Slf4j
 public class CreatorController {
 
     private final UserService userService;
@@ -55,8 +47,30 @@ public class CreatorController {
 
     /** 🔹 [GET] 창작가 개설 페이지 출력 */
     @GetMapping("/create")
-    public String getCreatorPage(Model model) {
-        model.addAttribute("message", "창작가 개설 페이지입니다!");
+    public String getCreatorPage(HttpServletRequest request, Model model) {
+        HttpSession session = request.getSession(false); // 세션 가져오기
+        Long userId = null; // 기본값 설정
+        if (session != null) {
+            userId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            System.out.println("로그인 정보 불러오기 성공1");
+
+            if (userId != null) {
+                try {
+                    // 사용자 정보를 데이터베이스에서 조회
+                    UserDTO user = userService.readUserById(userId);
+                    model.addAttribute("user", user);
+                    System.out.println("로그인 정보 불러오기 성공2");
+
+                } catch (DBNotFoundException e) {
+                    // 사용자 정보를 찾을 수 없는 경우 처리
+                    model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+                    System.out.println("로그인 정보 불러오기 실패");
+
+                }
+            }
+
+            model.addAttribute("message", "창작가 개설 페이지입니다!");
+        }
         return "creator/creator-create"; // ✅ ".html" 붙이지 않음!
     }
 
@@ -65,11 +79,8 @@ public class CreatorController {
     @ResponseBody
     public ResponseEntity<String> createCreator(@RequestBody CreatorCreateDTO creatorCreateDTO,
             HttpServletRequest httpServletRequest) {
-        String OAuthId = httpServletRequest.getUserPrincipal().getName();
-
-        // 값 확인
-        System.out.println("📥 받은 요청 데이터: " + creatorCreateDTO);
-        System.out.println("받은 bRegistDate: " + creatorCreateDTO.getBRegistDate());
+        HttpSession session = httpServletRequest.getSession(false);
+        Long userId = (Long) session.getAttribute("loginUserId");
 
         // 주소 기본값 설정
         if (creatorCreateDTO.getAddress() == null || creatorCreateDTO.getAddress().isEmpty()) {
@@ -81,7 +92,7 @@ public class CreatorController {
             creatorCreateDTO.setBRegistDate(LocalDate.now());
         }
         // creatorService.createCreator(creatorCreateDTO, OAuthId);
-        creatorService.createCreator(creatorCreateDTO, httpServletRequest.getUserPrincipal().getName());
+        creatorService.createCreator(creatorCreateDTO, userId);
         return ResponseEntity.ok("창작가가 성공적으로 저장되었습니다!");
     }
 
