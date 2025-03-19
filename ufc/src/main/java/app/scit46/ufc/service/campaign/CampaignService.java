@@ -271,7 +271,8 @@ public class CampaignService {
         CampaignEntity campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> new RuntimeException("캠페인을 찾을 수 없습니다."));
         campaign.setCampaignStatus(1);
-        alertService.registAlert(campaign, "cAccept");
+        alertService.registAlert(campaign, "cAccept");  // 승인 알림 전송
+        alertService.registAlert(campaign, "cRegist");  // 관심 유저에게 알림 전송
         campaignRepository.save(campaign); // ✅ 변경 사항 저장 필요!
     }
 
@@ -287,6 +288,7 @@ public class CampaignService {
         for (CampaignEntity campaign : campaigns) {
             campaign.setCampaignStatus(1);
             alertService.registAlert(campaign, "cAccept");
+            alertService.registAlert(campaign, "cRegist"); // 관심 유저에게 알림 전송
         }
         campaignRepository.saveAll(campaigns);
     }
@@ -348,6 +350,7 @@ public class CampaignService {
                 .collect(Collectors.toList());
     }
 
+    // 창작자 Id로 캠페인 list 조회
     public List<CampaignDTO> getCampaignsByCreator(Long creatorId) {
         return campaignRepository.findByCreatedBy_CreatorId(creatorId).stream()
                 .map(CampaignDTO::toDTO)
