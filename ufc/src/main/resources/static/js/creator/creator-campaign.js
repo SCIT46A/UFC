@@ -31,16 +31,16 @@ document.getElementById("create_campaign").addEventListener("click", function ()
 // });
 
 
-// // ✅ 누적 캠페인 수 업데이트 함수
-// function updateTotalCampaignCount() {
-//     const activeCount = $("#club-detail-active-container").children().length;
-//     const finishedCount = $("#finished-events-container").children().length;
-//     const totalCount = activeCount + finishedCount;
-//     $("#total-campaign-count").text(totalCount);
-// }
+// ✅ 누적 캠페인 수 업데이트 함수
+function updateTotalCampaignCount() {
+    const activeCount = $("#club-detail-active-container").children().length;
+    const finishedCount = $("#finished-events-container").children().length;
+    const totalCount = activeCount + finishedCount;
+    $("#total-campaign-count").text(totalCount);
+}
 
-// // 누적 캠페인 수를 계산할 변수
-// let totalCampaignCount = 0;
+// 누적 캠페인 수를 계산할 변수
+let totalCampaignCount = 0;
 
 // 누적캠페인 숫자 변경
 document.addEventListener("DOMContentLoaded", function () {
