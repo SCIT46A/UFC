@@ -5,6 +5,7 @@ import app.scit46.ufc.entity.campaign.CampaignBoardEntity;
 import app.scit46.ufc.entity.campaign.CampaignBoardReplyEntity;
 import app.scit46.ufc.repository.campaign.CampaignBoardRepository;
 import app.scit46.ufc.repository.campaign.CampaignRepository;
+import app.scit46.ufc.service.alert.AlertService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,8 +21,8 @@ import java.util.stream.Collectors;
 public class CampaignBoardService {
 
     private final CampaignBoardRepository campaignBoardRepository;
-
     private final CampaignRepository campaignRepository;
+    private final AlertService alertService;
 
 
     public Long boradsave(Long campaignId, String content, String title) {
@@ -30,6 +31,7 @@ public class CampaignBoardService {
         board.setContent(content);
         board.setCampaign(campaignRepository.findById(campaignId).orElse(null));
         campaignBoardRepository.save(board);
+        alertService.registAlert(board, "cNotice");
         return board.getCBoardId();
     }
 
