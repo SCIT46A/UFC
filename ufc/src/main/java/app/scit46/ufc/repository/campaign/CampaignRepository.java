@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.IntroPageCampaignDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 
@@ -90,6 +91,12 @@ public interface CampaignRepository extends JpaRepository<CampaignEntity, Long> 
     Integer isCampaignAchieved(@Param("campaignId") Long campaignId);
 
 
+    // 시작일자가 now이후인 캠페인 찾기
+    List<CampaignEntity> findByStartDateAfter(LocalDateTime now);
+    // 종료일자가 start와 end 사이인 캠페인 찾기 end = endDate
+    List<CampaignEntity> findByEndDateBetween(LocalDateTime start, LocalDateTime end);
+    // 리워드 배송일자가 end 사이인 캠페인 찾기 end = sendDate
+    List<CampaignEntity> findBySendDateBetween(LocalDateTime start, LocalDateTime end);
     
 
 }
