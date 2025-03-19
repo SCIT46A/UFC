@@ -65,8 +65,10 @@ public class CampaignController {
     public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션 가져오기
         Long loginUserId = null; // 기본값 설정
+        UserDTO userDTO = null;
         if (session != null) {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            userDTO = userService.findByIdDTO(loginUserId);
             model.addAttribute("loginUserId", loginUserId);
         }
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
@@ -76,7 +78,9 @@ public class CampaignController {
         Integer status = campaign.getCampaignStatus();
         if (status == 0) {
             if (loginUserId == null || !loginUserId.equals(creatorId)) {
-                return "redirect:/";
+                if (userDTO == null || !"ROLE_ADMIN".equals(userDTO.getRoles())) {
+                    return "redirect:/";
+                }
             }
         }
         if (loginUserId == null) {
@@ -115,8 +119,13 @@ public class CampaignController {
                 .mapToInt(MaterialDonationDTO::getQuantity)
                 .sum();
 
+
         boolean campaignLike = likeService.likeCheck(campaign.getCampaignId(), loginUserId, "campaign");
+        if(campaignLike){
+            log.info("--------------------------------------------------------------------------------------------------------------------");
+        }
         boolean creatorLike = likeService.likeCheck(campaign.getCreatedBy().getCreatorId(), loginUserId, "creator");
+
         model.addAttribute("campaignLike", campaignLike);
         model.addAttribute("creatorLike", creatorLike);
 
