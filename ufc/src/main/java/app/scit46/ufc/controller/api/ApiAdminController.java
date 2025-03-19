@@ -266,7 +266,7 @@ public class ApiAdminController {
         }
 
         CreatorApprovalDTO dto = CreatorApprovalDTO.builder()
-                .bRegistNumber(creator.getBRegistNumber())
+                .bRegistNumber(creator.getBRegistNumber().replace("-", ""))
                 .bName(creator.getBName())
                 .startDt(creator.getBRegistDate().toString().replace("-", ""))  // 개업일자 기본값 설정
                 .build();

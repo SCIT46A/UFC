@@ -610,7 +610,7 @@ function fetchPendingCampaigns() {
 
 // 3. 창작자 신고 관리
 function fetchCreatorReport() {
-    return fetch("/api/admin/campaign-report")  // 🔥 `return` 추가하여 Promise 반환
+    return fetch("/api/admin/campaign-report")
         .then(response => response.json())
         .then(data => {
             if (!Array.isArray(data)) {
