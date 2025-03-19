@@ -337,4 +337,44 @@ public class ApiCreatorDashboardController {
                 }
         }
 
+        /**
+         * 정산 목록 조회 API
+         */
+        @GetMapping("/settlements")
+        public ResponseEntity<List<Map<String, Object>>> getSettlements(HttpSession session) {
+                Long creatorId = (Long) session.getAttribute("creatorId");
+
+                if (creatorId == null) {
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(Collections.emptyList());
+                }
+                List<Map<String, Object>> settlements = productPaymentService.getSettlementList(creatorId);
+                return ResponseEntity.ok(settlements);
+        }
+
+        /**
+         * ✅ 정산 상세 정보 조회 API
+         */
+        @GetMapping("/settlements/details/{payId}")
+        public ResponseEntity<Map<String, Object>> getSettlementDetails(@PathVariable("payId") Long payId) {
+                System.out.println("📢 [SettlementController] 정산 상세 요청 - ID: " + payId);
+
+                Map<String, Object> settlement = productPaymentService.getSettlementDetails(payId);
+
+                if (settlement == null || settlement.isEmpty()) {
+                        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "정산 내역을 찾을 수 없습니다."));
+                }
+
+                return ResponseEntity.ok(settlement);
+        }
+
+        // /**
+        // * 정산 완료 처리 API
+        // */
+        // @PostMapping("/settlements/complete")
+        // public ResponseEntity<String> completeSettlement(@RequestBody List<Long>
+        // payIds) {
+        // productPaymentService.processSettlement(payIds);
+        // return ResponseEntity.ok("정산 완료 처리되었습니다.");
+        // }
+
 }
