@@ -765,10 +765,15 @@ function generateCreatorApprovalTable(creators) {
     let tabHTML = `
         <h2>창작자 승인 관리</h2>
         <p>창작자 승인 상태를 확인하세요.</p>
-        <button onclick="approveSelectedCreators()" class="bulk-approve-btn">선택된 창작자 승인</button>
+       
     `;
 
     let filteredCreators = creators.filter(creator => !creator.creatorStatus);
+
+    // ✅ 창작자가 있을 때만 버튼 추가
+    if (filteredCreators.length > 0) {
+        tabHTML += `<button onclick="approveSelectedCreators()" class="bulk-approve-btn">선택된 창작자 승인</button>`;
+    }
 
     if (filteredCreators.length === 0) {
         return tabHTML + "<p class='no-report'>✅ 현재 승인 대기 중인 창작자가 없습니다.</p>";
