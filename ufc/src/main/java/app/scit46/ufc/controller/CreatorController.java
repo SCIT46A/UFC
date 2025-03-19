@@ -81,9 +81,6 @@ public class CreatorController {
         HttpSession session = httpServletRequest.getSession(false);
         Long userId = (Long) session.getAttribute("loginUserId");
 
-        // 값 확인
-        System.out.println("📥 받은 요청 데이터: " + creatorCreateDTO);
-        System.out.println("받은 bRegistDate: " + creatorCreateDTO.getBRegistDate());
 
         // 주소 기본값 설정
         if (creatorCreateDTO.getAddress() == null || creatorCreateDTO.getAddress().isEmpty()) {
