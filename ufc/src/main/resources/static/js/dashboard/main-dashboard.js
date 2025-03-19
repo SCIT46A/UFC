@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
                 const idx = labels.indexOf(order.date);
                 if (idx !== -1) {
-                    productDataMap[prod.name][idx] = prod.sales;
+                    productDataMap[prod.name][idx] = prod.quantity;
                 }
             });
         });

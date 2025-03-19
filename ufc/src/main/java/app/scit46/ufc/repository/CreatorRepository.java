@@ -28,7 +28,7 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
 
     @Query(value = """
             WITH CreatorProducts AS (
-                SELECT p.product_id, p.price, pp.purchased_date
+                SELECT p.product_id, p.price, pp.purchased_date, pp.stock
                 FROM Products p
                 JOIN ProductPayments pp ON p.product_id = pp.product_id
                 WHERE p.created_by = :creatorId AND pp.status = 'completed'
@@ -50,7 +50,7 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
                 GROUP BY DATE(purchased_date)
             ),
             OrdersData AS (
-                SELECT DATE(purchased_date) AS order_date, i.name, i.item_id, COUNT(*) AS cnt,
+                SELECT DATE(purchased_date) AS order_date, i.name, i.item_id, SUM(stock) AS qty,
                        CASE
                            WHEN i.item_id % 5 = 0 THEN '#4361ee'
                            WHEN i.item_id % 5 = 1 THEN '#f72585'
@@ -84,23 +84,20 @@ public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
                     'amount', total_amount
                 )) FROM RevenueData),
                 'orders', (
-                    SELECT JSON_ARRAYAGG(order_obj)
+                    SELECT JSON_ARRAYAGG(JSON_OBJECT(
+                        'date', aggregatedOrders.order_date,
+                        'products', aggregatedOrders.products_data
+                    ))
                     FROM (
-                        SELECT JSON_OBJECT(
-                            'date', order_date,
-                            'products', (
-                                SELECT JSON_ARRAYAGG(JSON_OBJECT(
-                                    'name', do2.name,
-                                    'sales', do2.cnt,
-                                    'color', do2.color
-                                ))
-                                FROM OrdersData do2
-                                WHERE do2.order_date = do1.order_date
-                            )
-                        ) AS order_obj
-                        FROM OrdersData do1
+                        SELECT order_date,
+                               JSON_ARRAYAGG(JSON_OBJECT(
+                                   'name', name,
+                                   'quantity', qty,
+                                   'color', color
+                               )) AS products_data
+                        FROM OrdersData
                         GROUP BY order_date
-                    ) orders_agg
+                    ) aggregatedOrders
                 ),
                 'products', (
                     SELECT JSON_ARRAYAGG(
