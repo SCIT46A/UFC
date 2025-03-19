@@ -3,14 +3,12 @@ package app.scit46.ufc.service.alert;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import app.scit46.ufc.dto.alert.AlertDTO;
 import app.scit46.ufc.entity.BadgeEntity;
 import app.scit46.ufc.entity.CreatorEntity;
 import app.scit46.ufc.entity.LikeEntity;
@@ -34,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AlertService {
+
     private final AlertRepository alertRepository;
     private final ImageService imageService;
     private final ImageUrlService imageUrlService;
@@ -113,15 +112,17 @@ public class AlertService {
             // 캠페인 참여(펀딩) -> 창작자, 기부자, 참여 승인 / 거절 -> 참여유저
         } else if (data instanceof MaterialDonationEntity) {
             MaterialDonationEntity materialDonation = (MaterialDonationEntity) data;
-            if (type.equals("mRegist")) {
+            if (type.equals("mSend")){
                 // 참여 등록시
-                alert = generateAlert(materialDonation, "mRegist");
+                alert = generateAlert(materialDonation, "mSend");
                 // 참여 기부자
                 targetUsers.add(materialDonation.getUser());
+            } else if (type.equals("mRegist")) {
+                // 참여 등록시
+                alert = generateAlert(materialDonation, "mRegist");
                 // 캠페인 창작자
                 targetUsers.add(userRepository
                         .findById(materialDonation.getCampaign().getCreatedBy().getOwnUser().getUserId()).get());
-
             } else if (type.equals("mAccept")) {
                 // 참여 승인시
                 alert = generateAlert(materialDonation, "mAccept");
@@ -186,9 +187,12 @@ public class AlertService {
         } else if (data instanceof BadgeEntity) {
             BadgeEntity badge = (BadgeEntity) data;
             message = "업적 달성: " + badge.getName();
+        } else if (data instanceof MaterialDonationEntity && type.equals("mSend")) {
+            MaterialDonationEntity materialDonation = (MaterialDonationEntity) data;
+            message = "내가 기부한 자원 : " + materialDonation.getCampaign().getTitle();
         } else if (data instanceof MaterialDonationEntity && type.equals("mRegist")) {
             MaterialDonationEntity materialDonation = (MaterialDonationEntity) data;
-            message = "검토 대기중인 자원 기부 : " + materialDonation.getCampaign().getTitle();
+            message = "검토 대기중인 자원 : " + materialDonation.getCampaign().getTitle();
         } else if (data instanceof MaterialDonationEntity && type.equals("mAccept")) {
             MaterialDonationEntity materialDonation = (MaterialDonationEntity) data;
             message = "자원 기부 승인: " + materialDonation.getCampaign().getTitle();
@@ -230,7 +234,11 @@ public class AlertService {
             linkUrl += "/user/badge";
         } else if (data instanceof MaterialDonationEntity) {
             MaterialDonationEntity materialDonation = (MaterialDonationEntity) data;
-            linkUrl += "/user/donation/detail/" + materialDonation.getDonationId();
+            if(type.equals("mSend")){
+              linkUrl += "/user/donation/detail/" + materialDonation.getDonationId();
+            }else if(type.equals("mRegist")){
+              linkUrl += "/creator/dashboard";
+            }
         } else if (data instanceof ProductEntity) {
             linkUrl = "";
             // TODO: 마이페이지 상품 결제내역 미구현으로 메인으로 이동 처리

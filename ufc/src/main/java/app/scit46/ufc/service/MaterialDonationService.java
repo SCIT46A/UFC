@@ -19,6 +19,7 @@ import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
 import app.scit46.ufc.repository.MaterialDonationRepository;
 import app.scit46.ufc.repository.UserRepository;
+import app.scit46.ufc.service.alert.AlertService;
 import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.delivery.DeliveryService;
 import lombok.RequiredArgsConstructor;
@@ -26,10 +27,12 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class MaterialDonationService {
+
     private final UserRepository userRepository;
     private final MaterialDonationRepository materialDonationRepository;
     private final CourierService courierService;
     private final DeliveryService deliveryService;
+    private final AlertService alertService;
 
     private CampaignService campaignService;
 
@@ -89,7 +92,8 @@ public class MaterialDonationService {
 
             donation.setStatus(isApproved ? "approved" : "rejected");
             materialDonationRepository.save(donation);
-
+            alertService.registAlert(donation, isApproved?"mAccept":"mDecline"); // 기부물품 승인/거절 알림 전송(사용자)
+          
             System.out.println("✅ DB 저장 완료: " + donation.getDonationId() + ", 상태: " + donation.getStatus());
         } catch (Exception e) {
             System.err.println("❌ DB 업데이트 실패: " + e.getMessage());

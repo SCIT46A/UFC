@@ -1,34 +1,36 @@
 package app.scit46.ufc.service.delivery;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.JsonNode;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CompletableFuture;
-import java.util.Random;
 
 import app.scit46.ufc.dto.MaterialDonationDTO;
 import app.scit46.ufc.entity.MaterialDonationEntity;
-import app.scit46.ufc.repository.MaterialDonationRepository;
-
-import org.springframework.transaction.annotation.Transactional;
-import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
-import app.scit46.ufc.repository.product.ProductDeliveryRepository;
 import app.scit46.ufc.entity.product.ProductDeliveryEntity;
+import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
+import app.scit46.ufc.repository.MaterialDonationRepository;
+import app.scit46.ufc.repository.product.ProductDeliveryRepository;
+import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
+import app.scit46.ufc.service.alert.AlertService;
 
 @Service
 public class DeliveryService {
@@ -43,6 +45,8 @@ public class DeliveryService {
     private RewardDeliveryRepository rewardDeliveryRepository;
     @Autowired
     private ProductDeliveryRepository productDeliveryRepository;
+    @Autowired
+    private AlertService alertService;
 
     @Value("${tracker.api-key}")
     private String apiKey;
@@ -135,7 +139,7 @@ public class DeliveryService {
                 }, executor).thenAccept(status -> {
                     trackingResults.put(donation.getTrackingNumber(), status);
 
-                    // ✅ 배송 상태가 "배송완료"이고 현재 상태가 "processing"이면 pending으로 변경
+                    // ✅ 배송 상태가 "배송완료"이고 현재 상태가 "processing"이면 "pending"으로 변경
                     if ("배송완료".equals(status) && "processing".equals(donation.getStatus())) {
                         logger.info("✅ 배송완료 확인: 기부 ID {} → 상태 변경 (processing → pending)", donation.getDonationId());
                         updateDonationStatusToPending(donation.getDonationId());
