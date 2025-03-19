@@ -68,7 +68,7 @@
                                                     <div
                                                         class="main-in-box-pro-le-in-box-title-in"
                                                     >
-                                                       <span th:text="${user.userName}"></span>
+                                                        <span th:text="${user.userName}">up-da</span>
                                                     </div>
                                                 </div>
                                                 <div
@@ -80,11 +80,11 @@
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/like(tab='creator')}"
                                                             >
                                                                 팔로잉
-                                                                
                                                                 <svg
                                                                     class="Styled__StyledIconChevronRight-sc-15jatcm-8 kdRksf"
                                                                     width="18"
@@ -100,18 +100,20 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
+                                                                th:href="@{/user/like(tab='creator')}"
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
                                                                 <span th:text="${creatorLikesCount}"></span>
-                                                            </div>
+                                                            </a>
                                                         </div>
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/donation}"
                                                             >
                                                                 후원수
                                                                 <svg
@@ -129,24 +131,26 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
+                                                                th:href="@{/user/donation}"
                                                             >
-                                                            <span th:text="${donationCount}"></span>
-                                                            </div>
+                                                                <span th:text="${donationCount}"></span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                                 <!-- 내비게이션바 -->
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                        <span class="main-in-box-na-box-pe-span">
+                                        <span class="main-in-box-na-box-pe-span ">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-profile.html"
@@ -186,10 +190,19 @@
                                             >뱃지</a>
                                             </div>
                                         </span>
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-buy.html"
+                                            th:href="@{/user/buy}"
+                                            >구매내역</a>
+                                            </div>
+                                        </span>
                                         </div>
                                     </div>
                                     </div>
                                 </div>
+
                             </div>
                             <!-- 각각의 나올것들 -->
                             <div class="like">

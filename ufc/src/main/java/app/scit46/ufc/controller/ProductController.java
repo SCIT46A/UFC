@@ -112,7 +112,7 @@ public class ProductController {
     }
 
     @GetMapping("/pay")
-    public String pay(@RequestParam Integer stock, @RequestParam Long productId, HttpServletRequest request,
+    public String pay(@RequestParam("stock") Integer stock, @RequestParam("productId") Long productId, HttpServletRequest request,
             Model model) {
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
 

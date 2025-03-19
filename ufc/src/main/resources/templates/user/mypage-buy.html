@@ -79,8 +79,9 @@
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/like(tab='creator')}"
                                                             >
                                                                 팔로잉
                                                                 <svg
@@ -98,18 +99,20 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
+                                                                th:href="@{/user/like(tab='creator')}"
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
                                                                 <span th:text="${creatorLikes}"></span>
-                                                            </div>
+                                                            </a>
                                                         </div>
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/donation}"
                                                             >
                                                                 후원수
                                                                 <svg
@@ -127,12 +130,13 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
+                                                                th:href="@{/user/donation}"
                                                             >
                                                                 <span th:text="${donationCount}"></span>
-                                                            </div>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -161,7 +165,7 @@
                                             >작성한 후기</a>
                                             </div>
                                         </span>
-                                        <span class="main-in-box-na-box-pe-span current">
+                                        <span class="main-in-box-na-box-pe-span">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-donation.html"
@@ -185,7 +189,7 @@
                                             >뱃지</a>
                                             </div>
                                         </span>
-                                        <span class="main-in-box-na-box-pe-span">
+                                        <span class="main-in-box-na-box-pe-span current">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a
                                             href="/src/main/resources/templates/user/mypage-buy.html"
@@ -212,10 +216,9 @@
 
                                         <!-- 각각의 후원 내역 출력 -->
                                          <div class="sup-content-origin">
-
                                             <div class="sup-content-main" th:each="productPayment, iterStatus : ${productPayments}">
                                                 <div class="courierName" style="display: none;"  
-                                                    th:text="${reward[iterStatus.index].invoice != null ? reward[iterStatus.index].invoice : '배송 정보 없음'}">
+                                                    th:text="${reward[iterStatus.index] != null && reward[iterStatus.index].invoice != null ? reward[iterStatus.index].invoice : '배송 정보 없음'}">
 
                                                 </div>
                                                 <div class="main-in-mi-content-box" style="display: none;">
@@ -281,8 +284,17 @@
                                                                    <span th:text="|${#numbers.formatInteger(productPayment.price, 3, 'COMMA')} 원|"></span>
                                                                 </p>
                                                             </div>
-                                                            <div>
-                                                                <p class="sup-content-main-box-in-content-pr-ri deliveryStatus">
+                                                            <div th:switch="${productPayment.status}">
+                                                                <p th:case="'ordered'" class="sup-content-main-box-in-content-pr-ri deliveryStatus">
+                                                                </p>
+                                                                <p th:case="'completed'" class="sup-content-main-box-in-content-pr-ri">
+                                                                    결제가 완료되었습니다.
+                                                                </p>
+                                                                <p th:case="'cancelled'" class="sup-content-main-box-in-content-pr-ri">
+                                                                    결제가 취소되었습니다.
+                                                                </p>
+                                                                <p th:case="'pending'" class="sup-content-main-box-in-content-pr-ri">
+                                                                    취소 요청을 확인중입니다.
                                                                 </p>
                                                             </div>
                                                             <div class="delete-btn" th:if="${productPayment.status == 'completed'}">

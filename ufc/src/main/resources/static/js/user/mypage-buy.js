@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .catch(error => {
                         console.error(`🚨 배송 조회 실패 [${index}]:`, error);
                         if (deliveryStatusElement) {
-                            deliveryStatusElement.innerText = "배송 정보를 가져오는 중 오류가 발생했습니다.";
+                            deliveryStatusElement.innerText = "배송을 준비중이니 조금 기다려 주세요.";
                         }
                     });
             } else {
@@ -111,4 +111,5 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
     }
   });    
+    
 });

@@ -17,7 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
     BoxCreator.classList.remove('hidden');
     sortBtn.classList.add('hidden');
   });
+
   
+   const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('tab') === 'creator') {
+    // 크리에이터 탭 활성화
+    selectCreator.click();
+  }
 
   $(document).on("click", ".main-like-btn", function (event) {
     event.preventDefault();
