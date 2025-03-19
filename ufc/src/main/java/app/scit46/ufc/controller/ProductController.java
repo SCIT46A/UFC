@@ -99,6 +99,8 @@ public class ProductController {
                         : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
+        log.info(product.toString());
+
         boolean campaignLike = likeService.likeCheck(product.getProductId(), loginUserId, "product");
         boolean creatorLike = likeService.likeCheck(product.getCreatedBy().getCreatorId(), loginUserId, "creator");
         model.addAttribute("campaignLike", campaignLike);

@@ -116,7 +116,7 @@ $(function () {
                                 <span class="profile-th">
                                     <img src="${response.photo && response.photo.imageId
                                     ? `/api/image/${response.photo.imageId}`
-                                    : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                    : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
                                     class="target-img">
                                 </span>
                             </div>
@@ -140,7 +140,7 @@ $(function () {
                                 <span class="profile-th">
                                     <img src="${response.photo && response.photo.imageId
                                             ? `/api/image/${response.photo.imageId}`
-                                            : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                            : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
                                     class="target-img">
                                 </span>
                             </div>
@@ -163,7 +163,7 @@ $(function () {
                                 <span class="profile-th">
                                     <img src="${response.photo && response.photo.imageId
                                         ? `/api/image/${response.photo.imageId}`
-                                        : 'https://assets.tumblbug.com/profile/default_avatar.png'}" 
+                                        : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
                                     class="target-img">
                                 </span>
                             </div>

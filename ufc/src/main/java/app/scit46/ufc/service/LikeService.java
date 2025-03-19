@@ -64,6 +64,10 @@ public class LikeService {
                     .orElseThrow(() -> new RuntimeException("Creator not found with id: " + targetId));
             // 해당 사용자와 크리에이터에 대한 좋아요가 존재하는지 조회
             return likeRepository.findByUserAndCreator(user, creator) != null;
+        } else if ("product".equalsIgnoreCase(type)) {
+            ProductEntity product = productRepository.findById(targetId)
+                    .orElseThrow(() -> new RuntimeException("Product not found with id: " + targetId));
+            return likeRepository.findByUserAndProduct(user, product) != null;
         }
 
         return false;

@@ -588,8 +588,8 @@ public class CampaignService {
                 donation.setDonatedDate(LocalDateTime.now());
                 MaterialDonationEntity donationEntity = MaterialDonationEntity.toEntity(donation);
                 donationEntity = materialDonationRepository.save(donationEntity);
-                alertService.registAlert(donationEntity, "mRegist");
-                alertService.registAlert(donationEntity, "mSend");
+//                alertService.registAlert(donationEntity, "mRegist");
+//                alertService.registAlert(donationEntity, "mSend");
 
                 // donationReward가 존재하면 rewardItems 처리
                 Object donationRewardObj = item.get("donationReward");
@@ -640,8 +640,7 @@ public class CampaignService {
                             rewardDeliveryDTO.setAmount(rewardTotal);
 
                             // RewardDeliveryEntity 변환 후 저장
-                            RewardDeliveryEntity rewardDeliveryEntity = RewardDeliveryEntity
-                                    .toEntity(rewardDeliveryDTO);
+                            RewardDeliveryEntity rewardDeliveryEntity = RewardDeliveryEntity.toEntity(rewardDeliveryDTO);
                             rewardDeliveryRepository.save(rewardDeliveryEntity);
                         }
                     }
