@@ -687,7 +687,7 @@ main {
 .like-bo-box-in-pe-in-a-content-per-bo {
   width: 100%;
   height: 3px;
-  margin: 4px 0px 0px;
+  margin: 4px 0 0;
   overflow: hidden;
   background: rgb(158, 158, 158);
   position: relative;
@@ -695,11 +695,12 @@ main {
 
 .like-bo-box-in-pe-in-a-content-per-bo::after {
   content: '';
-  width: var(0%, (--achievement, 0%), 100%);
   display: block;
   height: 100%;
+  width: var(--achievement, 0%);
   background: #16a34a;
 }
+
 
 .choice {
   font-size: 14px;
@@ -792,7 +793,7 @@ main {
 
 .like-top-creator, .like-top-campaign {
   white-space: nowrap;
-  font-weight: 1000px;
+  font-weight: 400;
   color: rgb(0, 0, 0);
   text-decoration: none;
   background: transparent;
@@ -886,3 +887,24 @@ main {
   cursor: pointer;
 }
 
+
+.current-like{
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.goal-item {
+  margin-bottom: 12px; /* 목표 항목 사이 간격 */
+}
+
+.goal-percentage {
+  font-size: 14px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.goal-info {
+  font-size: 13px;
+  color: #555;
+  margin-top: 4px;
+}

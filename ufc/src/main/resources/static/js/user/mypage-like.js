@@ -10,12 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     BoxCampaign.classList.remove('hidden');
     BoxCreator.classList.add('hidden');
     sortBtn.classList.remove('hidden');
+    selectCreator.classList.remove('current-like');
+    selectCampaign.classList.add('current-like');
   });
 
   selectCreator.addEventListener('click', () => {
     BoxCampaign.classList.add('hidden');
     BoxCreator.classList.remove('hidden');
     sortBtn.classList.add('hidden');
+    selectCreator.classList.add('current-like');
+    selectCampaign.classList.remove('current-like');
+
   });
 
   

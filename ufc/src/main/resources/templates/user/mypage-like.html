@@ -209,7 +209,7 @@
                                 <div>
                                     <div class="like-top">
 
-                                            <a href="javascript:void(0)" class="like-top-campaign" id="like-campaign">캠페인</a>
+                                            <a href="javascript:void(0)" class="like-top-campaign current-like" id="like-campaign">캠페인</a>
 
                                             <a href="javascript:void(0)" class="like-top-creator" id="like-creator">크리에이터</a>
                                         <div class="like-top-ri">
@@ -305,52 +305,37 @@
                                                                         "
                                                                     ></div>
                                                                 </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
-                                                                        <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                th:text="${achievement} + '%'"
-                                                                                style="--achievement: ${achievement}%;"
-                                                                                ></span>
-                                                                            <div>
-                                                                                <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                th:text="${campaignGoals[iterStatus.index].material.name}">
-
-                                                                                </span>
-                                                                                <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                th:text="${donationSumByCampaign[campaign.campaignId]}"
-                                                                                >
-
-                                                                                </span>
-                                                                                <span>
-                                                                                    /
-                                                                                </span>
-                                                                                <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                th:text="${campaignGoals[iterStatus.index].quantityRequired}"
-                                                                                >
-                                                                                </span
-                                                                                >
-                                                                                <span>
-                                                                                    개
-                                                                                </span>
-                                                                            </div>
-                                                                        </div>
-                                                                        <em class="content-box-in-date-in-time">
-                                                                            <span th:text="${campaign.endDate}"></span>
-                                                                        </em>
+                                                                <div class="like-bo-box-in-pe-in-a-content-per">
+                                                                <!-- 내부 각 목표에 대해 반복 -->
+                                                                <div th:each="goalAchieve, iterAchieveStat : ${campaignAchievementsList[iterStatus.index]}">
+                                                                    <div class="goal-item">
+                                                                    <!-- 퍼센트 텍스트 -->
+                                                                    <div class="goal-percentage" th:text="${goalAchieve} + '%'"></div>
+                                                                    <!-- 진행 막대 컨테이너 : 인라인으로 --achievement 값을 설정 -->
+                                                                    <div class="like-bo-box-in-pe-in-a-content-per-bo"
+                                                                        th:style="'--achievement:' + goalAchieve + '%;'">
                                                                     </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
+                                                                    <!-- 목표 관련 정보 -->
+                                                                    <div class="goal-info">
+                                                                        <span class="goal-material"
+                                                                            th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].material.name}"></span>
+                                                                        <span class="goal-donated"
+                                                                            th:text="${donationSumByCampaign[campaign.campaignId]}"></span>
+                                                                        <span>/</span>
+                                                                        <span class="goal-required"
+                                                                            th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].quantityRequired}"></span>
+                                                                        <span>개</span>
+                                                                    </div>
+                                                                    </div>
                                                                 </div>
+                                                                <!-- 캠페인 종료일 등 추가 정보 -->
+                                                                <em class="content-box-in-date-in-time">
+                                                                    <span th:text="${campaign.endDate}"></span>
+                                                                </em>
+                                                                </div>
+
+
+
                                                             </div>
                                                         </a>
                                                     </div>
