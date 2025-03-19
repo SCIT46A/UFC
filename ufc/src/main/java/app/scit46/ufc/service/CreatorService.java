@@ -138,7 +138,7 @@ public class CreatorService {
 
     // 승인 대기 창작자 조회
     public List<CreatorDTO> getPendingCreators() {
-        return creatorRepository.findByCreatorStatusFalseWithUser().stream()
+        return creatorRepository.findByCreatorStatusFalse().stream()
                 .map(CreatorDTO::toDTO)
                 .collect(Collectors.toList());
     }

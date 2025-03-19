@@ -16,8 +16,8 @@ import app.scit46.ufc.entity.UserEntity;
 @Repository
 public interface CreatorRepository extends JpaRepository<CreatorEntity, Long> {
 
-    @Query("SELECT c FROM CreatorEntity c JOIN FETCH c.ownUser WHERE c.creatorStatus = false")
-    List<CreatorEntity> findByCreatorStatusFalseWithUser();
+    @Query("SELECT c FROM CreatorEntity c WHERE c.creatorStatus = false")
+    List<CreatorEntity> findByCreatorStatusFalse();
 
     CreatorEntity findByOwnUser(UserEntity ownUser);
 
