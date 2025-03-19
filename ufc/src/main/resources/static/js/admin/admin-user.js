@@ -907,8 +907,8 @@ function generateCreatorStatusTable(creators) {
                 <thead>
                     <tr>
                         <th>창작자 번호</th>
-                        <th>이름</th>
                         <th>상호</th>
+                        <th>이름</th>
                       
                     </tr>
                 </thead>
