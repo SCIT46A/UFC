@@ -129,7 +129,7 @@ $(document).ready(function () {
                                             <div class="server-message-icon-wrap">
                                                 <div class="server-message-icon-box">
                                                     <img class="server-message-icon-img target-img" width="30" height="30" src="${
-                chatImgUrl ? `/api/image/${chatImgUrl}` : 'https://assets.tumblbug.com/profile/default_avatar.png'
+                chatImgUrl ? `/api/image/${chatImgUrl}` : '/api/image/89888086-698b-4e0e-92c2-8eca99737900'
             }" alt="">
                                                 </div>
                                             </div>
@@ -206,7 +206,7 @@ $(document).ready(function () {
                         chatRoomhtml = `
                             <div class="chat-window-inner-pe" data-id="${data.id}" data-image="${data.user2.photo && data.user2.photo.imageId ? data.user2.photo.imageId : null}" data-username="${data.user2.userName}">
                                 <div class="chat-window-inner-pe-box">
-                                    <img src="${data.user2.photo && data.user2.photo.imageId ? `/api/image/${data.user2.photo.imageId}` : 'https://assets.tumblbug.com/profile/default_avatar.png'}" alt="" class="chat-window-inner-pe-box-img target-img">
+                                    <img src="${data.user2.photo && data.user2.photo.imageId ? `/api/image/${data.user2.photo.imageId}` : '/api/image/89888086-698b-4e0e-92c2-8eca99737900'}" alt="" class="chat-window-inner-pe-box-img target-img">
                                     <div class="chat-window-inner-pe-box-ri">
                                         <div class="chat-window-inner-pe-box-ri-top">${data.user2.userName}</div>
                                         <div class="chat-window-inner-pe-box-ri-bo">${timeForToday_time(data.createdTime)}</div>
@@ -217,7 +217,7 @@ $(document).ready(function () {
                         chatRoomhtml = `
                             <div class="chat-window-inner-pe" data-id="${data.id}" data-image="${data.user1.photo && data.user1.photo.imageId ? data.user1.photo.imageId : null}" data-username="${data.user1.userName}">
                                 <div class="chat-window-inner-pe-box">
-                                    <img src="${data.user1.photo && data.user1.photo.imageId ? `/api/image/${data.user1.photo.imageId}` : 'https://assets.tumblbug.com/profile/default_avatar.png'}" alt="" class="chat-window-inner-pe-box-img target-img">
+                                    <img src="${data.user1.photo && data.user1.photo.imageId ? `/api/image/${data.user1.photo.imageId}` : '/api/image/89888086-698b-4e0e-92c2-8eca99737900'}" alt="" class="chat-window-inner-pe-box-img target-img">
                                     <div class="chat-window-inner-pe-box-ri">
                                         <div class="chat-window-inner-pe-box-ri-top">${data.user1.userName}</div>
                                         <div class="chat-window-inner-pe-box-ri-bo">${timeForToday_time(data.createdTime)}</div>
