@@ -167,10 +167,7 @@ public class CreatorService {
     // 해당 내용 추가됨
     @Transactional
     public void createCreator(CreatorCreateDTO creatorCreateDTO, Long OAuthId) {
-        System.out.println("🔹 DB 저장 시작...");
 
-        // 값 확인
-        System.out.println("Service에서 받은 데이터: " + creatorCreateDTO);
 
         // ✅ bRegistDate가 null이면 기본값 설정 (기본값으로 오늘 날짜가 들어가고 있었음)
         if (creatorCreateDTO.getBRegistDate() == null) {
@@ -194,8 +191,6 @@ public class CreatorService {
 
         creatorRepository.save(creator);
         log.info("==================================================================");
-        log.info(userService.findById(OAuthId).toString());
-        System.out.println("✅ DB 저장 완료!");
     }
 
     /** 🔹 특정 사용자(로그인한 창작자)의 정보 가져오기 */
