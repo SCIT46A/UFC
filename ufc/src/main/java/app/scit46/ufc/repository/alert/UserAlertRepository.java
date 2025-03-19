@@ -1,15 +1,13 @@
 package app.scit46.ufc.repository.alert;
 
-import app.scit46.ufc.dto.alert.UserAlertDTO;
-import app.scit46.ufc.entity.UserEntity;
-import app.scit46.ufc.entity.alert.UserAlertEntity;
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
+import app.scit46.ufc.entity.UserEntity;
+import app.scit46.ufc.entity.alert.UserAlertEntity;
 
 @Repository
 public interface UserAlertRepository extends JpaRepository<UserAlertEntity, Long> {
@@ -23,6 +21,8 @@ public interface UserAlertRepository extends JpaRepository<UserAlertEntity, Long
     List<UserAlertEntity> findByUserAndReadTimeAfter(UserEntity user, LocalDateTime dateTime);
 
     // 모든 알림을 최신순으로 조회 (읽음 상태와 관계없이)
-    List<UserAlertEntity> findByUser_UserIdOrderByUserAlertIdDesc(Long userId);
+    //List<UserAlertEntity> findByUser_UserIdOrderByUserAlertIdDesc(Long userId);
+
+    List<UserAlertEntity> findByUser_UserIdAndReadTimeIsNullOrderByUserAlertIdDesc(Long userId);
 
 }

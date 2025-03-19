@@ -51,12 +51,15 @@ public class ProductController {
     }
 
     @GetMapping("/regist")
-    public String regist() {
+    public String regist(Model model,
+            @RequestParam(value = "iframe", required = false, defaultValue = "false") boolean iframe) {
+        model.addAttribute("iframe", iframe);
         return "product/regist-product";
     }
 
     @GetMapping("/{id}")
-    public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
+    public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request,
+            @RequestParam(value = "iframe", required = false, defaultValue = "false") boolean iframe) {
         HttpSession session = request.getSession(false);
         Long loginUserId = null;
         if (session != null) {
