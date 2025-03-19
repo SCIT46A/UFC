@@ -941,7 +941,7 @@ $(document).ready(function () {
         var currentState = $btn.hasClass("liked");
         // 전역 변수 campaignId를 그대로 사용합니다.
         // 또는 새 변수에 할당:
-        var currentCampaignId = campaignId;
+        var currentCampaignId = productId;
 
         $.ajax({
             url: "/api/like/toggle",
