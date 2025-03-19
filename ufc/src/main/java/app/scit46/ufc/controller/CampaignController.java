@@ -62,33 +62,36 @@ public class CampaignController {
     }
 
     @GetMapping("/{id}")
-    public String detailCampaign(@PathVariable Long id, Model model, HttpServletRequest request) {
+    public String detailCampaign(@PathVariable("id") Long id, Model model, HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 세션 가져오기
         Long loginUserId = null; // 기본값 설정
+        UserDTO userDTO = null;
         if (session != null) {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
+            userDTO = userService.findByIdDTO(loginUserId);
             model.addAttribute("loginUserId", loginUserId);
         }
-        UserDTO userInfo = UserDTO.toDTO(userService.findById(loginUserId));
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
         // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
         Long creatorId = campaign.getCreatedBy().getOwnUser().getUserId();
         Integer status = campaign.getCampaignStatus();
         if (status == 0) {
-            if (loginUserId == null ||!loginUserId.equals(creatorId) ||!userInfo.getRoles().equals("ROLE_ADMIN")) {
-                return "redirect:/";
+            if (loginUserId == null || !loginUserId.equals(creatorId)) {
+                if (userDTO == null || !"ROLE_ADMIN".equals(userDTO.getRoles())) {
+                    return "redirect:/";
+                }
             }
         }
         if (loginUserId == null) {
-            model.addAttribute("status", 0);
-        } else if(!loginUserId.equals(creatorId)){
-            model.addAttribute("status", 0);
-        }
-        else {
-            model.addAttribute("status", 1);
-        }
 
+            model.addAttribute("status", 0);
+        } else if (!loginUserId.equals(creatorId)) {
+            model.addAttribute("status", 0);
+        } else {
+            model.addAttribute("status", 1);
+
+        }
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
         final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
@@ -105,6 +108,7 @@ public class CampaignController {
                 && campaign.getCreatedBy().getProImgUrl() != null)
                 ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                 : DEFAULT_IMAGE;
+
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 
         List<CampaignGoalDTO> campaignGoalDtos = campaignGoalService.findAll(id);
@@ -115,14 +119,15 @@ public class CampaignController {
                 .mapToInt(MaterialDonationDTO::getQuantity)
                 .sum();
 
+
         boolean campaignLike = likeService.likeCheck(campaign.getCampaignId(), loginUserId, "campaign");
         boolean creatorLike = likeService.likeCheck(campaign.getCreatedBy().getCreatorId(), loginUserId, "creator");
+
         model.addAttribute("campaignLike", campaignLike);
         model.addAttribute("creatorLike", creatorLike);
 
         model.addAttribute("tags", tags);
         model.addAttribute("campaign", campaign);
-        log.info(campaign.toString());
         model.addAttribute("campaignGoalDTOS", campaignGoalDtos);
         model.addAttribute("totalDonors", totalDonors);
         model.addAttribute("totalQuantity", totalQuantity);
