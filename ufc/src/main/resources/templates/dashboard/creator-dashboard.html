@@ -79,13 +79,13 @@
         <main class="main-content">
             <!-- ✅ Hidden Input 추가 (creatorId 유지) -->
             <input type="hidden" id="creatorId" th:value="${creatorId}">
-
             <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/main-dashboard'}"></div>
         </main>
 
 
         <!-- JavaScript -->
         <script th:src="@{/js/dashboard/creator-dashboard.js}" defer></script>
+        <script th:src="@{/js/dashboard/main-dashboard.js}" defer></script>
 </body>
 
 </html>

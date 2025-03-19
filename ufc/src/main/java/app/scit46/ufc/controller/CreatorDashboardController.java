@@ -60,6 +60,8 @@ public class CreatorDashboardController {
         model.addAttribute("creatorName", creatorName);
         model.addAttribute("profileImgUrl", profileImgUrl);
 
+        // model.addAttribute("content", "dashboard/main-dashboard :: main-dashboard");
+
         return "dashboard/creator-dashboard";
     }
 

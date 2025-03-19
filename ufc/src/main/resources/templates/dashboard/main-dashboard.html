@@ -161,6 +161,7 @@
 
 <body>
     <div th:fragment="main-dashboard">
+        <input type="hidden" id="creatorId" th:value="${creatorId}">
         <div class="content-wrapper">
             <div class="dashboard-header">
                 <!-- <h1 class="dashboard-title">크리에이터 대시보드</h1>
@@ -171,23 +172,23 @@
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-title">총 매출</div>
-                    <div class="stat-value">₩4,231,000</div>
-                    <div class="stat-change positive">+20.1% 지난 달 대비</div>
+                    <div class="stat-value"></div>
+                    <div class="stat-change positive"></div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">신규 주문</div>
-                    <div class="stat-value">573</div>
-                    <div class="stat-change positive">+12.4% 지난 달 대비</div>
+                    <div class="stat-value"></div>
+                    <!-- <div class="stat-change positive">+12.4% 지난 달 대비</div> -->
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">활성 캠페인</div>
-                    <div class="stat-value">12</div>
-                    <div class="stat-change positive">+3 지난 달 대비</div>
+                    <div class="stat-value"></div>
+                    <!-- <div class="stat-change positive">+3 지난 달 대비</div> -->
                 </div>
                 <div class="stat-card">
                     <div class="stat-title">팔로워</div>
-                    <div class="stat-value">12,234</div>
-                    <div class="stat-change positive">+573 지난 달 대비</div>
+                    <div class="stat-value"></div>
+                    <!-- <div class="stat-change positive">+573 지난 달 대비</div> -->
                 </div>
             </div>
 

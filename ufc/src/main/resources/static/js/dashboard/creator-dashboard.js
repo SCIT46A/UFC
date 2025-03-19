@@ -10,6 +10,23 @@ document.addEventListener("DOMContentLoaded", function () {
     const profileImg = document.getElementById("profileImg");
     const creatorId = document.getElementById("creatorId")?.value; // ✅ 크리에이터 ID 가져오기
 
+    function ensureMainDashboardLoaded() {
+        const currentUrl = window.location.pathname;
+        if (currentUrl === "/creator/dashboard") {
+            console.log("🚀 [INIT] 최초 실행: 대시보드 페이지 감지됨 → initMainDashboard 실행");
+            if (typeof initMainDashboard === "function") {
+                initMainDashboard();
+            } else {
+                console.warn("⚠️ [WARNING] initMainDashboard 함수가 정의되지 않음. 스크립트 실행 대기.");
+                setTimeout(ensureMainDashboardLoaded, 500); // 0.5초 후 재시도
+            }
+        }
+    }
+
+    // ✅ `DOMContentLoaded` 시점에서 `initMainDashboard()` 실행 보장
+    ensureMainDashboardLoaded(); // 🔹
+
+
     if (profileContainer && fileInput) {
         // 🔹 프로필 이미지 클릭 시 파일 선택 창 열기
         profileContainer.addEventListener("click", function () {
@@ -61,6 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+
     // ✅ 메뉴 클릭 이벤트 (이벤트 위임 적용)
     document.addEventListener("click", function (event) {
         const menuItem = event.target.closest(".menu-item[data-url]");
