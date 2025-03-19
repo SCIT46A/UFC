@@ -331,7 +331,7 @@ public interface SearchRepository extends JpaRepository<SearchEntity, Long> {
                         "LIMIT 10", nativeQuery = true)
         List<SearchResultDTO> findTop10ProductsByLikes_add(@Param("userLoginId") Long userLoginId);
 
-        // 창작가 페이지 진행 중인 캠페인
+        // 창작가 페이지 진행 중인 캠페인 by Ikjun
         @Query(value = "SELECT " +
                         "  CAST(c.campaign_id AS SIGNED) AS originalId, " +
                         "  'campaign' AS type, " +
