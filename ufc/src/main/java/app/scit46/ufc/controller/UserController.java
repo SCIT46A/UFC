@@ -414,11 +414,14 @@ public class UserController {
                     RewardDeliveryDTO reward = rewardDeliveryService
                             .getRewardDeliveryByDonationId(donation.getDonationId());
                     
+                    
                     String rewardName = rewardDeliveryService.getRewardNameByDonationId(donation.getDonationId());
 
                     // 6. 사용자 프로필 이미지 설정
-                    String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                            + user.getPhoto().getImageId() + "/public";
+                    String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                            ? "/images/user/default_avatar.png"
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                    + "/public";
 
                     // 7. 모델에 값 추가
                     model.addAttribute("donation", donation);

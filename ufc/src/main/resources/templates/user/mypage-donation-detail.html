@@ -141,14 +141,14 @@
                       </dl>
                       <dl class="main-in-mi-content-box-content-in">
                         <dt>선택 리워드</dt>
-                        <dd th:text="${rewardName}"></dd>
+                        <dd th:text="${rewardName} !=null ? rewardName : '기부된 품목입니다 :)'"></dd>
                       </dl>
                     </div>
                   </div>
                   <!-- 배송 정보 -->
-                  <div class="main-in-mi-content-box">
+                  <div class="main-in-mi-content-box" th:if="${reward != null}">
                     <div class="main-in-mi-content-box-title">
-                      <p class="main-in-mi-content-box-title-le">배송 정보</p>
+                      <p class="main-in-mi-content-box-title-le" >배송 정보</p>
                     </div>
                     <div class="main-in-mi-content-box-content">
                       <dl class="main-in-mi-content-box-content-in">
@@ -165,7 +165,9 @@
                       </dl>
                       <dl class="main-in-mi-content-box-content-in">
                         <dt>송장번호</dt>
-                        <dd id="courierName" th:text="${reward.invoice != null ? reward.invoice : '배송을 준비중이니 조금 기다려 주세요 :)'}"></dd>
+                          <dd id="courierName" 
+                              th:text="${reward.invoice != null ? reward.invoice : '배송을 준비중이니 조금 기다려 주세요 :)'}">
+                          </dd>
                       </dl>
                       <dl class="main-in-mi-content-box-content-in">
                         <dt>배송 상태</dt>
