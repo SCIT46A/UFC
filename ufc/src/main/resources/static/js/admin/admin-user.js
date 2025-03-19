@@ -786,8 +786,8 @@ function generateCreatorApprovalTable(creators) {
                     <tr>
                         <th><input type="checkbox" id="select-all" onclick="toggleAllCreatorCheckboxes(this)"></th>
                         <th>창작자 번호</th>
+                        <th>스토어 이름</th>
                         <th>사업자 이름</th>
-                        <th>상호</th>
                         <th>사업자 등록번호</th>
                         <th>진위 여부</th> 
                         <th>승인</th>

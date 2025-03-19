@@ -69,13 +69,14 @@ public class CampaignController {
             loginUserId = (Long) session.getAttribute("loginUserId"); // 세션이 존재할 때만 값 가져오기
             model.addAttribute("loginUserId", loginUserId);
         }
+        UserDTO userInfo = UserDTO.toDTO(userService.findById(loginUserId));
         // 캠페인 조회 (없을 경우 예외 처리 또는 별도 로직 추가)
         CampaignDTO campaign = campaignService.readCampaign(id);
         // campaign_status가 false일때, userId랑 creator에서 받아온 userId랑 다르면 alert 띄우고 쫒아내기
         Long creatorId = campaign.getCreatedBy().getOwnUser().getUserId();
         Integer status = campaign.getCampaignStatus();
         if (status == 0) {
-            if (loginUserId == null || !loginUserId.equals(creatorId)) {
+            if (loginUserId == null ||!loginUserId.equals(creatorId) ||!userInfo.getRoles().equals("ROLE_ADMIN")) {
                 return "redirect:/";
             }
         }

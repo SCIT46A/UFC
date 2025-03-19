@@ -93,7 +93,7 @@ public class CreatorService {
 
             Map<String, Object> businessInfo = new HashMap<>();
             businessInfo.put("b_no", dto.getBRegistNumber() != null ? dto.getBRegistNumber() : "");
-            businessInfo.put("p_nm", dto.getBName() != null ? dto.getBName() : "");
+            businessInfo.put("p_nm", dto.getCompanyName() != null ? dto.getCompanyName() : "");
             businessInfo.put("start_dt", dto.getStartDt() != null ? dto.getStartDt() : "");
             businesses.add(businessInfo);
             requestData.put("businesses", businesses);

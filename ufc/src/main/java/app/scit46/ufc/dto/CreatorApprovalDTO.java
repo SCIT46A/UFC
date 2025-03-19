@@ -16,7 +16,7 @@ public class CreatorApprovalDTO {
     private String bRegistNumber;  // 사업자 등록번호
 
     @JsonProperty("p_nm")  // API 요구사항에 맞게 변경
-    private String bName;  // 대표자명
+    private String companyName;  // 대표자명
 
     @JsonProperty("start_dt")  // API 요구사항에 맞게 변경
     private String startDt ;  // 개업일자
