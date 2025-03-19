@@ -3,6 +3,7 @@ package app.scit46.ufc.service.campaign;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -46,12 +47,11 @@ import app.scit46.ufc.service.ImageUrlService;
 import app.scit46.ufc.service.MaterialDonationService;
 import app.scit46.ufc.service.RewardService;
 import app.scit46.ufc.service.UserService;
+import app.scit46.ufc.service.alert.AlertService;
 import app.scit46.ufc.service.material.MaterialService;
 import app.scit46.ufc.service.tag.TagService;
 import lombok.RequiredArgsConstructor;
-import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
-import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -71,6 +71,7 @@ public class CampaignService {
     private final ImageUrlService imageService;
     private final RewardService rewardService;
     private final RewardDeliveryRepository rewardDeliveryRepository;
+    private final AlertService alertService;
 
     public CampaignEntity findCampaignById(Long id) {
         return campaignRepository.findById(id).orElse(null);
@@ -523,7 +524,7 @@ public class CampaignService {
     }
 
     // 캠페인 구매 시 반응하는거
-
+    // 캠페인 제료 기부시 등록
     @Transactional
     public void processDonation(Long loginUserId, Map<String, Object> formData) {
         // 캠페인 정보 처리
@@ -581,12 +582,14 @@ public class CampaignService {
                 donation.setUser(user);
                 donation.setMaterial(materialDTO);
                 donation.setQuantity(donationTotal);
-                donation.setStatus("completed");
+                donation.setStatus("pending");
                 donation.setInvoice((String) formData.get("invoice"));
                 // donatedDate 값을 현재 시각으로 설정
                 donation.setDonatedDate(LocalDateTime.now());
                 MaterialDonationEntity donationEntity = MaterialDonationEntity.toEntity(donation);
-                materialDonationRepository.save(donationEntity);
+                donationEntity = materialDonationRepository.save(donationEntity);
+                alertService.registAlert(donationEntity, "mRegist");
+                alertService.registAlert(donationEntity, "mSend");
 
                 // donationReward가 존재하면 rewardItems 처리
                 Object donationRewardObj = item.get("donationReward");

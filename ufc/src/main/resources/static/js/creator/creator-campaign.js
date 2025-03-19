@@ -17,30 +17,71 @@ document.getElementById("create_campaign").addEventListener("click", function ()
     window.location.href = "/campaign/create"; // ✅ 서버 경로 기준으로 이동
 });
 
+// // 누적캠페인 숫자 변경
+// document.addEventListener("DOMContentLoaded", function () {
+//     fetch("/creator/campaign/count")
+//         .then(Response => Response.json())
+//         .then(totalCount => {
+//             const totalCampaignCountElement = document.getElementById("total-campaign-count");
+//             totalCampaignCountElement.textContent = `누적 캠페인: ${totalCount}개`;
+//         })
+//         .catch(error => {
+//             console.error("누적 캠페인 수 조회 실패:", error);
+//         });
+// });
+
+
+// // ✅ 누적 캠페인 수 업데이트 함수
+// function updateTotalCampaignCount() {
+//     const activeCount = $("#club-detail-active-container").children().length;
+//     const finishedCount = $("#finished-events-container").children().length;
+//     const totalCount = activeCount + finishedCount;
+//     $("#total-campaign-count").text(totalCount);
+// }
+
+// // 누적 캠페인 수를 계산할 변수
+// let totalCampaignCount = 0;
+
 // 누적캠페인 숫자 변경
 document.addEventListener("DOMContentLoaded", function () {
-    fetch()
-        .then(Response => Response.json())
-        .then(totalCount => {
-            const totalCampaignCountElement = document.getElementById("total-campaign-count");
-            totalCampaignCountElement.textContent = `누적 캠페인: ${totalCount}개`;
+    let activeCount = 0;
+    let finishedCount = 0;
+
+    // 진행 중인 캠페인 수 가져오기
+    fetch("/creator/campaign/active?offset=0&limit=1000")
+        .then(response => {
+            if (!response.ok) throw new Error("진행 중 캠페인 수 조회 실패");
+            return response.json();
+        })
+        .then(data => {
+            activeCount = data.length;  // 진행 중 캠페인 수
+            updateTotalCount();
         })
         .catch(error => {
-            console.error("누적 캠페인 수 조회 실패:", error);
+            console.error("진행 중 캠페인 수 조회 실패:", error);
         });
+
+    // 종료된 캠페인 수 가져오기
+    fetch("/creator/campaign/finished?offset=0&limit=1000")
+        .then(response => {
+            if (!response.ok) throw new Error("종료된 캠페인 수 조회 실패");
+            return response.json();
+        })
+        .then(data => {
+            finishedCount = data.length;  // 종료된 캠페인 수
+            updateTotalCount();
+        })
+        .catch(error => {
+            console.error("종료된 캠페인 수 조회 실패:", error);
+        });
+
+    // 누적 캠페인 수 업데이트
+    function updateTotalCount() {
+        const totalCount = activeCount + finishedCount;
+        const totalCampaignCountElement = document.getElementById("total-campaign-count");
+        totalCampaignCountElement.textContent = `${totalCount}개`;
+    }
 });
-
-
-// ✅ 누적 캠페인 수 업데이트 함수
-function updateTotalCampaignCount() {
-    const activeCount = $("#club-detail-active-container").children().length;
-    const finishedCount = $("#finished-events-container").children().length;
-    const totalCount = activeCount + finishedCount;
-    $("#total-campaign-count").text(totalCount);
-}
-
-// 누적 캠페인 수를 계산할 변수
-let totalCampaignCount = 0;
 
 document.addEventListener("DOMContentLoaded", function () {
     // ✅ 진행 중인 캠페인 불러오기

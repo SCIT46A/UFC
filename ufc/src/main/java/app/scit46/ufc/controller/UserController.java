@@ -338,8 +338,10 @@ public class UserController {
                     .map(ub -> ub.getBadge().getBadgeId())
                     .collect(Collectors.toList());
 
-            String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                    + user.getPhoto().getImageId() + "/public";
+            String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                            ? "/images/user/default_avatar.png"
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                    + "/public";
             
                     List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
             // ✅ `likes` 리스트를 분류 (creator_id 존재 여부 기준)
@@ -525,9 +527,10 @@ public class UserController {
                         }
                     }
 
-                    // 사용자 프로필 이미지 URL 생성
-                    String userImageId = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/"
-                            + user.getPhoto().getImageId() + "/public";
+                    String userImageId = (user.getPhoto() == null || user.getPhoto().getImageId() == null)
+                            ? "/images/user/default_avatar.png"
+                            : "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/" + user.getPhoto().getImageId()
+                                    + "/public";
 
                     // 각 좋아요 항목에서 크리에이터 또는 캠페인별 likeId 매핑
                     Map<Long, Long> creatorLikeIdMap = new HashMap<>();

@@ -332,8 +332,8 @@ document.querySelector(".img-form-button").addEventListener("click", function ()
         const creatorData = {
             intro: document.getElementById("seller_intro").value.trim() || "소개 없음",
             registNumber: document.getElementById("seller_regist_number").value.trim() || "000-00-00000",
-            bizName: document.getElementById("seller_regist_person").value.trim() || "대표자 없음",
-            companyName: document.getElementById("seller_regist_name").value.trim() || "회사 없음",
+            bizName: document.getElementById("bName").value.trim() || "기본 창작자", //창작자 이름
+            companyName: document.getElementById("seller_regist_person").value.trim() || "대표자 없음", // 대표자 이름
             address: document.getElementById("seller_regist_location").value.trim() || "주소 없음",
             bRegistDate: bRegistDate // ✅ "YYYY-MM-DD" 형식으로 백엔드 전송
         };

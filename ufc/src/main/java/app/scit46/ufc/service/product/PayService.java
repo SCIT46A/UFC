@@ -103,7 +103,7 @@ public class PayService {
             productPaymentDTO.setPurchasedBy(userDTO);
             productPaymentDTO.setReceiptNumber(receiptId);
             productPaymentDTO.setIsAdjust(false);
-            productPaymentDTO.setStatus("pending");
+            productPaymentDTO.setStatus("completed");
 
             ProductPaymentEntity target = ProductPaymentEntity.toEntity(productPaymentDTO);
             productPaymentRepository.save(target);

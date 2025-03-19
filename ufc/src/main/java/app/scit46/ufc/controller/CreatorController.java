@@ -21,6 +21,7 @@ import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.SearchResultDTO;
 import app.scit46.ufc.dto.UserDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.SearchService;
@@ -80,7 +81,6 @@ public class CreatorController {
             HttpServletRequest httpServletRequest) {
         HttpSession session = httpServletRequest.getSession(false);
         Long userId = (Long) session.getAttribute("loginUserId");
-
 
         // 주소 기본값 설정
         if (creatorCreateDTO.getAddress() == null || creatorCreateDTO.getAddress().isEmpty()) {
