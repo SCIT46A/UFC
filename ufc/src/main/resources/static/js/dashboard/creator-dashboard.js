@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function executePageScripts(url, creatorId) {
         const scriptMapping = {
+            "/creator/dashboard/main": { script: "/js/dashboard/main-dashboard.js", init: "initMainDashboard" },
             "/creator/dashboard/products/management": { script: "/js/dashboard/product-management.js", init: "initProductManagement" },
             "/creator/dashboard/products/orders": { script: "/js/dashboard/product-orders.js", init: "initProductOrders" },
             "/creator/dashboard/settlements": { script: "/js/dashboard/settlements.js", init: "initSettlementManagement" },

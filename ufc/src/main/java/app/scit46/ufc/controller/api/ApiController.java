@@ -205,7 +205,7 @@ public class ApiController {
     }
 
     @GetMapping("/chatRoom/add")
-    public ChatRoomDTO chatRoomAdd(@RequestParam Long loginUserId, @RequestParam Long userId) {
+    public ChatRoomDTO chatRoomAdd(@RequestParam("loginUserId") Long loginUserId, @RequestParam("userId") Long userId) {
         return chatRoomService.createChatRoom(loginUserId, userId);
     }
 

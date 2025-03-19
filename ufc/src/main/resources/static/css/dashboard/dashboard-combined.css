@@ -182,11 +182,9 @@ body {
     border: 2px solid white;
     display: flex;
     cursor: pointer;
-    z-index: 5;
+    z-index: 1;
     pointer-events: auto;
 }
-
-
 
 
 .profile-name {
@@ -1324,6 +1322,147 @@ input[type="number"] {
     display: flex;
     gap: 0.5rem;
     align-items: center;
+}
+
+/* ====================================================================== */
+/*                        SETTLEMENTS STYLES                           */
+/* ====================================================================== */
+/* ORDER MANAGEMENT */
+/* ✅ 모달 기본 스타일 (화면 중앙 정렬) */
+/* ✅ 모달 전체 배경 (백그라운드) */
+/* ✅ 모달 전체 배경 (백그라운드) */
+#settlementModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+    /* ✅ 기본적으로 숨김 */
+    justify-content: center;
+    align-items: center;
+}
+
+/* ✅ 모달 컨텐츠 (중앙 정렬 유지) */
+#settlementModal .modal-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    width: 400px;
+    max-width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* ✅ 닫기 버튼 */
+#settlementModal .close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #555;
+    transition: color 0.3s;
+}
+
+#settlementModal .close:hover {
+    color: #222;
+}
+
+/* ✅ 텍스트 영역 */
+#settlementModal .editable-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    overflow-y: auto;
+    vertical-align: middle;
+}
+
+#settlementModal .editable-textarea:focus {
+    border-color: #28a745;
+}
+
+/* ✅ 모달 내 버튼 스타일 */
+#settlementModal .btn-secondary {
+    background: var(--white);
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: background 0.3s ease-in-out;
+}
+
+#settlementModal .btn-primary {
+    background: var(--primary);
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    color: white;
+    transition: background 0.3s ease-in-out;
+}
+
+#settlementModal .btn-secondary:hover {
+    background: #f3f3f3;
+}
+
+#settlementModal .btn-primary:hover {
+    background: #218838;
+}
+
+/* ✅ 모달 내 버튼 정렬 */
+#settlementModal .modal-actions {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+/* ✅ 제목 스타일 */
+#settlementModal h3 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* ✅ 상태 뱃지 스타일 */
+#settlementModal .status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: white;
+}
+
+/* ✅ 각 상태별 색상 */
+#settlementModal .status-pending {
+    background-color: #ff6b6b;
+    /* 정산 대기 */
+}
+
+#settlementModal .status-scheduled {
+    background-color: #f5a623;
+    /* 정산 예정 */
+}
+
+#settlementModal .status-completed {
+    background-color: #4caf50;
+    /* 정산 완료 */
 }
 
 /* ====================================================================== */

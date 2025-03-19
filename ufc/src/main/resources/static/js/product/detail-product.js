@@ -937,7 +937,7 @@ $(document).ready(function () {
         }
         $btn.data("ajaxInProgress", true);
 
-        var itemType = "campaign";
+        var itemType = "product";
         var currentState = $btn.hasClass("liked");
         // 전역 변수 campaignId를 그대로 사용합니다.
         // 또는 새 변수에 할당:

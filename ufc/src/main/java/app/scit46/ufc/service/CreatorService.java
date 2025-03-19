@@ -168,7 +168,6 @@ public class CreatorService {
     @Transactional
     public void createCreator(CreatorCreateDTO creatorCreateDTO, Long OAuthId) {
 
-
         // ✅ bRegistDate가 null이면 기본값 설정 (기본값으로 오늘 날짜가 들어가고 있었음)
         if (creatorCreateDTO.getBRegistDate() == null) {
             System.out.println("⚠️ bRegistDate가 null이므로 기본값(오늘 날짜) 설정");
@@ -315,6 +314,10 @@ public class CreatorService {
         return creatorRepository.findByCreatorId(creatorId).stream()
                 .map(CreatorDTO::toDTO)
                 .collect(Collectors.toList());
+    }
+
+    public String getDashboardData(Long creatorId) {
+        return creatorRepository.getDashboardDataByCreatorId(creatorId);
     }
 }
 

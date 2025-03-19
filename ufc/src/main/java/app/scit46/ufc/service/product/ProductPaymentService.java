@@ -151,4 +151,36 @@ public class ProductPaymentService {
                 .orElseThrow(() -> new RuntimeException("결제 정보를 찾을 수 없습니다."));
     }
 
+    /**
+     * 정산 내역 조회 (PENDING, SCHEDULED, COMPLETED 포함)
+     */
+    public List<Map<String, Object>> getSettlementList(Long creatorId) {
+        System.out.println("📢 [SettlementService] 정산 목록 요청 - Creator ID: " + creatorId);
+
+        List<Map<String, Object>> settlements = productPaymentRepository.findAllSettlements(creatorId);
+
+        System.out.println("📢 [SettlementService] 조회된 정산 건수: " + settlements.size());
+
+        for (Map<String, Object> settlement : settlements) {
+            System.out.println("📢 정산 데이터: " + settlement);
+        }
+
+        return productPaymentRepository.findAllSettlements(creatorId);
+    }
+
+    /**
+     * ✅ 정산 상세 정보 조회
+     */
+    public Map<String, Object> getSettlementDetails(Long payId) {
+        System.out.println("📢 [Service] 정산 상세 조회 - ID: " + payId);
+        return productPaymentRepository.findSettlementById(payId);
+    }
+
+    // /**
+    // * 정산 처리 (정산 완료로 변경)
+    // */
+    // public void processSettlement(List<Long> payIds) {
+    // productPaymentRepository.markAsSettled(payIds);
+    // }
+
 }
