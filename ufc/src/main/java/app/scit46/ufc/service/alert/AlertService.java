@@ -72,16 +72,17 @@ public class AlertService {
             CampaignEntity campaign = (CampaignEntity) data;
             
             if(type.equals("cRegist")){
-                // 캠페인 등록시 => 관리자, 창작자
+                // 캠페인 등록 승인 시 => 창작자, 창작자 관심유저 
                 alert = generateAlert(campaign, "cRegist");
-            }else if(type.equals("cAccept")){
-                // 캠페인 승인시 => 창작자, 창작자관심유저
-                alert = generateAlert(campaign, "cAccept");
-                // 캠페인 창작자(유저)
-                targetUsers.add(userRepository.findById(campaign.getCreatedBy().getOwnUser().getUserId()).get());
                 // 캠페인을 좋아요 한 유저 list
                 targetUsers.addAll(likeRepository.findByCampaign_CampaignId(campaign.getCampaignId()).stream()
                         .map(LikeEntity::getUser).collect(Collectors.toList()));
+
+            }else if(type.equals("cAccept")){
+                // 캠페인 승인시 => 창작자
+                alert = generateAlert(campaign, "cAccept");
+                // 캠페인 창작자(유저)
+                targetUsers.add(userRepository.findById(campaign.getCreatedBy().getOwnUser().getUserId()).get());
             }else if(type.equals("cDecline")){
                 // 캠페인 거절시 => 창작자
                 alert = generateAlert(campaign, "cDecline");
@@ -170,13 +171,13 @@ public class AlertService {
             message = "새 공지사항 : " + notice.getTitle();
         } else if (data instanceof CampaignEntity && type.equals("cRegist")) {
             CampaignEntity campaign = (CampaignEntity) data;
-            message = "검토 대기중인 캠페인 : " + campaign.getTitle();
+            message = "새로운 캠페인 : " + campaign.getTitle();
         } else if (data instanceof CampaignEntity && type.equals("cAccept")) {
             CampaignEntity campaign = (CampaignEntity) data;
-            message = "캠페인 승인: " + campaign.getTitle();
+            message = "캠페인 등록 승인 : " + campaign.getTitle();
         } else if (data instanceof CampaignEntity && type.equals("cDecline")) {
             CampaignEntity campaign = (CampaignEntity) data;
-            message = "캠페인 거절: " + campaign.getTitle();
+            message = "캠페인 등록 거절: " + campaign.getTitle();
         } else if (data instanceof CampaignBoardEntity) {
             CampaignBoardEntity campaignBoard = (CampaignBoardEntity) data;
             message = "캠페인 새 소식 : " + campaignBoard.getTitle();
