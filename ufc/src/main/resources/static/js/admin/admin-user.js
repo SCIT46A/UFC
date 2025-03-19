@@ -1099,11 +1099,14 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function renderTab(tabType) {
+    console.log("📢 renderTab 실행됨. 현재 신고 데이터 개수:", allUserReports.length);
+
+    // 🔴 기존 코드: 데이터가 없으면 바로 에러 발생
     if (!allUserReports.length) {
-        console.error("❌ 신고 데이터가 아직 로드되지 않았습니다.");
+        console.warn("⚠️ 신고 데이터가 없습니다. (하지만 빈 화면이 아닌, 메시지를 표시해야 함)");
+        document.getElementById("content").innerHTML = `<h2>유저 신고 목록</h2><p>✅ 현재 신고된 유저가 없습니다.</p>`;
         return;
     }
-
 
     let filteredReports = [];
 
@@ -1113,6 +1116,7 @@ function renderTab(tabType) {
         filteredReports = allUserReports.filter(report => report.status === "ok" || report.status === "rejected");
     }
 
+    // 🚀 데이터가 없을 때도 메시지 출력하도록 변경
     document.getElementById("content").innerHTML = generateUserReportTable(filteredReports, tabType);
 }
 
