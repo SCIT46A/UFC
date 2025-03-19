@@ -10,6 +10,7 @@ import app.scit46.ufc.dto.campaign.CampaignGoalDTO;
 
 
 import app.scit46.ufc.entity.CreatorEntity;
+import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -289,23 +290,42 @@ public class ApiAdminController {
     @PutMapping("/{creatorId}/approve")
     public ResponseEntity<Map<String, Object>> approveCreator(@PathVariable Long creatorId) {
         try {
-
+            // 1️⃣ 창작자 조회
             CreatorEntity creator = creatorService.getCreatorById(creatorId);
             if (creator == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(Map.of("error", "🚨 창작자를 찾을 수 없습니다."));
             }
 
+            // 2️⃣ 창작자의 사용자(UserEntity) 조회
+            UserEntity user = creator.getOwnUser();
+            if (user == null) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(Map.of("error", "🚨 해당 창작자의 사용자 정보가 없습니다."));
+            }
+
+            // 3️⃣ 창작자 승인 (creatorStatus = true)
             creator.setCreatorStatus(true);
             creatorService.saveCreator(creator);
 
-            return ResponseEntity.ok(Map.of("message", "✅ 승인 완료", "creatorId", creatorId));
+            // 4️⃣ 사용자 역할 변경 (ROLE_USER → ROLE_CREATOR)
+            userService.updateUserRole(user.getUserId(), "ROLE_CREATOR");
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "✅ 승인 완료",
+
+                    "creatorId", creatorId,
+                    "userId", user.getUserId(),
+                    "newRole", user.getRoles()
+            ));
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "🚨 승인 처리 중 오류 발생: " + e.getMessage()));
         }
     }
+
+
 
     //창작자 여러명 승인
     // ✅ 여러 창작자 승인

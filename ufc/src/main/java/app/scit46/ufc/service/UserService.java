@@ -104,6 +104,14 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // ✅ 새롭게 추가: 기존 사용자의 역할(Role) 변경을 위한 메서드
+    public void updateUserRole(Long userId, String newRole) {
+        UserEntity user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("🚨 사용자 ID를 찾을 수 없습니다: " + userId));
+        user.setRoles(newRole);
+        userRepository.save(user);
+    }
+
     @Transactional
     public UserEntity updateUser(UserDTO userDTO) {
         // 가정: userId로 사용자 조회 (이 방식이 더 안전할 수 있음)
