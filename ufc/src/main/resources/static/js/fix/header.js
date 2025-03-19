@@ -34,14 +34,14 @@ $(function () {
                 // response가 null이거나 빈 배열일 경우 "알림이 없습니다" 텍스트 추가
                 $(".modal-alert > .modal-login-in").append('<p style="color:rgb(123,123,123); text-align:center;">알림이 없습니다</p>');
             } else {
-                response.forEach(alert => {
+                response.forEach(useralert => {
                     const alertTag = `
-                    <a data-link="${alert.linkUrl}">
+                    <a data-id="${useralert.userAlertId}" data-link="${useralert.alert.linkUrl}">
                         <div class="al-in-box-warp-pe">
                             <div>
                                 <div
                                         class="al-in-box-warp-pe-img"
-                                ><img src="${alert.imageUrl}" alt="alert image" style="width:70px; height:70px;"></div>
+                                ><img src="${useralert.alert.imageUrl}" alt="alert image" style="width:70px; height:70px;"></div>
                             </div>
 
                             <div class="al-in-box-warp-pe-content">
@@ -51,11 +51,11 @@ $(function () {
                                     <div
                                             class="al-in-box-warp-pe-content-box-top"
                                     >
-                                        ${alert.content}
+                                        ${useralert.alert.content}
                                     </div>
                                 </div>
                                 <p class="al-in-box-warp-pe-content-box-bottom">
-                                ${timeForToday_time(new Date(alert.alertDate))}
+                                ${timeForToday_time(new Date(useralert.alert.alertDate))}
                                 </p>
                             </div>
                         </div>          
@@ -73,17 +73,19 @@ $(function () {
     $(document).on('click', 'a[data-link]', function(event) {
         event.preventDefault();  // 기본 링크 이동을 막음 (페이지가 새로고침되지 않도록)
 
-        var linkUrl = $(this).data('link');  // 클릭한 a 태그의 data-link 값 가져오기
+        let linkId = $(this).data('id');  // 클릭한 a 태그의 data-id 값 가져오기
+        let linkUrl = $(this).data('link');
 
         // AJAX 요청을 통해 읽음 처리
         $.ajax({
             url: "/api/alert/read",  // 알림 읽음 처리 API 호출
             method: "GET",
-            data: { linkUrl: linkUrl },  // 읽은 알림에 대한 데이터 전송
+            data: { linkId: linkId },  // 읽은 알림에 대한 데이터 전송
             success: function(response) {
+                // 기존에 받아온 linkUrl
                 // 응답에 실제 이동할 URL이 있다면 그 URL로 이동
-                if (response.redirectUrl) {
-                    window.location.href = response.redirectUrl;  // 응답으로 받은 URL로 이동
+                if (!(linkUrl == null || linkUrl == "")) {
+                    window.location.href = linkUrl;  // 응답으로 받은 URL로 이동
                 } else {
                     console.log("이동할 URL이 없습니다.");  // URL이 없으면 이동하지 않음
                 }
