@@ -2,11 +2,14 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
     <link rel="stylesheet" th:href="@{/css/dashboard/dashboard-combined.css}" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>UP-DA Creator Dashboard</title>
 </head>
@@ -40,6 +43,8 @@
                     <button class="logout-button" onclick="window.location.href='/creator/campaign'">프로필 관리</button>
                 </div>
                 <ul class="sidebar-menu">
+                    <!-- 대시보드 -->
+                    <li class="menu-item parent-menu" data-url="/creator/dashboard/main">운영 현황</li>
                     <!-- 판매 관련 -->
                     <li class="menu-item parent-menu" data-toggle="products">
                         판매 관리
@@ -75,8 +80,9 @@
             <!-- ✅ Hidden Input 추가 (creatorId 유지) -->
             <input type="hidden" id="creatorId" th:value="${creatorId}">
 
-            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
+            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/main-dashboard'}"></div>
         </main>
+
 
         <!-- JavaScript -->
         <script th:src="@{/js/dashboard/creator-dashboard.js}" defer></script>

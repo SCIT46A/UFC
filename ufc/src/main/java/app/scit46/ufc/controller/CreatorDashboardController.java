@@ -63,6 +63,11 @@ public class CreatorDashboardController {
         return "dashboard/creator-dashboard";
     }
 
+    @GetMapping("/main")
+    public String getMainDashboardPage(Model model, Authentication authentication, HttpSession session) {
+        return addCreatorIdToModel(model, authentication, session, "dashboard/main-dashboard :: main-dashboard");
+    }
+
     /**
      * 🔹 제품 등록 페이지
      */

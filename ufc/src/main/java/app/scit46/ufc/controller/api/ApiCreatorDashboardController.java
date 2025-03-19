@@ -1,30 +1,32 @@
 package app.scit46.ufc.controller.api;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import jakarta.servlet.http.HttpSession;
-import org.springframework.http.HttpStatus;
-import lombok.RequiredArgsConstructor;
 import java.util.Collections;
-import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Map;
 
-import app.scit46.ufc.service.product.ProductPaymentService;
-import app.scit46.ufc.service.product.ProductDeliveryService;
-import app.scit46.ufc.service.reward.RewardDeliveryService;
-import app.scit46.ufc.service.campaign.CampaignService;
-import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
-import app.scit46.ufc.service.MaterialDonationService;
-import app.scit46.ufc.service.product.ProductService;
-import app.scit46.ufc.service.CourierService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
+import app.scit46.ufc.service.CourierService;
+import app.scit46.ufc.service.CreatorService;
+import app.scit46.ufc.service.MaterialDonationService;
+import app.scit46.ufc.service.campaign.CampaignService;
 import app.scit46.ufc.service.product.PayService;
+import app.scit46.ufc.service.product.ProductDeliveryService;
+import app.scit46.ufc.service.product.ProductPaymentService;
+import app.scit46.ufc.service.product.ProductService;
+import app.scit46.ufc.service.reward.RewardDeliveryService;
+import jakarta.servlet.http.HttpSession;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/creator/dashboard")
@@ -39,12 +41,20 @@ public class ApiCreatorDashboardController {
         private final ProductDeliveryService productDeliveryService;
         private final CourierService courierService;
         private final PayService payService;
+        private final CreatorService creatorService;
 
         /**
          * 
          * @param session
          * @return
          */
+
+        @GetMapping("/main")
+        public ResponseEntity<String> getCreatorDashboardData(@RequestParam("creatorId") Long creatorId) {
+                String dashboardData = creatorService.getDashboardData(creatorId);
+                return ResponseEntity.ok(dashboardData);
+        }
+
         @GetMapping("/campaigns/management")
         public ResponseEntity<List<Map<String, Object>>> getCampaigns(HttpSession session) {
                 Long creatorId = (Long) session.getAttribute("creatorId");
