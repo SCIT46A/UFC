@@ -5,86 +5,255 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>업사이클링 물품 기부 캠페인 가이드</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            background-color: #f9fafb;
-            color: #333;
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            line-height: 1.7;
+            color: #333;
         }
+
         .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #fff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-width: 720px;
+            margin: 50px auto;
+            padding: 40px 32px;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.00);
         }
+
+        .header-logo-icon {
+            width: 160px;
+            margin: 0 auto 24px auto;
+            display: block;
+        }
+
         h2 {
-            color: #2c7be5;
-            border-bottom: 3px solid #e7f1ff;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #212529;
+            text-align: center;
+            margin-bottom: 28px;
         }
+
         h3 {
-            margin-top: 30px;
-            color: #444;
+            font-size: 20px;
+            font-weight: 500;
+            color: #495057;
+            margin: 24px 0 12px;
+            border-left: 4px solid #4CAF50;
+            padding-left: 12px;
         }
+
         ul {
-            margin-left: 20px;
+            margin: 0;
+            padding: 0 0 0 24px;
+            list-style-type: disc;
         }
-        .note {
-            background-color: #e7f1ff;
-            padding: 15px;
-            border-left: 5px solid #2c7be5;
+
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        strong {
+            font-weight: 700;
+            color: #007bff;
+        }
+
+        .highlight {
+            background-color: #e9f5ff;
+            color: #0056b3;
+            padding: 6px 10px;
             border-radius: 4px;
+            font-weight: 500;
+            display: inline-block;
+            margin: 4px 0;
+        }
+
+        blockquote {
+            margin: 20px 0;
+            padding: 15px 20px;
+            background-color: #f1f3f5;
+            border-left: 5px solid #adb5bd;
+            border-radius: 4px;
+            color: #495057;
+            font-size: 16px;
+        }
+
+        .note {
+            margin-top: 32px;
+            padding: 20px;
+            background-color: #e9f5ff;
+            border-radius: 8px;
+            color: #0056b3;
+            font-size: 17px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .confirm-guide {
+            display: inline-block;
+            margin: 24px auto;
+            padding: 12px 32px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            text-align: center;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .confirm-guide:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .button-wrapper {
+            text-align: center;
             margin-top: 20px;
+        }
+
+        /* 페이드인 기본 스타일 */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px); /* 아래에서 올라오는 느낌 */
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        /* 화면에 나타날 때 적용될 클래스 */
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* 스크롤바 안 보이게 */
+        }
+
+        .scroll-container {
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh; /* 화면 전체 높이 */
+        }
+
+        .section {
+            scroll-snap-align: start;
+            height: 100vh; /* 화면 한 페이지 꽉 채우기 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            box-sizing: border-box;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h2>업사이클링 물품 기부 캠페인 작성 가이드</h2>
+    <div class="scroll-container">
+        <div class="section fade-in">
+            <div class="container">
+                <img src="/images/fix/logo.png" alt="UPDA Logo" class="header-logo-icon">
+                <h2>업사이클링 물품 기부 캠페인 작성 가이드</h2>
+                <!-- <div class="note">
+                    이 가이드를 참고하여 캠페인을 작성하면 참여자가 더 적극적이고 명확하게 참여할 수 있게 됩니다.
+                </div> -->
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="section fade-in">
+            <div class="container">
+                <h3>1. 캠페인 제목</h3>
+                <ul>
+                    <li>간결하면서도 캠페인의 핵심 내용을 잘 나타내는 제목을 작성해주세요.</li>
+                </ul>
 
-        <h3>1. 캠페인 제목</h3>
-        <ul>
-            <li>간결하면서도 캠페인의 핵심 내용을 잘 나타내는 제목을 작성해주세요.</li>
-        </ul>
+                <h3>2. 캠페인의 목적</h3>
+                <ul>
+                    <li>이 캠페인을 진행하는 목적과 업사이클링을 통해 기대하는 사회적, 환경적 효과를 명확히 설명해주세요.</li>
+                </ul>
+            </div>
+        </div>
 
-        <h3>2. 캠페인의 목적</h3>
-        <ul>
-            <li>이 캠페인을 진행하는 목적과 업사이클링을 통해 기대하는 사회적, 환경적 효과를 명확히 설명해주세요.</li>
-        </ul>
+        <div class="section fade-in">
+            <div class="container">
+                <h3>3. 필요 기부 물품 상세 안내</h3>
+                <ul>
+                    <li><strong>품목:</strong> 청바지, 플라스틱병, 원단 등 명확한 품목 기재</li>
+                    <li><strong>상태:</strong> <span class="highlight"> 사용감이 있어도 무방하지만 오염이나 훼손이 심하지 않은 상태</span></li>
+                    <li><strong>크기 및 규격:</strong> 최소 30cm 이상, 특정 브랜드나 모델 제한 여부 등</li>
+                    <li><strong>수량:</strong> 최소 필요 수량 및 최대 기부 가능 수량 명시</li>
+                    <li><strong><blockquote class="highlight">기부 불가 품목:</strong> 오염이 심한 제품, 특정 소재(예: 화학 처리된 원단 등)</blockquote></li>
+                </ul>
 
-        <h3>3. 필요 기부 물품 상세 안내</h3>
-        <ul>
-            <li><strong>품목:</strong> 청바지, 플라스틱병, 원단 등 명확한 품목 기재</li>
-            <li><strong>상태:</strong> 사용감이 있어도 무방하지만 오염이나 훼손이 심하지 않은 상태</li>
-            <li><strong>크기 및 규격:</strong> 최소 30cm 이상, 특정 브랜드나 모델 제한 여부 등</li>
-            <li><strong>수량:</strong> 최소 필요 수량 및 최대 기부 가능 수량 명시</li>
-            <li><strong>기부 불가 품목:</strong> 오염이 심한 제품, 특정 소재(예: 화학 처리된 원단 등)</li>
-        </ul>
+                <h3>4. 기부 방법 및 절차</h3>
+                <ul>
+                    <li>택배 발송 방법, 주소, 송장번호 입력 절차를 구체적으로 안내합니다.</li>
+                    <li class="highlight">택배 발송 시 유의사항(포장 방법 등)을 명시하여 제품 손상을 방지합니다.</li>
+                </ul>
+            </div>
+        </div>
 
-        <h3>4. 기부 방법 및 절차</h3>
-        <ul>
-            <li>택배 발송 방법, 주소, 송장번호 입력 절차를 구체적으로 안내합니다.</li>
-            <li>택배 발송 시 유의사항(포장 방법 등)을 명시하여 제품 손상을 방지합니다.</li>
-        </ul>
+        <div class="section fade-in">
+            <div class="container">
+                <h3>5. 리워드 상세 설명</h3>
+                <ul>
+                    <li>리워드의 종류, 수량, 제공 일정 및 방법 명시</li>
+                </ul>
 
-        <h3>5. 리워드 상세 설명</h3>
-        <ul>
-            <li>리워드의 종류, 수량, 제공 일정 및 방법 명시</li>
-        </ul>
+                <h3>6. 참여자 안내사항</h3>
+                <ul>
+                    <li>참여자가 유의해야 하는 사항 및 캠페인의 진행 일정(모집 기간, 제품 제작 기간, 리워드 발송 일정 등)</li>
+                </ul>
 
-        <h3>6. 참여자 안내사항</h3>
-        <ul>
-            <li>참여자가 유의해야 하는 사항 및 캠페인의 진행 일정(모집 기간, 제품 제작 기간, 리워드 발송 일정 등)</li>
-        </ul>
-
-        <div class="note">
-            이 가이드를 참고하여 캠페인을 작성하면 참여자가 더 적극적이고 명확하게 참여할 수 있게 됩니다.
+                <div class="note">
+                    이 가이드를 참고하여 캠페인을 작성하면 참여자가 더 적극적이고 명확하게 참여할 수 있게 됩니다.
+                </div>
+                <div></div>
+                <div class="button-wrapper">
+                    <button class="confirm-guide" onclick="location.href='/campaign/intro'">확인</button>
+                </div>
+            </div>
         </div>
     </div>
+    <script>
+        // 모든 fade-in 요소를 찾음
+        const fadeInElements = document.querySelectorAll('.fade-in');
+
+        // Intersection Observer로 화면 진입 감지
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        });
+
+        // 각 요소에 대해 Observer 설정
+        fadeInElements.forEach((el) => observer.observe(el));
+    
+        // // Intersection Observer로 화면 진입 감지
+        // const observer = new IntersectionObserver((entries) => {
+        //     entries.forEach((entry) => {
+        //         if (entry.isIntersecting) {
+        //             entry.target.classList.add('show');
+        //         } else {
+        //             // 화면에서 벗어나면 다시 숨기고 싶으면 아래 줄 주석 해제
+        //             // entry.target.classList.remove('show');
+        //         }
+        //     });
+        // });
+    
+        // // 각 요소에 대해 Observer 설정
+        // fadeInElements.forEach((el) => observer.observe(el));
+    </script>
 </body>
 </html>
