@@ -2,6 +2,10 @@ document.addEventListener('DOMContentLoaded', function () {
   // profile edit Btn
   const profileEditBtn = document.querySelector('.pro-edit-btn');
   const profileEditBtnCancle = document.querySelector('.pro-edit-btn-save');
+  const profileResetBtn = document.querySelector('.pro-edit-btn-reset');
+  
+  //default img Btn
+  const defaultImageBtn = document.querySelector('.default-img');
 
   // 원래 보이던 정보
   const profileImg = document.querySelector('.pro-img');
@@ -21,6 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
   profileEditBtn.addEventListener('click', () => {
     profileEditBtn.classList.add('hidden');
     profileEditBtnCancle.classList.remove('hidden');
+    profileResetBtn.classList.remove('hidden');
     profileImg.classList.add('hidden');
     profileName.classList.add('hidden');
     profileSh.classList.add('hidden');
@@ -31,23 +36,14 @@ document.addEventListener('DOMContentLoaded', function () {
     profileShClose.classList.remove('hidden');
     profilePhClose.classList.remove('hidden');
     profileAdClose.classList.remove('hidden');
+    defaultImageBtn.classList.add('hidden');
   });
-  // const addressInput = document.querySelector('.address');
-  // const addressDetailInput = document.querySelector('.address-detail');
-  // const totalAddress = document.querySelector('.total-add');
-  // addressDetailInput.addEventListener('input', addressAdd);
 
-  // function addressAdd() {
-  //   if ((addressInput.value = null)) {
-  //     totalAddress.value = addressDetailInput.value;
-  //   } else {
-  //     totalAddress.value = addressInput.value + addressDetailInput.value;
-  //   }
-  // }
 
   profileEditBtnCancle.addEventListener('click', () => {
     profileEditBtn.classList.remove('hidden');
     profileEditBtnCancle.classList.add('hidden');
+    profileResetBtn.classList.add('hidden');
     profileImg.classList.remove('hidden');
     profileName.classList.remove('hidden');
     profileSh.classList.remove('hidden');
@@ -58,13 +54,23 @@ document.addEventListener('DOMContentLoaded', function () {
     profileShClose.classList.add('hidden');
     profilePhClose.classList.add('hidden');
     profileAdClose.classList.add('hidden');
+    profileResetBtn.classList.add('hidden');
+    defaultImageBtn.classList.remove('hidden');
     addressAdd;
   });
+
+
+  
+
 
   //프로필 이미지 가져오기
   const profileImage = document.querySelector('.main-in-box-pro-le-in-img')
   let profileImageId = profileImage.getAttribute('src');
   console.log(profileImageId);
+
+  profileResetBtn.addEventListener('click', () => {
+    window.location.reload();
+  });
 
 
   function extractImageId(imageUrl) {
@@ -77,6 +83,19 @@ document.addEventListener('DOMContentLoaded', function () {
   //프로필 이미지 넣기
   const profileTarget = document.querySelector('#imageInputField-add');
   profileTarget.setAttribute('value', imageId);
+
+
+  defaultImageBtn.addEventListener('click', () => {
+    // hidden input의 값을 기본 이미지 URL로 변경
+    profileTarget.value = '/images/user/default_avatar.png';
+    // 미리보기 이미지 업데이트 (화면에 보이는 이미지)
+    const previewImg = document.querySelector('#previewImage img');
+    if (previewImg) {
+      previewImg.src = '/images/user/default_avatar.png';
+    }
+    console.log(profileTarget.value);
+  });
+
 
 
 
@@ -120,6 +139,7 @@ document.querySelector('.pro-edit-btn-save').addEventListener('click', () => {
   totalAddress.value =
     (addressInput.value || '') + '#' + (addressDetailInput.value || '');
     
+  
 });
 
 const imageInput = document.getElementById('ch-img-btn');
@@ -198,6 +218,10 @@ async function uploadImage() {
     console.error('Error:', error);
     throw error;
   }
+
+
+
+
 }
 
 
