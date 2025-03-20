@@ -271,7 +271,7 @@
                                                         </div>
                                                         
                                                         <!-- 제목 -->
-                                                        <a href="/" class="sup-content-main-box-in-content-title">
+                                                        <a th:href="@{/product/{productId}(productId=${productPayment.product.productId})}" class="sup-content-main-box-in-content-title">
                                                             <span th:text="${productPayment.product.item.name}"></span>
                                                             <span th:text="|${productPayment.stock} 개|"></span>
                                                         </a>

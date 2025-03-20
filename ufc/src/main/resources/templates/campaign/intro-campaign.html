@@ -62,9 +62,12 @@
                                         필요없는게 없는 UP-DA에서
                                     </p>
                                     <div class="main-intro-start-btn">
-                                        <button><a href="../creator/creator-create.html" th:href="@{/creator/create}">지금 시작하기</a></button>
+                                        <button class="btn-start"><a href="../creator/creator-create.html" th:href="@{/creator/create}">지금 시작하기</a></button>
                                         <!-- 필요하면 만들기 -->
-                                        <a href="/upcycling_campaign_guide.html">창작자 가이드</a>
+                                        <button class="btn-guide">
+
+                                            <a href="/upcycling_campaign_guide.html">창작자 가이드</a>
+                                        </button>
                                     </div>
                                 </div>
                                 <!-- 이미지 슬라이드 힘들면 빼기 -->
@@ -77,7 +80,6 @@
                                             >
                                                 <!-- 각각이 들어감 -->
                                                 <div
-                                                    th:each="num : ${#numbers.sequence(1,5)}"
                                                     class="main-intro-sl-box-in-box-pe"
                                                 >
                                                     <a
@@ -110,6 +112,159 @@
                                                         </p>
                                                         <p
                                                             class="main-intro-sl-box-in-box-pe-a-per"
+                                                        >
+                                                            1919% 달성!
+                                                        </p>
+                                                    </a>
+                                                </div>
+<!--                                                2-->
+                                                <div
+                                                        class="main-intro-sl-box-in-box-pe"
+                                                >
+                                                    <a
+                                                            href="/"
+                                                            class="main-intro-sl-box-in-box-pe-a"
+                                                    >
+                                                        <div
+                                                                class="main-intro-sl-box-in-box-pe-a-img"
+                                                        >
+                                                            <img
+                                                                    src="https://d1ohqa58xvigdz.cloudfront.net/start/project5.jpg"
+                                                                    alt=""
+                                                            />
+                                                        </div>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-tag"
+                                                        >
+                                                            마법
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-title"
+                                                        >
+                                                            마법사는 마법마법
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-content"
+                                                        >
+                                                            인기 이모티콘을 넘어
+                                                            게임까지
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-per"
+                                                        >
+                                                            191% 달성!
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <div
+                                                        class="main-intro-sl-box-in-box-pe"
+                                                >
+                                                    <a
+                                                            href="/"
+                                                            class="main-intro-sl-box-in-box-pe-a"
+                                                    >
+                                                        <div
+                                                                class="main-intro-sl-box-in-box-pe-a-img"
+                                                        >
+                                                            <img
+                                                                    src="https://d1ohqa58xvigdz.cloudfront.net/start/project8.jpg"
+                                                                    alt=""
+                                                            />
+                                                        </div>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-tag"
+                                                        >
+                                                            강아지
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-title"
+                                                        >
+                                                            강아지는 멍멍
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-content"
+                                                        >
+                                                            인기 이모티콘을 넘어
+                                                            게임까지
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-per"
+                                                        >
+                                                            1919% 달성!
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <div
+                                                        class="main-intro-sl-box-in-box-pe"
+                                                >
+                                                    <a
+                                                            href="/"
+                                                            class="main-intro-sl-box-in-box-pe-a"
+                                                    >
+                                                        <div
+                                                                class="main-intro-sl-box-in-box-pe-a-img"
+                                                        >
+                                                            <img
+                                                                    src="https://d1ohqa58xvigdz.cloudfront.net/start/project9.jpg"
+                                                                    alt=""
+                                                            />
+                                                        </div>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-tag"
+                                                        >
+                                                            젤리
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-title"
+                                                        >
+                                                            젤리는 젤리젤리
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-content"
+                                                        >
+                                                            인기 이모티콘을 넘어
+                                                            게임까지
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-per"
+                                                        >
+                                                            1919% 달성!
+                                                        </p>
+                                                    </a>
+                                                </div>
+                                                <div
+                                                        class="main-intro-sl-box-in-box-pe"
+                                                >
+                                                    <a
+                                                            href="/"
+                                                            class="main-intro-sl-box-in-box-pe-a"
+                                                    >
+                                                        <div
+                                                                class="main-intro-sl-box-in-box-pe-a-img"
+                                                        >
+                                                            <img
+                                                                    src="https://d1ohqa58xvigdz.cloudfront.net/start/project11.jpg"
+                                                                    alt=""
+                                                            />
+                                                        </div>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-tag"
+                                                        >
+                                                            퍼류퓸
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-title"
+                                                        >
+                                                            향수는 향수향수
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-content"
+                                                        >
+                                                            인기 이모티콘을 넘어
+                                                            게임까지
+                                                        </p>
+                                                        <p
+                                                                class="main-intro-sl-box-in-box-pe-a-per"
                                                         >
                                                             1919% 달성!
                                                         </p>

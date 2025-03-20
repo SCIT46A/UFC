@@ -20,8 +20,8 @@ import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.SearchResultDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.campaign.CampaignDTO;
 import app.scit46.ufc.dto.custom.CreatorCreateDTO;
-import app.scit46.ufc.entity.UserEntity;
 import app.scit46.ufc.exception.DBNotFoundException;
 import app.scit46.ufc.service.CreatorService;
 import app.scit46.ufc.service.SearchService;
@@ -106,23 +106,32 @@ public class CreatorController {
     /** 🔹 [GET] 특정 창작가 정보 불러오기 */
     @GetMapping("/campaign")
     public String getCreatorCampaignPage(Model model, HttpServletRequest request) {
-        String OAuthId = request.getUserPrincipal().getName(); // 현재 로그인한 사용자 ID 가져오기
-        CreatorDTO creator = creatorService.findCreatorByUser(OAuthId); // DB에서 창작가 정보 가져오기
-
+        // 현재 로그인한 사용자 ID 가져오기
+        String oAuthId = request.getUserPrincipal().getName();
+        
+        // DB에서 창작가 정보 가져오기
+        CreatorDTO creator = creatorService.findCreatorByUser(oAuthId);
         if (creator == null) {
             model.addAttribute("errorMessage", "창작가 정보를 찾을 수 없습니다.");
             return "error"; // 오류 페이지로 이동
         }
-
-        // ✅ `imageId`를 `URL`로 변환하여 모델에 추가
+        
+        // 해당 창작가의 캠페인 목록 가져오기
+        List<CampaignDTO> campaigns = campaignService.getCampaignsByCampaignId(creator.getCreatorId());
+        
+        
+        // 이미지 URL 변환 후 모델에 추가
         model.addAttribute("creator", creator);
-        model.addAttribute("profileImgUrl", imageService.getImageUrl(creator.getProImgUrl().getImageId())); // ✅ 변환된 URL
-                                                                                                            // 사용
-        model.addAttribute("backImgUrl", imageService.getImageUrl(creator.getBackImgUrl().getImageId())); // ✅ 변환된 URL
-                                                                                                          // 사용
-
+        model.addAttribute("profileImgUrl", imageService.getImageUrl(creator.getProImgUrl().getImageId()));
+        model.addAttribute("backImgUrl", imageService.getImageUrl(creator.getBackImgUrl().getImageId()));
+        
+        // 캠페인 개수 추가 (리스트 크기는 size() 메서드로 구합니다)
+        model.addAttribute("campaignCount", campaigns.size());
+        model.addAttribute("campaigns", campaigns);
+        
         return "creator/creator-campaign"; // 창작가 캠페인 페이지로 이동
     }
+
 
     /** 🔹 [GET] 창작가 수정 페이지 */
     @GetMapping("/edit")
