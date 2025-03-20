@@ -945,7 +945,8 @@ main {
 }
 
 .image-container img{
-    width: 100%;
+    width: 584px;
+    height: 325px;
     display: block;
 }
 
