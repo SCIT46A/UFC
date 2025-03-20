@@ -296,6 +296,10 @@ main{
     font-weight: normal;
     line-height: 150%;
     color: rgb(109, 109, 109);
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
 }
 
 .main-bo-in-bo-pe-box-a-title-bo{
@@ -311,6 +315,7 @@ main{
 
 .main-funding{
     width: 100%;
+    margin-top: 10px;
 }
 
 .main-funding-top{

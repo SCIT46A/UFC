@@ -305,7 +305,7 @@ $(document).ready(function () {
                 $(".top-information-main-text").html(chatUserName);
                 console.log("기존 메시지:", response);
                 if(response.length === 0){
-                    $(".message-list").html(`<div>아직 메시지가 없습니다.</div>`);
+                    $(".message-list").html(`<div class="chat-center-target-add">아직 메시지가 없습니다.</div>`);
                 } else {
                     let allMessagesHtml = "";
                     response.forEach((msg) => {

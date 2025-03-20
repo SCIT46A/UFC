@@ -196,7 +196,7 @@ $(document).ready(function () {
             success: function (response) {
                 $(".content-box-in").html(`
                     <p style="color: gray">
-                      ※ 게시글을 작성하셔야 관리자에게 캠페인을 승인받을 수 있습니다.
+                      ※ 게시글을 작성하셔야 관리자에게 상품을 승인받을 수 있습니다.
                     </p>
                     <div id="summernote-container">
                         <textarea id="summernote-editor"></textarea>
@@ -749,7 +749,7 @@ $(document).ready(function () {
                                         </div>
                                     </div>
                                     <div class="main-resent-per">
-                                        ${data.donationPercentage}% 달성!
+                                       ${parseFloat(data.donationPercentage).toFixed(2)}% 달성!
                                     </div>
                                     <div class="main-resent-tag">
                                         <div class="main-resent-tag-in">
