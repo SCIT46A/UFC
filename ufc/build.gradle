@@ -38,8 +38,17 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-api
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.0'
-  // 검색창 COS 유사도 계산 라이브러리
+  	// 검색창 COS 유사도 계산 라이브러리
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	implementation 'org.hibernate.validator:hibernate-validator:8.0.1.Final'
+    implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
+//	결제를 위한 부트페이
+	implementation 'io.github.bootpay:backend:+'
+
+//  채팅을 위한 웹소켓
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
 }
 
 tasks.named('test') {

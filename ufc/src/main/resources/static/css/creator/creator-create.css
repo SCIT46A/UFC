@@ -361,7 +361,7 @@ button, input, optgroup, select, textarea {
     letter-spacing: -1px;
     font-size: 1.25rem;
     line-height: 1.75rem;
-    width: 250px;
+    width: 400px;
 }
 
 .name-form-text-content {
@@ -975,6 +975,7 @@ input::placeholder {
 
 .cover-delete-hover {
     display: none;
+    background-color: gray;
 }
 
 .profile-delete-wrap {
@@ -993,6 +994,7 @@ input::placeholder {
 
 .profile-delete-hover {
     display: none;
+    background-color: gray;
 }
 
 

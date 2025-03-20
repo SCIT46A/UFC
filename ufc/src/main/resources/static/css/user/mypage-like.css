@@ -85,6 +85,13 @@ main {
   gap: 4px;
 }
 
+.container{
+  max-width: 1200px !important;
+  padding: 0px 15px !important;
+  width: 100% !important;
+  margin: 0px auto !important;
+}
+
 .main-in-box-pro-le-in-box-title {
   display: flex;
   -webkit-box-align: center;
@@ -198,8 +205,8 @@ main {
   position: absolute;
   background: rgb(248, 100, 83);
   bottom: -1px;
-  width: 148px;
-  left: 369px;
+  width: 60px;
+  left: 365px;
   transition: left 0.15s ease-out, width 0.09s ease-out;
 }
 
@@ -255,7 +262,6 @@ main {
 
 .like-top {
   width: 1200px;
-  margin: 0px 18px;
   padding-left: 0px;
   padding-right: 0px;
   display: flex;
@@ -417,21 +423,26 @@ main {
   padding: 0px;
 }
 
-.like-bo-box {
+.like-bo-box-campaign {
   color: rgb(51, 51, 51);
 }
 
-/* .like-bo-box-in{
-    -webkit-box-pack: start;
-    justify-content: flex-start;
-    margin: 0px -10px;
-    padding: 0px;
-    width: auto;
-    display: flex;
-    flex-wrap: wrap;
-} */
+.like-bo-box-creator {
+  color: rgb(51, 51, 51);
+}
 
-.like-bo-box-in {
+
+.like-bo-box-in-campaign {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 0 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin-bottom: 20px;
+}
+
+.like-bo-box-in-campaign {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
@@ -439,6 +450,12 @@ main {
   width: 100%;
   max-width: 1200px;
 }
+
+.hidden {
+  display: none;
+}
+
+
 
 .like-bo-box-in-pe {
   width: 100%;
@@ -453,7 +470,6 @@ main {
 
   .like-top {
     width: 100%;
-    padding: 14px 20px 24px;
   }
 }
 
@@ -529,8 +545,8 @@ main {
 }
 
 .like-bo-box-in-pe-in-a-img {
-  width: 100%;
-  height: 100%;
+  width: 363.84px;
+  height: 363.84px;
   flex: 0 0 auto;
   aspect-ratio: 1 / 1;
   position: relative;
@@ -654,7 +670,7 @@ main {
 }
 
 .like-bo-box-in-pe-in-a-content-per-top-le {
-  color: rgb(235, 75, 56);
+  color: #16a34a;
   font-size: 14px;
   font-weight: bold;
   line-height: 120%;
@@ -671,7 +687,7 @@ main {
 .like-bo-box-in-pe-in-a-content-per-bo {
   width: 100%;
   height: 3px;
-  margin: 4px 0px 0px;
+  margin: 4px 0 0;
   overflow: hidden;
   background: rgb(158, 158, 158);
   position: relative;
@@ -679,11 +695,12 @@ main {
 
 .like-bo-box-in-pe-in-a-content-per-bo::after {
   content: '';
-  width: 20%;
   display: block;
   height: 100%;
-  background: rgb(235, 75, 56);
+  width: var(--achievement, 0%);
+  background: #16a34a;
 }
+
 
 .choice {
   font-size: 14px;
@@ -771,4 +788,146 @@ main {
   cursor: pointer;
   padding: 0px 16px 0px 12px;
   min-width: 130px;
+}
+
+
+.like-top-creator, .like-top-campaign {
+  white-space: nowrap;
+  font-weight: 400;
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  background: transparent;
+  margin-right: 15px;
+
+}
+
+.like-top-campaign {
+  margin-right: 15px;
+}
+
+.like-top-creator:hover, .like-top-campaign:hover {
+  color: rgb(22, 163, 74);
+}
+
+
+.like-top-creator:active, .like-top-campaign:active {
+  color: rgb(22, 163, 74);
+  
+}
+
+
+
+.like-bo-box-in-creator {
+  padding: 20px;
+}
+
+.creator-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.creator-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s;
+}
+
+ 
+.creator-item:hover {
+  transform: translateY(-5px);
+}
+
+.creator-image {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 10px;
+}
+
+.creator-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.creator-info h3 {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.creator-info p {
+  font-size: 14px;
+  color: #666;
+}
+
+.like-btn-path {
+  cursor: pointer;
+  
+}
+
+ .main-like-btn-path {
+    background-color: lightgray;
+}
+
+ .main-like-btn-path.liked {
+    background-color: hotpink;
+}
+
+.main-like-btn-path:hover {
+  cursor: pointer;
+}
+
+.main-like-btn-path.liked:hover {
+  cursor: pointer;
+}
+
+
+.current-like{
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.goal-item {
+  margin-bottom: 12px; /* 목표 항목 사이 간격 */
+}
+
+.quantity{
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 120%;
+  color: rgb(84, 84, 84);
+}
+.goal-percentage {
+  font-size: 14px;
+  margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.percentage{
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 120%;
+}
+
+.enddate{
+  font-size: 11px;
+  line-height: 21px;
+  font-style: normal;
+  font-weight: 700;
+  color: rgb(84, 84, 84);
+}
+
+.goal-info {
+  font-size: 13px;
+  color: #555;
+  margin-top: 4px;
 }

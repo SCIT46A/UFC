@@ -1,5 +1,9 @@
 package app.scit46.ufc.dto.product;
 
+import java.time.LocalDateTime;
+
+import app.scit46.ufc.dto.CreatorDTO;
+import app.scit46.ufc.dto.ItemDTO;
 import app.scit46.ufc.entity.product.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,16 +20,23 @@ import lombok.ToString;
 @Builder
 public class ProductDTO {
     private Long productId;
-    private Long itemId;
+    private ItemDTO item; // ✅ ItemDTO 포함
     private Integer stockQuantity;
-    private Long createdById;
+    private CreatorDTO createdBy; // ✅ CreatorDTO 포함
+    private String content;
+    private Integer price;
+    private int status;
+    private LocalDateTime createTime;
 
     public static ProductDTO toDTO(ProductEntity entity) {
         return ProductDTO.builder()
                 .productId(entity.getProductId())
-                .itemId(entity.getItem() != null ? entity.getItem().getItemId() : null)
+                .item(entity.getItem() != null ? ItemDTO.toDTO(entity.getItem()) : null) // ✅ ItemDTO 변환
+                .price(entity.getPrice())
+                .content(entity.getContent())
+                .status(entity.getStatus())
                 .stockQuantity(entity.getStockQuantity())
-                .createdById(entity.getCreatedBy() != null ? entity.getCreatedBy().getCreatorId() : null)
+                .createdBy(entity.getCreatedBy() != null ? CreatorDTO.toDTO(entity.getCreatedBy()) : null) // ✅ CreatorDTO 변환
                 .build();
     }
 }

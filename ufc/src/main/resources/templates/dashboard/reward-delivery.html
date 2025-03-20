@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <!-- ✅ th:fragment 추가 -->
+    <div th:fragment="reward-delivery">
+        <div class="content-wrapper">
+            <!-- Delivery Tracking Status -->
+            <section class="card-container">
+                <div class="tracking-grid">
+                    <!-- 신규주문/발주 -->
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper green">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="8" x2="8" y2="8"></line>
+                                    <line x1="16" y1="12" x2="8" y2="12"></line>
+                                    <line x1="16" y1="16" x2="8" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>신규 주문</span>
+                        </div>
+                        <div class="count" id="newOrdersCount">0<span>건</span></div>
+                    </div>
+
+                    <!-- ✅ 배송 준비 완료 -->
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper blue">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                            </div>
+                            <span>배송 준비 완료</span>
+                        </div>
+                        <div class="count" id="readyToShipCount">0<span>건</span></div>
+                    </div>
+
+
+
+
+                    <!-- ✅ 발송마감 D-day -->
+                    <div class="tracking-card orange">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <span>발송마감 D-day</span>
+                        </div>
+                        <div class="count" id="shipmentDdayCount">0<span>건</span></div>
+                    </div>
+
+                    <!-- ✅ 배송 중 -->
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <rect x="1" y="3" width="15" height="13"></rect>
+                                    <polygon points="16 8 20 8 23 11 23 16 16 16"></polygon>
+                                    <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                    <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                                </svg>
+                            </div>
+                            <span>배송 중</span>
+                        </div>
+                        <div class="count" id="shipmentD1Count">0<span>건</span></div>
+                    </div>
+
+                    <!-- ✅ 배송 완료 카드 -->
+                    <div class="tracking-card">
+                        <div class="card-content">
+                            <div class="icon-wrapper">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <polyline points="9 11 12 14 22 4"></polyline>
+                                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                                </svg>
+                            </div>
+                            <span>배송 완료</span>
+                        </div>
+                        <div class="count" id="shippedCount">0<span>건</span></div>
+                    </div>
+
+                    <!-- ✅ 발송기한 초과 -->
+                    <div class="tracking-card orange">
+                        <div class="card-content">
+                            <div class="icon-wrapper gray">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="8" x2="12" y2="12"></line>
+                                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                                </svg>
+                            </div>
+                            <span>발송기한 초과</span>
+                        </div>
+                        <div class="count" id="overdueCount">0<span>건</span></div>
+                    </div>
+
+                </div>
+
+
+            </section>
+
+            <!-- Batch Actions -->
+            <div class="batch-actions">
+                <div class="batch-actions">
+                    <button class="btn btn-secondary" onclick="downloadOrderExcel()">주문 내역 다운로드</button>
+                    <button class="btn btn-warning" onclick="openBatchInvoiceModal()">송장번호 일괄등록</button>
+                </div>
+
+            </div>
+
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-row">
+                    <label>캠페인 제목/기부자</label>
+                    <input type="text" class="search-input" id="searchKeyword" placeholder="캠페인제목/기부자를입력하세요">
+                </div>
+                <div class="search-row">
+                    <label>기간</label>
+                    <div class="date-range">
+                        <input type="date" class="search-input">
+                        <span>~</span>
+                        <input type="date" class="search-input">
+                        <div class="period-buttons">
+                            <button class="active"> 오늘</button>
+                            <button>1주일</button>
+                            <button>1개월</button>
+                            <button>3개월</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="search-actions">
+                    <button class="btn btn-primary">검색</button>
+                    <button class="btn btn-secondary">초기화</button>
+                </div>
+        </div>
+        </section>
+
+        <!-- Invoice Table Section -->
+        <section class="invoice-section">
+            <div class="table-header">
+                <div class="left-section">
+                    <span>목록 (총 1개)</span>
+                    <select>
+                        <!-- <option>최근 기부순</option>
+                        <option>오래된 기부순</option> -->
+                        <option>캠페인명 오름차순</option>
+                        <option>캠페인명 내림차순</option>
+                        <option>발송마감일순</option>
+                    </select>
+                    <!-- <select>
+                        <option>100개씩 보기</option>
+                    </select> -->
+                </div>
+                <!-- <button class="btn-secondary">조회항목 설정</button> -->
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                <input type="checkbox" id="selectAll" />
+                            </th>
+                            <th>캠페인 제목</th>
+                            <th>기부번호</th>
+                            <th>기부자명</th>
+                            <th>기부자연락처</th>
+                            <th>기부자주소</th>
+                            <th>리워드 내역</th>
+                            <th>발송마감일</th>
+                            <th>택배사</th>
+                            <th>송장번호</th>
+                            <th>발송처리</th>
+                            <th>배송상태</th>
+                        </tr>
+                    </thead>
+                    <tbody id="delivery-table-body">
+                        <!-- JS에서 동적으로 데이터 삽입 -->
+                    </tbody>
+
+                </table>
+            </div>
+            <div class="table-footer">
+                <p>• 배송정보(배송방법/택배사/송장번호)가 등록된 주문 건의 경우 한 번에 정보를 일괄적용 수 있습니다.</p>
+                <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
+                <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
+            </div>
+        </section>
+        <!-- Batch Invoice Modal -->
+        <div id="batchInvoiceModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>송장번호 일괄등록</h3>
+                    <button class="btn" onclick="closeBatchInvoiceModal()">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="search-row">
+                        <label>엑셀 업로드</label>
+                        <input type="file" id="invoiceExcelUpload" accept=".xlsx">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="uploadInvoiceExcel()">업로드</button>
+                    <button class="btn" onclick="closeBatchInvoiceModal()">취소</button>
+                </div>
+            </div>
+        </div>
+        <script th:src="@{/js/dashboard/reward-delivery.js}" async></script>
+</body>
+
+</html>

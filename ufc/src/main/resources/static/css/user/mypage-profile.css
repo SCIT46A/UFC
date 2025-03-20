@@ -15,6 +15,10 @@ body {
   box-sizing: inherit;
 }
 
+.hidden{
+  display: none;
+}
+
 main {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -75,6 +79,13 @@ main {
   height: 120px;
   border-radius: 50%;
   border: 0;
+}
+
+.container{
+  max-width: 1200px !important;
+  padding: 0px 15px !important;
+  width: 100% !important;
+  margin: 0px auto !important;
 }
 
 .main-in-box-pro-le-in-box {
@@ -169,7 +180,7 @@ main {
   background-color: white;
   border: 1px solid rgb(235, 75, 56);
   color: rgb(235, 75, 56);
-  -webkit-appearance: button;
+  appearance: button;
   cursor: pointer;
   text-transform: none;
   overflow: visible;
@@ -235,35 +246,7 @@ main {
   background: transparent;
 }
 
-/* 주소 입력 관련 스타일 */
-/* .input {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(0.625rem * (1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(0.625rem * var(--tw-space-y-reverse));
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  --tw-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
-  line-height: 1;
-  font-size: 0.9375rem;
-  padding-top: 0.875rem;
-  padding-bottom: 0.875rem;
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-  border-radius: 0.375rem;
-  width: 100%;
-  display: block;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter,
-    backdrop-filter, -webkit-backdrop-filter;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 0.15s;
-  appearance: none;
-  border-color: rgba(0, 0, 0, 0.1);
-  border-width: 1px;
-} */
+
 
 .input:active {
   opacity: 0.8;
@@ -352,7 +335,7 @@ main {
   display: flex;
   margin: 0px 0px 12px;
   color: rgba(175, 175, 175, 0.8);
-  text-decoration: underline;
+  /* text-decoration: underline; */
   align-items: center;
   justify-content: center;
 }
@@ -399,7 +382,7 @@ main {
   color: rgb(61, 61, 61);
   font-size: 12px !important;
   line-height: 20px !important;
-  -webkit-appearance: button;
+  appearance: button;
   cursor: pointer;
   text-transform: none;
 }
@@ -427,8 +410,6 @@ main {
   height: 100%;
   position: relative;
   z-index: 2;
-  background: url(https://assets.tumblbug.com/profile/default_avatar.png) 50%
-    37% / cover no-repeat;
 }
 
 .ch-img {
@@ -458,8 +439,7 @@ main {
   height: 100%;
   position: relative;
   z-index: 2;
-  background: url(https://assets.tumblbug.com/profile/default_avatar.png) 50%
-    37% / cover no-repeat;
+
 }
 
 .ch-img-text {
@@ -502,24 +482,7 @@ main {
   margin: 0;
 } */
 
-.ch-img-text-in span label {
-  cursor: pointer;
-  display: inline-flex;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  justify-content: center;
-  height: 32px;
-  border-radius: 4px;
-  margin: 0px;
-  outline: none;
-  font-weight: normal;
-  box-sizing: border-box;
-  padding: 0px 12px;
-  border: 1px solid black;
-  background-color: rgb(22, 163, 74);
-  color: rgb(255, 255, 255);
-}
+
 
 .name-content {
   margin-top: 10px;
@@ -603,15 +566,15 @@ main {
   padding: 0px 16px;
   background-color: rgb(61, 61, 61);
   color: white;
-  -webkit-appearance: button;
+  appearance: button;
 }
 
 .name-in {
   width: 328px;
 }
 
-.name-in-span {
-  /* border: 1px solid rgb(228, 228, 228);
+/*.name-in-span {
+   border: 1px solid rgb(228, 228, 228);
   color: rgb(13, 13, 13);
   background: white;
   padding: 0px 12px;
@@ -623,8 +586,8 @@ main {
   letter-spacing: -0.015em;
   -webkit-box-align: center;
   align-items: center;
-  border-radius: 1px; */
-}
+  border-radius: 1px; 
+}*/
 
 /* .name-in-span input {
   width: 100%;
@@ -667,7 +630,7 @@ main {
   padding: 0px 16px;
   background-color: rgb(61, 61, 61);
   color: white;
-  -webkit-appearance: button;
+  appearance: button;
 }
 
 
@@ -677,8 +640,8 @@ main {
   box-sizing: border-box;
   border: 1px solid rgb(228, 228, 228);
   border-radius: 1px;
-  /* padding: 12px; */
-} */
+  padding: 12px; 
+}*/
 
 .edit-ri {
   margin: 0px;
@@ -715,4 +678,125 @@ main {
   color: rgb(55, 165, 247);
   text-decoration: underline;
   background: transparent;
+}
+
+/* 공통 버튼 스타일 */
+input[type="submit"],
+input[type="button"] {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* 저장 버튼 스타일 */
+.pro-edit-btn-save {
+  background-color: #16A34A; /* 초록색 배경 */
+  color: #fff;
+  margin-right: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pro-edit-btn-save:hover {
+  background-color: #16A34A;
+  transform: translateY(-2px);
+}
+
+/* 취소 버튼 스타일 */
+.pro-edit-btn-reset {
+  background-color: #f44336; /* 빨간색 배경 */
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.pro-edit-btn-reset:hover {
+  background-color: #e53935;
+  transform: translateY(-2px);
+}
+
+/* 숨김 클래스 (필요시) */
+.hidden {
+  display: none;
+}
+
+
+/* 공통 라벨 스타일 */
+.ch-img-btn-label {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  height: 32px;
+  border-radius: 4px;
+  margin: 0px;
+  outline: none;
+  font-weight: normal;
+  box-sizing: border-box;
+  padding: 0px 12px;
+  background-color: rgb(22, 163, 74);
+  color: rgb(255, 255, 255);
+}
+
+.ch-nomal-btn-label{
+  background-color: #f44336; /* 빨간색 배경 */
+  color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 10px;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  text-align: center;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+    cursor: pointer;
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  height: 32px;
+  border-radius: 4px;
+  margin: 0px;
+  outline: none;
+  font-weight: normal;
+  box-sizing: border-box;
+  padding: 0px 12px;
+  background-color: rgb(22, 163, 74);
+  color: rgb(255, 255, 255);
+}
+
+/* 파일 업로드 라벨 (초록색) */
+.ch-img-btn-label[for="ch-img-btn"] {
+  background-color:#16A34A;
+  color: #fff;
+}
+
+.ch-img-btn-label[for="ch-img-btn"]:hover {
+  background-color: #16A34A;
+  transform: translateY(-2px);
+}
+
+/* 기본 이미지 라벨 (베이지톤) */
+.ch-img-btn-label[for="default-img"] {
+  color: #fff;
+}
+
+.ch-img-btn-label[for="default-img"]:hover {
+  transform: translateY(-2px);
 }

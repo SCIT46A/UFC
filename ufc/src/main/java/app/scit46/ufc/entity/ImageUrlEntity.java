@@ -36,11 +36,11 @@ public class ImageUrlEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "photo_id")
     private Long id;
 
     @Column(name = "image_id", nullable = false, unique = true, length = 32)
-    private String imageId; //uuid
+    private String imageId; // uuid
 
     @Column(name = "filename", nullable = false, unique = true, length = 255)
     private String filename;
@@ -48,7 +48,7 @@ public class ImageUrlEntity {
     @Column(name = "uploaded_at", nullable = false)
     @CreationTimestamp
     private LocalDateTime uploadedAt;
-    
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploaded_by", nullable = false)
     private UserEntity uploadedBy;
@@ -66,11 +66,14 @@ public class ImageUrlEntity {
     private List<CampaignEntity> campaigns;
 
     public static ImageUrlEntity toEntity(ImageUrlDTO dto) {
+        if (dto == null || dto.getImageId() == null) { // ✅ `null` 체크 추가
+            return null;
+        }
         return builder()
-                //.id(dto.getId())  // 기본값 자동 생성이므로 주석처리
+                // .id(dto.getId()) // 기본값 자동 생성이므로 주석처리
                 .imageId(dto.getImageId())
                 .filename(dto.getFilename())
-                //.uploadedAt(dto.getUploadedAt()) // 기본값 설정
+                // .uploadedAt(dto.getUploadedAt()) // 기본값 설정
                 .uploadedBy(UserEntity.builder().userId(dto.getUploadedBy()).build()) // userId만 담고 있는 Entity로 변환
                 .build();
     }

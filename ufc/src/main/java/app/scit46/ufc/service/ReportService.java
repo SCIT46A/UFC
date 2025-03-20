@@ -126,26 +126,26 @@ public class ReportService {
         }
 
         // ✅ 유저 정지 해제 기능 (매분 실행 테스트)
-        @Scheduled(fixedRate = 60000) // 1분마다 실행
-        @Transactional
-        public void unbanExpiredUsers() {
-            System.out.println("🕒 정지 해제 체크 실행됨: " + LocalDateTime.now()); // ✅ 실행 로그 추가
-
-            List<UserEntity> bannedUsers = userRepository.findAllByUserStatus(0); // ✅ 정지된 유저 찾기
-
-            for (UserEntity user : bannedUsers) {
-                if (user.getUpdatedAt() != null && !user.getUpdatedAt().isAfter(LocalDateTime.now())) {
-                    user.setUserStatus(1);  // ✅ 정지 해제
-                    user.setUpdatedAt(null); // ✅ 정지 해제 날짜 초기화
-                    user.setStatusReason(null); // ✅ 신고 사유 초기화
-
-                    userRepository.save(user); // ✅ 변경 사항 저장
-
-                    // ✅ 로그 추가 (정지 해제된 유저 확인)
-                    System.out.println("✅ 유저 정지 해제됨 - User ID: " + user.getUserId());
-                }
-            }
-        }
+//        @Scheduled(fixedRate = 60000) // 1분마다 실행
+//        @Transactional
+//        public void unbanExpiredUsers() {
+//            System.out.println("🕒 정지 해제 체크 실행됨: " + LocalDateTime.now()); // ✅ 실행 로그 추가
+//
+//            List<UserEntity> bannedUsers = userRepository.findAllByUserStatus(0); // ✅ 정지된 유저 찾기
+//
+//            for (UserEntity user : bannedUsers) {
+//                if (user.getUpdatedAt() != null && !user.getUpdatedAt().isAfter(LocalDateTime.now())) {
+//                    user.setUserStatus(1);  // ✅ 정지 해제
+//                    user.setUpdatedAt(null); // ✅ 정지 해제 날짜 초기화
+//                    user.setStatusReason(null); // ✅ 신고 사유 초기화
+//
+//                    userRepository.save(user); // ✅ 변경 사항 저장
+//
+//                    // ✅ 로그 추가 (정지 해제된 유저 확인)
+//                    System.out.println("✅ 유저 정지 해제됨 - User ID: " + user.getUserId());
+//                }
+//            }
+//        }
     }
 
 

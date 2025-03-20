@@ -80,12 +80,12 @@ $(function () {
                 if (response.length > 0) {
                     response.forEach((data) => {
                             htmlResult += `
-                                <div class="main-bo-in-bo-pe">
+                                <div class="main-bo-in-bo-pe" data-id="${data.originalId}" data-type="${data.type}">
                                     <div class="main-bo-in-bo-pe-box">
-                                        <a href="/campaign/detail/${data.originalId}" class="main-bo-in-bo-pe-box-a">
+                                        <a href="/campaign/${data.originalId}" class="main-bo-in-bo-pe-box-a">
                                             <div class="main-bo-in-bo-pe-box-a-img">
-                                                <img src="/images/fix/logo.png" alt="" class="main-bo-in-bo-pe-box-a-img-size" />
-                                                <div class="main-like-btn">
+                                                <img alt="" src="/api/image/${data.imageId}" class="main-bo-in-bo-pe-box-a-img-size" />
+                                                <div class="main-like-btn ${data.isLiked ? 'liked' : ''}">
                                                     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path
                                                             d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"
@@ -107,7 +107,7 @@ $(function () {
                                                 <div class="main-funding">
                                                     <div class="main-funding-top">
                                                         <div>
-                                                            <span class="main-funding-top-per">${data.donationPercentage}%</span>
+                                                            <span class="main-funding-top-per">${parseFloat(data.donationPercentage).toFixed(2)}%</span>
                                                             <span class="main-funding-top-pri">${data.donatedQuantity}개 모임</span>
                                                         </div>
                                                         <em>${data.remainingDays}일 남음</em>
@@ -133,10 +133,78 @@ $(function () {
                     const percentage = $(this).data("percentage");
                     $(this).find(".progress-bar").css("width", percentage + "%");
                 });
+                $mainBoInBo.find("img.main-bo-in-bo-pe-box-a-img-size").each(function() {
+                    const $img = $(this);
+                    const endpoint = $img.attr("src"); // /api/image/{imageId} 엔드포인트
+                    $.ajax({
+                        url: endpoint,
+                        method: "GET",
+                        success: function(resultUrl) {
+                            if(resultUrl) {
+                                $img.attr("src", resultUrl);
+                            }
+                        },
+                        error: function(err) {
+                            console.error("이미지 URL 요청 오류:", err);
+                        }
+                    });
+                });
             },
             error: (xhr, status, error) => {
                 console.error("검색 오류:", error);
             },
+        });
+        $(document).ready(function() {
+            // 좋아요 버튼 클릭 이벤트 - 문서 로드 시 단 한 번 바인딩
+            $(document).on("click", ".main-like-btn", function (event) {
+                event.preventDefault();  // a태그 등 기본 동작 막기
+                event.stopPropagation(); // 부모로의 이벤트 전파 차단
+
+                var $likeBtn = $(this);
+                // AJAX 진행 중이면 중복 클릭 방지
+                if ($likeBtn.data("ajaxInProgress")) {
+                    return;
+                }
+                $likeBtn.data("ajaxInProgress", true);
+
+                // 현재 좋아요 상태 (클릭 전 상태)
+                var currentState = $likeBtn.hasClass("liked");
+                // 부모 요소에 data-id와 data-type이 반드시 있어야 합니다.
+                var $parentItem = $likeBtn.closest(".main-bo-in-bo-pe");
+                var itemId = $parentItem.data("id");
+                var itemType = $parentItem.data("type");
+
+
+
+                $.ajax({
+                    url: "/api/like/toggle",  // 서버의 좋아요 토글 엔드포인트
+                    method: "POST",
+                    data: {
+                        itemId: itemId,
+                        type: itemType,
+                        currentState: currentState
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            // 서버가 반환한 새 상태에 따라 클래스 토글
+                            if (response.isLiked) {
+                                $likeBtn.addClass("liked");
+                            } else {
+                                $likeBtn.removeClass("liked");
+                            }
+                        } else {
+                            console.error("좋아요 토글 실패:", response.message);
+                        }
+                    },
+                    error: function (err) {
+                        console.error("좋아요 토글 AJAX 오류:", err);
+                    },
+                    complete: function () {
+                        // AJAX 요청 완료 후 플래그 제거
+                        $likeBtn.removeData("ajaxInProgress");
+                    }
+                });
+            });
         });
     }
 

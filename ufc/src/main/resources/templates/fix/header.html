@@ -14,8 +14,8 @@
             href="../../static/css/fix/header.css"
     />
 </head>
-<script th:src="@{/js/jquery-3.7.1.min.js}"></script>
-<script th:src="@{/js/fix/header.js}" defer></script>
+    <script th:src="@{/js/jquery-3.7.1.min.js}"></script>
+    <script th:src="@{/js/fix/header.js}" defer></script>
 <body>
 <div class="flex-col min-h-screen bg-green-50">
     <header class="text-white header-main">
@@ -95,9 +95,7 @@
                             <div class="modal-login-bar"></div>
 
                             <div class="modal-login-pe">
-                                <a th:href="@{/creator/create}"
-                                >판매자 아이디로 전환하기</a
-                                >
+                                <a th:href="@{/campaign/intro}">판매자 아이디로 전환하기</a>
                             </div>
                             <div class="modal-login-bar"></div>
                             <a
@@ -122,8 +120,14 @@
                             </div>
                             <div class="modal-login-bar"></div>
                             <div class="modal-login-pe">
-                                <a th:href="@{/campaign/intro}"
-                                >캠페인 만들기</a
+                                <a th:href="@{/creator/campaign}"
+                                >창작가 프로필</a
+                                >
+                            </div>
+                            <div class="modal-login-bar"></div>
+                            <div class="modal-login-pe">
+                                <a th:href="@{/creator/dashboard}"
+                                >판매자 센터</a
                                 >
                             </div>
                             <div class="modal-login-bar"></div>
@@ -144,69 +148,6 @@
                         <!-- 진짜 창 -->
                         <div class="modal-login-in">
                             <!-- 각각의 내용 넣기 -->
-                            <div class="al-in-box-warp-pe">
-                                <div>
-                                    <div
-                                            class="al-in-box-warp-pe-img"
-                                    ></div>
-                                </div>
-
-                                <div class="al-in-box-warp-pe-content">
-                                    <div
-                                            class="al-in-box-warp-pe-content-box"
-                                    >
-                                        <div
-                                                class="al-in-box-warp-pe-content-box-top"
-                                        >
-                                            좋아하신<b>헬로, 팜!</b>
-                                            프로젝트에 창작자의 새
-                                            게시글이 올라왔습니다.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="al-in-box-warp-pe">
-                                <div>
-                                    <div
-                                            class="al-in-box-warp-pe-img"
-                                    ></div>
-                                </div>
-
-                                <div class="al-in-box-warp-pe-content">
-                                    <div
-                                            class="al-in-box-warp-pe-content-box"
-                                    >
-                                        <div
-                                                class="al-in-box-warp-pe-content-box-top"
-                                        >
-                                            좋아하신<b>헬로, 팜!</b>
-                                            프로젝트에 창작자의 새
-                                            게시글이 올라왔습니다.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="al-in-box-warp-pe">
-                                <div>
-                                    <div
-                                            class="al-in-box-warp-pe-img"
-                                    ></div>
-                                </div>
-
-                                <div class="al-in-box-warp-pe-content">
-                                    <div
-                                            class="al-in-box-warp-pe-content-box"
-                                    >
-                                        <div
-                                                class="al-in-box-warp-pe-content-box-top"
-                                        >
-                                            좋아하신<b>헬로, 팜!</b>
-                                            프로젝트에 창작자의 새
-                                            게시글이 올라왔습니다.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!-- 닫기위한 전체 창 -->
                         <div
@@ -278,7 +219,7 @@
                         <a class="header-nav-home" href="/campaign/upcoming">
                             진행 예정 캠페인
                         </a>
-                        <a class="header-nav-home" href="/product/all">구매</a>
+                        <a class="header-nav-home" href="/product/all">스토어</a>
                     </div>
                 </div>
             </div>

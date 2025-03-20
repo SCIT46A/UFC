@@ -326,6 +326,7 @@ main {
     font-size: 12px;
     line-height: 20px;
     color: rgba(255, 255, 255, 0.7);
+    width: 40px;
 }
 
 .main-container-count-point{
@@ -719,13 +720,13 @@ main {
 }
 
 .main-resent-all{
-    transform: translate3d(0px, 0px, 0px);
     position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
     display: flex;
     transition-property: transform;
+    transition: transform 0.5s ease-in-out; /* 트랜지션 추가 */
     box-sizing: content-box;
     margin-left: auto;
     text-decoration: none;
@@ -733,13 +734,13 @@ main {
 }
 
 .main-resent-all-add{
-    transform: translate3d(0px, 0px, 0px);
     position: relative;
     width: 100%;
     height: 100%;
     z-index: 1;
     display: flex;
     transition-property: transform;
+    transition: transform 0.5s ease-in-out; /* 트랜지션 추가 */
     box-sizing: content-box;
     margin-left: auto;
     text-decoration: none;
@@ -807,6 +808,7 @@ main {
     display: flex;
     flex-direction: column;
     text-decoration: none;
+    margin-bottom: 5px;
 }
 
 .main-resent-content-box{
@@ -888,6 +890,8 @@ main {
     text-decoration: none;
     -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
     word-break: break-all;
+    flex-wrap: wrap;
+
 }
 
 .main-resent-tag-in-pe{
@@ -941,7 +945,8 @@ main {
 }
 
 .image-container img{
-    width: 100%;
+    width: 584px;
+    height: 325px;
     display: block;
 }
 
@@ -973,4 +978,128 @@ main {
     width: 0%; /* 초기 상태 */
     background-color: #16a34a; /* 초록색 진행 바 */
     transition: width 0.5s ease-in-out; /* 애니메이션 */
+}
+
+.main-resent-all-add-btn-le{
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    outline: 0px;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    left: -4px;
+}
+
+.main-resent-all-add-btn-ri{
+    outline: 0;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    right: -4px;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    font: inherit;
+    margin: 0;
+}
+
+.main-resent-all-add-btn-in{
+    display: inline-flex;
+    align-self: center;
+}
+
+.main-resent-all-add-btn-in svg{
+    font-size: 16px;
+    fill: rgb(13, 13, 13);
+    margin-right: 2px;
+    width: 0.5em;
+    height: 0.5em;
+}
+
+.main-resent-all-add-btn-add-le{
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    outline: 0px;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    left: -4px;
+}
+
+.main-resent-all-add-btn-add-ri{
+    outline: 0;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    padding: 0px;
+    position: absolute;
+    border: 0px;
+    border-radius: 100%;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 1px 4px, rgba(0, 0, 0, 0.1) 0px 4px 5px;
+    background: white;
+    color: rgb(61, 61, 61);
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    top: 175px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 3;
+    transition: 0.5s;
+    right: -4px;
+    -webkit-appearance: button;
+    text-transform: none;
+    overflow: visible;
+    font: inherit;
+    margin: 0;
+}
+
+
+.target-slide{
+    transform: translateX(-101%);
 }

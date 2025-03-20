@@ -23,6 +23,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -54,6 +55,7 @@ public class ProductPaymentEntity {
     private Byte stock;
 
     @Column(name = "purchased_date", nullable = false)
+    @CreationTimestamp
     private LocalDateTime purchasedDate;
 
     @Column(name = "receipt_number", nullable = false, length = 100)
@@ -69,11 +71,11 @@ public class ProductPaymentEntity {
     @OneToMany(mappedBy = "pay", fetch = FetchType.LAZY)
     private List<ProductDeliveryEntity> productDeliveries;
 
-    public static ProductPaymentEntity toEntity(ProductPaymentDTO dto, ProductDTO product, UserDTO purchasedBy) {
+    public static ProductPaymentEntity toEntity(ProductPaymentDTO dto) {
         return ProductPaymentEntity.builder()
                 .payId(dto.getPayId())
-                .product(ProductEntity.builder().productId(product.getProductId()).build())
-                .purchasedBy(UserEntity.builder().userId(purchasedBy.getUserId()).build())
+                .product(ProductEntity.builder().productId(dto.getProduct().getProductId()).build())
+                .purchasedBy(UserEntity.builder().userId(dto.getPurchasedBy().getUserId()).build())
                 .price(dto.getPrice())
                 .stock(dto.getStock())
                 .purchasedDate(dto.getPurchasedDate())

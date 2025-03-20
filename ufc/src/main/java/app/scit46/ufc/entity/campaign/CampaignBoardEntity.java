@@ -21,6 +21,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Getter
 @Setter
@@ -44,6 +45,7 @@ public class CampaignBoardEntity {
     @Column(name = "content", nullable = false, columnDefinition = "MEDIUMTEXT")
     private String content;
 
+    @CreationTimestamp
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
@@ -55,13 +57,13 @@ public class CampaignBoardEntity {
     @OneToMany(mappedBy = "campaignBoard", fetch = FetchType.LAZY)
     private List<CampaignBoardReplyEntity> replies;
 
-    public static CampaignBoardEntity toEntity(CampaignBoardDTO dto, CampaignEntity campaign) {
+    public static CampaignBoardEntity toEntity(CampaignBoardDTO dto) {
         return CampaignBoardEntity.builder()
                 .cBoardId(dto.getCBoardId())
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .createdDate(dto.getCreatedDate())
-                .campaign(campaign)
+                .campaign(CampaignEntity.builder().campaignId(dto.getCampaign().getCampaignId()).build())
                 .build();
     }
 }

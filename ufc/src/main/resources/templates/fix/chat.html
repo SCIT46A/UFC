@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>chat</title>
+    <!-- ✅ CSS 연결 (Thymeleaf 사용) -->
+    <link rel="stylesheet" th:href="@{/css/fix/chat.css}" />
+
+    <!-- ✅ JS 연결 (Thymeleaf 사용) -->
+    <script th:src="@{/js/jquery-3.7.1.min.js}" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.6.1/sockjs.min.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js" ></script>
+    <script th:src="@{/js/fix/chat.js}" defer></script>
+</head>
+<body>
+
+    <div th:fragment="chat">
+<!--     채팅창 여는 모달-->
+        <button id="chat-toggle">
+            <img th:src="@{/images/fix/chat.png}" alt="" class="chat-img">
+        </button>
+<!--    이곳을 통해서 채팅방 선택-->
+        <div id="chat-window" class="chat-window hidden">
+            <div style="text-align: -webkit-right; border-bottom: 1px solid gray;">
+                <svg width="15" height="15" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg" class="chat-room-close">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z" fill="#6D6D6D"></path>
+                </svg>
+            </div>
+            <div class="chat-window-inner">
+<!--                각각의 채팅방-->
+
+            </div>
+        </div>
+<!--        사싱상 채팅창-->
+        <div class="chat-inner-view hidden">
+            <main class="main message-text-view-all" >
+                <div class="top-wrap">
+                    <div class="middle-wrap">
+                        <div class="bottom-wrap">
+                            <div class="top-section">
+                                <button class="top-out-button-box">
+                                    <svg width="20" height="20" viewBox="0 0 13 20" fill="none" xmlns="http://www.w3.org/2000/svg" foundation="[object Object]" class="top-out-button InnerIconstyled__Icon-ch-front__sc-197h5bb-0 iXzzNw" defaultopacity="1" hoveredopacity="1" margintop="0" marginright="0" marginbottom="0" marginleft="8" withtheme="true">
+                                        <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M9.17255 16.4226C8.84711 16.748 8.31947 16.748 7.99404 16.4226L2.1607 10.5893C1.83527 10.2638 1.83527 9.73619 2.1607 9.41075L7.99404 3.57742C8.31947 3.25198 8.84711 3.25198 9.17255 3.57742C9.49799 3.90285 9.49799 4.43049 9.17255 4.75593L3.92847 10L9.17255 15.2441C9.49799 15.5695 9.49799 16.0972 9.17255 16.4226Z"></path>
+                                    </svg>
+                                </button>
+                                <!-- 상단 섹션 -->
+                                <div class="top-information-wrap">
+                                    <div class="top-information-container">
+                                        <div class="top-information-text-box">
+                                            <div class="top-information-main-text-box">
+                                                <div class="top-information-main-text">PotaTalk</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 중간 섹션 -->
+                            <div class="middle-section">
+                                <section class="middle-main-message-wrap">
+                                    <div class="message-list">
+                                        <!-- 메세지 (공통 후 서버 or 클라이언트 나뉨)-->
+
+                                        <!-- 메세지 (공통 후 서버 or 클라이언트 나뉨)-->
+
+                                    </div>
+                                    <!-- 메세지 공백 -->
+                                    <div class="middel-message-margin loading hidden">
+                                        <img src="https://velog.velcdn.com/images/0307ssk/post/d9e2bd73-1f72-4a5d-a990-24ac10c69ad8/image.gif" style='width: 5%';/>
+                                    </div>
+                                    <div class="middel-message-margin"></div>
+                                </section>
+                            </div>
+                            <!-- 하단 섹션 -->
+                            <section class="bottom-section">
+                                <div class="bottom-message-wrap">
+                                    <div class="bottom-message-margin"></div>
+                                    <div class="bottom-message-container">
+                                        <!-- 메세지 입력 -->
+                                        <div class="bottom-message-input-box">
+                                            <label class="bottom-message-input-label" for="message_input"></label>
+                                            <textarea class="bottom-message-input-textarea" id="message_input" foundation="[object Object]" data-ch-testid="messenger-footer-text-area" placeholder="메시지를 입력해주세요." style="height: 34px !important;"></textarea>
+                                        </div>
+                                        <button class="bottom-message-send-button disable">
+                                            <svg class="bottom-message-send-img" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" foundation="[object Object]" defaultopacity="1" hoveredopacity="1" margintop="0" marginright="0" marginbottom="0" marginleft="0" withtheme="true">
+                                                <path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M20.9186 5.01057L2.91895 5.01034C2.51794 5.00977 2.15508 5.24929 1.99895 5.61886C1.84146 5.98808 1.92039 6.41478 2.19802 6.70366L7.74779 12.4761L17.7176 7.45444L18.0686 8.06239L8.74519 14.2097L10.9214 21.931C11.0307 22.3183 11.3609 22.6022 11.7599 22.6513C11.9807 22.6797 12.1991 22.6321 12.3836 22.5256C12.5326 22.4396 12.6604 22.315 12.7501 22.1604L21.7846 6.51053C21.964 6.20137 21.9636 5.82058 21.7846 5.51055C21.6061 5.20138 21.2765 5.01059 20.9186 5.01057Z"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+<script th:src="@{/js/fix/chat-add.js}" defer></script>
+</html>

@@ -2,7 +2,6 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <body>
-
     <!-- ✅ 정산 관리 프래그먼트 -->
     <div th:fragment="settlements">
         <div class="content-wrapper">
@@ -11,23 +10,22 @@
                 <div class="status-grid">
                     <div class="status-card">
                         <span>총 매출</span>
-                        <p th:text="${#numbers.formatDecimal(totalSales, 0, 'COMMA', 0, 'POINT')} + '원'">1,000,000원
-                        </p>
+                        <p th:text="${#numbers.formatDecimal(totalSales ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 예정</span>
-                        <p th:text="${#numbers.formatDecimal(scheduledSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            500,000원</p>
+                        <p th:text="${#numbers.formatDecimal(scheduledSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 완료</span>
-                        <p th:text="${#numbers.formatDecimal(completedSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            400,000원</p>
+                        <p th:text="${#numbers.formatDecimal(completedSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 대기</span>
-                        <p th:text="${#numbers.formatDecimal(pendingSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            100,000원</p>
+                        <p th:text="${#numbers.formatDecimal(pendingSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원
+                        </p>
                     </div>
                 </div>
 
@@ -36,7 +34,7 @@
             <!-- Download Buttons -->
             <div class="batch-actions">
                 <button class="btn btn-secondary" onclick="downloadExcel()">엑셀 다운로드</button>
-                <button class="btn btn-secondary" onclick="downloadCSV()">CSV 다운로드</button>
+                <!-- <button class="btn btn-secondary" onclick="downloadCSV()">CSV 다운로드</button> -->
             </div>
             <div class="search-section">
                 <div class="search-row">
@@ -71,63 +69,30 @@
             <!-- Settlement Table -->
             <div class="table-header">
                 <div class="left-section">
-                    <span>목록 (총 1개)</span>
+                    <span>목록 (총 0개)</span>
                     <select>
-                        <option>최근주문순</option>
+                        <option>최신순</option>
+                        <option>오래된순</option>
                     </select>
-                    <select>
+                    <!-- <select>
                         <option>100개씩 보기</option>
-                    </select>
+                    </select> -->
                 </div>
-                <button class="btn-secondary">조회항목 설정</button>
+                <!-- <button class="btn-secondary">조회항목 설정</button> -->
             </div>
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
+                            <th><input type="checkbox" id="selectAll"></th>
                             <th>정산 ID</th>
                             <th>날짜</th>
                             <th>금액</th>
                             <th>상태</th>
-                            <th>액션</th>
+                            <th>내역</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- 데이터가 있을 경우 -->
-                        <tr th:each="settlement : ${settlements}" th:if="${not #lists.isEmpty(settlements)}">
-                            <td th:text="${settlement.id}">SET001</td>
-                            <td th:text="${#temporals.format(settlement.date, 'yyyy-MM-dd')}">2024-02-16</td>
-                            <td th:text="${#numbers.formatDecimal(settlement.amount, 0, 'COMMA', 0, 'POINT')} + '원'">
-                                50,000원
-                            </td>
-                            <td>
-                                <span class="status-badge" th:classappend="${settlement.status == 'SCHEDULED' ? 'scheduled' : 
-                                                settlement.status == 'COMPLETED' ? 'completed' : 'pending'}" th:text="${settlement.status == 'SCHEDULED' ? '정산 예정' : 
-                                          settlement.status == 'COMPLETED' ? '정산 완료' : '정산 대기'}">정산 예정
-                                </span>
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    th:onclick="'viewDetails(\'' + ${settlement.id} + '\')'">상세
-                                    보기</button>
-                            </td>
-                        </tr>
-
-                        <!-- 데이터가 없을 경우 -->
-                        <tr th:if="${#lists.isEmpty(settlements)}">
-                            <td colspan="5">
-                                <div class="empty-message">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="12" cy="12" r="10" />
-                                        <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
-                                    </svg>
-                                    데이터가 존재하지 않습니다.
-                                </div>
-                            </td>
-                        </tr>
                     </tbody>
 
                 </table>
@@ -138,19 +103,15 @@
             <p>• 배송정보를 선택 후 주문 목록 상단/하단의 [발송처리] 버튼을 누르시면 처음 처리가 진행됩니다.</p>
             <p>• 송장번호의 수정이 필요하신 경우 아래의 주문 목록에서 대상 제품 선택 후 정보 수정을 하신 [송장수정] 버튼을 클릭하시면 수정 창이 제공됩니다.</p>
         </div>
-    </div>
-
-    <!-- Settlement Details Modal -->
-    <div id="settlementModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>정산 상세 정보</h2>
-            <div id="settlementDetails"></div>
+        <!-- Settlement Details Modal -->
+        <div id="settlementModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2>정산 상세 정보</h2>
+                <div id="settlementDetails"></div>
+            </div>
         </div>
     </div>
-
-    </div>
-
     <script th:src="@{/js/dashboard/settlements.js}" async></script>
 </body>
 

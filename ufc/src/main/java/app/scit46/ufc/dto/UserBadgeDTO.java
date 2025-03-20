@@ -11,14 +11,14 @@ import lombok.*;
 @Builder
 public class UserBadgeDTO {
     private Long userBadgeId;
-    private Long userId;
-    private Long badgeId;
+    private UserDTO user; // ✅ UserDTO 포함
+    private BadgeDTO badge; // ✅ BadgeDTO 포함
 
     public static UserBadgeDTO toDTO(UserBadgeEntity entity) {
         return UserBadgeDTO.builder()
                 .userBadgeId(entity.getUserBadgeId())
-                .userId(entity.getUser() != null ? entity.getUser().getUserId() : null)
-                .badgeId(entity.getBadge() != null ? entity.getBadge().getBadgeId() : null)
+                .user(entity.getUser() != null ? UserDTO.toDTO(entity.getUser()) : null) // ✅ UserDTO 변환
+                .badge(entity.getBadge() != null ? BadgeDTO.toDTO(entity.getBadge()) : null) // ✅ BadgeDTO 변환
                 .build();
     }
 }

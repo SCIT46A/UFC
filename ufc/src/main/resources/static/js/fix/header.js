@@ -25,6 +25,79 @@ $(function () {
         }
     });
 
+    // 알림 등록
+    $.ajax({
+        url: "/api/alert/list",
+        method: "GET",
+        success: function (response) {
+            if (response == null || response.length === 0) {
+                // response가 null이거나 빈 배열일 경우 "알림이 없습니다" 텍스트 추가
+                $(".modal-alert > .modal-login-in").append('<p style="color:rgb(123,123,123); text-align:center;">알림이 없습니다</p>');
+            } else {
+                response.forEach(useralert => {
+                    const alertTag = `
+                    <a data-id="${useralert.userAlertId}" data-link="${useralert.alert.linkUrl}">
+                        <div class="al-in-box-warp-pe">
+                            <div>
+                                <div
+                                        class="al-in-box-warp-pe-img"
+                                ><img src="${useralert.alert.imageUrl}" alt="alert image" style="width:70px; height:70px;"></div>
+                            </div>
+
+                            <div class="al-in-box-warp-pe-content">
+                                <div
+                                        class="al-in-box-warp-pe-content-box"
+                                >
+                                    <div
+                                            class="al-in-box-warp-pe-content-box-top"
+                                    >
+                                        ${useralert.alert.content}
+                                    </div>
+                                </div>
+                                <p class="al-in-box-warp-pe-content-box-bottom">
+                                ${timeForToday_time(new Date(useralert.alert.alertDate))}
+                                </p>
+                            </div>
+                        </div>          
+                    </a>
+                    `;
+                    console.log(alert);
+                    $(".modal-alert > .modal-login-in").append(alertTag);
+                });
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("Error:", error); // 에러 발생 시 콘솔에 출력
+        }
+    });
+    $(document).on('click', 'a[data-link]', function(event) {
+        event.preventDefault();  // 기본 링크 이동을 막음 (페이지가 새로고침되지 않도록)
+
+        let linkId = $(this).data('id');  // 클릭한 a 태그의 data-id 값 가져오기
+        let linkUrl = $(this).data('link');
+
+        // AJAX 요청을 통해 읽음 처리
+        $.ajax({
+            url: "/api/alert/read",  // 알림 읽음 처리 API 호출
+            method: "GET",
+            data: { linkId: linkId },  // 읽은 알림에 대한 데이터 전송
+            success: function(response) {
+                // 기존에 받아온 linkUrl
+                // 응답에 실제 이동할 URL이 있다면 그 URL로 이동
+                if (!(linkUrl == null || linkUrl == "")) {
+                    window.location.href = linkUrl;  // 응답으로 받은 URL로 이동
+                } else {
+                    console.log("이동할 URL이 없습니다.");  // URL이 없으면 이동하지 않음
+                }
+            },
+            error: function(xhr, status, error) {
+                // 오류 처리 (필요시)
+                console.error("알림 읽기 처리 중 오류 발생:", error);
+            }
+        });
+    });
+   
+
 
     //  로그인정보가 보고 나타내기
 
@@ -33,6 +106,7 @@ $(function () {
         method: "GET",
         success: function (response) {
             // 일반유저
+            console.log(response)
             if (response.roles === "ROLE_USER") {
                 $(".header-box-top-pe").append(`
                     <div class="header-box-top-pe-my">
@@ -40,14 +114,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                    ? `/api/image/${response.photo.imageId}`
+                                    : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -68,14 +138,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                            ? `/api/image/${response.photo.imageId}`
+                                            : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -95,14 +161,10 @@ $(function () {
                             <!-- 프로필 -->
                             <div class="header-box-top-pe-my-in-pro">
                                 <span class="profile-th">
-                                    <svg
-                                        class="UserProfileButton__AvatarIcon-sc-1amdfbl-5 bAnHGm"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 48 48"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    ></svg>
+                                    <img src="${response.photo && response.photo.imageId
+                                        ? `/api/image/${response.photo.imageId}`
+                                        : `/api/image/89888086-698b-4e0e-92c2-8eca99737900`}" 
+                                    class="target-img">
                                 </span>
                             </div>
                             <!-- 이름 -->
@@ -119,7 +181,7 @@ $(function () {
             else {
                 $(".header-box-top-pe").append(
                     `
-                <a class="header-box-top-pe-my" href="/user/login">
+                <a class="header-box-top-pe-my-login" href="/user/login">
                     <div class="header-box-top-pe-my-in">
 
                         <div class="header-box-top-pe-my-in-name-no">
@@ -131,7 +193,58 @@ $(function () {
                 );
                 initializeEventListeners();
             }
+
+            $(".header-box-top-pe").find("img.target-img").each(function() {
+                const $img = $(this);
+                const endpoint = $img.attr("src");
+                $.ajax({
+                    url: endpoint,
+                    method: "GET",
+                    success: function(resultUrl) {
+                        if (resultUrl) {
+                            $img.attr("src", resultUrl);
+                        }
+                    },
+                    error: function(err) {
+                        console.error("이미지 URL 요청 오류:", err);
+                    }
+                });
+            });
+
         },
+        error: function(xhr, status, error) {
+            $(".header-box-top-pe").append(
+                `
+                <a class="header-box-top-pe-my-login" href="/user/login">
+                    <div class="header-box-top-pe-my-in">
+
+                        <div class="header-box-top-pe-my-in-name-no">
+                            로그인 / 회원가입
+                        </div>
+                    </div>
+                </a>
+                `
+            );
+            initializeEventListeners();
+            $(".header-box-top-pe").find("img.target-img").each(function() {
+                const $img = $(this);
+                const endpoint = $img.attr("src");
+                $.ajax({
+                    url: endpoint,
+                    method: "GET",
+                    success: function(resultUrl) {
+                        if (resultUrl) {
+                            $img.attr("src", resultUrl);
+                        }
+                    },
+                    error: function(err) {
+                        console.error("이미지 URL 요청 오류:", err);
+                    }
+                });
+            });
+        }
+
+
     });
 
     $.ajax({
@@ -185,7 +298,7 @@ $(function () {
 
 
 
-// 쿠키에서 검색 기록 가져오는 함수
+    // 쿠키에서 검색 기록 가져오는 함수
     function getSearchHistory() {
         const cookie = document.cookie
             .split("; ")
@@ -222,7 +335,7 @@ $(function () {
                     <div class="modal-re-search-box-recent-bo-pe-text">${query}</div>
                     <div class="modal-re-search-box-recent-bo-pe-cancle">
                         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L5.70945 5.00257L7.97564 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z" fill="#6D6D6D"></path>
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M4.28544 5.00257L2.01916 2.73642C1.82521 2.54248 1.82974 2.23083 2.01598 2.02765C2.21448 1.81131 2.5294 1.8394 2.72795 2.02108L2.72969 2.02268L4.99738 4.2905L7.26357 2.02431C7.4575 1.83056 7.7691 1.83508 7.97226 2.02115C8.1886 2.21946 8.16077 2.53473 7.97878 2.73311L7.97723 2.73479L7.97564 5.00257L7.97724 7.26876C8.16953 7.46283 8.16504 7.77425 7.97884 7.97756L7.97724 7.9793L7.97557 7.98097C7.78164 8.17472 7.47008 8.17023 7.26691 7.98417L7.26519 7.98259L4.99738 5.71465L2.73129 7.981C2.53725 8.17469 2.22572 8.17025 2.02253 7.98417L2.01908 7.98101L2.01592 7.97756C1.82971 7.77425 1.82526 7.46279 2.01916 7.26872L4.28544 5.00257Z" fill="#6D6D6D"></path>
                         </svg>
                     </div>
                 </a>
@@ -296,7 +409,7 @@ $(function () {
                         const highlightedName = highlightText(data.name, keyword);
                         if(data.type !== "Tag"){
                             $(".modal-re-search-box-bo-box-in-se").append(`
-                    <a href="/${data.type}/detail/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
+                    <a href="/${data.type}/${data.id}" class="modal-re-search-box-bo-box-in-se-a">
                         <div>
                             <svg viewBox="0 0 48 48">
                                 <path fill-rule="evenodd" clip-rule="evenodd"
@@ -332,8 +445,7 @@ $(function () {
 
     });
 
-
-
+    
 
     $(document).on("keydown", ".modal-search-box-in-top-input-in", function (event) {
         if ($(".modal-search").css("display") === "flex" && event.key === "Enter") {
@@ -373,8 +485,6 @@ $(function () {
 
     });
 
-
-
     // 🔹 이벤트 리스너 초기화 함수 (AJAX 이후 실행)
     function initializeEventListeners() {
         // Lucide Icons Initialization
@@ -393,6 +503,14 @@ $(function () {
         // Login Modal (AJAX 후 추가된 요소에 이벤트 바인딩)
         $(document).on("click", ".header-box-top-pe-my", function () {
             $(".modal-login").css("display", "flex");
+        });
+
+        // Login Modal (AJAX 후 추가된 요소에 이벤트 바인딩)
+        $(document).on("click", ".header-box-top-pe-my-login", function (e) {
+            e.preventDefault();
+            var currentUrl = window.location.href;
+            // 현재 페이지 URL을 쿼리 파라미터로 포함하여 로그인 페이지로 이동
+            window.location.href = '/user/login?redirectUrl=' + encodeURIComponent(currentUrl);
         });
 
         $(document).on("click", "#modal-controller", function () {
@@ -425,4 +543,42 @@ $(function () {
         });
 
     }
+
+    function timeForToday_time(datetime) {
+        const today = new Date();
+        const date = new Date(datetime);
+
+        let gap = Math.floor((today.getTime() - date.getTime()) / 1000 / 60);
+
+        if (gap < 1) {
+            return "방금 전";
+        }
+
+        if (gap < 60) {
+            return `${gap}분 전`;
+        }
+
+        gap = Math.floor(gap / 60);
+
+        if (gap < 24) {
+            return `${gap}시간 전`;
+        }
+
+        gap = Math.floor(gap / 24);
+
+        if (gap < 31) {
+            return `${gap}일 전`;
+        }
+
+        gap = Math.floor(gap / 31);
+
+        if (gap < 12) {
+            return `${gap}개월 전`;
+        }
+
+        gap = Math.floor(gap / 12);
+
+        return `${gap}년 전`;
+    }
 });
+

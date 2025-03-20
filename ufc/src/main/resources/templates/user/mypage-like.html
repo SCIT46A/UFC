@@ -4,11 +4,19 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>UP-DA :: 마이페이지</title>
-        <link
-            rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
-        />
-        <script src="https://unpkg.com/lucide@latest"></script>
+    <link
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" type="text/css" />
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="http://code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css" />
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.css" />
+        <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
         <link
             rel="icon"
             th:href="@{/images/fix/favicon.png}"
@@ -29,9 +37,8 @@
             th:href="@{/css/fix/footer.css}"
             href="../../static/css/fix/footer.css"
         />
-        <script src="../../static/js/user/mypage-like.js" defer></script>
-        <script th:src="@{/js/user/mypage-like.js}" defer></script>
         <script th:src="@{/js/fix/header.js}" defer></script>
+        <script th:src="@{/js/user/mypage-like.js}" defer></script>
     </head>
     <body>
         <div th:replace="~{fix/header :: header}"></div>
@@ -48,7 +55,7 @@
                                     <div class="main-in-box-pro-le">
                                         <div class="main-in-box-pro-le-in">
                                             <img
-                                                src="https://assets.tumblbug.com/profile/default_avatar.png"
+                                                th:src="${userImageId}"
                                                 alt=""
                                                 class="main-in-box-pro-le-in-img"
                                             />
@@ -61,7 +68,7 @@
                                                     <div
                                                         class="main-in-box-pro-le-in-box-title-in"
                                                     >
-                                                        up-da
+                                                        <span th:text="${user.userName}">up-da</span>
                                                     </div>
                                                 </div>
                                                 <div
@@ -73,8 +80,9 @@
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/like(tab='creator')}"
                                                             >
                                                                 팔로잉
                                                                 <svg
@@ -92,18 +100,20 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
+                                                                th:href="@{/user/like(tab='creator')}"
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
                                                             >
-                                                                -
-                                                            </div>
+                                                                <span th:text="${creatorLikesCount}"></span>
+                                                            </a>
                                                         </div>
                                                         <div
                                                             class="main-in-box-pro-le-in-box-content-box-in"
                                                         >
-                                                            <div
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-top"
+                                                                th:href="@{/user/donation}"
                                                             >
                                                                 후원수
                                                                 <svg
@@ -121,24 +131,26 @@
                                                                         fill="#545454"
                                                                     ></path>
                                                                 </svg>
-                                                            </div>
-                                                            <div
+                                                            </a>
+                                                            <a
                                                                 class="main-in-box-pro-le-in-box-content-box-in-bo"
+                                                                th:href="@{/user/donation}"
                                                             >
-                                                                -
-                                                            </div>
+                                                                <span th:text="${donationCount}"></span>
+                                                            </a>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
                                 </div>
                                 <!-- 내비게이션바 -->
                                 <div class="main-in-box-na">
                                     <div class="main-in-box-na-box">
                                         <div class="main-in-box-na-box-pe">
-                                        <span class="main-in-box-na-box-pe-span">
+                                        <span class="main-in-box-na-box-pe-span ">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-profile.html"
@@ -149,8 +161,8 @@
                                         <span class="main-in-box-na-box-pe-span">
                                             <div class="main-in-box-na-box-pe-span-in">
                                             <a 
-                                            href="/src/main/resources/templates/user/mypage-reply.html"
-                                            th:href="@{/user/reply}"
+                                            href="/src/main/resources/templates/user/mypage-review.html"
+                                            th:href="@{/user/review}"
                                             >작성한 후기</a>
                                             </div>
                                         </span>
@@ -167,7 +179,7 @@
                                             <a 
                                             href="/src/main/resources/templates/user/mypage-like.html"
                                             th:href="@{/user/like}"
-                                            >좋아요 누른 캠페인</a>
+                                            >좋아요</a>
                                             </div>
                                         </span>
                                         <span class="main-in-box-na-box-pe-span">
@@ -178,50 +190,54 @@
                                             >뱃지</a>
                                             </div>
                                         </span>
+                                        <span class="main-in-box-na-box-pe-span ">
+                                            <div class="main-in-box-na-box-pe-span-in">
+                                            <a
+                                            href="/src/main/resources/templates/user/mypage-buy.html"
+                                            th:href="@{/user/buy}"
+                                            >구매내역</a>
+                                            </div>
+                                        </span>
                                         </div>
                                     </div>
                                     </div>
                                 </div>
+
                             </div>
                             <!-- 각각의 나올것들 -->
                             <div class="like">
                                 <div>
                                     <div class="like-top">
 
-                                        <span class="like-top-le">
-                                            <select class="like-top-select">
-                                            <option value="all">전체</option>
-                                            <option value="progress">진행중</option>
-                                            <option value="end">종료</option>
-                                        </select>
+                                            <a href="javascript:void(0)" class="like-top-campaign current-like" id="like-campaign">캠페인</a>
 
-                                        </span>
+                                            <a href="javascript:void(0)" class="like-top-creator" id="like-creator">크리에이터</a>
                                         <div class="like-top-ri">
                                             <div class="like-top-ri-in">
                                                 <select class="like-top-sorting">
-                                                    <option value="latest">최신순</option>
-                                                    <option value="add">추가순</option>
-                                                    <option value="deadline">마감임박순</option>
+                                                    <option value="latest" th:selected="${sort == 'latest'}">최신순</option>
+                                                    <option value="deadline" th:selected="${sort == 'deadline'}">마감임박순</option>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="like-bo">
-                                        <div class="like-bo-box">
-                                            <div class="like-bo-box-in">
+                                        <div class="like-bo-box-campaign ">
+                                            <div class="like-bo-box-in-campaign">
                                                 <!-- 각각의div   -->
-                                                <div class="like-bo-box-in-pe">
+                                                <div class="like-bo-box-in-pe" th:each="campaign, iterStatus : ${campaigns}">
                                                     <div
                                                         class="like-bo-box-in-pe-in"
                                                     >
                                                         <a
-                                                            href="/"
+                                                            th:href="@{/campaign/{campaignId}(campaignId=${campaign.campaignId})}"
                                                             class="like-bo-box-in-pe-in-a"
                                                         >
                                                             <div
                                                                 class="like-bo-box-in-pe-in-a-img"
                                                             >
                                                                 <img
+                                                                    th:src="${campaignImageUrls[iterStatus.index]}"
                                                                     src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
                                                                     alt=""
                                                                 />
@@ -235,15 +251,20 @@
                                                                         viewBox="0 0 40 40"
                                                                         fill="none"
                                                                         xmlns="http://www.w3.org/2000/svg"
+                                                                        class="main-like-btn"
+                                                                        th:attr="data-like-id=${campaignLikeIdMap[campaign.campaignId] != null ? campaignLikeIdMap[campaign.campaignId] : ''}">
+
                                                                     >
                                                                         <g
                                                                             filter="url(#filter0_dd_909_4706251)"
                                                                         >
                                                                             <path
+                                                                                
                                                                                 fill-rule="evenodd"
                                                                                 clip-rule="evenodd"
                                                                                 d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
                                                                                 fill="#F86453"
+                                                                                th:attr="fill=${campaignLikeIdMap[campaign.campaignId] != null ? 'hotpink' : 'black'}, fill-opacity=${campaignLikeIdMap[campaign.campaignId] != null ? '1' : '0.25'}"
                                                                             ></path>
                                                                         </g>
                                                                     </svg>
@@ -260,10 +281,8 @@
                                                                     >
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-top-text"
+                                                                                th:text="${campaign.createdBy.bName}"
                                                                         >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
                                                                         </div>
                                                                     </div>
                                                                     <div
@@ -271,25 +290,13 @@
                                                                     >
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-top"
+                                                                                th:text="${campaign.title}"
                                                                         >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
                                                                         </div>
                                                                         <div
                                                                             class="like-bo-box-in-pe-in-a-content-title-mi-bo"
+                                                                            th:text="${#strings.length(campaign.description) > 80 ? #strings.substring(campaign.description, 0, 80) + '...' : campaign.description}" 
                                                                         >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
                                                                         </div>
                                                                     </div>
                                                                     <div
@@ -298,510 +305,81 @@
                                                                         "
                                                                     ></div>
                                                                 </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
+                                                                <div class="like-bo-box-in-pe-in-a-content-per">
+                                                                <!-- 내부 각 목표에 대해 반복 -->
+                                                                <div th:each="goalAchieve, iterAchieveStat : ${campaignAchievementsList[iterStatus.index]}">
+                                                                    <div class="goal-item">
+                                                                    <!-- 퍼센트 텍스트 -->
+                                                                    <div class="goal-percentage">
                                                                         <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                >20%</span
-                                                                            >
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                >청바지
-                                                                                40개</span
-                                                                            >
+
+                                                                            <span class="percentage" th:text="${goalAchieve} + '%'"></span>
+                                                                            <span class="quantity" th:text="${donationSumByCampaign[campaign.campaignId]}"></span>
+                                                                            <span class="quantity">개 모임</span>
                                                                         </div>
-                                                                        <em
-                                                                            >2일
-                                                                            남음</em
-                                                                        >
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <!-- 2번째 -->
-                                                <div class="like-bo-box-in-pe">
-                                                    <div
-                                                        class="like-bo-box-in-pe-in"
-                                                    >
-                                                        <a
-                                                            href="/"
-                                                            class="like-bo-box-in-pe-in-a"
-                                                        >
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-img"
-                                                            >
-                                                                <img
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                    alt=""
-                                                                />
-                                                                <!-- like -->
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-like"
-                                                                >
-                                                                    <svg
-                                                                        width="40"
-                                                                        height="40"
-                                                                        viewBox="0 0 40 40"
-                                                                        fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                    >
-                                                                        <g
-                                                                            filter="url(#filter0_dd_909_4706251)"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
-                                                                                fill="#F86453"
-                                                                            ></path>
-                                                                        </g>
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-content"
-                                                            >
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-title"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-top"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-top-text"
-                                                                        >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-mi"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-top"
-                                                                        >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
-                                                                        </div>
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                        >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        style="
-                                                                            margin-bottom: 12px;
-                                                                        "
-                                                                    ></div>
-                                                                </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
                                                                         <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                >20%</span
-                                                                            >
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                >청바지
-                                                                                40개</span
-                                                                            >
-                                                                        </div>
-                                                                        <em
-                                                                            >2일
-                                                                            남음</em
-                                                                        >
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="like-bo-box-in-pe">
-                                                    <div
-                                                        class="like-bo-box-in-pe-in"
-                                                    >
-                                                        <a
-                                                            href="/"
-                                                            class="like-bo-box-in-pe-in-a"
-                                                        >
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-img"
-                                                            >
-                                                                <img
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                    alt=""
-                                                                />
-                                                                <!-- like -->
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-like"
-                                                                >
-                                                                    <svg
-                                                                        width="40"
-                                                                        height="40"
-                                                                        viewBox="0 0 40 40"
-                                                                        fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                    >
-                                                                        <g
-                                                                            filter="url(#filter0_dd_909_4706251)"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
-                                                                                fill="#F86453"
-                                                                            ></path>
-                                                                        </g>
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-content"
-                                                            >
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-title"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-top"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-top-text"
-                                                                        >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
+
+                                                                            <span class="enddate" th:text="${campaign.endDate}"></span>
                                                                         </div>
                                                                     </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-mi"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-top"
-                                                                        >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
-                                                                        </div>
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                        >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
-                                                                        </div>
+                                                                    <!-- 진행 막대 컨테이너 : 인라인으로 --achievement 값을 설정 -->
+                                                                    <div class="like-bo-box-in-pe-in-a-content-per-bo"
+                                                                        th:style="'--achievement:' + goalAchieve + '%;'">
                                                                     </div>
-                                                                    <div
-                                                                        style="
-                                                                            margin-bottom: 12px;
-                                                                        "
-                                                                    ></div>
-                                                                </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
-                                                                        <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                >20%</span
-                                                                            >
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                >청바지
-                                                                                40개</span
-                                                                            >
-                                                                        </div>
-                                                                        <em
-                                                                            >2일
-                                                                            남음</em
-                                                                        >
+                                                                    <!-- 목표 관련 정보 -->
+                                                                    <!-- <div class="goal-info">
+                                                                        <span class="goal-material"
+                                                                            th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].material.name}"></span>
+                                                                        <span class="goal-donated"
+                                                                            th:text="${donationSumByCampaign[campaign.campaignId]}"></span>
+                                                                        <span>/</span>
+                                                                        <span class="goal-required"
+                                                                            th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].quantityRequired}"></span>
+                                                                        <span>개</span>
+                                                                    </div> -->
                                                                     </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
                                                                 </div>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="like-bo-box-in-pe">
-                                                    <div
-                                                        class="like-bo-box-in-pe-in"
-                                                    >
-                                                        <a
-                                                            href="/"
-                                                            class="like-bo-box-in-pe-in-a"
-                                                        >
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-img"
-                                                            >
-                                                                <img
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                    alt=""
-                                                                />
-                                                                <!-- like -->
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-like"
-                                                                >
-                                                                    <svg
-                                                                        width="40"
-                                                                        height="40"
-                                                                        viewBox="0 0 40 40"
-                                                                        fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                    >
-                                                                        <g
-                                                                            filter="url(#filter0_dd_909_4706251)"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
-                                                                                fill="#F86453"
-                                                                            ></path>
-                                                                        </g>
-                                                                    </svg>
+                                                                <!-- 캠페인 종료일 등 추가 정보 -->
+                                                                <em class="content-box-in-date-in-time">
+                                                                </em>
                                                                 </div>
-                                                            </div>
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-content"
-                                                            >
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-title"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-top"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-top-text"
-                                                                        >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-mi"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-top"
-                                                                        >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
-                                                                        </div>
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                        >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        style="
-                                                                            margin-bottom: 12px;
-                                                                        "
-                                                                    ></div>
-                                                                </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
-                                                                        <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                >20%</span
-                                                                            >
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                >청바지
-                                                                                40개</span
-                                                                            >
-                                                                        </div>
-                                                                        <em
-                                                                            >2일
-                                                                            남음</em
-                                                                        >
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
-                                                                </div>
-                                                            </div>
-                                                        </a>
-                                                    </div>
-                                                </div>
-                                                <div class="like-bo-box-in-pe">
-                                                    <div
-                                                        class="like-bo-box-in-pe-in"
-                                                    >
-                                                        <a
-                                                            href="/"
-                                                            class="like-bo-box-in-pe-in-a"
-                                                        >
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-img"
-                                                            >
-                                                                <img
-                                                                    src="https://img.tumblbug.com/eyJidWNrZXQiOiJ0dW1ibGJ1Zy1pbWctYXNzZXRzIiwia2V5IjoiY292ZXIvZWYzYjgwMjgtNTJiOS00NTA3LWIzZDUtMGE4OGRjZTUxMzZkLzNiZmNkMTVlLWYwOGItNGIwNy04YzY5LTljMGZiMzMzODAzNC5qcGVnIiwiZWRpdHMiOnsicmVzaXplIjp7IndpZHRoIjo0NjUsImhlaWdodCI6NDY1LCJ3aXRob3V0RW5sYXJnZW1lbnQiOnRydWV9fX0="
-                                                                    alt=""
-                                                                />
-                                                                <!-- like -->
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-like"
-                                                                >
-                                                                    <svg
-                                                                        width="40"
-                                                                        height="40"
-                                                                        viewBox="0 0 40 40"
-                                                                        fill="none"
-                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                    >
-                                                                        <g
-                                                                            filter="url(#filter0_dd_909_4706251)"
-                                                                        >
-                                                                            <path
-                                                                                fill-rule="evenodd"
-                                                                                clip-rule="evenodd"
-                                                                                d="M19.9993 14.7154L18.2706 13.1536C16.5419 11.592 13.6694 11.9423 12.0965 13.6742C10.121 15.7562 10.1209 19.2799 12.2112 21.483L19.9995 29.1061L27.7872 21.483C29.8775 19.2799 29.8776 15.7566 27.902 13.6742C26.3291 11.9423 23.4567 11.5921 21.728 13.1536L19.9993 14.7154Z"
-                                                                                fill="#F86453"
-                                                                            ></path>
-                                                                        </g>
-                                                                    </svg>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="like-bo-box-in-pe-in-a-content"
-                                                            >
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-title"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-top"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-top-text"
-                                                                        >
-                                                                            TEAM
-                                                                            GURO
-                                                                            GURO
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-title-mi"
-                                                                    >
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-top"
-                                                                        >
-                                                                            귀여움이
-                                                                            가득한
-                                                                            감성
-                                                                            힐링
-                                                                            게임
-                                                                        </div>
-                                                                        <div
-                                                                            class="like-bo-box-in-pe-in-a-content-title-mi-bo"
-                                                                        >
-                                                                            고요의
-                                                                            정원에서
-                                                                            귀여운
-                                                                            친구들과
-                                                                            함께
-                                                                            느긋한
-                                                                            힐링의
-                                                                            시간을
-                                                                            가져보세요!
-                                                                        </div>
-                                                                    </div>
-                                                                    <div
-                                                                        style="
-                                                                            margin-bottom: 12px;
-                                                                        "
-                                                                    ></div>
-                                                                </div>
-                                                                <div
-                                                                    class="like-bo-box-in-pe-in-a-content-per"
-                                                                >
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-top"
-                                                                    >
-                                                                        <div>
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-le"
-                                                                                >20%</span
-                                                                            >
-                                                                            <span
-                                                                                class="like-bo-box-in-pe-in-a-content-per-top-ri"
-                                                                                >청바지
-                                                                                40개</span
-                                                                            >
-                                                                        </div>
-                                                                        <em
-                                                                            >2일
-                                                                            남음</em
-                                                                        >
-                                                                    </div>
-                                                                    <div
-                                                                        class="like-bo-box-in-pe-in-a-content-per-bo"
-                                                                    ></div>
-                                                                </div>
+
+
+
                                                             </div>
                                                         </a>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- ---------------- Creator 좋아요 ------------------- -->
+                                            <div class="like-bo-box-creator hidden">
+                                                 <div class="like-bo-box-in-creator">
+                                                     <div class="creator-grid">
+                                                         <div class="creator-item" th:each="creator, iterStatus : ${creators}">
+                                                             <div class="creator-image">
+                                                                 <img th:src="${creatorImageUrls[iterStatus.index]}"
+                                                                 alt="크리에이터" />
+                                                            </div>
+                                                            <div class="creator-info">
+                                                                <h3 th:text="${creator.bName}"></h3>
+                                                                <p th:text="${creator.intro}"></p>
+                                                                <div class="main-like-btn"
+                                                                    th:attr="data-like-id=${creatorLikeIdMap[creator.creatorId] != null ? creatorLikeIdMap[creator.creatorId] : ''}">
+                                                                    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path 
+                                                                            d="M19.463 15.3087L19.9993 15.7933L20.5356 15.3087L22.2643 13.747C22.2643 13.747 22.2643 13.7469 22.2643 13.7469C23.615 12.5269 25.9852 12.7532 27.3097 14.2118L27.3156 14.2182L27.3216 14.2246C28.9912 15.9843 29.0145 19.0158 27.2167 20.9218L19.9995 27.9864L12.7818 20.9218C10.9839 19.0158 11.0075 15.984 12.6769 14.2246L12.6829 14.2182L12.6888 14.2118C14.0133 12.7532 16.3836 12.5269 17.7343 13.7469C17.7343 13.7469 17.7343 13.7469 17.7344 13.747L19.463 15.3087Z"          
+                                                                            stroke="white" stroke-width="1.6"
+                                                                            th:attr="fill=${creatorLikeIdMap[creator.creatorId] !=null  ? 'hotpink' : 'black'}, fill-opacity=${creatorLikeIdMap[creator.creatorId] != null ? '1' : '0.25'}"
+                                                                        ></path>
+                                                                    </svg>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- --------------------구분선 ----------------------- -->
                                         </div>
                                     </div>
                                 </div>

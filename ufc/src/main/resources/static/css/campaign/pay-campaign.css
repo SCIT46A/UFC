@@ -16,7 +16,7 @@ body{
 }
 
 main{
-    
+
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -71,8 +71,8 @@ main{
 .main-in-box-section-in{
     -webkit-box-align: center;
     align-items: center;
-    width: 1080px;
-    padding: 32px 0px 0px;
+    width: 1200px;
+    padding: 32px 20px 0px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -244,6 +244,8 @@ main{
     -webkit-box-align: center;
     display: flex;
     flex: 1 1 auto;
+    flex-direction: column;
+    gap: 18px;
 }
 
 .inner-box-in-contentr-in-ri-in{
@@ -290,7 +292,7 @@ main{
     padding: 5px 6px;
     align-items: flex-start;
     border-radius: 5px;
-    background: rgb(245, 244, 243);
+
 }
 
 .inner-box-span-le{
@@ -361,6 +363,7 @@ main{
     appearance: none !important;
     color: inherit;
     font: inherit;
+    margin-bottom: 8px;
 }
 
 .inner-box-bo{
@@ -399,7 +402,6 @@ main{
 }
 
 .inner-pay-in-total-in{
-    display: flex;
     -webkit-box-pack: justify;
     justify-content: space-between;
     -webkit-box-align: center;
@@ -531,4 +533,34 @@ main{
     margin-top: 4px;
     display: flex;
     color: rgb(109, 109, 109);
+}
+
+.reward-last-btn{
+    border: 1px solid gray;
+    border-radius: 4px;
+    color: #ffffff;
+    background: gray;
+    height: 50px;
+    width: 354px;
+    margin-top: 29px;
+    cursor: context-menu;
+}
+
+
+.address-btn-add-ver{
+    width: 74px;
+    height: 41px;
+    border: 1px solid #16A34A;
+    background: #16A34A;
+    color: #ffffff;
+    border-radius: 4px;
+    margin-left: 12px;
+}
+
+.invoice-select-box{
+    width: 200px;
+    border: 1px solid rgb(228, 228, 228);;
+    height: 38px;
+    margin-right: 28px;
+    border-radius: 4px;
 }

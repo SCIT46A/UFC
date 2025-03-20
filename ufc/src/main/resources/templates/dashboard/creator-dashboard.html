@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" th:href="@{/images/fix/favicon.png}" type="image/png" />
     <link rel="stylesheet" th:href="@{/css/dashboard/dashboard-combined.css}" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <title>UP-DA Creator Dashboard</title>
 </head>
@@ -15,7 +19,7 @@
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-logo-text">
-                <a href="" class="header-logo">
+                <a href="/" class="header-logo">
                     <img class="header-logo-icon" th:src="@{/images/fix/logo.png}" alt="로고" />
                 </a>
                 <div class="header-slash">|</div>
@@ -29,21 +33,27 @@
         <aside class="sidebar">
             <nav class="sidebar-nav">
                 <div class="profile-section">
-                    <div class="profile-image"></div>
-                    <div class="profile-name">UP-DA</div>
-                    <button class="logout-button">로그아웃</button>
+                    <div class="profile-image" id="profileContainer">
+                        <img id="profileImg" th:src="${profileImgUrl}" src="/images/default-profile.png" alt="프로필 이미지">
+                        <input type="file" id="profileUpload" style="display: none;">
+                    </div>
+
+                    <!-- 판매자 이름 -->
+                    <div class="profile-name" th:text="${creatorName}">판매자 아이디</div>
+                    <button class="logout-button" onclick="window.location.href='/creator/campaign'">프로필 관리</button>
                 </div>
                 <ul class="sidebar-menu">
+                    <!-- 대시보드 -->
+                    <li class="menu-item parent-menu" data-url="/creator/dashboard/main">운영 현황</li>
                     <!-- 판매 관련 -->
                     <li class="menu-item parent-menu" data-toggle="products">
                         판매 관리
                     </li>
                     <ul class="submenu" id="products-menu">
-                        <li class="menu-item" data-url="/dashboard/products/register">상품 등록</li>
-                        <li class="menu-item" data-url="/dashboard/products/management">상품 관리</li>
-                        <li class="menu-item" data-url="/dashboard/products/orders">주문/발송 관리</li>
-                        <li class="menu-item" data-url="/dashboard/delivery">배송 관리</li>
-                        <li class="menu-item" data-url="/dashboard/settlements">정산 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/products/register">상품 등록</li>
+                        <li class="menu-item" data-url="/creator/dashboard/products/management">상품 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/products/orders">주문/발송 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/settlements">정산 관리</li>
                     </ul>
 
                     <!-- 캠페인 관련 -->
@@ -51,14 +61,15 @@
                         캠페인 관리
                     </li>
                     <ul class="submenu" id="campaigns-menu">
-                        <li class="menu-item" data-url="/dashboard/campaigns/register">캠페인 등록</li>
-                        <li class="menu-item" data-url="/dashboard/campaigns/management">캠페인 관리</li>
-                        <li class="menu-item" data-url="/dashboard/campaigns/donation/management">기부 내역/배송 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/campaigns/register">캠페인 등록</li>
+                        <li class="menu-item" data-url="/creator/dashboard/campaigns/management">캠페인 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/campaigns/donation/orders">기부 내역 관리</li>
+                        <li class="menu-item" data-url="/creator/dashboard/campaigns/reward/delivery">리워드 배송 관리</li>
                     </ul>
 
                     <!-- 기타 메뉴 -->
-                    <li class="menu-item parent-menu" data-url="/dashboard/reviews">후기 관리</li>
-                    <li class="menu-item parent-menu" data-url="/dashboard/inquiries">문의 관리</li>
+                    <!-- <li class="menu-item parent-menu" data-url="/creator/dashboard/reviews">후기 관리</li> -->
+                    <li class="menu-item parent-menu" data-url="/creator/dashboard/inquiries">문의 관리</li>
                 </ul>
 
             </nav>
@@ -66,12 +77,15 @@
 
         <!-- Main Content -->
         <main class="main-content">
-            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/inquiries'}"></div>
+            <!-- ✅ Hidden Input 추가 (creatorId 유지) -->
+            <input type="hidden" id="creatorId" th:value="${creatorId}">
+            <div class="content-wrapper" th:replace="~{${content} ?: 'dashboard/main-dashboard'}"></div>
         </main>
-    </div>
 
-    <!-- JavaScript -->
-    <script th:src="@{/js/dashboard/dashboard.js}" defer></script>
+
+        <!-- JavaScript -->
+        <script th:src="@{/js/dashboard/creator-dashboard.js}" defer></script>
+        <script th:src="@{/js/dashboard/main-dashboard.js}" defer></script>
 </body>
 
 </html>

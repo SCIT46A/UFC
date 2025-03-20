@@ -41,11 +41,11 @@ public class CampaignTagEntity {
     @JoinColumn(name = "tag_id", nullable = false)
     private TagEntity tag;
 
-    public static CampaignTagEntity toEntity(CampaignTagDTO dto, CampaignEntity campaign, TagEntity tag) {
+    public static CampaignTagEntity toEntity(CampaignTagDTO dto) {
         return CampaignTagEntity.builder()
                 //.cTagId(dto.getCTagId())  // 기본값 자동 생성
-                .campaign(campaign)
-                .tag(tag)
+                .campaign(CampaignEntity.toEntity(dto.getCampaign()))
+                .tag(TagEntity.toEntity(dto.getTag()))
                 .build();
     }
 }

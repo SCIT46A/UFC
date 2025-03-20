@@ -1,10 +1,13 @@
 package app.scit46.ufc.entity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import app.scit46.ufc.dto.CreatorDTO;
 import app.scit46.ufc.dto.ImageUrlDTO;
 import app.scit46.ufc.dto.UserDTO;
+import app.scit46.ufc.dto.custom.CreatorCreateDTO;
 import app.scit46.ufc.entity.campaign.CampaignEntity;
 import app.scit46.ufc.entity.product.ProductEntity;
 import jakarta.persistence.Column;
@@ -49,6 +52,9 @@ public class CreatorEntity {
     @Column(name = "b_regist_number", nullable = false, length = 30)
     private String bRegistNumber;
 
+    @Column(name = "b_regist_date", nullable = false)
+    private LocalDate bRegistDate;
+
     @Column(name = "b_name", nullable = false, length = 20)
     private String bName;
 
@@ -59,7 +65,7 @@ public class CreatorEntity {
     private String address;
 
     @Column(name = "creator_status", nullable = false)
-    private Boolean creatorStatus;
+    private Boolean creatorStatus; // 기본값: 미승인
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "back_img_url")
@@ -85,25 +91,20 @@ public class CreatorEntity {
     @OneToMany(mappedBy = "creator", fetch = FetchType.LAZY)
     private List<LikeEntity> likes;
 
-
-
-    public static CreatorEntity toEntity(CreatorDTO dto,
-                                         ImageUrlDTO businessCert,
-                                         ImageUrlDTO backImgUrl,
-                                         ImageUrlDTO proImgUrl,
-                                         UserDTO ownUser) {
+    public static CreatorEntity toEntity(CreatorDTO dto) {
         return CreatorEntity.builder()
-                //.creatorId(dto.getCreatorId())  // 기본값 자동 생성이므로 주석처리
+                // .creatorId(dto.getCreatorId()) // 기본값 자동 생성이므로 주석처리
                 .intro(dto.getIntro())
-                .businessCert(ImageUrlEntity.toEntity(businessCert))
+                .businessCert(ImageUrlEntity.toEntity(dto.getBusinessCert()))
                 .bRegistNumber(dto.getBRegistNumber())
+                .bRegistDate(dto.getBRegistDate())
                 .bName(dto.getBName())
                 .companyName(dto.getCompanyName())
                 .address(dto.getAddress())
                 .creatorStatus(dto.getCreatorStatus())
-                .backImgUrl(ImageUrlEntity.toEntity(backImgUrl))
-                .proImgUrl(ImageUrlEntity.toEntity(proImgUrl))
-                .ownUser(UserEntity.toEntity(ownUser, null)) // photoId는 여기서 필요 없을 듯 ㅎㅎ;;
+                .backImgUrl(ImageUrlEntity.toEntity(dto.getBackImgUrl()))
+                .proImgUrl(ImageUrlEntity.toEntity(dto.getProImgUrl()))
+                .ownUser(UserEntity.toEntity(dto.getOwnUser()))
                 .build();
     }
 }

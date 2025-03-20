@@ -1,12 +1,9 @@
 package app.scit46.ufc.dto.reward;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
@@ -18,16 +15,38 @@ public class RewardDeliveryDTO {
     private Long rDeliveryId;
     private String invoice;
     private String status;
-    private Long campaignId;
-    private Long donationId;
+    // 캠페인 대신 리워드 정보를 포함하도록 수정
+    private RewardDTO reward;
+    private MaterialDonationDTO donation;
+    // 추가된 amount 필드
+    private Integer amount;
+
+    public String getCourierId() {
+        if (invoice != null && invoice.contains("#")) {
+            String[] parts = invoice.split("#");
+            return parts.length > 0 ? parts[0] : "";
+        }
+        return "";
+    }
+
+    public String getTrackingNumber() {
+        if (invoice != null && invoice.contains("#")) {
+            String[] parts = invoice.split("#");
+            return parts.length > 1 ? parts[1] : "";
+        }
+        return "";
+    }
 
     public static RewardDeliveryDTO toDTO(RewardDeliveryEntity entity) {
+        if (entity == null)
+            return null;
         return RewardDeliveryDTO.builder()
                 .rDeliveryId(entity.getRDeliveryId())
                 .invoice(entity.getInvoice())
                 .status(entity.getStatus())
-                .campaignId(entity.getCampaign() != null ? entity.getCampaign().getCampaignId() : null)
-                .donationId(entity.getDonation() != null ? entity.getDonation().getDonationId() : null)
+                .reward(entity.getReward() != null ? RewardDTO.toDTOMinimal(entity.getReward()) : null)
+                .donation(entity.getDonation() != null ? MaterialDonationDTO.toDTOMinimal(entity.getDonation()) : null)
+                .amount(entity.getAmount())
                 .build();
     }
 }
