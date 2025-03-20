@@ -246,7 +246,8 @@
                                                         <!-- 구성 -->
                                                         <ul class="sup-content-main-box-in-content-in">
                                                             <li>
-                                                                <span th:text="${rewardNameList[iterStatus.index]}">구성품</span>
+                                                                <span th:each="reward : ${donationRewardMap[donation.donationId]}"
+                                                                      th:text="${reward}">구성품</span>
                                                             </li>
                                                         </ul>
                                                         
