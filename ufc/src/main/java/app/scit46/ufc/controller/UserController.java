@@ -314,7 +314,7 @@ public String donation(HttpServletRequest request, Model model) {
         @GetMapping("/buy/delete/{payId}")
         public String buydelete(@PathVariable(name = "payId") Long payId) {
             productPaymentService.delete(payId);
-            return "redirect:/user/mypage-buy";
+            return "redirect:/user/buy";
         }
         
 
@@ -481,6 +481,7 @@ public String donation(HttpServletRequest request, Model model) {
                 try {
                     UserDTO user = userService.readUserById(userId);
                     List<LikeDTO> likes = likeService.getLikeByUserUserId(userId);
+                    Map<Long, Integer> donationSumByCampaign = new HashMap<>();
 
                     // 좋아요한 항목들을 크리에이터와 캠페인으로 분류
                     List<LikeDTO> creatorLikes = likes.stream()
@@ -525,10 +526,10 @@ public String donation(HttpServletRequest request, Model model) {
                             // 해당 캠페인의 기부 수량 계산
                             List<MaterialDonationDTO> materialDonationsList = materialDonationService
                                     .getMaterialDonationsByCampaignId(campaign.getCampaignId());
-                            int donationSumForCampaign = 0;
-                            for (MaterialDonationDTO donation : materialDonationsList) {
-                                donationSumForCampaign += donation.getQuantity();
-                            }
+                            int donationSumForCampaign = materialDonationsList.stream()
+                                    .mapToInt(MaterialDonationDTO::getQuantity)
+                                    .sum();
+                            donationSumByCampaign.put(campaign.getCampaignId(), donationSumForCampaign);
                             
                             // 각 Goal별 달성률 계산 → (기부수량 / 목표수량) * 100, 소수점 반올림
                             List<Double> achievementsForCampaign = new ArrayList<>();
@@ -583,11 +584,7 @@ public String donation(HttpServletRequest request, Model model) {
                         campaigns.sort(Comparator.comparing(CampaignDTO::getEndDate));
                     }
 
-                    Map<Long, Integer> donationSumByCampaign = materialDonations.stream()
-                            .collect(Collectors.groupingBy(
-                                    donation -> donation.getCampaign().getCampaignId(),
-                                    Collectors.summingInt(MaterialDonationDTO::getQuantity)
-                            ));
+
 
                     // 모델에 값 추가
                     model.addAttribute("donationSumByCampaign", donationSumByCampaign);

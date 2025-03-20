@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // 사용 예시:
-  const dateSpans = document.querySelectorAll('.content-box-in-date-in-time span');
+  const dateSpans = document.querySelectorAll('.enddate');
   dateSpans.forEach(function (span) {
     const datetime = span.textContent.trim();
     if (datetime) {
