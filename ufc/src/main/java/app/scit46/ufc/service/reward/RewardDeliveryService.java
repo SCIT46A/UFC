@@ -4,27 +4,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import app.scit46.ufc.repository.RewardRepository;
-import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
-import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
-
+import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import app.scit46.ufc.dto.MaterialDonationDTO;
+import app.scit46.ufc.dto.delivery.InvoiceUpdateRequest;
+import app.scit46.ufc.dto.reward.RewardDTO;
 import app.scit46.ufc.dto.reward.RewardDeliveryDTO;
 import app.scit46.ufc.entity.reward.RewardDeliveryEntity;
 import app.scit46.ufc.repository.RewardRepository;
 import app.scit46.ufc.repository.reward.RewardDeliveryRepository;
-import lombok.RequiredArgsConstructor;
-
-import jakarta.transaction.Transactional;
-import java.util.stream.Collectors;
 import app.scit46.ufc.service.delivery.DeliveryService;
-import java.util.concurrent.ConcurrentHashMap;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -180,14 +176,50 @@ public class RewardDeliveryService {
     }
 
     public String getRewardNameByDonationId(Long donationId) {
-        return rewardDeliveryRepository.findRewardNameByDonationId(donationId);
+            return rewardDeliveryRepository.findRewardNameByDonationId(donationId);
     }
 
-    public RewardDeliveryDTO getRewardDeliveryByDonationId(Long donationId) {
-            return RewardDeliveryDTO.toDTO(rewardDeliveryRepository.findRewardDeliveryByDonationId(donationId));
-    }
+            public List<String> getRewardNamesByDonationId(Long donationId) {
+        return rewardDeliveryRepository.findRewardNamesByDonationId(donationId);
+        }
+
+        public RewardDeliveryDTO getRewardDeliveryByDonationId(Long donationId) {
+                return RewardDeliveryDTO.toDTO(rewardDeliveryRepository.findRewardDeliveryByDonationId(donationId));
+        }
+    
+
     
 
 
+        public List<RewardDeliveryDTO> getRewardDeliveriesByDonationIds(List<Long> donationIds) {
+                List<RewardDeliveryEntity> entities = rewardDeliveryRepository.findByDonationIdIn(donationIds);
+                // Entity -> DTO 변환 로직을 작성 (예: ModelMapper, 또는 직접 변환)
+                return entities.stream()
+                        .map(this::convertToDto)
+                        .collect(Collectors.toList());
+        }
+
+        private RewardDeliveryDTO convertToDto(RewardDeliveryEntity entity) {
+        RewardDeliveryDTO dto = new RewardDeliveryDTO();
+        dto.setRDeliveryId(entity.getRDeliveryId());
+        dto.setInvoice(entity.getInvoice());
+        dto.setStatus(entity.getStatus());
+        dto.setAmount(entity.getAmount());
+        
+        // MaterialDonationEntity -> MaterialDonationDTO 변환 (필요한 필드만 복사)
+        MaterialDonationDTO donationDto = new MaterialDonationDTO();
+        donationDto.setDonationId(entity.getDonation().getDonationId());
+        // donationDto에 필요한 다른 필드들도 복사
+        dto.setDonation(donationDto);
+        
+        // RewardEntity -> RewardDTO 변환 (필요한 필드만 복사)
+        RewardDTO rewardDto = new RewardDTO();
+        rewardDto.setRewardId(entity.getReward().getRewardId());
+        rewardDto.setRewardName(entity.getReward().getRewardName());
+        // rewardDto에 필요한 다른 필드들도 복사
+        dto.setReward(rewardDto);
+        
+        return dto;
+        }
 
 }
