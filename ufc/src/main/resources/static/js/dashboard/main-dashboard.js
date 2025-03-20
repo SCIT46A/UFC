@@ -69,10 +69,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (campaignChart) campaignChart.destroy(); // 🔹 기존 차트 제거
 
+        const MAX_LABEL_LENGTH = 10; // ✅ 최대 길이 설정 (원하는 값으로 조정 가능)
+
         campaignChart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: campaigns.map(c => c.name),
+                labels: campaigns.map(c => c.name.length > MAX_LABEL_LENGTH
+                    ? c.name.substring(0, MAX_LABEL_LENGTH) + "..."
+                    : c.name
+                ), // ✅ 길이 조절 후 `...` 추가
                 datasets: [{
                     label: "달성률 (%)",
                     data: campaigns.map(c => c.achievementRate),
@@ -93,8 +98,21 @@ document.addEventListener("DOMContentLoaded", function () {
                     }
                 },
                 scales: {
-                    y: {
+                    x: {
                         ticks: {
+                            callback: function (value, index, values) {
+                                let label = campaigns[index]?.name || ""; // ✅ 원래 전체 이름 가져오기
+                                return label.length > MAX_LABEL_LENGTH
+                                    ? label.substring(0, MAX_LABEL_LENGTH) + "..."
+                                    : label;
+                            }
+                        }
+                    },
+                    y: {
+                        min: 0,  // ✅ 최소값을 0으로 고정
+                        max: 100, // ✅ 최대값을 100으로 고정
+                        ticks: {
+                            stepSize: 10, // ✅ 10% 단위로 표시 (선택 사항)
                             callback: value => `${value}%`
                         }
                     }
