@@ -3,6 +3,35 @@ function initProductManagement() {
 
     let cachedProducts = []; // 🔥 상품 데이터 캐시 (필터링 및 렌더링용)
 
+
+    // 🔍 검색 입력 필드 찾기
+    const searchInput = document.querySelector(".search-row input[placeholder='상품명 또는 상품번호를 입력하세요']");
+    const tagInput = document.querySelector(".search-row input[placeholder='태그를 입력하세요']");
+    const dateInputs = document.querySelectorAll(".date-range input[type='date']");
+    const searchButton = document.querySelector(".search-actions .btn-primary");
+    const resetButton = document.querySelector(".search-actions .btn-secondary");
+    const sortSelect = document.querySelector(".table-header select");
+
+    // 🔍 검색 버튼 클릭 이벤트 추가
+    searchButton.addEventListener("click", () => {
+        filterAndSortProducts();
+    });
+
+    // 🔄 초기화 버튼 클릭 시 검색 필드 리셋 & 전체 상품 표시
+    resetButton.addEventListener("click", () => {
+        searchInput.value = "";
+        tagInput.value = "";
+        dateInputs.forEach(input => input.value = "");
+
+        filterAndSortProducts(); // 전체 목록 다시 표시
+    });
+
+    sortSelect.addEventListener("change", () => {
+        sortAndRenderProducts(sortSelect.value);
+    });
+
+
+
     // ✅ 기존 이벤트 리스너 제거 (이중 실행 방지)
     document.querySelectorAll(".status-card").forEach(card => {
         card.replaceWith(card.cloneNode(true));
@@ -14,7 +43,7 @@ function initProductManagement() {
         card.addEventListener("click", () => {
             document.querySelectorAll(".status-card").forEach(c => c.classList.remove("active"));
             card.classList.add("active");
-            filterAndRenderProducts();
+            filterAndSortProducts();
         });
     });
 
@@ -24,6 +53,28 @@ function initProductManagement() {
         });
     });
 
+
+    // 🔽 정렬 후 UI 업데이트 함수
+    function sortAndRenderProducts(sortOption) {
+        let sortedProducts = [...cachedProducts]; // 기존 배열 복사
+
+        switch (sortOption) {
+            case "최근등록순":
+                sortedProducts.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+                break;
+            case "오래된등록순":
+                sortedProducts.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+                break;
+            case "가격높은순":
+                sortedProducts.sort((a, b) => b.price - a.price);
+                break;
+            case "가격낮은순":
+                sortedProducts.sort((a, b) => a.price - b.price);
+                break;
+        }
+
+        renderProductList(sortedProducts); // UI 업데이트
+    }
 
     // ✅ 기간 선택 버튼 기능
     const periodButtons = document.querySelectorAll(".period-buttons button");
@@ -62,8 +113,34 @@ function initProductManagement() {
         return date.toISOString().split("T")[0];
     };
 
+    // ✅ 상태별 개수 업데이트 함수
+    function updateStatusCounts() {
+        const statusCounts = {
+            full: cachedProducts.length, // 전체 상품 개수
+            "on-sale": cachedProducts.filter(p => p.status == 1).length,
+            waiting: cachedProducts.filter(p => p.status == 0).length,
+            "out-of-stock": cachedProducts.filter(p => p.status == 2).length,
+            stopped: cachedProducts.filter(p => p.status == 3).length
+        };
+
+        // ✅ 각 상태 카드에 개수 반영
+        document.querySelectorAll(".status-card").forEach(card => {
+            const status = card.dataset.status;
+            const countElement = card.querySelector(".count");
+            if (countElement && statusCounts.hasOwnProperty(status)) {
+                countElement.innerText = statusCounts[status];
+            }
+        });
+    }
+
+
     // ✅ 상품 데이터 불러오기 (백엔드 API 연동)
-    async function fetchProducts() {
+    async function fetchProducts(initialLoad = true) {
+        if (!initialLoad) {
+            updateStatusCounts(); // 🔥 기존 데이터 사용 시 개수 업데이트만 실행
+            return;
+        }
+
         try {
             const response = await fetch("/api/creator/dashboard/products");
 
@@ -78,15 +155,14 @@ function initProductManagement() {
             // ✅ 삭제된 상품(status=4) 필터링
             cachedProducts = data.filter(product => product.status !== "삭제됨" && product.status !== 4);
 
-
-            // ✅ 데이터가 배열인지 확인 (배열이 아니면 빈 배열로 초기화)
             if (!Array.isArray(data)) {
                 console.error("🚨 서버 응답이 배열이 아닙니다:", data);
                 throw new Error("서버 응답이 올바른 상품 목록(JSON 배열)이 아닙니다.");
             }
 
             console.log("✅ 상품 데이터 불러오기 성공:", data);
-            renderProductList(data); // UI 업데이트
+            renderProductList(cachedProducts); // UI 업데이트
+            updateStatusCounts();
         } catch (error) {
             console.error("🚨 상품 데이터를 불러오는 중 오류 발생:", error);
             alert("상품 정보를 불러오지 못했습니다. 관리자에게 문의하세요.");
@@ -94,15 +170,98 @@ function initProductManagement() {
     }
 
 
-    // ✅ 상품 목록 필터링 & 렌더링
-    function filterAndRenderProducts() {
-        const activeStatus = document.querySelector(".status-card.active")?.dataset.status;
-        const filteredProducts = activeStatus && activeStatus !== "full"
-            ? cachedProducts.filter(product => product.status === activeStatus)
-            : cachedProducts;
 
-        renderProductList(filteredProducts);
+    // ✅ 상품 목록 필터링 & 렌더링
+    // ✅ 필터링 + 정렬을 한 번에 수행하는 함수
+    function filterAndSortProducts() {
+        const activeStatus = document.querySelector(".status-card.active")?.dataset.status;
+        const searchText = searchInput.value.trim().toLowerCase();
+        const tagText = tagInput.value.trim().toLowerCase();
+        const startDate = dateInputs[0].value ? new Date(dateInputs[0].value) : null;
+        const endDate = dateInputs[1].value ? new Date(dateInputs[1].value) : null;
+        const sortOption = sortSelect.value;
+
+        let filteredProducts = [...cachedProducts]; // ✅ 기존 데이터 복사 후 필터 적용
+
+        // 🔄 상태 필터 적용
+        if (activeStatus && activeStatus !== "full") {
+            filteredProducts = filteredProducts.filter(product => product.status == activeStatus);
+        }
+
+        // 🔍 상품명 또는 상품번호 검색
+        if (searchText) {
+            filteredProducts = filteredProducts.filter(product =>
+                product.itemName.toLowerCase().includes(searchText) ||
+                product.productId.toString().includes(searchText)
+            );
+        }
+
+        // 🔍 태그 검색
+        if (tagText) {
+            filteredProducts = filteredProducts.filter(product =>
+                product.tags.some(tag => tag.toLowerCase().includes(tagText))
+            );
+        }
+
+        // 📅 날짜 범위 검색
+        if (startDate || endDate) {
+            filteredProducts = filteredProducts.filter(product => {
+                const productDate = new Date(product.createdTime);
+                if (startDate && productDate < startDate) return false;
+                if (endDate && productDate > endDate) return false;
+                return true;
+            });
+        }
+
+        // 🔽 정렬 적용 (필터된 데이터에서 정렬 수행)
+        switch (sortOption) {
+            case "최근등록순":
+                filteredProducts.sort((a, b) => new Date(b.createdTime) - new Date(a.createdTime));
+                break;
+            case "오래된등록순":
+                filteredProducts.sort((a, b) => new Date(a.createdTime) - new Date(b.createdTime));
+                break;
+            case "가격높은순":
+                filteredProducts.sort((a, b) => b.price - a.price);
+                break;
+            case "가격낮은순":
+                filteredProducts.sort((a, b) => a.price - b.price);
+                break;
+        }
+
+        renderProductList(filteredProducts); // 🔥 UI 업데이트
     }
+
+    // ✅ 검색 버튼 클릭 이벤트에 필터 + 정렬 함수 적용
+    searchButton.addEventListener("click", () => {
+        filterAndSortProducts();
+    });
+
+    // ✅ 초기화 버튼 클릭 시 필터 및 정렬 초기화
+    resetButton.addEventListener("click", () => {
+        searchInput.value = "";
+        tagInput.value = "";
+        dateInputs.forEach(input => input.value = "");
+
+        filterAndSortProducts(); // 🔥 전체 목록 다시 표시 (필터 해제된 상태로)
+    });
+
+    // ✅ 정렬 옵션 변경 시 필터된 상태에서 정렬 유지
+    sortSelect.addEventListener("change", () => {
+        filterAndSortProducts();
+    });
+
+    // ✅ 상태 카드 클릭 시 필터 + 정렬 업데이트
+    document.querySelectorAll(".status-card").forEach(card => {
+        card.addEventListener("click", () => {
+            document.querySelectorAll(".status-card").forEach(c => c.classList.remove("active"));
+            card.classList.add("active");
+            filterAndSortProducts(); // 🔥 필터 + 정렬 적용
+        });
+    });
+
+
+
 
     // ✅ 상품 목록 렌더링
     function renderProductList(products) {
@@ -111,6 +270,26 @@ function initProductManagement() {
 
         productList.innerHTML = "";
         productCount.innerText = products.length;
+
+        if (products.length === 0) {
+            productList.innerHTML = `
+            <tr>
+                <td colspan="10"> <!-- 🔥 테이블 전체 칸 차지하도록 수정 -->
+                    <div class="empty-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        데이터가 존재하지 않습니다.
+                    </div>
+                </td>
+            </tr>
+        `;
+            return;
+        }
 
         products.forEach(product => {
             let row = document.createElement("tr");
@@ -173,14 +352,14 @@ function initProductManagement() {
 
             if (!response.ok) throw new Error("상품 삭제 실패");
 
-            // ✅ 삭제된 상품을 화면에서 즉시 제거
-            document.querySelector(`tr[data-id='${productId}']`)?.remove();
-
-            // ✅ 캐시된 데이터에서도 삭제
+            // ✅ 삭제된 상품을 캐시 데이터에서 제거
             cachedProducts = cachedProducts.filter(product => product.productId !== parseInt(productId));
 
-            // ✅ 최신 상품 목록 다시 불러오기
-            fetchProducts();
+            // ✅ UI에서 삭제 후 개수 업데이트
+            document.querySelector(`tr[data-id='${productId}']`)?.remove();
+            updateStatusCounts(); // 🔥 개수 업데이트
+            renderProductList(cachedProducts); // ✅ UI 갱신
+
         } catch (error) {
             console.error("🚨 상품 삭제 중 오류 발생:", error);
             alert("상품 삭제에 실패했습니다.");
@@ -188,24 +367,25 @@ function initProductManagement() {
     }
 
 
+
     // ✅ 상품 상태 업데이트
     async function updateProductStatus(productId, newStatus) {
         try {
-            console.log(`✅ 상품 상태 변경 요청 - 상품 ID: ${productId}, 새로운 상태 코드: ${newStatus}`);
-
             const response = await fetch(`/api/creator/dashboard/products/${productId}/status`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ status: parseInt(newStatus, 10) })  // 숫자로 변환하여 전송
+                body: JSON.stringify({ status: parseInt(newStatus, 10) })
             });
 
-            const data = await response.json();
+            if (!response.ok) throw new Error("상품 상태 업데이트 실패");
 
-            if (!response.ok) {
-                throw new Error(data.error || "상태 업데이트 실패");
-            }
+            // ✅ 캐시 데이터에서 상태 업데이트
+            cachedProducts = cachedProducts.map(product =>
+                product.productId == productId ? { ...product, status: parseInt(newStatus, 10) } : product
+            );
 
-            console.log(`✅ 상태 업데이트 성공 - 상태 코드: ${newStatus}`);
+            updateStatusCounts(); // 🔥 개수 업데이트
+            renderProductList(cachedProducts); // ✅ UI 갱신
 
         } catch (error) {
             console.error("🚨 상품 상태 변경 중 오류 발생:", error);
@@ -215,9 +395,16 @@ function initProductManagement() {
 
     function openProductCreatePage() {
         const url = window.location.origin + "/product/regist";
-        window.open(url, "_blank");
-    }
+        const newWindow = window.open(url, "_blank");
 
+        // ✅ 새 창이 닫히면 상품 데이터 다시 불러오기
+        const timer = setInterval(() => {
+            if (newWindow.closed) {
+                clearInterval(timer);
+                fetchProducts(); // 🔥 상품 목록 다시 불러오기 → 자동으로 개수 업데이트됨
+            }
+        }, 1000);
+    }
 
     // ✅ 브라우저에서 함수 인식 가능하도록 등록
     window.openProductCreatePage = openProductCreatePage;
@@ -392,18 +579,29 @@ function initProductManagement() {
     document.getElementById("modal-save")?.addEventListener("click", async function () {
         const productId = this.dataset.id;
         const newDescription = document.getElementById("modal-description").innerText;
+
         try {
-            await fetch(`/api/creator/dashboard/products/${productId}`, {
+            const response = await fetch(`/api/creator/dashboard/products/${productId}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ itemDescription: newDescription })
             });
-            fetchProducts();
+
+            if (!response.ok) throw new Error("설명 업데이트 실패");
+
+            // ✅ 캐시 데이터에서 설명 업데이트
+            cachedProducts = cachedProducts.map(product =>
+                product.productId == productId ? { ...product, itemDescription: newDescription } : product
+            );
+
+            renderProductList(cachedProducts); // ✅ UI 갱신
             closeDescriptionModal(); // ✅ 저장 후 모달 닫기
+
         } catch (error) {
             console.error("🚨 설명 수정 중 오류 발생:", error);
         }
     });
+
 
 
     fetchProducts(); // 데이터 불러오기 실행

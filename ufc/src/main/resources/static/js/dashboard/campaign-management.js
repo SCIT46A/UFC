@@ -65,17 +65,33 @@ function updateDateRange(period) {
 }
 
 // ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
+
+// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
+// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
 function formatDate(date) {
-    if (!date) return "-"; // ❗ 날짜 값이 없으면 '-' 반환
+    if (!date) return "-"; // ❗ null 또는 undefined 처리
 
-    // ✅ 문자열일 경우 Date 객체로 변환
-    const parsedDate = (typeof date === "string") ? new Date(date) : date;
+    // ✅ date가 문자열이면 Date 객체로 변환
+    if (typeof date === "string") {
+        date = new Date(date.trim()); // 🚀 trim() 추가로 공백 제거
+    }
 
-    // ✅ 날짜 유효성 체크
-    if (isNaN(parsedDate.getTime())) return "유효하지 않은 날짜";
+    // ✅ date가 숫자 (timestamp)인 경우 Date 객체로 변환
+    if (typeof date === "number") {
+        date = new Date(date);
+    }
 
-    return parsedDate.toISOString().split("T")[0]; // YYYY-MM-DD 포맷 반환
+    // ✅ Date 객체인지 확인 후 변환
+    if (date instanceof Date && !isNaN(date.getTime())) {
+        return date.toISOString().split("T")[0]; // YYYY-MM-DD 포맷 반환
+    }
+
+    console.warn("❗ 유효하지 않은 날짜 형식:", date);
+    return "유효하지 않은 날짜"; // ❗ 변환 실패한 경우
 }
+
+
+
 
 // ✅ 캠페인 목록 가져오기
 async function fetchCampaigns() {
@@ -90,11 +106,21 @@ async function fetchCampaigns() {
             throw new Error("서버 응답이 올바른 캠페인 목록(JSON 배열)이 아닙니다.");
         }
 
+        // 🔍 startDate와 endDate의 데이터 유형 확인
+        data.forEach(campaign => {
+            console.log(`📌 캠페인 ${campaign.campaignId} 날짜 확인:`,
+                "startDate:", typeof campaign.startDate, campaign.startDate,
+                "endDate:", typeof campaign.endDate, campaign.endDate
+            );
+        });
+
         renderCampaignList(data);
     } catch (error) {
         console.error("❌ 캠페인 데이터를 불러오는 중 오류 발생:", error);
     }
 }
+
+
 
 // ✅ 캠페인 목록 테이블 렌더링
 function renderCampaignList(campaigns) {
@@ -106,11 +132,19 @@ function renderCampaignList(campaigns) {
 
     tbody.innerHTML = ""; // 기존 테이블 초기화
 
+
     if (campaigns.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7">
+                <td colspan="12">
                     <div class="empty-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
                         데이터가 존재하지 않습니다.
                     </div>
                 </td>
@@ -125,8 +159,8 @@ function renderCampaignList(campaigns) {
         row.innerHTML = `
             <td>${campaign.campaignId}</td>
             <td>${campaign.title}</td>
-            <td>${formatDate(campaign.startDate)}</td>
-            <td>${formatDate(campaign.endDate)}</td>
+            <td>${formatDate(campaign.startDate ?? "-")}</td>  <!-- 🛠️ 예외처리 추가 -->
+            <td>${formatDate(campaign.endDate ?? "-")}</td>    <!-- 🛠️ 예외처리 추가 -->
             <td>
                 <span class="status-badge ${getStatusClass(campaign)}">
                     ${getStatusText(campaign)}
@@ -134,32 +168,27 @@ function renderCampaignList(campaigns) {
             </td>
             <td>${campaign.donationPercentage ? `${campaign.donationPercentage.toFixed(1)}%` : '0%'}</td>
             <td>
-            <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
-                <button class="btn btn-primary" onclick="${campaign.campaignStatus === 1
+                <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 8px;">
+                    <button class="btn btn-primary" onclick="${campaign.campaignStatus === 1
                 ? `viewCampaignDetails('${campaign.campaignId}')`
                 : `openCampaignUpdatePage('${campaign.campaignId}')`}">
-                    ${campaign.campaignStatus === 1 ? '캠페인 보기' : '캠페인 수정'}
-                </button>
-                ${campaign.campaignStatus === 2
+                        ${campaign.campaignStatus === 1 ? '캠페인 보기' : '캠페인 수정'}
+                    </button>
+                    ${campaign.campaignStatus === 2
                 ? `<button style="min-width: 89.89px; text-align: center;" class="btn btn-danger" onclick="showRejectionReason('${campaign.rejectedReason}')">
-                     거절 사유 
-                    </button>`
+                            거절 사유 
+                        </button>`
                 : ''}
-            </div>
+                </div>
             </td>
         `;
-        // <button class="btn ${campaign.campaignStatus === 1 ? 'btn-primary' : 'btn-update'}"
-        //     onclick="${campaign.campaignStatus === 1
-        //         ? `viewCampaignDetails('${campaign.campaignId}')`
-        //         : `openCampaignUpdatePage('${campaign.campaignId}')`}">
-        //     ${campaign.campaignStatus === 1 ? '캠페인 보기' : '캠페인 수정'}
-        // </button>
 
         tbody.appendChild(row);
     });
 
     console.log("✅ 캠페인 목록 렌더링 완료!");
 }
+
 
 // ✅ 캠페인 상태에 따라 CSS 클래스 반환
 function getStatusClass(campaign) {
@@ -237,12 +266,6 @@ function openCampaignCreatePage() {
 }
 
 
-// // ✅ 캠페인 미리보기 함수
-// function previewCampaign() {
-//     console.log("👀 캠페인 미리보기");
-//     alert("현재 등록된 캠페인의 미리보기 기능은 개발 중입니다.");
-// }
-
 // ✅ 모달 HTML 추가
 document.body.insertAdjacentHTML("beforeend", `
     <div id="rejectionModal" class="modal">
@@ -255,15 +278,20 @@ document.body.insertAdjacentHTML("beforeend", `
 `);
 
 // ✅ 모달 스타일 추가
-const modalStyle = `
-    .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
-    .modal-content { background-color: white; padding: 20px; margin: 15% auto; width: 50%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-    .close { float: right; font-size: 20px; cursor: pointer; }
-`;
+if (!window.campaignModalStyleInitialized) {
+    window.campaignModalStyleInitialized = true;
 
-const styleSheet = document.createElement("style");
-styleSheet.innerText = modalStyle;
-document.head.appendChild(styleSheet);
+    const modalStyle = `
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: white; padding: 20px; margin: 15% auto; width: 50%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .close { float: right; font-size: 20px; cursor: pointer; }
+    `;
+
+    const styleSheet = document.createElement("style");
+    styleSheet.innerText = modalStyle;
+    document.head.appendChild(styleSheet);
+}
+
 
 // ✅ 모달 열기 함수
 function showRejectionReason(reason) {
