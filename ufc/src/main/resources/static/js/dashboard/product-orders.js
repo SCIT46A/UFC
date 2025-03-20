@@ -32,9 +32,9 @@ function initProductOrders() {
 // ✅ 주문 데이터 로드
 async function loadOrders(filters = {}, forceReload = false) {
     try {
-        if (!forceReload && Object.keys(filters).length === 0 && cachedOrders.length > 0) {
+        if (!forceReload && cachedOrders.length > 0) {
             console.log("🔄 캐싱된 데이터 사용");
-            updateOrderCounts(getOrderCounts(cachedOrders));
+            updateOrderCounts(); // ✅ 상태 카드 개수 업데이트
             renderOrders(cachedOrders);
             return;
         }
@@ -53,12 +53,13 @@ async function loadOrders(filters = {}, forceReload = false) {
 
         cachedOrders = orders.orders || [];
 
-        updateOrderCounts(orders.orderCounts);
+        updateOrderCounts(); // ✅ 상태 카드 개수 업데이트
         renderOrders(cachedOrders);
     } catch (error) {
         console.error("❌ 주문 데이터 로딩 실패:", error);
     }
 }
+
 
 // ✅ 주문 테이블 렌더링
 function renderOrders(orders) {
@@ -75,7 +76,9 @@ function renderOrders(orders) {
             <tr>
                 <td colspan="12">
                     <div class="empty-message">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
                             <circle cx="12" cy="12" r="10" />
                             <line x1="12" y1="8" x2="12" y2="12" />
                             <line x1="12" y1="16" x2="12.01" y2="16" />
@@ -153,7 +156,7 @@ function renderOrders(orders) {
         }
         // 6️⃣ 취소된 주문이면 텍스트만 표시
         else if (paymentStatus === "취소 완료") {
-            actionButton = `<span class="text-danger">주문 취소</span>`;
+            actionButton = `<span class="text-danger">-</span>`;
         }
 
 
@@ -626,23 +629,51 @@ function getOrderCounts(orders) {
 }
 
 // ✅ 상태 카드 값 업데이트
-function updateOrderCounts(counts) {
-    const elements = {
-        paymentCompleted: document.getElementById("paymentCompletedCount"),
-        deliveryReady: document.getElementById("deliveryReadyCount"),
-        inDelivery: document.getElementById("inDeliveryCount"),
-        deliveryCompleted: document.getElementById("deliveryCompletedCount"),
-        cancelRequested: document.getElementById("cancelRequestedCount"),
+// ✅ `cachedOrders`에서 상태 개수 집계해서 상태 카드 업데이트
+function updateOrderCounts() {
+    if (!cachedOrders || cachedOrders.length === 0) {
+        console.warn("⚠️ 캐싱된 주문 데이터가 없음!");
+        return;
+    }
+
+    // ✅ 상태 개수 초기화
+    let orderCounts = {
+        paymentCompleted: 0,   // 결제 완료
+        deliveryReady: 0,      // 배송 준비중 (발주 완료 상태)
+        inDelivery: 0,         // 배송중 (발주 완료 + 송장 등록됨)
+        deliveryCompleted: 0,  // 배송완료 (프론트에서 상태 가져옴)
+        cancelRequested: 0     // 취소 요청 (pending 상태)
     };
 
-    for (let key in elements) {
-        if (elements[key]) {
-            elements[key].textContent = counts[key] || 0;
-        } else {
-            console.warn(`⚠️ ${key} 요소를 찾을 수 없습니다. HTML 구조를 확인하세요.`);
+    // ✅ `cachedOrders`에서 상태별 개수 계산
+    cachedOrders.forEach(order => {
+        if (order.status === "completed") {
+            orderCounts.paymentCompleted++;
+        } else if (order.status === "ordered") {
+            orderCounts.deliveryReady++; // 발주 완료 → 배송 준비중
+        } else if (order.status === "ordered" && order.trackingNumber) {
+            orderCounts.inDelivery++; // 발주 완료 + 송장 등록됨 → 배송중
+        } else if (order.status === "pending") {
+            orderCounts.cancelRequested++; // 취소 요청
         }
+    });
+
+    // ✅ 상태 카드 개수 업데이트
+    const statusElements = document.querySelectorAll(".status-grid .status-card .count");
+    if (statusElements.length < 5) {
+        console.warn("⚠️ 상태 카드 개수 업데이트 실패: HTML 구조 확인 필요!");
+        return;
     }
+
+    statusElements[0].textContent = orderCounts.paymentCompleted;  // 결제완료
+    statusElements[1].textContent = orderCounts.deliveryReady;     // 배송준비중
+    statusElements[2].textContent = orderCounts.inDelivery;        // 배송중
+    statusElements[3].textContent = orderCounts.deliveryCompleted; // 배송완료 (프론트에서 상태 업데이트)
+    statusElements[4].textContent = orderCounts.cancelRequested;   // 취소 요청
+
+    console.log("✅ 상태 카드 개수 업데이트 완료:", orderCounts);
 }
+
 
 
 function updateDateRange(period) {
