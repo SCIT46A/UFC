@@ -897,10 +897,33 @@ main {
   margin-bottom: 12px; /* 목표 항목 사이 간격 */
 }
 
+.quantity{
+  margin-left: 4px;
+  font-size: 12px;
+  font-weight: normal;
+  line-height: 120%;
+  color: rgb(84, 84, 84);
+}
 .goal-percentage {
   font-size: 14px;
-  font-weight: bold;
   margin-bottom: 4px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.percentage{
+  color: #16a34a;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 120%;
+}
+
+.enddate{
+  font-size: 11px;
+  line-height: 21px;
+  font-style: normal;
+  font-weight: 700;
+  color: rgb(84, 84, 84);
 }
 
 .goal-info {

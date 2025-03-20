@@ -33,4 +33,13 @@ public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEn
    @Query("SELECT rw FROM RewardDeliveryEntity rw WHERE rw.donation.donationId = :donationId")
    RewardDeliveryEntity findRewardDeliveryByDonationId(@Param("donationId") Long donationId);
 
+    @Query("SELECT r.reward.rewardName FROM RewardDeliveryEntity r WHERE r.donation.id = :donationId")
+    List<String> findRewardNamesByDonationId(@Param("donationId") Long donationId);
+    
+   @Query("SELECT rd FROM RewardDeliveryEntity rd WHERE rd.donation.id IN :donationIds")
+   List<RewardDeliveryEntity> findByDonationIdIn(@Param("donationIds") List<Long> donationIds);
+
+    
+    
+
 }
