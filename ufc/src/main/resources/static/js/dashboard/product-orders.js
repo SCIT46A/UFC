@@ -323,7 +323,192 @@ async function processSelectedOrders() {
     alert("✅ 선택된 주문의 발주 처리가 완료되었습니다!");
 }
 
-// 파일 다운로드, 업로드 함수 (생략 - 기존 로직 유지)
+async function downloadOrderExcel() {
+    console.log("📂 주문 내역 다운로드 시작...");
+
+    const table = document.querySelector("#order-table-body");
+    if (!table) {
+        alert("⚠ 다운로드할 데이터가 없습니다. (테이블이 존재하지 않음)");
+        return;
+    }
+
+    const selectedCheckboxes = document.querySelectorAll(".order-checkbox:checked");
+    let rowsToDownload = [];
+
+    if (selectedCheckboxes.length > 0) {
+        // ✅ 선택된 주문만 다운로드
+        selectedCheckboxes.forEach(checkbox => {
+            const row = checkbox.closest("tr");
+            rowsToDownload.push(row);
+        });
+    } else {
+        // ✅ 선택된 항목이 없으면 전체 다운로드
+        rowsToDownload = Array.from(table.querySelectorAll("tr"));
+    }
+
+    if (rowsToDownload.length === 0) {
+        alert("⚠ 다운로드할 데이터가 없습니다.");
+        return;
+    }
+
+    const wb = XLSX.utils.book_new();
+    const wsData = [
+        ["주문번호", "주문일자", "고객명", "연락처", "주소", "상품명", "수량", "단가", "총액", "택배사", "송장번호"]
+    ];
+
+    let orderMap = new Map(); // 주문별 데이터를 그룹화
+
+    rowsToDownload.forEach(row => {
+        const columns = row.querySelectorAll("td");
+
+        let orderNumber = columns[1]?.textContent.trim() || "-";
+        let orderDate = columns[2]?.textContent.trim() || "-";
+        let customerName = columns[4]?.textContent.trim() || "-";
+        let customerPhone = columns[5]?.textContent.trim() || "-";
+        let customerAddress = columns[6]?.textContent.trim() || "-";
+        let courierName = columns[7]?.querySelector("span")?.textContent.trim() || ""; // 택배사
+        let trackingNumber = columns[8]?.querySelector("span")?.textContent.trim() || ""; // 송장번호
+
+        // ✅ 주문 내역을 <br> 태그 기준으로 나누기
+        let orderDetails = columns[3]?.innerHTML.split("<br>").map(line => line.trim()) || [];
+
+        let productName = orderDetails[0]?.replace("상품명  : ", "") || "-";
+        let quantity = orderDetails[1]?.replace("수량    : ", "").replace("개", "").trim() || "-";
+        let unitPrice = orderDetails[2]?.replace("단가    : ", "").replace("원", "").trim() || "-";
+        let totalPrice = orderDetails[3]?.replace("총액    : ", "").replace("원", "").trim() || "-";
+
+        // ✅ 주문번호 별로 그룹화하여 같은 주문번호는 한 번만 저장
+        if (!orderMap.has(orderNumber)) {
+            orderMap.set(orderNumber, {
+                orderDate,
+                customerName,
+                customerPhone,
+                customerAddress,
+                courierName,
+                trackingNumber,
+                products: []
+            });
+        }
+
+        orderMap.get(orderNumber).products.push([productName, quantity, unitPrice, totalPrice]);
+    });
+
+    // ✅ 주문번호별로 데이터를 합쳐서 엑셀 시트에 추가
+    orderMap.forEach((order, orderNumber) => {
+        let firstRow = true;
+        order.products.forEach(product => {
+            let row = [
+                firstRow ? orderNumber : "",
+                firstRow ? order.orderDate : "",
+                firstRow ? order.customerName : "",
+                firstRow ? order.customerPhone : "",
+                firstRow ? order.customerAddress : "",
+                ...product,
+                firstRow ? order.courierName : "",
+                firstRow ? order.trackingNumber : ""
+            ];
+            wsData.push(row);
+            firstRow = false;
+        });
+    });
+
+    const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+    // ✅ 셀 병합 (주문번호, 주문일자, 고객정보, 배송정보)
+    let merges = [];
+    let rowIndex = 1;
+    orderMap.forEach((order, orderNumber) => {
+        if (order.products.length > 1) {
+            let mergeEndRow = rowIndex + order.products.length - 1;
+            merges.push(
+                { s: { r: rowIndex, c: 0 }, e: { r: mergeEndRow, c: 0 } }, // 주문번호
+                { s: { r: rowIndex, c: 1 }, e: { r: mergeEndRow, c: 1 } }, // 주문일자
+                { s: { r: rowIndex, c: 2 }, e: { r: mergeEndRow, c: 2 } }, // 고객명
+                { s: { r: rowIndex, c: 3 }, e: { r: mergeEndRow, c: 3 } }, // 연락처
+                { s: { r: rowIndex, c: 4 }, e: { r: mergeEndRow, c: 4 } }, // 주소
+                { s: { r: rowIndex, c: 9 }, e: { r: mergeEndRow, c: 9 } }, // 택배사
+                { s: { r: rowIndex, c: 10 }, e: { r: mergeEndRow, c: 10 } } // 송장번호
+            );
+        }
+        rowIndex += order.products.length;
+    });
+
+    ws["!merges"] = merges;
+    XLSX.utils.book_append_sheet(wb, ws, "주문 내역");
+
+    const today = new Date().toISOString().split("T")[0];
+    const fileName = `${today}_주문내역.xlsx`;
+
+    XLSX.writeFile(wb, fileName);
+    console.log(`✅ ${fileName} 엑셀 다운로드 완료!`);
+}
+
+
+async function uploadInvoiceExcel() {
+    const fileInput = document.getElementById("invoiceExcelUpload");
+    if (!fileInput.files.length) {
+        alert("⚠ 업로드할 엑셀 파일을 선택하세요.");
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async function (event) {
+        try {
+            const data = new Uint8Array(event.target.result);
+            const workbook = XLSX.read(data, { type: "array" });
+            const sheet = workbook.Sheets[workbook.SheetNames[0]];
+            let jsonData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+            console.log("📊 업로드된 엑셀 원본 데이터:", jsonData);
+
+            // ✅ 1. 헤더 찾기 (주문번호, 택배사, 송장번호)
+            const headerIndex = jsonData.findIndex(row => row.includes("주문번호"));
+            if (headerIndex === -1) {
+                alert("⚠ 올바른 엑셀 파일이 아닙니다. 양식을 확인하세요.");
+                return;
+            }
+
+            // ✅ 2. 데이터 필터링 (빈 행 제거)
+            let validData = jsonData.slice(headerIndex + 1).filter(row => row.some(value => value));
+
+            if (validData.length === 0) {
+                alert("⚠ 데이터가 없습니다. 올바른 파일을 업로드하세요.");
+                return;
+            }
+
+            console.log("📊 필터링된 데이터:", validData);
+
+            let updateData = validData.map(rowData => ({
+                id: Number(rowData[0]?.toString().trim() || 0), // 주문번호
+                courier: rowData[9]?.toString().trim(), // 택배사
+                trackingNumber: rowData[10]?.toString().trim() // 송장번호
+            })).filter(row => row.id && row.trackingNumber);
+
+            if (updateData.length === 0) {
+                alert("⚠ 올바른 데이터가 없습니다. 주문번호, 택배사, 송장번호를 입력하세요.");
+                return;
+            }
+
+            // ✅ 3. 송장번호 업데이트 요청
+            await updateInvoicesInDB(updateData);
+
+            // ✅ 4. UI 데이터 갱신
+            await loadOrders({}, true);
+
+            // ✅ 5. 모달 닫기
+            closeBatchInvoiceModal();
+
+            // ✅ 6. 성공 메시지
+            alert("✅ 송장번호가 정상적으로 등록되었습니다.");
+
+        } catch (error) {
+            console.error("❌ 엑셀 업로드 처리 중 오류 발생:", error);
+            alert("❌ 엑셀 업로드 실패! 콘솔을 확인하세요.");
+        }
+    };
+
+    reader.readAsArrayBuffer(fileInput.files[0]);
+}
 
 // 상태 카드 업데이트 함수 (cachedOrders 기준)
 function updateOrderCountsFromCache() {
