@@ -310,13 +310,16 @@
                                                                 <div th:each="goalAchieve, iterAchieveStat : ${campaignAchievementsList[iterStatus.index]}">
                                                                     <div class="goal-item">
                                                                     <!-- 퍼센트 텍스트 -->
-                                                                    <div class="goal-percentage" th:text="${goalAchieve} + '%'"></div>
+                                                                    <div class="goal-percentage">
+                                                                        <span th:text="${goalAchieve} + '%'"></span>
+                                                                        <span th:text="${campaign.endDate}"></span>
+                                                                    </div>
                                                                     <!-- 진행 막대 컨테이너 : 인라인으로 --achievement 값을 설정 -->
                                                                     <div class="like-bo-box-in-pe-in-a-content-per-bo"
                                                                         th:style="'--achievement:' + goalAchieve + '%;'">
                                                                     </div>
                                                                     <!-- 목표 관련 정보 -->
-                                                                    <div class="goal-info">
+                                                                    <!-- <div class="goal-info">
                                                                         <span class="goal-material"
                                                                             th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].material.name}"></span>
                                                                         <span class="goal-donated"
@@ -325,12 +328,11 @@
                                                                         <span class="goal-required"
                                                                             th:text="${campaignGoalsList[iterStatus.index][iterAchieveStat.index].quantityRequired}"></span>
                                                                         <span>개</span>
-                                                                    </div>
+                                                                    </div> -->
                                                                     </div>
                                                                 </div>
                                                                 <!-- 캠페인 종료일 등 추가 정보 -->
                                                                 <em class="content-box-in-date-in-time">
-                                                                    <span th:text="${campaign.endDate}"></span>
                                                                 </em>
                                                                 </div>
 

@@ -37,8 +37,9 @@ public interface RewardDeliveryRepository extends JpaRepository<RewardDeliveryEn
     List<String> findRewardNamesByDonationId(@Param("donationId") Long donationId);
     
    @Query("SELECT rd FROM RewardDeliveryEntity rd WHERE rd.donation.id IN :donationIds")
-    List<RewardDeliveryEntity> findByDonationIdIn(@Param("donationIds") List<Long> donationIds);
+   List<RewardDeliveryEntity> findByDonationIdIn(@Param("donationIds") List<Long> donationIds);
 
+    
     
 
 }
