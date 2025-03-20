@@ -10,24 +10,29 @@
                 <div class="status-grid">
                     <div class="status-card">
                         <span>총 매출</span>
-                        <p th:text="${#numbers.formatDecimal(totalSales ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</p>
+                        <p id="totalSales"
+                            th:text="${#numbers.formatDecimal(totalSales ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 예정</span>
-                        <p th:text="${#numbers.formatDecimal(scheduledSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                        <p id="scheduledSettlement"
+                            th:text="${#numbers.formatDecimal(scheduledSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
                             0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 완료</span>
-                        <p th:text="${#numbers.formatDecimal(completedSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                        <p id="completedSettlement"
+                            th:text="${#numbers.formatDecimal(completedSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
                             0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 대기</span>
-                        <p th:text="${#numbers.formatDecimal(pendingSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원
+                        <p id="pendingSettlement"
+                            th:text="${#numbers.formatDecimal(pendingSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원
                         </p>
                     </div>
                 </div>
+
 
             </section>
 
