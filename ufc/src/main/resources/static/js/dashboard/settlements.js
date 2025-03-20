@@ -78,7 +78,6 @@ function initSettlementManagement() {
         let startDate = startDateInput?.value;
         let endDate = endDateInput?.value;
 
-        // 🚀 선택된 날짜가 없으면 필터에서 제외
         let queryParams = new URLSearchParams();
         if (status !== "all") queryParams.append("status", status);
         if (startDate) queryParams.append("startDate", startDate);
@@ -93,10 +92,44 @@ function initSettlementManagement() {
                     console.error("🚨 API 응답이 배열이 아닙니다!", data);
                     return;
                 }
+                // 상태 카드 값 업데이트
+                updateStatusCards(data);
                 renderSettlementTable(data);
             })
             .catch(error => console.error("❌ 정산 목록 로드 오류:", error));
     }
+
+    /**
+     * settlement 목록 데이터를 순회하여 상태별 금액 합산 후 상태카드 업데이트
+     */
+    function updateStatusCards(settlements) {
+        let totalSales = 0;
+        let scheduledSettlement = 0;
+        let completedSettlement = 0;
+        let pendingSettlement = 0;
+
+        settlements.forEach(settlement => {
+            // 총 매출은 settlement.totalAmount (없으면 settlementAmount 사용)
+            totalSales += settlement.totalAmount || settlement.settlementAmount || 0;
+            switch (settlement.settlementStatus) {
+                case "SCHEDULED":
+                    scheduledSettlement += settlement.settlementAmount || 0;
+                    break;
+                case "COMPLETED":
+                    completedSettlement += settlement.settlementAmount || 0;
+                    break;
+                case "PENDING":
+                    pendingSettlement += settlement.settlementAmount || 0;
+                    break;
+            }
+        });
+
+        document.getElementById("totalSales").textContent = formatCurrency(totalSales);
+        document.getElementById("scheduledSettlement").textContent = formatCurrency(scheduledSettlement);
+        document.getElementById("completedSettlement").textContent = formatCurrency(completedSettlement);
+        document.getElementById("pendingSettlement").textContent = formatCurrency(pendingSettlement);
+    }
+
 
 
     /**

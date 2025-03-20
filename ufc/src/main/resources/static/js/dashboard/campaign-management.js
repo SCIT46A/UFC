@@ -64,10 +64,7 @@ function updateDateRange(period) {
     document.querySelectorAll(".date-range input[type='date']")[1].value = formatDate(endDate);
 }
 
-// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
 
-// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
-// ✅ 날짜 형식 변환 함수 (YYYY-MM-DD)
 function formatDate(date) {
     if (!date) return "-"; // ❗ null 또는 undefined 처리
 
@@ -91,6 +88,25 @@ function formatDate(date) {
 }
 
 
+function updateCampaignStatusCounts(counts) {
+    console.log("📊 캠페인 상태 카드 값 업데이트:", counts);
+
+    const elements = {
+        pendingCampaigns: document.querySelector(".status-card:nth-child(1) p"),
+        rejectedCampaigns: document.querySelector(".status-card:nth-child(2) p"),
+        inProgressCampaigns: document.querySelector(".status-card:nth-child(3) p"),
+        closedCampaigns: document.querySelector(".status-card:nth-child(4) p"),
+        achievedCampaigns: document.querySelector(".status-card:nth-child(5) p"),
+    };
+
+    for (let key in elements) {
+        if (elements[key]) {
+            elements[key].textContent = counts[key] || 0;
+        } else {
+            console.warn(`⚠️ 상태 카드 요소 없음: ${key}`);
+        }
+    }
+}
 
 
 // ✅ 캠페인 목록 가져오기
@@ -114,10 +130,43 @@ async function fetchCampaigns() {
             );
         });
 
+        updateCampaignStatusCounts(getCampaignCounts(data));
         renderCampaignList(data);
     } catch (error) {
         console.error("❌ 캠페인 데이터를 불러오는 중 오류 발생:", error);
     }
+}
+
+function getCampaignCounts(campaigns) {
+    let counts = {
+        pendingCampaigns: 0,
+        rejectedCampaigns: 0,
+        inProgressCampaigns: 0,
+        closedCampaigns: 0,
+        achievedCampaigns: 0
+    };
+
+    campaigns.forEach(campaign => {
+        switch (campaign.campaignStatus) {
+            case 0: counts.pendingCampaigns++; break; // 승인 대기
+            case 1: {
+                const today = new Date();
+                const endDate = new Date(campaign.endDate);
+                const donationRate = campaign.donationPercentage || 0;
+
+                if (endDate < today) {
+                    counts.closedCampaigns++; // 종료된 캠페인
+                    if (donationRate >= 100) counts.achievedCampaigns++; // 목표 달성
+                } else {
+                    counts.inProgressCampaigns++; // 진행 중
+                }
+                break;
+            }
+            case 2: counts.rejectedCampaigns++; break; // 승인 거부
+        }
+    });
+
+    return counts;
 }
 
 

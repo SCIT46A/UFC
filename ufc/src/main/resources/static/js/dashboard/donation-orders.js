@@ -114,7 +114,12 @@ async function renderDonationOrders(donations) {
                     ${getStatusText(displayStatus, trackingStatus)}
                 </span>
             </td>
-            <td>-</td>
+            <td>
+            ${(donation.status === "pending" && isDelivered) ? `
+                <button class="btn btn-primary approve-btn" data-id="${donation.donationId}">승인</button>
+                <button class="btn btn-danger reject-btn" data-id="${donation.donationId}">반려</button>
+            ` : "-"}
+        </td>
         `;
 
         tbody.appendChild(row);
@@ -239,29 +244,36 @@ function modifyApprovalClickHandler(event) {
 
 // 기부 상태별 개수 업데이트
 function updateDonationCounts(counts) {
-    document.getElementById("pendingDonationCount").textContent = counts.pending || 0;
-    document.getElementById("processingDonationCount").textContent = counts.processing || 0;
-    document.getElementById("rejectedDonationCount").textContent = counts.rejected || 0;
-    document.getElementById("approvedDonationCount").textContent = counts.approved || 0;
+    document.getElementById("processingDonationCount").textContent = counts.processing || 0; // 🚀 진행 중
+    document.getElementById("pendingDonationCount").textContent = counts.pending || 0; // ✅ 검수 대기
+    document.getElementById("rejectedDonationCount").textContent = counts.rejected || 0; // ❌ 반려
+    document.getElementById("approvedDonationCount").textContent = counts.approved || 0; // ✅ 승인
 
     document.querySelector(".left-section span").textContent = `목록 (총 ${cachedDonations.length}개)`;
 }
 
 
+
 function getStatusClass(status, trackingStatus) {
     const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
-    if (!isDelivered) return "processing"; // 🚀 배송 완료가 아니면 기부 진행 중으로 간주
-    return status === "pending" ? "pending" :
-        status === "approved" ? "approved" : "rejected";
+
+    if (status === "pending" && isDelivered) return "pending"; // 검수 대기 + 배송 완료 ✅
+    return isDelivered
+        ? status === "approved" ? "approved" : "rejected"
+        : "processing"; // 🚀 배송 완료가 아니면 "진행 중"
 }
+
 
 
 function getStatusText(status, trackingStatus) {
     const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
-    if (!isDelivered) return "진행 중"; // 🚀 배송 완료가 아니면 기부 진행 중
-    return status === "pending" ? "검수 대기" :
-        status === "approved" ? "승인" : "반려";
+
+    if (status === "pending" && isDelivered) return "검수 대기"; // ✅ 검수 대기 유지
+    return isDelivered
+        ? status === "approved" ? "승인" : "반려"
+        : "진행 중"; // 🚀 배송 완료가 아니면 "진행 중"
 }
+
 
 
 
@@ -422,8 +434,10 @@ function getDonationCounts(donations) {
         const trackingStatus = donation.trackingStatus ? donation.trackingStatus.trim() : "배송 상태 없음";
         const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
 
-        if (!isDelivered) {
-            acc.processing = (acc.processing || 0) + 1; // 🚀 배송 완료가 아닌 것들을 기부 진행 중으로 간주
+        if (donation.status === "pending" && !isDelivered) {
+            acc.processing = (acc.processing || 0) + 1; // 🚀 배송 완료되지 않은 "pending" → "진행 중"
+        } else if (donation.status === "pending" && isDelivered) {
+            acc.pending = (acc.pending || 0) + 1; // ✅ 배송 완료된 "pending" → "검수 대기"
         } else {
             acc[donation.status] = (acc[donation.status] || 0) + 1;
         }
@@ -431,6 +445,7 @@ function getDonationCounts(donations) {
         return acc;
     }, { pending: 0, processing: 0, rejected: 0, approved: 0 });
 }
+
 
 
 // 전체 승인 처리 함수 (선택된 항목들을 승인 처리)
