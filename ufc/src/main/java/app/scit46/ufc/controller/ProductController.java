@@ -84,7 +84,8 @@ public class ProductController {
 
         // 사용 예시
         List<ProductTagDTO> tags = productTagService.findTagsByProductId(id);
-        final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
+       //      나중에 바끌게 꼭
+        final String DEFAULT_IMAGE = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/89888086-698b-4e0e-92c2-8eca99737900/public";
 
         // 캠페인 이미지 처리
         String imageUrl = (product.getItem().getPhoto() != null)
@@ -94,8 +95,8 @@ public class ProductController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (product.getCreatedBy() != null
-                && product.getCreatedBy().getBusinessCert() != null)
-                        ? imageService.getImageUrl(product.getCreatedBy().getBusinessCert().getImageId())
+                && product.getCreatedBy().getProImgUrl() != null)
+                        ? imageService.getImageUrl(product.getCreatedBy().getProImgUrl().getImageId())
                         : DEFAULT_IMAGE;
         model.addAttribute("creatorimageUrl", creatorImageUrl);
 

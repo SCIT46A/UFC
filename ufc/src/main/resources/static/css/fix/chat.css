@@ -17,6 +17,7 @@
 }
 
 .chat-window{
+    border: 1px solid gray;
     height: 450px;
     width: 300px;
     position: fixed;
@@ -29,6 +30,7 @@
 }
 
 .chat-inner-view{
+    border: 1px solid gray;
     display: flex;
     height: 600px;
     width: 400px;
@@ -383,7 +385,8 @@
     transform: translateZ(0px);
     backdrop-filter: blur(30px);
     unicode-bidi: isolate;
-    width: 100%
+    width: 100%;
+    border-bottom: 1px solid gray;
 }
 
 .top-out-button-box {
@@ -956,7 +959,9 @@
     bottom: 0px;
     left: 0px;
     z-index: 1030;
-    width: 97%;
+    width: 100%;
+    padding-top: 8px;
+    border-top: 1px solid gray;
 }
 
 .bottom-message-wrap {
@@ -1189,4 +1194,8 @@
 
 .middle-main-message-wrap::-webkit-scrollbar {
     display: none;
+}
+
+.chat-center-target-add{
+    justify-self: center;
 }

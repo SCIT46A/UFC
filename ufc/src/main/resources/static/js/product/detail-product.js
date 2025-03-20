@@ -196,7 +196,7 @@ $(document).ready(function () {
             success: function (response) {
                 $(".content-box-in").html(`
                     <p style="color: gray">
-                      ※ 게시글을 작성하셔야 관리자에게 캠페인을 승인받을 수 있습니다.
+                      ※ 게시글을 작성하셔야 관리자에게 상품을 승인받을 수 있습니다.
                     </p>
                     <div id="summernote-container">
                         <textarea id="summernote-editor"></textarea>

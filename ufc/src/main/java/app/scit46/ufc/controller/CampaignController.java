@@ -94,7 +94,8 @@ public class CampaignController {
         }
 
         List<CampaignTagDTO> tags = campaignTagService.findTagsByCampaignId(id);
-        final String DEFAULT_IMAGE = "/static/images/fix/logo.png";
+//      나중에 바끌게 꼭
+        final String DEFAULT_IMAGE = "https://imagedelivery.net/sXWs4txHKON-dqRmy35ZtA/89888086-698b-4e0e-92c2-8eca99737900/public";
 
         // 캠페인 이미지 처리
         String imageUrl = (campaign.getPhoto() != null)
@@ -104,7 +105,6 @@ public class CampaignController {
 
         // 크리에이터 이미지 처리
         String creatorImageUrl = (campaign.getCreatedBy() != null
-
                 && campaign.getCreatedBy().getProImgUrl() != null)
                         ? imageService.getImageUrl(campaign.getCreatedBy().getProImgUrl().getImageId())
                         : DEFAULT_IMAGE;
