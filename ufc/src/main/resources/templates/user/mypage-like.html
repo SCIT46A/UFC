@@ -311,8 +311,16 @@
                                                                     <div class="goal-item">
                                                                     <!-- 퍼센트 텍스트 -->
                                                                     <div class="goal-percentage">
-                                                                        <span th:text="${goalAchieve} + '%'"></span>
-                                                                        <span th:text="${campaign.endDate}"></span>
+                                                                        <div>
+
+                                                                            <span class="percentage" th:text="${goalAchieve} + '%'"></span>
+                                                                            <span class="quantity" th:text="${donationSumByCampaign[campaign.campaignId]}"></span>
+                                                                            <span class="quantity">개 모임</span>
+                                                                        </div>
+                                                                        <div>
+
+                                                                            <span class="enddate" th:text="${campaign.endDate}"></span>
+                                                                        </div>
                                                                     </div>
                                                                     <!-- 진행 막대 컨테이너 : 인라인으로 --achievement 값을 설정 -->
                                                                     <div class="like-bo-box-in-pe-in-a-content-per-bo"
