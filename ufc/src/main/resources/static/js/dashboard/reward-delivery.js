@@ -44,14 +44,10 @@ async function loadRewardDeliveries(filters = {}, forceReload = false) {
         let data = await response.json();
         console.log("✅ 리워드 배송 데이터 로드 성공:", data);
 
-        if (!data.rewardDeliveries || data.rewardDeliveries.length === 0) {
-            console.warn("⚠ 배송 데이터가 비어 있습니다:", data.rewardDeliveries);
-        }
-
-        cachedRewardDeliveries = data.rewardDeliveries;
+        cachedRewardDeliveries = data.rewardDeliveries || [];
 
         // ✅ 상태 카드 값 업데이트
-        updateRewardDeliveryCounts(data.deliveryCounts);
+        updateRewardDeliveryCounts(getDeliveryCounts(cachedRewardDeliveries));
 
         // ✅ 테이블 데이터 업데이트
         renderRewardDeliveries(cachedRewardDeliveries);
@@ -59,6 +55,7 @@ async function loadRewardDeliveries(filters = {}, forceReload = false) {
         console.error("❌ 리워드 배송 데이터 로딩 실패:", error);
     }
 }
+
 
 
 async function renderRewardDeliveries(rewardDeliveries) {
@@ -151,29 +148,29 @@ async function renderRewardDeliveries(rewardDeliveries) {
 // ✅ 배송 상태 개수 계산 함수 (추가됨)
 function getDeliveryCounts(deliveries) {
     let counts = {
-        overdue: 0,
-        autoProcess: 0,
         newOrders: 0,
         readyToShip: 0,
-        shipmentD1: 0,
         shipmentDday: 0,
-        shipped: 0
+        shipmentD1: 0,
+        shipped: 0,
+        overdue: 0
     };
 
     deliveries.forEach(delivery => {
-        switch (delivery.status) {
-            case "overdue": counts.overdue++; break;
-            case "autoProcess": counts.autoProcess++; break;
+        switch (delivery.deliveryStatus || delivery.status) {
             case "newOrders": counts.newOrders++; break;
             case "readyToShip": counts.readyToShip++; break;
-            case "shipmentD1": counts.shipmentD1++; break;
             case "shipmentDday": counts.shipmentDday++; break;
+            case "shipmentD1": counts.shipmentD1++; break;
             case "shipped": counts.shipped++; break;
+            case "overdue": counts.overdue++; break;
+            default: break;
         }
     });
 
     return counts;
 }
+
 
 
 function editInvoice(rdeliveryId) {
@@ -318,14 +315,24 @@ async function processDelivery(rewardDeliveryId) {
 function updateRewardDeliveryCounts(counts) {
     console.log("📊 배송 상태 업데이트:", counts);
 
-    // ✅ 요소가 존재하는 경우에만 업데이트 (오류 방지)
-    document.getElementById("overdueCount").textContent = counts.overdue || 0;
-    document.getElementById("autoProcessCount").textContent = counts.autoProcess || 0;
-    document.getElementById("newOrdersCount").textContent = counts.newOrders || 0;
-    document.getElementById("readyToShipCount").textContent = counts.readyToShip || 0;
-    document.getElementById("shipmentD1Count").textContent = counts.shipmentD1 || 0;
-    document.getElementById("shipmentDdayCount").textContent = counts.shipmentDday || 0;
+    const elements = {
+        newOrdersCount: document.getElementById("newOrdersCount"),
+        readyToShipCount: document.getElementById("readyToShipCount"),
+        shipmentDdayCount: document.getElementById("shipmentDdayCount"),
+        shipmentD1Count: document.getElementById("shipmentD1Count"),
+        shippedCount: document.getElementById("shippedCount"),
+        overdueCount: document.getElementById("overdueCount"),
+    };
+
+    for (let key in elements) {
+        if (elements[key]) {
+            elements[key].innerHTML = `${counts[key] || 0}<span>건</span>`;
+        } else {
+            console.warn(`⚠️ 상태 카드 요소 없음: ${key}`);
+        }
+    }
 }
+
 
 function formatDate(date) {
     if (!date || isNaN(date.getTime())) return '-';
