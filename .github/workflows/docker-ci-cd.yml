@@ -7,7 +7,7 @@
 
 on:
   push:
-    branches: [ "last_deploy" ]
+    branches: [ "last_merge" ]
 
 permissions:
   contents: read
