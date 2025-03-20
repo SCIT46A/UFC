@@ -38,7 +38,7 @@ $(function () {
                                 <div class="progress-bar" style="width: ${goal.donationPercentage}%"></div>
                             </div>
                             <div class="flex justify-between text-sm text-gray-500">
-                                <span>${goal.donationPercentage}% 달성</span>
+                                <span>${parseFloat(goal.donationPercentage).toFixed(2)}% 달성</span>
                                 <span>목표: ${goal.goalTitle} (${goal.requiredQuantity}개)</span>
                             </div>
                         </div>
@@ -123,7 +123,9 @@ $(function () {
                                         </div>
                                     </div>
                                     <div class="main-resent-per">
-                                        ${data.donationPercentage}% 달성!
+                                        <div class="main-resent-per">
+                                            ${parseFloat(data.donationPercentage).toFixed(2)}% 달성!
+                                        </div>
                                     </div>
                                     <div class="main-resent-tag">
                                         <div class="main-resent-tag-in">
@@ -301,4 +303,75 @@ $(function () {
             productLeftBtn.classList.add("hidden");
         });
     }
+
+    $.ajax({
+        url: `/recommendations/user`,
+        method: "POST",
+        success: function(resultUrl) {
+            resultUrl.forEach((data) =>{
+                targetImgHtml = `
+                <a class="image-container" href="/campaign/${data.campaign_id}">
+                    <img
+                            src="/api/image/${data.image_id}"
+                            alt="Slide 1"
+                            class="target-img-addddddd"
+                    />
+                    <div class="main-container-title">
+                        <div
+                                class="main-container-title-in"
+                        >
+                            ${data.title}
+                        </div>
+                    </div>
+                </a>
+                `
+                $("#title-target-img").append(targetImgHtml)
+                updateImageUrls("#title-target-img img.target-img-addddddd");
+
+            })
+            initializeSlider()
+        },
+        error: function(err) {
+            console.error("이미지 URL 요청 오류:", err);
+        }
+    });
+
+    function initializeSlider() {
+        const slider = document.querySelector(".slider");
+        const slides = document.querySelectorAll(".image-container");
+        const prevBtn = document.querySelector(".main-container-count-control-l");
+        const nextBtn = document.querySelector(".main-container-count-control-r");
+        const pageCount = document.querySelector(".main-container-count-point");
+        if (slider && slides.length > 0 && prevBtn && nextBtn && pageCount) {
+            let currentIndex = 0;
+            const totalSlides = slides.length;
+            function moveSlide(index) {
+                const slideWidth = 584; // 슬라이드 너비 (px)
+                slider.style.transform = `translateX(-${index * slideWidth}px)`;
+                pageCount.innerText = index + 1;
+            }
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                moveSlide(currentIndex);
+            }
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                moveSlide(currentIndex);
+            }
+            let slideInterval = setInterval(nextSlide, 4000);
+            nextBtn.addEventListener("click", () => {
+                clearInterval(slideInterval);
+                nextSlide();
+                slideInterval = setInterval(nextSlide, 4000);
+            });
+            prevBtn.addEventListener("click", () => {
+                clearInterval(slideInterval);
+                prevSlide();
+                slideInterval = setInterval(nextSlide, 4000);
+            });
+        }
+    }
+
+
+
 });

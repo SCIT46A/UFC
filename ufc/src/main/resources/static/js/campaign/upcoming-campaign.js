@@ -106,7 +106,7 @@ $(function () {
                                                 <div class="main-funding">
                                                     <div class="main-funding-top">
                                                         <div>
-                                                            <span class="main-funding-top-per">${data.donationPercentage}%</span>
+                                                            <span class="main-funding-top-per">${parseFloat(data.donationPercentage).toFixed(2)}%</span>
                                                             <span class="main-funding-top-pri">${data.donatedQuantity}개 모임</span>
                                                         </div>
                                                         <em>${data.remainingDays}일 남음</em>

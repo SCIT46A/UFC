@@ -749,7 +749,7 @@ $(document).ready(function () {
                                         </div>
                                     </div>
                                     <div class="main-resent-per">
-                                        ${data.donationPercentage}% 달성!
+                                       ${parseFloat(data.donationPercentage).toFixed(2)}% 달성!
                                     </div>
                                     <div class="main-resent-tag">
                                         <div class="main-resent-tag-in">
