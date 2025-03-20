@@ -630,6 +630,7 @@ public class CampaignService {
                                 rewardTotal = 0;
                             }
 
+
                             // RewardDeliveryDTO 생성 – donation 정보를 minimal 변환 후 세팅
                             RewardDeliveryDTO rewardDeliveryDTO = new RewardDeliveryDTO();
                             rewardDeliveryDTO.setInvoice((String) formData.get("invoice"));
