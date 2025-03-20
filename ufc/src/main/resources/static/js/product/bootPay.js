@@ -52,7 +52,7 @@ document.getElementById("pay-button").addEventListener("click", async function (
 
         if (result.success) {
             alert("✅ 결제가 성공적으로 처리되었습니다.");
-            window.location.href = "/";
+            window.location.href = "/user/pay";
         } else {
             alert("❌ 결제 검증에 실패했습니다. 서버 응답: " + JSON.stringify(result));
         }

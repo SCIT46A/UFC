@@ -10,23 +10,22 @@
                 <div class="status-grid">
                     <div class="status-card">
                         <span>총 매출</span>
-                        <p th:text="${#numbers.formatDecimal(totalSales, 0, 'COMMA', 0, 'POINT')} + '원'">1,000,000원
-                        </p>
+                        <p th:text="${#numbers.formatDecimal(totalSales ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 예정</span>
-                        <p th:text="${#numbers.formatDecimal(scheduledSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            500,000원</p>
+                        <p th:text="${#numbers.formatDecimal(scheduledSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 완료</span>
-                        <p th:text="${#numbers.formatDecimal(completedSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            400,000원</p>
+                        <p th:text="${#numbers.formatDecimal(completedSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">
+                            0원</p>
                     </div>
                     <div class="status-card">
                         <span>정산 대기</span>
-                        <p th:text="${#numbers.formatDecimal(pendingSettlement, 0, 'COMMA', 0, 'POINT')} + '원'">
-                            100,000원</p>
+                        <p th:text="${#numbers.formatDecimal(pendingSettlement ?: 0, 0, 'COMMA', 0, 'POINT')} + '원'">0원
+                        </p>
                     </div>
                 </div>
 
@@ -70,9 +69,10 @@
             <!-- Settlement Table -->
             <div class="table-header">
                 <div class="left-section">
-                    <span>목록 (총 1개)</span>
+                    <span>목록 (총 0개)</span>
                     <select>
-                        <option>최근주문순</option>
+                        <option>최신순</option>
+                        <option>오래된순</option>
                     </select>
                     <!-- <select>
                         <option>100개씩 보기</option>

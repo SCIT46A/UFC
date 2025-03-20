@@ -72,34 +72,32 @@ async function renderDonationOrders(donations) {
 
     tbody.innerHTML = ""; // 기존 목록 초기화
 
+    if (donations.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="12">
+                    <div class="empty-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        데이터가 존재하지 않습니다.
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
     donations.forEach(donation => {
         const row = document.createElement("tr");
 
-        // 🚨 trackingStatus가 undefined일 경우 대비
         const trackingStatus = donation.trackingStatus ? donation.trackingStatus.trim() : "배송 상태 없음";
-
-        // 🚨 정확한 비교
         const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
-        const isProcessing = donation.status === "processing";
-        const isPending = donation.status === "pending";
-        const isApproved = donation.status === "approved";
-        const isRejected = donation.status === "rejected";
-
-
-        // 🚀 검수 처리 UI 결정 (배송 완료가 아니면 "-" 표시)
-        let inspectionCellContent = "-";
-
-        if (isRejected || isApproved) {
-            inspectionCellContent = `
-        <button class="btn btn-secondary modify-approval-btn" data-id="${donation.donationId}">수정</button>
-        `;
-        } else if (isDelivered && isPending) {
-            inspectionCellContent = `
-        <button class="btn btn-primary approve-btn" data-id="${donation.donationId}">승인</button>
-        <button class="btn btn-danger reject-btn" data-id="${donation.donationId}">반려</button>
-        `;
-        }
-
+        const displayStatus = isDelivered ? donation.status : "processing"; // 🚀 배송 완료가 아니면 "기부 진행 중"
 
         row.innerHTML = `
             <td><input type="checkbox" class="donation-checkbox" value="${donation.donationId}"></td>
@@ -112,11 +110,11 @@ async function renderDonationOrders(donations) {
             <td>${donation.trackingNumber || "미등록"}</td>
             <td><span class="tracking-status">${trackingStatus}</span></td>
             <td>
-                <span class="status-badge ${getStatusClass(donation.status)}">
-                    ${getStatusText(donation.status)}
+                <span class="status-badge ${getStatusClass(displayStatus, trackingStatus)}">
+                    ${getStatusText(displayStatus, trackingStatus)}
                 </span>
             </td>
-            <td>${inspectionCellContent}</td>  <!-- 🚀 검수 처리 칸 -->
+            <td>-</td>
         `;
 
         tbody.appendChild(row);
@@ -124,6 +122,7 @@ async function renderDonationOrders(donations) {
 
     console.log("✅ 기부 데이터 렌더링 완료!");
 }
+
 
 async function updateRowAfterInspection(donationId, isApproved) {
     const row = document.querySelector(`.donation-checkbox[value="${donationId}"]`)?.closest("tr");
@@ -245,19 +244,25 @@ function updateDonationCounts(counts) {
     document.getElementById("rejectedDonationCount").textContent = counts.rejected || 0;
     document.getElementById("approvedDonationCount").textContent = counts.approved || 0;
 
-    // ✅ 전체 개수 업데이트
     document.querySelector(".left-section span").textContent = `목록 (총 ${cachedDonations.length}개)`;
 }
 
-function getStatusClass(status) {
+
+function getStatusClass(status, trackingStatus) {
+    const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
+    if (!isDelivered) return "processing"; // 🚀 배송 완료가 아니면 기부 진행 중으로 간주
     return status === "pending" ? "pending" :
         status === "approved" ? "approved" : "rejected";
 }
 
-function getStatusText(status) {
+
+function getStatusText(status, trackingStatus) {
+    const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
+    if (!isDelivered) return "진행 중"; // 🚀 배송 완료가 아니면 기부 진행 중
     return status === "pending" ? "검수 대기" :
         status === "approved" ? "승인" : "반려";
 }
+
 
 
 function initFilters() {
@@ -300,7 +305,6 @@ function applyFilters() {
         return;
     }
 
-    // 캠페인 제목과 기부자 이름 모두 검색하는 하나의 텍스트 입력 필드
     const searchText = document.querySelector(".search-input[type='text']").value.trim().toLowerCase();
     const status = document.querySelector("select.search-input")?.value;
     const startDate = document.querySelector(".date-range input[type='date']:nth-of-type(1)")?.value;
@@ -311,7 +315,6 @@ function applyFilters() {
         let matchesStatus = true;
         let matchesDate = true;
 
-        // 검색어가 입력되어 있다면 캠페인 제목 또는 기부자 이름에서 검색어가 포함되어 있는지 확인
         if (searchText) {
             const normalizedSearch = searchText.replace(/\s+/g, "");
             const normalizedTitle = donation.campaignTitle.replace(/\s+/g, "").toLowerCase();
@@ -321,7 +324,13 @@ function applyFilters() {
                 normalizedDonor.includes(normalizedSearch);
         }
 
-        if (status) {
+        // 🚀 새로운 필터 로직: 배송 완료 여부 반영
+        const trackingStatus = donation.trackingStatus ? donation.trackingStatus.trim() : "배송 상태 없음";
+        const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
+
+        if (status === "processing") {
+            matchesStatus = !isDelivered; // 🚀 배송 완료가 아닌 것들을 "기부 진행 중"으로 간주
+        } else if (status) {
             matchesStatus = donation.status === status;
         }
 
@@ -333,12 +342,12 @@ function applyFilters() {
         return matchesSearch && matchesStatus && matchesDate;
     });
 
-    // 현재 선택된 정렬 기준을 적용
     const sortOrder = document.getElementById("sortOrder").value;
     filteredDonations = sortDonations(filteredDonations, sortOrder);
 
     renderDonationOrders(filteredDonations);
 }
+
 
 
 function resetFilters() {
@@ -410,10 +419,19 @@ document.getElementById("sortOrder")?.addEventListener("change", function () {
 // ✅ 상태 카드 값 업데이트를 위한 카운트 계산 함수
 function getDonationCounts(donations) {
     return donations.reduce((acc, donation) => {
-        acc[donation.status] = (acc[donation.status] || 0) + 1;
+        const trackingStatus = donation.trackingStatus ? donation.trackingStatus.trim() : "배송 상태 없음";
+        const isDelivered = trackingStatus.replace(/\s+/g, "") === "배송완료";
+
+        if (!isDelivered) {
+            acc.processing = (acc.processing || 0) + 1; // 🚀 배송 완료가 아닌 것들을 기부 진행 중으로 간주
+        } else {
+            acc[donation.status] = (acc[donation.status] || 0) + 1;
+        }
+
         return acc;
     }, { pending: 0, processing: 0, rejected: 0, approved: 0 });
 }
+
 
 // 전체 승인 처리 함수 (선택된 항목들을 승인 처리)
 async function bulkApproveSelectedDonations() {

@@ -22,6 +22,49 @@ function initSettlementManagement() {
         check();
     }
 
+    document.querySelectorAll(".period-buttons button").forEach(button => {
+        button.addEventListener("click", function () {
+            document.querySelectorAll(".period-buttons button").forEach(btn => btn.classList.remove("active"));
+            this.classList.add("active");
+
+            const period = this.textContent.trim();
+            updateDateRange(period);
+            loadSettlementList();
+        });
+    });
+
+    document.querySelector(".search-actions .btn-primary").addEventListener("click", function () {
+        loadSettlementList();
+    });
+
+    document.querySelector(".search-actions .btn-secondary").addEventListener("click", function () {
+        document.getElementById("status").value = "all";
+        document.querySelectorAll(".date-range input").forEach(input => input.value = "");
+
+        // ✅ 활성화된 기간 버튼도 초기화
+        document.querySelectorAll(".period-buttons button").forEach(button => button.classList.remove("active"));
+        document.querySelector(".period-buttons button:first-child").classList.add("active"); // '오늘' 버튼 활성화
+
+        // ✅ 초기화 후 다시 정산 목록 불러오기
+        loadSettlementList();
+    });
+
+
+    function downloadExcel() {
+        const status = document.getElementById("status")?.value || "all";
+        const startDateInput = document.querySelector(".date-range input[type='date']");
+        const endDateInput = document.querySelector(".date-range input[type='date']:nth-of-type(2)");
+
+        let startDate = startDateInput?.value;
+        let endDate = endDateInput?.value;
+
+        let queryParams = new URLSearchParams();
+        if (status !== "all") queryParams.append("status", status);
+        if (startDate) queryParams.append("startDate", startDate);
+        if (endDate) queryParams.append("endDate", endDate);
+
+        window.location.href = `/api/creator/dashboard/settlements/download/excel?${queryParams.toString()}`;
+    }
 
 
     /**
@@ -29,12 +72,21 @@ function initSettlementManagement() {
      */
     function loadSettlementList() {
         const status = document.getElementById("status")?.value || "all";
-        const startDate = document.querySelector(".date-range input[type='date']")?.value || "";
-        const endDate = document.querySelector(".date-range input[type='date']:nth-of-type(2)")?.value || "";
+        const startDateInput = document.querySelector(".date-range input[type='date']");
+        const endDateInput = document.querySelector(".date-range input[type='date']:nth-of-type(2)");
 
-        console.log("📢 [JavaScript] API 요청 - status:", status, "startDate:", startDate, "endDate:", endDate);
+        let startDate = startDateInput?.value;
+        let endDate = endDateInput?.value;
 
-        fetch(`/api/creator/dashboard/settlements?status=${status}&startDate=${startDate}&endDate=${endDate}`)
+        // 🚀 선택된 날짜가 없으면 필터에서 제외
+        let queryParams = new URLSearchParams();
+        if (status !== "all") queryParams.append("status", status);
+        if (startDate) queryParams.append("startDate", startDate);
+        if (endDate) queryParams.append("endDate", endDate);
+
+        console.log("📢 [JavaScript] API 요청 -", queryParams.toString());
+
+        fetch(`/api/creator/dashboard/settlements?${queryParams.toString()}`)
             .then(response => response.json())
             .then(data => {
                 if (!Array.isArray(data)) {
@@ -46,6 +98,7 @@ function initSettlementManagement() {
             .catch(error => console.error("❌ 정산 목록 로드 오류:", error));
     }
 
+
     /**
      * ✅ 정산 목록 테이블 렌더링
      */
@@ -53,23 +106,26 @@ function initSettlementManagement() {
         const tbody = document.querySelector(".table-container tbody");
         tbody.innerHTML = ""; // 기존 내용 삭제
 
+        // ✅ 전체 개수 업데이트
+        document.querySelector(".table-header .left-section span").textContent = `목록 (총 ${settlements.length}개)`;
+
         if (settlements.length === 0) {
             tbody.innerHTML = `
-                <tr>
-                    <td colspan="6">
-                        <div class="empty-message">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                stroke-linejoin="round">
-                                <circle cx="12" cy="12" r="10" />
-                                <line x1="12" y1="8" x2="12" y2="12" />
-                                <line x1="12" y1="16" x2="12.01" y2="16" />
-                            </svg>
-                            데이터가 존재하지 않습니다.
-                        </div>
-                    </td>
-                </tr>
-            `;
+            <tr>
+                <td colspan="6">
+                    <div class="empty-message">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10" />
+                            <line x1="12" y1="8" x2="12" y2="12" />
+                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                        </svg>
+                        데이터가 존재하지 않습니다.
+                    </div>
+                </td>
+            </tr>
+        `;
             return;
         }
 
@@ -77,18 +133,19 @@ function initSettlementManagement() {
             const row = document.createElement("tr");
             row.dataset.payId = settlement.payId;
             row.innerHTML = `
-                <td><input type="checkbox" class="order-checkbox" value="${settlement.payId}"></td>
-                <td>${settlement.payId}</td>
-                <td>${new Date(settlement.purchasedDate).toLocaleDateString()}</td>
-                <td>${formatCurrency(settlement.settlementAmount)}</td>
-                <td>${getSettlementBadge(settlement.settlementStatus)}</td>
-                <td>
-                    <button class="btn btn-primary view-details-btn" data-pay-id="${settlement.payId}">상세 보기</button>
-                </td>
-            `;
+            <td><input type="checkbox" class="order-checkbox" value="${settlement.payId}"></td>
+            <td>${settlement.payId}</td>
+            <td>${new Date(settlement.purchasedDate).toLocaleDateString()}</td>
+            <td>${formatCurrency(settlement.settlementAmount)}</td>
+            <td>${getSettlementBadge(settlement.settlementStatus)}</td>
+            <td>
+                <button class="btn btn-primary view-details-btn" data-pay-id="${settlement.payId}">상세 보기</button>
+            </td>
+        `;
             tbody.appendChild(row);
         });
     }
+
 
     /**
      * ✅ 정산 상태에 따라 뱃지 스타일 반환
