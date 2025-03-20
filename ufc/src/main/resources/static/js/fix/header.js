@@ -193,6 +193,7 @@ $(function () {
                 );
                 initializeEventListeners();
             }
+
             $(".header-box-top-pe").find("img.target-img").each(function() {
                 const $img = $(this);
                 const endpoint = $img.attr("src");
@@ -209,7 +210,41 @@ $(function () {
                     }
                 });
             });
+
         },
+        error: function(xhr, status, error) {
+            $(".header-box-top-pe").append(
+                `
+                <a class="header-box-top-pe-my-login" href="/user/login">
+                    <div class="header-box-top-pe-my-in">
+
+                        <div class="header-box-top-pe-my-in-name-no">
+                            로그인 / 회원가입
+                        </div>
+                    </div>
+                </a>
+                `
+            );
+            initializeEventListeners();
+            $(".header-box-top-pe").find("img.target-img").each(function() {
+                const $img = $(this);
+                const endpoint = $img.attr("src");
+                $.ajax({
+                    url: endpoint,
+                    method: "GET",
+                    success: function(resultUrl) {
+                        if (resultUrl) {
+                            $img.attr("src", resultUrl);
+                        }
+                    },
+                    error: function(err) {
+                        console.error("이미지 URL 요청 오류:", err);
+                    }
+                });
+            });
+        }
+
+
     });
 
     $.ajax({
